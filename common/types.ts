@@ -31,6 +31,7 @@ export type Slot = {
 export type Slots = Record<Day, Slot[]>;
 
 export type Event = {
+  user: string;
   name: string;
   location: string;
   description: string;
@@ -45,6 +46,7 @@ export type Event = {
 };
 
 export const EMPTY_EVENT: Event = {
+  user: "",
   name: "",
   location: "",
   description: "",
@@ -64,4 +66,22 @@ export const EMPTY_EVENT: Event = {
     [Day.SATURDAY]: [],
     [Day.SUNDAY]: [],
   },
+};
+
+export interface GoogleTokens extends Document {
+  access_token?: string;
+  refresh_token?: string;
+  scope?: string;
+  expiry_date?: number;
+}
+
+export interface User {
+  email: string;
+  name: string;
+  password: string;
+  user_url: string;
+  picture_url: string;
+  google_tokens: GoogleTokens;
+  push_calendar: string;
+  pull_calendars: string[];
 };

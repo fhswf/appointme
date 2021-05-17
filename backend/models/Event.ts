@@ -1,13 +1,12 @@
-import * as mongoose from 'mongoose';
-
-import { Day, Event } from '@fhswf/bookme-common'
-
+import { Document, Schema, model } from 'mongoose';
+import { Day, Event, Slot, Slots } from '@fhswf/bookme-common'
 
 
 
-interface EventDocument extends Event, mongoose.Document { }
 
-const eventSchema = new mongoose.Schema<EventDocument>({
+export interface EventDocument extends Event, Document<Event> { }
+
+const eventSchema = new Schema<EventDocument>({
   user: {
     type: String,
     required: true,
@@ -69,37 +68,37 @@ const eventSchema = new mongoose.Schema<EventDocument>({
   },
 
   available: {
-    mon: {
+    [Day.SUNDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    tue: {
+    [Day.MONDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    wen: {
+    [Day.TUESDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    thu: {
+    [Day.WEDNESDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    fri: {
+    [Day.THURSDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    sat: {
+    [Day.FRIDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
-    sun: {
+    [Day.SATURDAY]: {
       type: Array,
-      default: [{ starttime: "8:00", endtime: "17:00" }],
+      default: [{ start: "8:00", end: "17:00" }],
     },
   },
 });
 
 eventSchema.index({ user: 1, url: 1 }, { unique: true });
 
-export const EventModel = mongoose.model<EventDocument>("Event", eventSchema);
+export const EventModel = model<EventDocument>("Event", eventSchema);

@@ -1,49 +1,74 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { StaticDatePicker, PickersDay } from '@material-ui/lab';
-import Datepicker from "../components/datepicker";
+import { StaticDatePicker, PickersDay } from "@material-ui/lab";
 
-import { createMuiTheme, makeStyles, responsiveFontSizes, ThemeProvider, StylesProvider } from '@material-ui/core/styles';
-import { Avatar, Box, Button, Container, Grid, Link, Paper, Stepper, Step, StepLabel, TextField, Typography } from '@material-ui/core';
-import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-import { EventAvailable, HourglassFull, Room, Schedule } from '@material-ui/icons';
+import {
+  createMuiTheme,
+  makeStyles,
+  responsiveFontSizes,
+  ThemeProvider,
+  StylesProvider,
+} from "@material-ui/core/styles";
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link,
+  Paper,
+  Stepper,
+  Step,
+  StepLabel,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
+import {
+  EventAvailable,
+  HourglassFull,
+  Room,
+  Schedule,
+} from "@material-ui/icons";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
-import clsx from 'clsx';
+import clsx from "clsx";
 import de from "date-fns/locale/de";
-import { addMinutes, format } from 'date-fns';
-import Bookdetails from "./bookdetails";
+import { addMinutes, format } from "date-fns";
+import Bookdetails from "./BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-
+import { EMPTY_EVENT, Event, Slot, Slots } from "@fhswf/bookme-common";
+import { UserDocument } from "../helpers/UserDocument";
 
 const theme = createMuiTheme({
   components: {
     MuiTextField: {
       styleOverrides: {
         root: {
-          width: "100%"
-        }
-      }
+          width: "100%",
+        },
+      },
     },
+    /*
     MuiPickersDay: {
       styleOverrides: {
         root: {
-          borderRadius: "50%"
-        }
-      }
-    },
+          borderRadius: "50%",
+        },
+      },
+    },*/
     MuiTypography: {
       defaultProps: {
         variantMapping: {
-          h1: 'h3',
-          h2: 'h4',
-          h3: 'h5',
-          h4: 'h5',
-          h5: 'h6',
-          h6: 'h6',
+          h1: "h3",
+          h2: "h4",
+          h3: "h5",
+          h4: "h5",
+          h5: "h6",
+          h6: "h6",
         },
       },
     },
@@ -62,13 +87,12 @@ const useStyles = makeStyles((theme) => ({
       "&.highlight": {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
-        '&:hover, &:focus': {
+        "&:hover, &:focus": {
           backgroundColor: theme.palette.primary.light,
         },
       },
     },
   },
-
 
   date: {
     borderRadius: "50%",
@@ -80,55 +104,51 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   root: {
-    width: '100%',
+    width: "100%",
   },
   buttonWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: '16px 0 0',
+    display: "flex",
+    flexDirection: "row",
+    padding: "16px 0 0",
   },
   button: {
     marginRight: theme.spacing(1),
   },
   spacer: {
-    flex: '1 1 auto',
+    flex: "1 1 auto",
   },
   instructions: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
   },
   container: {
-    display: 'grid',
-    gridTemplateColumns: '1.5em 1fr',
+    display: "grid",
+    gridTemplateColumns: "1.5em 1fr",
     gridGap: theme.spacing(1),
     alignItems: "center",
     paddingBottom: "16px",
   },
+  item: {},
   slots: {
     maxHeight: "300px",
-  }
+  },
 }));
 
-const Booking = () => {
-  const data = useParams();
+const Booking = (props: any) => {
+  const data = useParams<{ user_url: string; url: string }>();
   const history = useHistory();
   const classes = useStyles();
 
+  type Details = { name: string; email: string; description: string };
 
-  const [user, setUser] = useState({
-    name: "No User under that Link",
-  });
+  const [user, setUser] = useState<UserDocument>();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [event, setEvent] = useState({
-    name: "",
-    location: "",
-    duration: "",
-  });
-  const [selectedDate, setDate] = useState(Date())
-  const [slots, setSlots] = useState([])
-  const [selectedTime, setTime] = useState()
-  const [details, setDetails] = useState()
+  const [event, setEvent] = useState<Event>(EMPTY_EVENT);
+  const [selectedDate, setDate] = useState<Date>(new Date());
+  const [slots, setSlots] = useState<Slot[]>([]);
+  const [selectedTime, setTime] = useState<Date>();
+  const [details, setDetails] = useState<Details>();
 
   useEffect(() => {
     getUserByUrl(data.user_url)
@@ -156,18 +176,13 @@ const Booking = () => {
       .catch((err) => {
         return err;
       });
-  }, [data.user_url, selectedDate.url]);
+  }, [data.url, data.user_url, history, selectedDate]);
 
-  const handleBackClick = (event) => {
-    event.preventDefault();
-    history.goBack();
-  };
-
-  const isStepOptional = (step) => {
+  const isStepOptional = (step: number) => {
     return false;
   };
 
-  const isStepSkipped = (step) => {
+  const isStepSkipped = (step: number) => {
     return skipped.has(step);
   };
 
@@ -205,35 +220,43 @@ const Booking = () => {
     setActiveStep(0);
   };
 
-  const handleDateChange = (newValue) => {
-    console.log('date: %o', newValue);
-    getAvailableTimes(newValue, event.url, user._id)
-      .then((res) => {
-        console.log('slots: %j', res.data);
-        setSlots(res.data);
-      })
-      .catch((err) => {
-        console.error('failed to get available times')
-      });
-    setActiveStep(1);
-    setDate(newValue);
-  }
+  const handleDateChange = (newValue: Date) => {
+    console.log("date: %o", newValue);
+    if (user) {
+      getAvailableTimes(newValue, event.url, user._id)
+        .then((res) => {
+          console.log("slots: %j", res.data);
+          setSlots(res.data);
+        })
+        .catch((err) => {
+          console.error("failed to get available times");
+        });
+      setActiveStep(1);
+      setDate(newValue);
+    }
+  };
 
-  const steps = ['Choose date', 'Choose time', 'Provide details'];
+  const steps = ["Choose date", "Choose time", "Provide details"];
 
-  const DAYS = ['sun', 'mon', 'tue', 'wen', 'thu', 'fri', 'sat'];
+  const DAYS = ["sun", "mon", "tue", "wen", "thu", "fri", "sat"];
 
-  const checkDay = (date) => {
+  const checkDay = (date: Date) => {
     if (!event.available) {
       return false;
+    } else {
+      return (
+        date > new Date() &&
+        event.available[date.getDay() as Day].length > 0 &&
+        event.available[date.getDay() as Day][0].start !== ""
+      );
     }
-    else {
-      return date > new Date() && event.available[DAYS[date.getDay()]].[0] !== "";
-    }
-  }
+  };
 
-  const renderPickerDay = (date, selectedDates, pickersDayProps) => {
-
+  const renderPickerDay = (
+    date: Date,
+    selectedDates: any,
+    pickersDayProps: any
+  ) => {
     return (
       <PickersDay
         {...pickersDayProps}
@@ -241,17 +264,17 @@ const Booking = () => {
         disabled={!checkDay(date)}
         className={clsx({
           [classes.date]: true,
-          "highlight": checkDay(date)
+          highlight: checkDay(date),
         })}
-
       />
     );
-  }
+  };
 
   const getTimes = () => {
     if (slots) {
-      let times = []
+      let times = [];
       for (let slot of slots) {
+        console.log("Slot: %o", slot);
         let start = new Date(slot.start);
         let end = new Date(slot.end);
         console.log("start: %s, end: %s", start, end);
@@ -262,77 +285,94 @@ const Booking = () => {
         }
       }
       return times;
+    } else {
+      return [];
     }
-    else {
-      return []
-    }
-  }
+  };
 
-  const handleTime = (time) => (event) => {
-    console.log("target: %o %o", event.target.dataset, event.target)
-    console.log("time: %o", time)
-    setActiveStep(2);
-    setTime(time);
-  }
+  const handleTime =
+    (time: Date) => (event: React.MouseEvent<HTMLButtonElement>) => {
+      console.log("time: %o", time);
+      setActiveStep(2);
+      setTime(time);
+    };
 
   const renderSlots = () => {
     console.log("renderSlots: %o", slots);
     const times = getTimes();
     return (
       <>
-        <Grid className={classes.slots} spacing={2} container direction="column" alignItems="flex-start">
-          {times.map((time) => (<Grid item><Button variant="contained" onClick={handleTime(time)}>{format(time, "HH:mm")}</Button></Grid>))}
+        <Grid
+          className={classes.slots}
+          spacing={2}
+          container
+          direction="column"
+          alignItems="flex-start"
+        >
+          {times.map((time) => (
+            <Grid item>
+              <Button variant="contained" onClick={handleTime(time)}>
+                {format(time, "HH:mm")}
+              </Button>
+            </Grid>
+          ))}
         </Grid>
       </>
-    )
-  }
+    );
+  };
 
-  const handleDetailChange = (details) => {
+  const handleDetailChange = (details: Details) => {
     console.log("details: %o", details);
     setDetails(details);
-  }
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     console.log("onSubmit");
     e.preventDefault();
-    insertIntoGoogle(user._id, event, selectedTime, details.name, details.email, details.description).then(
-      () => {
+    if (user && details) {
+      insertIntoGoogle(
+        user._id,
+        event,
+        selectedTime,
+        details.name,
+        details.email,
+        details.description
+      ).then(() => {
         //toast.success("Event successfully booked!");
         history.push({
           pathname: `/booked`,
-          state: { userid: user.name, event, time: selectedTime },
+          state: { userid: user._id, event, time: selectedTime },
         });
-      }
-    );
-
-  }
+      });
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ThemeProvider theme={theme}>
         <Container>
-          <Typography variant="h3" component="h1" gutterBottom>Schedule an appointment</Typography>
+          <Typography variant="h3" component="h1" gutterBottom>
+            Schedule an appointment
+          </Typography>
 
           <div className={classes.container}>
             <div className={classes.item}>
-              <Avatar sx={{ width: 24, height: 24 }} alt={user.name} src={user.picture_url} size />
+              <Avatar
+                sx={{ width: 24, height: 24 }}
+                alt={user ? user.name : ""}
+                src={user ? user.picture_url : ""}
+              />
             </div>
-            <div className={classes.item}>
-              {event.name}
-            </div>
+            <div className={classes.item}>{event.name}</div>
             <div className={classes.item}>
               <HourglassFull />
             </div>
-            <div className={classes.item}>
-              {event.duration + " minutes"}
-            </div>
+            <div className={classes.item}>{event.duration + " minutes"}</div>
 
             <div className={classes.item}>
               <Room />
             </div>
-            <div className={classes.item}>
-              {event.location}
-            </div>
+            <div className={classes.item}>{event.location}</div>
           </div>
 
           <Paper>
@@ -340,8 +380,8 @@ const Booking = () => {
               <Box pt="1em" m="2em">
                 <Stepper activeStep={activeStep}>
                   {steps.map((label, index) => {
-                    const stepProps = {};
-                    const labelProps = {};
+                    const stepProps: any = {};
+                    const labelProps: any = {};
                     if (isStepOptional(index)) {
                       labelProps.optional = (
                         <Typography variant="caption">Optional</Typography>
@@ -370,7 +410,7 @@ const Booking = () => {
                       className={classes.button}
                     >
                       Back
-                 </Button>
+                    </Button>
                     <div className={classes.spacer} />
                     {isStepOptional(activeStep) && (
                       <Button
@@ -382,14 +422,17 @@ const Booking = () => {
                       </Button>
                     )}
 
-                    {activeStep === steps.length - 1 ?
-                      <Button variant="contained" type="submit">Book appointment</Button> : ""
-                    }
+                    {activeStep === steps.length - 1 ? (
+                      <Button variant="contained" type="submit">
+                        Book appointment
+                      </Button>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </React.Fragment>
 
-                <Grid container spacing={2} >
-
+                <Grid container spacing={2}>
                   <Grid item hidden={activeStep != 0}>
                     <StaticDatePicker
                       displayStaticWrapperAs="desktop"
@@ -397,32 +440,41 @@ const Booking = () => {
                       className={classes.picker}
                       onChange={handleDateChange}
                       renderDay={renderPickerDay}
-                      renderInput={(params) => <TextField {...params} variant="standard" />}
+                      renderInput={(params) => (
+                        <TextField {...params} variant="standard" />
+                      )}
                     />
                   </Grid>
-
 
                   <Grid item hidden={activeStep != 1}>
                     {renderSlots()}
                   </Grid>
 
-
                   {activeStep > 1 ? (
                     <Grid item>
-                      <Bookdetails
-                        userid={user._id} username={user.name}
-                        event={event}
-                        start={selectedTime.valueOf()} end={addMinutes(selectedTime, event.duration).valueOf()}
-                        onChange={handleDetailChange}
-                      />
+                      {user ? (
+                        <Bookdetails
+                          userid={user._id}
+                          username={user.name}
+                          event={event}
+                          start={selectedTime.valueOf()}
+                          end={addMinutes(
+                            selectedTime,
+                            event.duration
+                          ).valueOf()}
+                          onChange={handleDetailChange}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </Grid>
-                  ) : ""}
+                  ) : (
+                    ""
+                  )}
                 </Grid>
               </Box>
             </form>
           </Paper>
-
-
         </Container>
       </ThemeProvider>
     </LocalizationProvider>

@@ -3,7 +3,7 @@
 /**
  * @module event_controller
  */
-import { EventModel } from "../models/Event";
+import { EventDocument, EventModel } from "../models/Event";
 import { Day } from "@fhswf/bookme-common";
 import { freeBusy } from "./google_controller";
 import { validationResult } from "express-validator";
@@ -23,9 +23,9 @@ export const getAvailableTimesForDay = (req: Request, res: Response): void => {
   console.log('getAvailableTimesForDay: %s', req.query.day);
   const date = new Date(<string>req.query.day);
   const day = <Day>(date.getDay());
-  const eventurl = <string>req.query.eventurl;
+  const url = <string>req.query.url;
   const userid = <string>req.query.user;
-  const query = EventModel.findOne({ url: eventurl, user: userid }).select(
+  const query = EventModel.findOne({ url: url, user: userid }).select(
     `available bufferbefore bufferafter -_id`
   );
   void query.exec((err, event) => {
@@ -69,47 +69,26 @@ export const addEventController = (req: Request, res: Response): void => {
   const errors = validationResult(req);
   console.log('errors: %j', errors);
 
-  const available = {
-    mon: [req.body.starttimemon, req.body.endtimemon],
-    tue: [req.body.starttimetue, req.body.endtimetue],
-    wen: [req.body.starttimewen, req.body.endtimewen],
-    thu: [req.body.starttimethu, req.body.endtimethu],
-    fri: [req.body.starttimefri, req.body.endtimefri],
-    sat: [req.body.starttimesat, req.body.endtimesat],
-    sun: [req.body.starttimesun, req.body.endtimesun],
-  };
-  console.log('available: %j', available)
+  const event: Event = req.body;
+  console.log('event: %j', event)
 
   if (!errors.isEmpty()) {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ error: newError });
   } else {
-    const eventToSave = new EventModel({
-      user: userid,
-      name: req.body.name,
-      location: req.body.location,
-      description: req.body.description,
-      url: req.body.eventurl,
-      isActive: req.body.isActive,
-      duration: parseInt(req.body.duration),
-      rangedays: parseInt(req.body.rangedays),
-      bufferbefore: parseInt(req.body.bufferbefore),
-      bufferafter: parseInt(req.body.bufferafter),
-      calendardays: req.body.calendardays,
-      available: available,
-    });
+    const eventToSave = new EventModel(event);
 
-    void eventToSave.save((err, eventToSave) => {
-      if (err) {
-        return res.status(400).json({ error: errorHandler(err) });
-      } else {
-        return res.status(201).json({
+    void eventToSave.save()
+      .then((doc: EventDocument) => {
+        res.status(201).json({
           success: true,
-          message: eventToSave,
+          message: doc,
           msg: "Successfully saved event!",
-        });
-      }
-    });
+        })
+      })
+      .catch((err: any) => {
+        res.status(400).json({ error: errorHandler(err) });
+      });
   }
 };
 
@@ -187,7 +166,7 @@ export const getEventByIdController = (req: Request, res: Response): void => {
 };
 
 /**
- * Middleware to get an event by the eventurl
+ * Middleware to get an event by the url
  * @function
  * @param {request} req
  * @param {response} res
@@ -215,11 +194,12 @@ export const getEventByUrl = (req: Request, res: Response): void => {
 export const updateEventController = (req: Request, res: Response): void => {
   const event = req.body.data;
   const event_id = req.params.id;
-  void EventModel.findByIdAndUpdate(event_id, event, function (err, event) {
-    if (err) {
-      return res.status(400).json({ error: err });
-    } else {
-      return res.status(200).json({ msg: "Update successful", event: event });
-    }
-  });
+  void EventModel.findByIdAndUpdate(event_id, event)
+    .then((doc: EventDocument) => {
+      res.status(200).json({ msg: "Update successful", event: doc })
+    })
+    .catch((err: any) => {
+      res.status(400).json({ error: err });
+    });
+
 };

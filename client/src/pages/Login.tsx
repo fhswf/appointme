@@ -4,7 +4,7 @@ import { isAuthenticated, authenticate } from "../helpers/helpers";
 import { Redirect, Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import { postGoogleLogin, postLogin } from "../helpers/services/auth_services";
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from "@material-ui/core";
 import "../styles/login.css";
 
 /*
@@ -13,9 +13,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 */
 
-
-
-const Login = () => {
+const Login = (props: any) => {
   const history = useHistory();
 
   const sendGoogleToken = (idToken) => {
@@ -37,7 +35,7 @@ const Login = () => {
   };
 
   const errorResponseGoogle = (err) => {
-    console.error('google login error: %o', err);
+    console.error("google login error: %o", err);
     toast.error("Google Login failed, please try again");
   };
 
@@ -99,8 +97,6 @@ const Login = () => {
         <p>Login to your Bookme account</p>
         <div className="loginbox">
           <form onSubmit={handleOnSubmit}>
-
-
             <TextField
               type="email"
               label="Email"
@@ -116,8 +112,7 @@ const Login = () => {
               value={password}
             />
 
-
-            <Button variant="primary" type="submit">
+            <Button variant="contained" type="submit">
               {changeBtnTxt}
             </Button>
 
@@ -141,8 +136,8 @@ const Login = () => {
             <p>No account yet?</p>
 
             <Button
-              variant="info"
-              as={Link}
+              variant="outlined"
+              component={Link}
               to="/register"
               role="button"
               target="_self"

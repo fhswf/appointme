@@ -5,12 +5,10 @@ import "../styles/landing.css";
 import { isAuthenticated } from "../helpers/helpers";
 import { Link, Redirect } from "react-router-dom";
 
+import AppNavbar from "../components/AppNavbar";
+import Paper from "@material-ui/core/Paper";
 
-
-import AppNavbar from "../components/appNavbar";
-import Paper from '@material-ui/core/Paper';
-
-const Landing = () => {
+const Landing = (props: any) => {
   return (
     <div className="landing">
       {isAuthenticated() ? <Redirect to="/app" /> : null}
@@ -23,22 +21,20 @@ const Landing = () => {
               <div className="steps">
                 <div className="row">
                   <div className="stepone">
-
                     <div className="step-description">
                       <p>
                         <strong>Create Events</strong>
                       </p>
 
                       <p>
-                        Create events. Setup your available times and you're good
-                        to go!
-                    </p>
+                        Create events. Setup your available times and you're
+                        good to go!
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="steptwo">
-
                     <div className="step-description">
                       <p>
                         <strong>Share your Link</strong>
@@ -50,7 +46,6 @@ const Landing = () => {
                 </div>
                 <div className="row">
                   <div className="stepthree">
-
                     <div className="step-description">
                       <p>
                         <strong>Done! Congrats!</strong>
@@ -59,7 +54,7 @@ const Landing = () => {
                       <p>
                         Once a user books a appointment, the event is added to
                         your Calendar.
-                    </p>
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -1,18 +1,9 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
-
-/*
-import { DropdownButton, Dropdown } from "react-bootstrap";
-*/
 import { Button, Menu, MenuItem } from '@material-ui/core';
-
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
 import { signout } from "../helpers/helpers";
-
 import { deleteEvent } from "../helpers/services/event_services";
-const iconConfig = <FontAwesomeIcon icon={faCog} />;
+
 
 const EventDropdownMenu = ({ options }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);

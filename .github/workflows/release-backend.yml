@@ -5,8 +5,8 @@ on:
   pull_request:
   push:
     branches: [master]
-    paths:
-      - "backend/**"
+    #paths:
+    #  - "backend/**"
 
 jobs:
   test:
