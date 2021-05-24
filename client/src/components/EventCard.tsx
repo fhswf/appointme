@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { deleteEvent } from "../helpers/services/event_services";
@@ -20,12 +20,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import ShareIcon from "@material-ui/icons/Share";
 import { useStyles } from "./EventList";
 import { Event } from "@fhswf/bookme-common";
-import { GoogleTokens } from "../../../backend/models/User";
+import { EventDocument } from "../helpers/EventDocument";
 
 type EventCardProps = {
-  event: Event;
+  event: EventDocument;
   token: string;
   url: string;
+  setActive: (active: boolean) => void;
+  onDelete: (event: EventDocument) => void;
 };
 
 export const EventCard = (props: EventCardProps) => {
@@ -36,9 +38,9 @@ export const EventCard = (props: EventCardProps) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const toggleActive = (evt) => {
+  const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
     setActive(evt.target.checked);
-    props.setActive(active);
+    props.setActive(evt.target.checked);
   };
 
   const handleCopy = () => {
@@ -65,6 +67,9 @@ export const EventCard = (props: EventCardProps) => {
         history.push("/landing");
       }
     });
+    if (props.onDelete) {
+      props.onDelete(props.event);
+    }
   };
 
   return (
@@ -121,7 +126,7 @@ export const EventCard = (props: EventCardProps) => {
         <Alert severity="success">Link copied to clipboard!</Alert>
       </Snackbar>
       <Snackbar open={failure}>
-        <Alert severity="failure">Could not copy link to clipboard!</Alert>
+        <Alert severity="error">Could not copy link to clipboard!</Alert>
       </Snackbar>
     </>
   );

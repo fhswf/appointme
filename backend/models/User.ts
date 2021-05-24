@@ -1,7 +1,8 @@
+
 import { Document, Schema, model } from 'mongoose';
 import { genSalt, hash } from "bcryptjs";
 
-export interface GoogleTokens extends mongoose.Document {
+export interface GoogleTokens extends Document {
   access_token?: string;
   refresh_token?: string;
   scope?: string;
@@ -97,29 +98,21 @@ const userSchema = new Schema<UserDocument>(
 );
 
 userSchema.pre("save", function (next) {
-  const user: UserDocument = this;
 
   // only hash the password if it has been modified (or is new)
-  if (!user.isModified("password")) {
+  if (!this.isModified("password")) {
     return next();
   }
 
   // generate a salt
-  genSalt(10, (err, salt) => {
-    if (err) {
-      return next(err);
-    }
+  genSalt(10)
+    .then((salt: string) =>    // hash the password using our new salt
+      hash(this.password, salt)
+        .then((hsh: string) => { this.password = hsh; next(); })
+        .catch(next)
+    )
+    .catch(next);
 
-    // hash the password using our new salt
-    hash(user.password, salt, function (err, hash) {
-      if (err) {
-        return next(err);
-      }
-      // override the cleartext password with the hashed one
-      user.password = hash;
-      next();
-    });
-  });
 });
 
 export const UserModel = model<UserDocument>("User", userSchema);

@@ -4,7 +4,7 @@
 
 const express = require("express");
 const router = express.Router();
-const { validateAddEvent } = require("../handlers/validation");
+
 const {
   addEventController,
   getEventListController,
@@ -26,7 +26,7 @@ const { requireAuth } = require("../handlers/middleware");
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post("/addEvent", validateAddEvent, requireAuth, addEventController);
+router.post("/addEvent", requireAuth, addEventController);
 
 /**
  * Route to delete an event

@@ -9,7 +9,7 @@ import { Redirect, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { isAuthenticated } from "../helpers/helpers";
 import { postToActivate } from "../helpers/services/auth_services";
-import { Button } from '@material-ui/core';
+import { Button } from "@material-ui/core";
 import "../styles/activation.css";
 
 /*------------Font Awesome Icons --------------*/
@@ -33,12 +33,12 @@ const Activate = ({ match }) => {
         <h3> Welcome to Bookme</h3>
         <div className="activatebox">
           <form onSubmit={handleOnSubmit}>
-            <Button variant="primary" type="submit">
+            <Button variant="contained" type="submit">
               Activate your Account
             </Button>
             <p>Already got an Account?</p>
             <Button
-              variant="primary"
+              variant="contained"
               href="/login"
               role="button"
               target="_self"

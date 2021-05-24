@@ -34,10 +34,17 @@ export const getUser = (req: Request, res: Response): void => {
     });
 };
 
+/** Filter out the google_tokens key from user.
+ * This is necessary since we do *not* want to overwrite the google_tokens 
+ * since the client only has the access_token, not the refresh_token!
+ */
+const filterUser = (user) => Object.keys(user)
+  .filter(key => key != 'google_tokens')
+  .reduce((obj, key) => { obj[key] = user[key]; return obj }, {});
 
 export const putUser = (req: Request, res: Response): void => {
   const userid = req.user_id;
-  const user = <User>req.body.data;
+  const user = filterUser(req.body.data as User);
   console.log('putUser: %o', user);
   void UserModel.findByIdAndUpdate(userid, user,
     {
@@ -71,8 +78,8 @@ export const putUser = (req: Request, res: Response): void => {
  * @param {response} res
  */
 export const getUserByUrl = (req: Request, res: Response): void => {
-  const userurl = req.query.url;
-  const query = UserModel.findOne({ user_url: <string>userurl },
+  const user_url = req.query.url;
+  const query = UserModel.findOne({ user_url: <string>user_url }/*,
     {
       "_id": 1,
       "email": 1,
@@ -85,12 +92,13 @@ export const getUserByUrl = (req: Request, res: Response): void => {
       "updatedAt": 1,
       "password": 0,
       "google_tokens": 0
-    });
-  query.exec()
+    }*/)
+    .select("_id email name picture_url user_url welcome")
+    .exec()
     .then(user => {
       res.status(200).json(user);
     })
-    .catch(err => {
-      res.status(400).json({ error: err });
+    .catch(error => {
+      res.status(400).json({ error, query: { user_url: <string>user_url } });
     })
 };

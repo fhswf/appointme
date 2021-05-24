@@ -3,12 +3,13 @@ import { GoogleTokens } from "../../../../backend/models/User";
 import { Event } from "@fhswf/bookme-common";
 
 export async function saveUserEvent(
-  token: GoogleTokens,
-  event: Event
+  token: string,
+  event: Event,
+  userid: string
 ) {
   const response = await axios.post(
     `${process.env.REACT_APP_API_URI}/events/addEvent`,
-    event,
+    { ...event, user: userid },
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -18,7 +19,7 @@ export async function saveUserEvent(
   return response;
 }
 
-export async function deleteEvent(token, id) {
+export async function deleteEvent(token: string, id: string) {
   const response = await axios.delete(
     `${process.env.REACT_APP_API_URI}/events/deleteEvent/${id}`,
     {
@@ -31,7 +32,7 @@ export async function deleteEvent(token, id) {
   return response;
 }
 
-export async function getEventByID(token, id) {
+export async function getEventByID(token: string, id: string) {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URI}/events/getEvent/${id}`,
     {
@@ -45,7 +46,7 @@ export async function getEventByID(token, id) {
 }
 
 export async function updateEvent(
-  token: GoogleTokens,
+  token: string,
   id: string,
   event: Event
 ) {
@@ -64,7 +65,7 @@ export async function updateEvent(
   return response;
 }
 
-export async function getActiveEvents(user_id) {
+export async function getActiveEvents(user_id: string) {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URI}/events/getActiveEvents`,
     {
@@ -74,7 +75,7 @@ export async function getActiveEvents(user_id) {
   return response;
 }
 
-export async function getAvailableTimes(day, url, userid) {
+export async function getAvailableTimes(day: unknown, url: string, userid: string) {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URI}/events/getAvailable`,
     {
@@ -88,7 +89,7 @@ export async function getAvailableTimes(day, url, userid) {
   return response;
 }
 
-export async function getUsersEvents(token) {
+export async function getUsersEvents(token: string) {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URI}/events/getEvents`,
     {
@@ -100,7 +101,7 @@ export async function getUsersEvents(token) {
   return response;
 }
 
-export async function getEventByUrlAndUser(user_id, event_url) {
+export async function getEventByUrlAndUser(user_id: string, event_url: string) {
   const response = await axios.get(
     `${process.env.REACT_APP_API_URI}/events/getEventBy`,
     {
