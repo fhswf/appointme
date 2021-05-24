@@ -1,6 +1,6 @@
 import axios from "axios";
 import { GoogleTokens } from "../../../../backend/models/User";
-import { Event } from "@fhswf/bookme-common";
+import { Event, IntervalSet } from "@fhswf/bookme-common";
 
 export async function saveUserEvent(
   token: string,
@@ -75,18 +75,19 @@ export async function getActiveEvents(user_id: string) {
   return response;
 }
 
-export async function getAvailableTimes(day: unknown, url: string, userid: string) {
-  const response = await axios.get(
+export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, userid: string) {
+  return axios.get(
     `${process.env.REACT_APP_API_URI}/events/getAvailable`,
     {
       params: {
-        day: day,
-        eventurl: url,
-        user: userid,
+        timeMin,
+        timeMax,
+        url,
+        userid,
       },
     }
-  );
-  return response;
+  )
+    .then((response) => new IntervalSet(response.data))
 }
 
 export async function getUsersEvents(token: string) {

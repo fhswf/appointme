@@ -3,12 +3,10 @@ import { useHistory } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import AppNavbar from "../components/AppNavbar";
 
-import "../styles/calendarint.css";
-
 // Material UI
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
 import {
+  Box,
+  Button,
   Card,
   CardHeader,
   CardContent,
@@ -44,7 +42,7 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import { ToastContainer, toast } from "react-toastify";
 import { Avatar } from "@material-ui/core";
-import { UserContext } from "../helpers/PrivateRoute";
+import { UserContext } from "../components/PrivateRoute";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);
@@ -322,26 +320,21 @@ const Calendarintegration = () => {
         signout();
         history.push("/landing");
       } else {
-        setUrl(res.data);
+        setUrl(res.data.url as string);
       }
     });
-  }, [history, token]);
+  }, [history, token, user]);
 
-  const renderConnectButton = () => {
-    if (connected) {
-      return (
-        <Button variant="contained" onClick={revokeScopes}>
-          Disconnect from Google
-        </Button>
-      );
-    } else {
-      return (
-        <Button variant="contained" href={url}>
-          Connect Google Calendar
-        </Button>
-      );
-    }
-  };
+  const renderConnectButton = () =>
+    connected ? (
+      <Button variant="contained" onClick={revokeScopes}>
+        Disconnect from Google
+      </Button>
+    ) : (
+      <Button variant="contained" href={url}>
+        Connect Google Calendar
+      </Button>
+    );
 
   return (
     <>

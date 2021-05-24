@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Container,
+  Fab,
   Grid,
   Link,
   Typography,
@@ -14,7 +15,7 @@ import {
 
 import AddIcon from "@material-ui/icons/Add";
 
-import { UserContext } from "../helpers/PrivateRoute";
+import { UserContext } from "../components/PrivateRoute";
 
 const App = () => {
   const history = useHistory();
@@ -32,9 +33,17 @@ const App = () => {
   const addEventButton = () => {
     if (connected) {
       return (
-        <Button href="addevent" variant="contained" startIcon={<AddIcon />}>
-          Add Event Type
-        </Button>
+        <>
+          <Fab
+            variant="extended"
+            color="primary"
+            aria-label="add"
+            href="addevent"
+          >
+            <AddIcon sx={{ mr: 1 }} />
+            Add event type
+          </Fab>
+        </>
       );
     } else {
       return (
@@ -51,6 +60,7 @@ const App = () => {
     }
   };
 
+  console.log("App: user=%o", user);
   return (
     <>
       <AppNavbar />

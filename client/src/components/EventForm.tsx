@@ -21,7 +21,6 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Add, Delete } from "@material-ui/icons";
-import { TimesForDay } from "./TimesForDay";
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "@fhswf/bookme-common";
 

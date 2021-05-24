@@ -5,7 +5,6 @@ import { Redirect, Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import { postGoogleLogin, postLogin } from "../helpers/services/auth_services";
 import { Button, TextField } from "@material-ui/core";
-import "../styles/login.css";
 
 /*
 import Form from "react-bootstrap/Form";

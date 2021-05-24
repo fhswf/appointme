@@ -4,10 +4,11 @@
  * @module event_controller
  */
 import { EventDocument, EventModel } from "../models/Event";
-import { Day } from "@fhswf/bookme-common";
+import { Day, Event, IntervalSet, Slot } from "@fhswf/bookme-common";
 import { freeBusy } from "./google_controller";
 import { validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler";
+import { addMinutes, parseISO, parse } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 import { Request, Response } from "express";
 
@@ -21,42 +22,61 @@ import { Request, Response } from "express";
  */
 export const getAvailableTimesForDay = (req: Request, res: Response): void => {
   console.log('getAvailableTimesForDay: %s', req.query.day);
-  const date = new Date(<string>req.query.day);
-  const day = <Day>(date.getDay());
+
+  const timeMin = new Date(<string>req.query.timeMin);
+  const timeMax = new Date(<string>req.query.timeMax);
   const url = <string>req.query.url;
-  const userid = <string>req.query.user;
+  const userid = <string>req.query.userid;
   const query = EventModel.findOne({ url: url, user: userid }).select(
     `available bufferbefore bufferafter -_id`
   );
-  void query.exec((err, event) => {
-    if (err) {
-      res.status(400).json({ erorr: err });
-    } else {
-      console.log("Event: %o; day: %o, %o", event, day, event.available[day]);
-      const slot = event.available[day][0];
-      let start = new Date(date);
-      console.log("start: %o, %j", start, slot)
-      start.setHours(Number.parseInt(slot.start.substring(0, 2)),
-        Number.parseInt(slot.start.substring(3, 5)), 0);
-      console.log("start: %o", start);
-      start = zonedTimeToUtc(start, 'Europe/Berlin');
-      let end = new Date(date);
-      end.setHours(Number.parseInt(slot.end.substring(0, 2)),
-        Number.parseInt(slot.end.substring(3, 5)), 0);
-      end = zonedTimeToUtc(end, 'Europe/Berlin');
-      console.log('TZ: %s', process.env.TZ);
-      console.log("event: %j %o %s %s", event, slot, start, end);
-      freeBusy(userid, start, end, event)
-        .then(slots => {
-          res.status(200).json(slots);
-        })
-        .catch(err => {
-          console.log('freeBusy failed: %o', err);
-          res.status(400).json({ error: <unknown>err });
-        });
-    }
-  });
-};
+  void query.exec()
+    .then(event => {
+      console.log("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
+      try {
+        freeBusy(userid, timeMin.toISOString(), timeMax.toISOString(), event)
+          .then(res => {
+            let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+            for (const key in res.data.calendars) {
+              const calIntervals = new IntervalSet();
+              let current = timeMin;
+              for (const busy of res.data.calendars[key].busy) {
+                console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+                const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
+                const _end = addMinutes(new Date(busy.end), event.bufferafter);
+                if (current < _start)
+                  calIntervals.push({ start: current, end: _start });
+                current = _end;
+              }
+              if (current < timeMax) {
+                calIntervals.push({ start: current, end: timeMax });
+              }
+              freeSlots = freeSlots.intersect(calIntervals)
+            }
+            console.log('freeBusy: %j', freeSlots);
+            return freeSlots;
+          })
+          .catch(err => {
+            console.log('freebusy failed: %o', err);
+            throw err;
+          })
+          .then(slots => {
+            res.status(200).json(slots);
+          })
+          .catch(err => {
+            console.log('freeBusy failed: %o', err);
+            res.status(400).json({ error: <unknown>err });
+          });
+      }
+      catch (err) {
+        console.exception("Exception in getAvailableTimesForDay: %o", err);
+        res.status(400).json({ erorr: err });
+      }
+    })
+    .catch((err) => { res.status(400).json({ erorr: err }); });
+}
+
+
 
 /**
  * Middleware to create a new event

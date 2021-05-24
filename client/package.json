@@ -23,7 +23,7 @@
   "proxy": "https://jupiter.fh-swf.de/",
   "dependencies": {
     "@emotion/styled": "^11.3.0",
-    "@fhswf/bookme-common": "^1.0.7",
+    "@fhswf/bookme-common": "^1.1.8",
     "@material-ui/core": "^5.0.0-alpha.32",
     "@material-ui/icons": "^5.0.0-alpha.29",
     "@material-ui/lab": "^5.0.0-alpha.32",

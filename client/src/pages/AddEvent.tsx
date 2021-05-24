@@ -10,10 +10,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
-import { TimesForDay } from "../components/TimesForDay";
 import { Day, EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
 import { EventForm } from "../components/EventForm";
-import { UserContext } from "../helpers/PrivateRoute";
+import { UserContext } from "../components/PrivateRoute";
 
 export const useStyles = makeStyles((theme) => ({
   row: {

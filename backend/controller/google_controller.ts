@@ -78,7 +78,7 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
   const event: Schema$Event = {
     summary: <string>req.body.event.name + " with " + <string>req.body.name,
     location: <string>req.body.event.location,
-    description: req.body.event.description,
+    description: req.body.event.description as string,
     start: {
       dateTime: starttime.toISOString(),
       timeZone: "Europe/Berlin",
@@ -89,7 +89,7 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
     },
     attendees: [
       {
-        email: req.body.email,
+        email: req.body.email as string,
       },
     ],
   };
@@ -107,12 +107,12 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
         .then((event: any) => {
           res.json({ success: true, message: "Event wurde gebucht", event: event });
         })
-        .catch(err => {
-          res.status(400).json({ error: err });
+        .catch(error => {
+          res.status(400).json({ error });
         })
     })
-    .catch(err => {
-      res.status(400).json({ error: err });
+    .catch(error => {
+      res.status(400).json({ error });
     })
 };
 
@@ -178,7 +178,9 @@ export async function getCalendarList(req: Request, res: Response) {
     })
 }
 
-export const freeBusy = async (user_id: string, start, end, event) => {
+
+
+export const freeBusy = async (user_id: string, timeMin: string, timeMax: string, event) => {
   const user: User = await UserModel.findOne({ _id: user_id });
   const google_tokens = user.google_tokens;
   console.log('freeBusy: tokens: %o', google_tokens);
@@ -188,33 +190,11 @@ export const freeBusy = async (user_id: string, start, end, event) => {
   const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
   return calendar.freebusy.query({
     requestBody: {
-      timeMin: start,
-      timeMax: end,
-      timeZone: "Europe/Berlin",
+      timeMin,
+      timeMax,
       items
     }
   })
-    .then(res => {
-      const slots = [];
-      for (const key in res.data.calendars) {
-        for (const busy of res.data.calendars[key].busy) {
-          console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
-          let _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-          let _end = addMinutes(new Date(busy.end), event.bufferafter);
-          slots.push({ start: start, end: _start });
-          start = _end;
-        }
-        if (start < end) {
-          slots.push({ start: start, end: end });
-        }
-        console.log('freeBusy: %s %j', key, slots);
-      }
-      return slots;
-    })
-    .catch(err => {
-      console.log('freebusy failed: %o', err);
-      throw err;
-    });
 }
 
 function deleteTokens(userid: string) {

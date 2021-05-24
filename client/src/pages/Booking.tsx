@@ -1,13 +1,11 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
 
 import {
   createMuiTheme,
   makeStyles,
-  responsiveFontSizes,
   ThemeProvider,
-  StylesProvider,
 } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -15,7 +13,6 @@ import {
   Button,
   Container,
   Grid,
-  Link,
   Paper,
   Stepper,
   Step,
@@ -25,22 +22,16 @@ import {
 } from "@material-ui/core";
 import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import {
-  EventAvailable,
-  HourglassFull,
-  Room,
-  Schedule,
-} from "@material-ui/icons";
+import { HourglassFull, Room } from "@material-ui/icons";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
-import de from "date-fns/locale/de";
-import { addMinutes, format } from "date-fns";
-import Bookdetails from "./BookDetails";
+import { addMonths, addMinutes, format } from "date-fns";
+import BookDetails from "./BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot, Slots } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 
 const theme = createMuiTheme({
@@ -220,13 +211,15 @@ const Booking = (props: any) => {
     setActiveStep(0);
   };
 
+  const handleMonthChange = (date: Date) => {};
+
   const handleDateChange = (newValue: Date) => {
     console.log("date: %o", newValue);
     if (user) {
-      getAvailableTimes(newValue, event.url, user._id)
-        .then((res) => {
-          console.log("slots: %j", res.data);
-          setSlots(res.data);
+      getAvailableTimes(newValue, addMonths(newValue, 1), event.url, user._id)
+        .then((slots) => {
+          console.log("slots: %j", slots);
+          //setSlots(slots);
         })
         .catch((err) => {
           console.error("failed to get available times");
@@ -237,8 +230,6 @@ const Booking = (props: any) => {
   };
 
   const steps = ["Choose date", "Choose time", "Provide details"];
-
-  const DAYS = ["sun", "mon", "tue", "wen", "thu", "fri", "sat"];
 
   const checkDay = (date: Date) => {
     if (!event.available) {
@@ -439,6 +430,7 @@ const Booking = (props: any) => {
                       value={selectedDate}
                       className={classes.picker}
                       onChange={handleDateChange}
+                      onMonthChange={handleMonthChange}
                       renderDay={renderPickerDay}
                       renderInput={(params) => (
                         <TextField {...params} variant="standard" />
@@ -453,15 +445,12 @@ const Booking = (props: any) => {
                   {activeStep > 1 ? (
                     <Grid item>
                       {user ? (
-                        <Bookdetails
+                        <BookDetails
                           userid={user._id}
                           username={user.name}
                           event={event}
-                          start={selectedTime.valueOf()}
-                          end={addMinutes(
-                            selectedTime,
-                            event.duration
-                          ).valueOf()}
+                          start={selectedTime}
+                          end={addMinutes(selectedTime, event.duration)}
                           onChange={handleDetailChange}
                         />
                       ) : (

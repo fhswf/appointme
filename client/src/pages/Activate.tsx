@@ -10,7 +10,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { isAuthenticated } from "../helpers/helpers";
 import { postToActivate } from "../helpers/services/auth_services";
 import { Button } from "@material-ui/core";
-import "../styles/activation.css";
 
 /*------------Font Awesome Icons --------------*/
 

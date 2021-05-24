@@ -12,19 +12,25 @@ import { toast, ToastContainer } from "react-toastify";
 
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import SettingsIcon from "@material-ui/icons/Settings";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MenuIcon from "@material-ui/icons/Menu";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import { UserContext } from "../helpers/PrivateRoute";
+import { UserContext } from "./PrivateRoute";
+import { Divider, Snackbar } from "@material-ui/core";
+
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import LinkIcon from "@material-ui/icons/Link";
+import LoginIcon from "@material-ui/icons/Login";
+import LogoutIcon from "@material-ui/icons/Logout";
+import MenuIcon from "@material-ui/icons/Menu";
+import PersonIcon from "@material-ui/icons/Person";
+import SettingsIcon from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,8 +48,8 @@ const AppNavbar = () => {
   const classes = useStyles();
   const history = useHistory();
   const user = useContext(UserContext).user;
-  const [anchorEl, setAnchorEl] = useState<EventTarget | null>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [snack, setSnack] = React.useState<string | null>(null);
 
   const token = JSON.parse(localStorage.getItem("access_token") as string);
   const link = user ? process.env.REACT_APP_URL + "users/" + user.user_url : "";
@@ -68,31 +74,9 @@ const AppNavbar = () => {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    toast.success("Copied Link to Clipboard");
+    setAnchorEl(null);
+    setSnack("Link copied");
   };
-
-  const items = [
-    {
-      label: "Profile",
-      items: [
-        {
-          label: "Logout",
-          icon: "pi pi-logout",
-          command: handleLogout,
-        },
-        {
-          label: "Share your link",
-          icon: "pi pi-copy",
-          command: copyToClipboard,
-        },
-        {
-          label: "Calendar configuration",
-          icon: "pi pi-config",
-          command: () => history.push("/integration"),
-        },
-      ],
-    },
-  ];
 
   const handleOnClick = (target: string) => () => history.push(target);
 
@@ -104,40 +88,74 @@ const AppNavbar = () => {
     setAnchorEl(null);
   };
 
-  const handleProfileMenuOpen: MouseEventHandler = (event) => {
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const loginout = isAuthenticated() ? (
-    <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+  const closeSnack = (
+    event: React.SyntheticEvent | React.MouseEvent,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnack(null);
+  };
+
+  const loginOut = isAuthenticated() ? (
+    <MenuItem onClick={handleLogout}>
+      <ListItemIcon>
+        <LogoutIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Log out</ListItemText>
+    </MenuItem>
   ) : (
-    <MenuItem onClick={handleLogin}>Log In</MenuItem>
+    <MenuItem onClick={handleLogin}>
+      <ListItemIcon>
+        <LoginIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Log in</ListItemText>
+    </MenuItem>
   );
 
   const userMenu = (
     <>
       <MenuItem onClick={handleMenuClose}>
         <ListItemIcon>
-          <CalendarTodayIcon fontSize="small" />
+          <PersonIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Profile</ListItemText>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem component={Link} to="/integration">
+        <ListItemIcon>
+          <CalendarTodayIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>Calendar Integration</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={copyToClipboard}>
+        <ListItemIcon>
+          <LinkIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>Copy your link</ListItemText>
+      </MenuItem>
     </>
   );
 
   const renderMenu = (
     <Menu
-      anchorEl={anchorEl as Element}
+      anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
+      open={Boolean(anchorEl)}
       onClose={handleMenuClose}
     >
       {userMenu}
-      {loginout}
+      <Divider />
+      {loginOut}
     </Menu>
   );
 
@@ -160,16 +178,6 @@ const AppNavbar = () => {
           </Typography>
           <div>
             <IconButton
-              aria-label="Calendar Settings"
-              color="inherit"
-              onClick={handleOnClick("/integration")}
-            >
-              <SettingsIcon />
-            </IconButton>
-            <Menu open={open} id="popup_menu">
-              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            </Menu>
-            <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
@@ -182,6 +190,12 @@ const AppNavbar = () => {
         </Toolbar>
       </AppBar>
       {renderMenu}
+      <Snackbar
+        open={Boolean(snack)}
+        autoHideDuration={6000}
+        onClose={closeSnack}
+        message="Link Copied"
+      />
     </>
   );
 };

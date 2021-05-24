@@ -6,11 +6,6 @@ import { Redirect, Link } from "react-router-dom";
 import { isAuthenticated } from "../helpers/helpers";
 import { postToRegister } from "../helpers/services/auth_services";
 
-import "../styles/register.css";
-
-
-
-
 const Register = ({ history }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -73,11 +68,8 @@ const Register = ({ history }) => {
         <div className="calIcon" onClick={onIconClick}>
           Bookme
         </div>
-
         <p>Sign up for Bookme</p>
         To be done via Auth0.
-
-
       </div>
     </div>
   );

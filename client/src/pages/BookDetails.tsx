@@ -1,18 +1,33 @@
-import React, { useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
-import { Box, Button, Grid, TextField } from '@material-ui/core';
+import { Grid, TextField } from "@material-ui/core";
 import { insertIntoGoogle } from "../helpers/services/google_services";
+import { Event } from "@fhswf/bookme-common";
 
+export type BookingFormData = {
+  name: string;
+  email: string;
+  description: string;
+};
 
-const Bookdetails = (props) => {
+export type BookDetailsProps = {
+  start: Date;
+  end: Date;
+  userid: string;
+  username: string;
+  event: Event;
+  onChange: (form: BookingFormData) => void;
+};
+
+const BookDetails = (props: BookDetailsProps) => {
   const history = useHistory();
   const start = props.start;
   const userid = props.userid;
   const username = props.username;
   const event = props.event;
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<BookingFormData>({
     name: "",
     email: "",
     description: "",
@@ -45,7 +60,6 @@ const Bookdetails = (props) => {
     history.goBack();
   };
   return (
-
     <Grid container alignItems="stretch" direction="column">
       <Grid item>
         <TextField
@@ -74,10 +88,10 @@ const Bookdetails = (props) => {
       </Grid>
       <Grid item>
         <TextField
-          label="description"
+          label="information"
           multiline
           minRows="4"
-          helperText="Please share anything that will help prepare for our meeting"
+          helperText="Please share anything that will help me to prepare for our meeting"
           margin="normal"
           onChange={handleOnChange("description")}
           variant="filled"
@@ -88,4 +102,4 @@ const Bookdetails = (props) => {
   );
 };
 
-export default Bookdetails;
+export default BookDetails;

@@ -1,7 +1,5 @@
 import React from "react";
 
-import "../styles/landing.css";
-
 import { isAuthenticated } from "../helpers/helpers";
 import { Link, Redirect } from "react-router-dom";
 
