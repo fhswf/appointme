@@ -29,7 +29,7 @@ import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
 import { addMonths, addMinutes, format } from "date-fns";
-import BookDetails from "./BookDetails";
+import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";

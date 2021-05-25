@@ -1,33 +1,20 @@
-import React, { useState, useEffect, FormEvent } from "react";
-import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
 
-import {
-  createTheme,
-  makeStyles,
-  ThemeProvider,
-} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
   Box,
   Button,
   Container,
   Grid,
-  Paper,
-  Stepper,
-  Step,
-  StepLabel,
   TextField,
   Typography,
   Link,
 } from "@material-ui/core";
 import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import {
-  HourglassFull,
-  Room,
-  SettingsSystemDaydreamTwoTone,
-} from "@material-ui/icons";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
@@ -36,27 +23,27 @@ import clsx from "clsx";
 import {
   addDays,
   addMonths,
-  addMinutes,
-  format,
   isBefore,
   isAfter,
   isSameDay,
   startOfDay,
-  startOfMonth,
   endOfDay,
-  endOfMonth,
 } from "date-fns";
-import BookDetails, { BookingFormData } from "./BookDetails";
+//import de from "date-fns/locale/de";
+import { de, enUS } from "date-fns/locale";
+import BookDetails, { BookingFormData } from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import {
   EMPTY_EVENT,
   Event,
-  Slot,
   IntervalSet,
   TimeRange,
 } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
+import { useTranslation, Trans } from "react-i18next";
+
+const LOCALES = { en: enUS, de: de, "de-DE": de };
 
 const useStyles = makeStyles((theme) => ({
   picker: {
@@ -135,6 +122,7 @@ const Schedule = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();
   const history = useHistory();
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
 
   const [user, setUser] = useState<UserDocument>();
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
@@ -273,7 +261,7 @@ const Schedule = (props: any) => {
         //toast.success("Event successfully booked!");
         history.push({
           pathname: `/booked`,
-          state: { userid: user._id, event, time: selectedTime.start },
+          state: { user, event, time: selectedTime },
         });
       });
     } else {
@@ -281,24 +269,31 @@ const Schedule = (props: any) => {
     }
   };
 
+  const userName = user ? user.name : "";
+
+  console.log("langue: %s", i18n.language);
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      locale={LOCALES[i18n.language]}
+    >
       <Container>
         {selectedTime ? (
           <>
-            <Typography variant="h5">Confirm meeting</Typography>
+            <Typography variant="h5">{t("Confirm meeting")}</Typography>
             <Typography>
-              {selectedDate.toLocaleDateString("de-DE", {
+              {selectedDate.toLocaleDateString(i18n.language, {
                 dateStyle: "medium",
               })}{" "}
-              {selectedTime.start.toLocaleTimeString("de-DE", {
+              {selectedTime.start.toLocaleTimeString(i18n.language, {
                 timeStyle: "short",
               })}{" "}
               –{" "}
-              {selectedTime.end.toLocaleTimeString("de-DE", {
+              {selectedTime.end.toLocaleTimeString(i18n.language, {
                 timeStyle: "short",
-              })}
-              <Link onClick={() => setTime(null)}>Change</Link>
+              })}{" "}
+              <Link onClick={() => setTime(null)}>{t("Change")}</Link>
             </Typography>
 
             <form onSubmit={handleSubmit}>
@@ -316,16 +311,16 @@ const Schedule = (props: any) => {
                   color="primary"
                   onClick={() => setTime(null)}
                 >
-                  Back
+                  {t("Back")}
                 </Button>
                 <Button variant="contained" color="primary" type="submit">
-                  Confirm &amp; Book
+                  {t("Confirm &amp; Book")}
                 </Button>
               </Grid>
             </form>
           </>
         ) : (
-          <Box className={classes.grid}>
+          <Box className={classes.grid} padding={2}>
             <Box sx={{ gridArea: "header_l" }} justifyContent="center">
               <Avatar
                 alt={user ? user.name : ""}
@@ -333,7 +328,7 @@ const Schedule = (props: any) => {
                 sx={{ width: 72, height: 72, margin: "auto" }}
               />
               <Typography variant="h5" textAlign="center">
-                Meeting with {user ? user.name : ""}
+                {t("Meeting with")} {userName}
               </Typography>
             </Box>
             <Box sx={{ gridArea: "picker_l" }}>
@@ -354,11 +349,16 @@ const Schedule = (props: any) => {
               <Typography>
                 {selectedDate ? (
                   <>
-                    The following times are available on{" "}
-                    {selectedDate.toLocaleDateString("de-DE", {
-                      dateStyle: "short",
-                    })}
-                    . You may pick one or choose a different date.
+                    <Trans i18nKey="availableSlots">
+                      The following times are available on
+                      {{
+                        date: selectedDate.toLocaleDateString(i18n.language, {
+                          day: "numeric",
+                          month: "long",
+                        }),
+                      }}
+                      . You may pick one or choose a different date.
+                    </Trans>
                   </>
                 ) : (
                   <>Please choose a date to check available times.</>

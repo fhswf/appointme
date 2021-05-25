@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Grid, TextField } from "@material-ui/core";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { Event } from "@fhswf/bookme-common";
+import { useTranslation, Trans } from "react-i18next";
 
 export type BookingFormData = {
   name: string;
@@ -22,6 +23,7 @@ export type BookDetailsProps = {
 
 const BookDetails = (props: BookDetailsProps) => {
   const history = useHistory();
+  const { t, i18n } = useTranslation();
   const start = props.start;
   const userid = props.userid;
   const username = props.username;
@@ -34,39 +36,25 @@ const BookDetails = (props: BookDetailsProps) => {
   });
 
   const { name, email, description } = formData;
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-    if (name && email) {
-      insertIntoGoogle(username, event, start, name, email, description).then(
-        () => {
-          //toast.success("Event successfully booked!");
-          history.push({
-            pathname: `/booked`,
-            state: { userid: userid, event, time: start },
-          });
-        }
-      );
-    } else {
-      //toast.error("Please fill in your name and email!");
-    }
-  };
 
   const handleOnChange = (text) => (event) => {
     setFormData({ ...formData, [text]: event.target.value });
     props.onChange(formData);
   };
+
   const handleBackClick = (event) => {
     event.preventDefault();
     history.goBack();
   };
+
   return (
     <Grid container alignItems="stretch" direction="column">
       <Grid item>
         <TextField
-          label="Name"
+          label={t("Name")}
           required
           fullWidth
-          helperText="Please provide your name"
+          helperText={t("Please provide your name")}
           margin="normal"
           onChange={handleOnChange("name")}
           variant="filled"
@@ -75,11 +63,11 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
-          label="Email"
+          label={t("Email")}
           type="email"
           required
           fullWidth
-          helperText="You will receive a confirmation email"
+          helperText={t("You will receive a confirmation email")}
           margin="normal"
           onChange={handleOnChange("email")}
           variant="filled"
@@ -88,10 +76,12 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
-          label="information"
+          label={t("Information")}
           multiline
           minRows="4"
-          helperText="Please share anything that will help me to prepare for our meeting"
+          helperText={t(
+            "Please share anything that will help me to prepare for our meeting"
+          )}
           margin="normal"
           onChange={handleOnChange("description")}
           variant="filled"
