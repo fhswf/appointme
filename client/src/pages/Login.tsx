@@ -4,14 +4,35 @@ import { isAuthenticated, authenticate } from "../helpers/helpers";
 import { Redirect, Link, useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
 import { postGoogleLogin, postLogin } from "../helpers/services/auth_services";
-import { Button, TextField } from "@material-ui/core";
+import { Button, Container, SvgIcon, TextField } from "@material-ui/core";
 
-/*
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Button from "react-bootstrap/Button";
-*/
-
+const GoogleIcon = (props) => {
+  return (
+    <SvgIcon {...props} viewBox={"0 0 48 48"}>
+      <defs>
+        <path
+          id="a"
+          d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
+        />
+      </defs>
+      <clipPath id="b">
+        <use xlinkHref="#a" overflow="visible" />
+      </clipPath>
+      <path clipPath="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z" />
+      <path
+        clipPath="url(#b)"
+        fill="#EA4335"
+        d="M0 11l17 13 7-6.1L48 14V0H0z"
+      />
+      <path
+        clipPath="url(#b)"
+        fill="#34A853"
+        d="M0 37l30-23 7.9 1L48 0v48H0z"
+      />
+      <path clipPath="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" />
+    </SvgIcon>
+  );
+};
 const Login = (props: any) => {
   const history = useHistory();
 
@@ -86,67 +107,23 @@ const Login = (props: any) => {
   };
 
   return (
-    <div className="login">
-      {isAuthenticated() ? <Redirect to="/app" /> : null}
-      <ToastContainer />
-      <div className="login-container">
-        <div className="calIcon" onClick={onIconClick}>
-          Bookme
-        </div>
-        <p>Login to your Bookme account</p>
-        <div className="loginbox">
-          <form onSubmit={handleOnSubmit}>
-            <TextField
-              type="email"
-              label="Email"
-              placeholder="name@example.com"
-              onChange={handleChangeEvent("email")}
-              value={email}
-            />
-
-            <TextField
-              type="password"
-              label="Password"
-              onChange={handleChangeEvent("password")}
-              value={password}
-            />
-
-            <Button variant="contained" type="submit">
-              {changeBtnTxt}
-            </Button>
-
-            <p></p>
-
-            <GoogleLogin
-              clientId={process.env.REACT_APP_GOOGLE_ID}
-              onSuccess={responseGoogle}
-              onFailure={errorResponseGoogle}
-              cookiePolicy={"single_host_origin"}
-              render={(renderProps) => (
-                <Button
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                >
-                  Sign in with Google
-                </Button>
-              )}
-            ></GoogleLogin>
-
-            <p>No account yet?</p>
-
-            <Button
-              variant="outlined"
-              component={Link}
-              to="/register"
-              role="button"
-              target="_self"
-            >
-              Sign up
-            </Button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Container>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_GOOGLE_ID}
+        onSuccess={responseGoogle}
+        onFailure={errorResponseGoogle}
+        cookiePolicy={"single_host_origin"}
+        render={(renderProps) => (
+          <Button
+            onClick={renderProps.onClick}
+            disabled={renderProps.disabled}
+            startIcon={<GoogleIcon />}
+          >
+            Sign in with Google
+          </Button>
+        )}
+      />
+    </Container>
   );
 };
 
