@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.0.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.0.0...@fhswf/bookme-backend-v1.0.1) (2021-05-26)
+
+
+### Bug Fixes
+
+* do not overwrite calendar settings upon login ([8923777](https://github.com/fhswf/book_me/commit/892377784cc94f2243c193f0763c82e7e58e7c16))
+
 # @fhswf/bookme-backend-v1.0.0 (2021-05-26)
 
 
