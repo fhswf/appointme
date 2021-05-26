@@ -16,9 +16,9 @@ export interface User {
   user_url: string;
   picture_url: string;
   google_tokens: GoogleTokens;
-  push_calendar: string;
-  pull_calendars: string[];
-};
+  push_calendar?: string;
+  pull_calendars?: string[];
+}
 
 interface GoogleTokensDocument extends GoogleTokens, Document {
 }
@@ -87,6 +87,7 @@ const userSchema = new Schema<UserDocument>(
     },
     pull_calendars: {
       type: Array,
+      default: null
     },
     push_calendar: {
       type: String

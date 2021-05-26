@@ -201,7 +201,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
         const user = new UserModel({ name, email, password, picture_url: picture, user_url });
         user._id = sub;
         console.log('user: %o', user);
-        UserModel.findOneAndUpdate({ _id: sub }, user, { upsert: true })
+        UserModel.findOneAndUpdate({ _id: sub }, { name, email, password, picture_url: picture, user_url }, { upsert: true })
           .exec()
           .then(user => {
 
@@ -251,7 +251,7 @@ function makePassword(length) {
  * @function
  * @param {string} userEmail
  */
-function validateUrl(userEmail) {
+function validateUrl(userEmail: string): string {
   const newEmail = userEmail.split("@");
   const reg = new RegExp(/[~\/]/g);
   let newUrl = newEmail[0].toLowerCase().replace(/[\. ,:]+/g, "-");

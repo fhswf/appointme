@@ -5,9 +5,9 @@
 
 
 import { addMinutes, parseISO, parse } from 'date-fns';
-const { body } = require("express-validator");
+//const { body } = require("express-validator");
 import { calendar_v3, google } from 'googleapis';
-import { GaxiosPromise } from "gaxios";
+import { GaxiosPromise, GaxiosResponse } from "gaxios";
 import { OAuth2Client, Credentials } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
 import { UserModel, User, GoogleTokens } from "../models/User";
@@ -104,8 +104,8 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
           sendUpdates: "all",
           requestBody: event,
         })
-        .then((event: any) => {
-          res.json({ success: true, message: "Event wurde gebucht", event: event });
+        .then((event: GaxiosResponse<Schema$Event>) => {
+          res.json({ success: true, message: "Event wurde gebucht", event });
         })
         .catch(error => {
           res.status(400).json({ error });
@@ -166,7 +166,7 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
  * @param req 
  * @param res 
  */
-export async function getCalendarList(req: Request, res: Response) {
+export async function getCalendarList(req: Request, res: Response): Promise<void> {
   google.calendar({ version: "v3", auth: await getAuth(req.user_id) })
     .calendarList.list()
     .then(list => {
