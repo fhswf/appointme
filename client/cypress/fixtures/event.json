@@ -1,0 +1,43 @@
+{
+    "available": {
+        "0": [],
+        "1": [
+            {
+                "start": "09:00",
+                "end": "17:00"
+            }
+        ],
+        "2": [
+            {
+                "start": "06:00",
+                "end": "12:00"
+            },
+            {
+                "start": "18:00",
+                "end": "20:00"
+            }
+        ],
+        "3": [
+            {
+                "start": "09:00",
+                "end": "17:00"
+            }
+        ],
+        "4": [],
+        "5": [],
+        "6": []
+    },
+    "location": "",
+    "description": "",
+    "duration": 30,
+    "isActive": true,
+    "rangedays": 0,
+    "calendardays": false,
+    "bufferbefore": 0,
+    "bufferafter": 0,
+    "_id": "60a427218d0d5800121d16b5",
+    "user": "109150731150582581691",
+    "name": "Test 5",
+    "url": "test_5",
+    "__v": 0
+}

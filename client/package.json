@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
+    "cypress": "^7.4.0",
     "dotenv-cli": "^4.0.0",
     "i18next-parser": "^4.0.1",
     "i18next-scanner": "^3.0.0",
