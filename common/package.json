@@ -43,6 +43,7 @@
     "eslint": "^7.19.0",
     "jsdoc": "^3.6.7",
     "jshint": "^2.12.0",
+    "mocha": "^8.4.0",
     "semantic-release": "^17.4.3",
     "semantic-release-monorepo": "^7.0.5",
     "ts-mocha": "^8.0.0",
