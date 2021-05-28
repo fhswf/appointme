@@ -30,6 +30,7 @@ export type Slot = {
 
 export type Slots = Record<Day, Slot[]>;
 
+/** Event describes a type of appointment */
 export type Event = {
   user: string;
   name: string;
@@ -43,6 +44,15 @@ export type Event = {
   bufferafter: number;
   bufferbefore: number;
   available: Slots;
+
+  /** Minimum time in advance */
+  minFuture: number;
+
+  /** Maximum time in advance */
+  maxFuture: number;
+
+  /** Maximum number of events per day */
+  maxPerDay: number;
 };
 
 export const EMPTY_EVENT: Event = {
@@ -66,6 +76,9 @@ export const EMPTY_EVENT: Event = {
     [Day.SATURDAY]: [],
     [Day.SUNDAY]: [],
   },
+  minFuture: 2 * 86400,
+  maxFuture: 60 * 86400,
+  maxPerDay: 2
 };
 
 export interface GoogleTokens extends Document {
