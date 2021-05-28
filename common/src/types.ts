@@ -39,6 +39,7 @@ export type Event = {
   duration: number;
   isActive: boolean;
   url: string;
+  /** @deprecated */
   rangedays: number;
   calendardays: boolean;
   bufferafter: number;

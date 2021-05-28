@@ -284,7 +284,9 @@ const Schedule = (props: any) => {
             <Typography variant="h5">{t("Confirm meeting")}</Typography>
             <Typography>
               {selectedDate.toLocaleDateString(i18n.language, {
-                dateStyle: "medium",
+                weekday: "long",
+                day: "numeric",
+                month: "long",
               })}{" "}
               {selectedTime.start.toLocaleTimeString(i18n.language, {
                 timeStyle: "short",

@@ -50,9 +50,14 @@ jobs:
           node-version: 14.x
 
       - name: Install
+        working-directory: common
         run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        working-directory: common
+        run: npm build
 
       - name: Release
         working-directory: common
