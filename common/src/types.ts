@@ -39,9 +39,7 @@ export type Event = {
   duration: number;
   isActive: boolean;
   url: string;
-  /** @deprecated */
-  rangedays: number;
-  calendardays: boolean;
+
   bufferafter: number;
   bufferbefore: number;
   available: Slots;
@@ -64,8 +62,6 @@ export const EMPTY_EVENT: Event = {
   duration: 0,
   isActive: false,
   url: "",
-  rangedays: 0,
-  calendardays: false,
   bufferafter: 0,
   bufferbefore: 0,
   available: {
