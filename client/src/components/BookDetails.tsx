@@ -51,6 +51,7 @@ const BookDetails = (props: BookDetailsProps) => {
     <Grid container alignItems="stretch" direction="column">
       <Grid item>
         <TextField
+          name="name"
           label={t("Name")}
           required
           fullWidth
@@ -63,6 +64,7 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
+          name="email"
           label={t("Email")}
           type="email"
           required
