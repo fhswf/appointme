@@ -78,6 +78,7 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
+          name=""
           label={t("Information")}
           multiline
           minRows="4"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
 
@@ -12,6 +12,10 @@ import {
   TextField,
   Typography,
   Link,
+  CircularProgress,
+  LinearProgress,
+  Snackbar,
+  Alert,
 } from "@material-ui/core";
 import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
@@ -118,6 +122,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Error = {
+  message: string;
+} & any;
+
 const Schedule = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();
   const history = useHistory();
@@ -133,6 +141,7 @@ const Schedule = (props: any) => {
   const [slots, setSlots] = useState<IntervalSet>(new IntervalSet());
   const [daySlots, setDaySlots] = useState<IntervalSet>(new IntervalSet());
   const [details, setDetails] = useState<BookingFormData | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     getUserByUrl(data.user_url)
@@ -141,24 +150,20 @@ const Schedule = (props: any) => {
           history.push("/notfound");
         } else {
           setUser(res.data);
-          getEventByUrlAndUser(res.data._id, data.url)
-            .then((res) => {
-              if (res.data == null) {
-                history.push("/notfound");
-              }
-              if (res.data.isActive === false) {
-                history.push("/notfound");
-              } else {
-                setEvent(res.data);
-              }
-            })
-            .catch((err) => {
-              return err;
-            });
+          getEventByUrlAndUser(res.data._id, data.url).then((res) => {
+            if (res.data == null) {
+              history.push("/notfound");
+            }
+            if (res.data.isActive === false) {
+              history.push("/notfound");
+            } else {
+              setEvent(res.data);
+            }
+          });
         }
       })
       .catch((err) => {
-        return err;
+        setError({ message: "could not load data", details: err });
       });
   }, [data.url, data.user_url, history, selectedDate]);
 
@@ -184,6 +189,10 @@ const Schedule = (props: any) => {
       });
     }
   }, [user, event, beginDate]);
+
+  const handleErrorClose = () => {
+    history.push("/");
+  };
 
   const checkDay = (date: Date) => {
     if (date < new Date()) {
@@ -249,27 +258,27 @@ const Schedule = (props: any) => {
   const handleSubmit = (e) => {
     console.log("submit: %o", details);
     e.preventDefault();
-    if (details.name && details.email) {
-      insertIntoGoogle(
-        user._id,
-        event,
-        selectedTime.start,
-        details.name,
-        details.email,
-        details.description
-      ).then(() => {
-        //toast.success("Event successfully booked!");
+
+    insertIntoGoogle(
+      user._id,
+      event,
+      selectedTime.start,
+      details.name,
+      details.email,
+      details.description
+    )
+      .then(() => {
         history.push({
           pathname: `/booked`,
           state: { user, event, time: selectedTime },
         });
-      });
-    } else {
-      //toast.error("Please fill in your name and email!");
-    }
+      })
+      .catch((err) =>
+        setError({ message: "failed to schedule appointment", details: err })
+      );
   };
 
-  const userName = user ? user.name : "";
+  //const userName = user ? user.name : "";
 
   console.log("langue: %s", i18n.language);
 
@@ -279,108 +288,132 @@ const Schedule = (props: any) => {
       locale={LOCALES[i18n.language]}
     >
       <Container>
-        {selectedTime ? (
-          <>
-            <Typography variant="h5">{t("Confirm meeting")}</Typography>
-            <Typography>
-              {selectedDate.toLocaleDateString(i18n.language, {
-                dateStyle: "medium",
-              })}{" "}
-              {selectedTime.start.toLocaleTimeString(i18n.language, {
-                timeStyle: "short",
-              })}{" "}
-              –{" "}
-              {selectedTime.end.toLocaleTimeString(i18n.language, {
-                timeStyle: "short",
-              })}{" "}
-              <Link onClick={() => setTime(null)}>{t("Change")}</Link>
-            </Typography>
-
-            <form onSubmit={handleSubmit}>
-              <BookDetails
-                userid={user._id}
-                username={user.name}
-                event={event}
-                start={selectedTime.start}
-                end={selectedTime.end}
-                onChange={handleDetailChange}
-              />
-              <Grid container justifyContent="space-between" padding={2}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => setTime(null)}
-                >
-                  {t("Back")}
-                </Button>
-                <Button variant="contained" color="primary" type="submit">
-                  {t("Confirm &amp; Book")}
-                </Button>
-              </Grid>
-            </form>
-          </>
-        ) : (
-          <Box className={classes.grid} padding={2}>
-            <Box sx={{ gridArea: "header_l" }} justifyContent="center">
-              <Avatar
-                alt={user ? user.name : ""}
-                src={user ? user.picture_url : ""}
-                sx={{ width: 72, height: 72, margin: "auto" }}
-              />
-              <Typography variant="h5" textAlign="center">
-                {t("Meeting with")} {userName}
-              </Typography>
-            </Box>
-            <Box sx={{ gridArea: "picker_l" }}>
-              <StaticDatePicker
-                displayStaticWrapperAs="desktop"
-                value={selectedDate}
-                className={classes.picker}
-                onChange={handleDateChange}
-                onMonthChange={handleMonthChange}
-                renderDay={renderPickerDay}
-                renderInput={(params) => (
-                  <TextField {...params} variant="standard" />
-                )}
-              />
-            </Box>
-
-            <Box sx={{ gridArea: "header_r" }} alignSelf="end">
+        {user ? (
+          selectedTime ? (
+            <>
+              <Typography variant="h5">{t("Confirm meeting")}</Typography>
               <Typography>
-                {selectedDate ? (
-                  <>
-                    <Trans i18nKey="availableSlots">
-                      The following times are available on
-                      {{
-                        date: selectedDate.toLocaleDateString(i18n.language, {
-                          day: "numeric",
-                          month: "long",
-                        }),
-                      }}
-                      . You may pick one or choose a different date.
-                    </Trans>
-                  </>
-                ) : (
-                  <>Please choose a date to check available times.</>
-                )}
+                {selectedDate.toLocaleDateString(i18n.language, {
+                  dateStyle: "medium",
+                })}{" "}
+                {selectedTime.start.toLocaleTimeString(i18n.language, {
+                  timeStyle: "short",
+                })}{" "}
+                –{" "}
+                {selectedTime.end.toLocaleTimeString(i18n.language, {
+                  timeStyle: "short",
+                })}{" "}
+                <Link onClick={() => setTime(null)}>{t("Change")}</Link>
               </Typography>
+
+              <form onSubmit={handleSubmit}>
+                <BookDetails
+                  userid={user._id}
+                  username={user.name}
+                  event={event}
+                  start={selectedTime.start}
+                  end={selectedTime.end}
+                  onChange={handleDetailChange}
+                />
+                <Grid container justifyContent="space-between" padding={2}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => setTime(null)}
+                  >
+                    {t("Back")}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    name="submit"
+                    type="submit"
+                  >
+                    {t("Confirm &amp; Book")}
+                  </Button>
+                </Grid>
+              </form>
+            </>
+          ) : (
+            <Box className={classes.grid} padding={2}>
+              <Box sx={{ gridArea: "header_l" }} justifyContent="center">
+                <Avatar
+                  alt={user ? user.name : ""}
+                  src={user ? user.picture_url : ""}
+                  sx={{ width: 72, height: 72, margin: "auto" }}
+                />
+                <Typography variant="h5" textAlign="center">
+                  {t("Meeting with")} {user.name}
+                </Typography>
+              </Box>
+              <Box sx={{ gridArea: "picker_l" }}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  value={selectedDate}
+                  className={classes.picker}
+                  onChange={handleDateChange}
+                  onMonthChange={handleMonthChange}
+                  renderDay={renderPickerDay}
+                  renderInput={(params) => (
+                    <TextField {...params} variant="standard" />
+                  )}
+                />
+              </Box>
+
+              <Box sx={{ gridArea: "header_r" }} alignSelf="end">
+                <Typography>
+                  {selectedDate ? (
+                    <>
+                      <Trans i18nKey="availableSlots">
+                        The following times are available on
+                        {{
+                          date: selectedDate.toLocaleDateString(i18n.language, {
+                            day: "numeric",
+                            month: "long",
+                          }),
+                        }}
+                        . You may pick one or choose a different date.
+                      </Trans>
+                    </>
+                  ) : (
+                    <>Please choose a date to check available times.</>
+                  )}
+                </Typography>
+              </Box>
+              <Box
+                sx={{ gridArea: "picker_r" }}
+                display="flex"
+                flexWrap="wrap"
+                gap={2}
+                padding={2}
+              >
+                <ChooseTime
+                  slots={daySlots}
+                  duration={event.duration}
+                  onSelect={handleTime}
+                />
+              </Box>
             </Box>
-            <Box
-              sx={{ gridArea: "picker_r" }}
-              display="flex"
-              flexWrap="wrap"
-              gap={2}
-              padding={2}
-            >
-              <ChooseTime
-                slots={daySlots}
-                duration={event.duration}
-                onSelect={handleTime}
-              />
-            </Box>
+          )
+        ) : (
+          <Box display="flex" alignContent="center">
+            <Typography textAlign="center">Loading user</Typography>
+            <CircularProgress />
           </Box>
         )}
       </Container>
+      <Snackbar open={error != null} autoHideDuration={6000}>
+        {error ? (
+          <Alert onClose={handleErrorClose} severity="error" className="error">
+            Error: {error.message}{" "}
+            {"details" in error && "message" in error.details
+              ? ": " + error.details.message
+              : ""}
+          </Alert>
+        ) : (
+          <></>
+        )}
+      </Snackbar>
     </LocalizationProvider>
   );
 };

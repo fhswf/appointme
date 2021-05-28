@@ -1,20 +1,65 @@
 /// <reference types="cypress" />
 
-context('Schedule page', () => {
+context('Error handling', () => {
+    describe('Error getting user', () => {
+        before(() => {
+            cy.intercept('/bookme/api/v1/users/findUserByUrl?url=christian-gawron', { statusCode: 500, body: { error: "no data" } }).as('getUser')
+            cy.visit('/schedule/christian-gawron/test_5')
+        })
+
+        it('Should show error message', () => {
+            cy.wait(['@getUser'])
+            cy.get('.error')
+        })
+    })
+})
+
+context('Scheduling page', () => {
     beforeEach(() => {
-        //const now = new Date(2021, 5, 25).getTime()
-        cy.clock(Date.UTC(2021, 5, 25), ['Date'])
+        //const now = new Date(2021, 4, 25).getTime()
+        cy.clock(Date.UTC(2021, 4, 25), ['Date'])
         cy.intercept('/bookme/api/v1/users/findUserByUrl?url=christian-gawron', { fixture: 'userByURL' }).as('getUser')
         cy.intercept('/bookme/api/v1/events/getEventBy?user=109150731150582581691&url=test_5', { fixture: 'event' }).as('getEvent')
-        cy.visit('https://jupiter.fh-swf.de/bookme/schedule/christian-gawron/test_5')
+        cy.intercept('/bookme/api/v1/events/getAvailable?*', { fixture: 'available' }).as('getAvailable')
     })
 
+    describe('Visit scheduling page and schedule appointment', () => {
+        before(() => {
+            cy.intercept('POST', '/bookme/api/v1/**', { body: { error: 'not possible' } }).as('apiCheck')
+            cy.visit('/schedule/christian-gawron/test_5')
+        })
 
-    describe('Visit scheduling page', () => {
-        it('Check basic elements', () => {
-            cy.wait(['@getUser', '@getEvent'])
+        it('Check simple schedule flow', () => {
+            cy.wait(['@getUser', '@getEvent', '@getAvailable'])
             cy.get('h6').should('contain', 'Christian Gawron')
             cy.get('.MuiPickersDay-today').should('contain', '25')
+            cy.contains('07:00').click()
+            cy.get('[name=name]').type('Max Mustermann')
+            cy.get('[name=email]').type('mustermann.max@fh-swf.de')
+            cy.get('form').submit()
+            cy.wait('@apiCheck').then((interception) => {
+                cy.log(interception.request.body)
+                assert.equal(interception.request.body.name, 'Max Mustermann')
+            })
+        })
+    })
+
+    describe('Error creating appointment', () => {
+        before(() => {
+            cy.intercept('POST', '/bookme/api/v1/**', { statusCode: 400, body: { error: 'not possible' } }).as('apiCheck')
+            cy.visit('/schedule/christian-gawron/test_5')
+        })
+
+        it('should show an error message', () => {
+            cy.wait(['@getUser', '@getEvent', '@getAvailable'])
+            cy.get('h6').should('contain', 'Christian Gawron')
+            cy.get('.MuiPickersDay-today').should('contain', '25')
+            cy.contains('07:00').click()
+            cy.get('[name=name]').type('Max Mustermann')
+            cy.get('[name=email]').type('mustermann.max@fh-swf.de')
+            cy.get('form').submit()
+            cy.wait('@apiCheck')
+            cy.get('.error')
         })
     })
 })
