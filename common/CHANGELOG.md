@@ -1,3 +1,10 @@
+# [@fhswf/bookme-common-v1.2.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.2.0...@fhswf/bookme-common-v1.2.1) (2021-05-28)
+
+
+### Bug Fixes
+
+* **build:** fix build of bookme-common ([01f4a8e](https://github.com/fhswf/book_me/commit/01f4a8e5475c8f425a0857b571b4735b1ddeb8b5))
+
 # [@fhswf/bookme-common-v1.2.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.1.0...@fhswf/bookme-common-v1.2.0) (2021-05-28)
 
 
