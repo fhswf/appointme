@@ -29,10 +29,17 @@ jobs:
 
       # Install package dependencies
       - name: Install
+        working-directory: common
         run: npm ci
+
+      # Build
+      - name: Build
+        working-directory: common
+        run: npm run-script build
 
       # Run tests
       - name: Test
+        working-directory: common
         run: npm test
 
   release:
@@ -57,7 +64,7 @@ jobs:
 
       - name: Build
         working-directory: common
-        run: npm build
+        run: npm run-script build
 
       - name: Release
         working-directory: common
