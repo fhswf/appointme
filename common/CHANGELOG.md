@@ -1,3 +1,10 @@
+# [@fhswf/bookme-common-v1.2.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.1.0...@fhswf/bookme-common-v1.2.0) (2021-05-28)
+
+
+### Features
+
+* **event type:** add min/max timespan for events, add maximum number of events per day ([59454e7](https://github.com/fhswf/book_me/commit/59454e7169da395f2bd071e77fb74f0eadf6557f))
+
 # [@fhswf/bookme-common-v1.1.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.0.0...@fhswf/bookme-common-v1.1.0) (2021-05-24)
 
 
