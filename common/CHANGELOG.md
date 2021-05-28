@@ -1,3 +1,10 @@
+# [@fhswf/bookme-common-v1.3.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.2.1...@fhswf/bookme-common-v1.3.0) (2021-05-28)
+
+
+### Features
+
+* **event type:** remove deprecated fields ([4f85047](https://github.com/fhswf/book_me/commit/4f85047cf3f0520873785011b8071308218c7880))
+
 # [@fhswf/bookme-common-v1.2.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-common-v1.2.0...@fhswf/bookme-common-v1.2.1) (2021-05-28)
 
 
