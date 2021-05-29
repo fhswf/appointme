@@ -2,10 +2,9 @@
  * @module routers/events
  */
 
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
 
-const {
+import {
   addEventController,
   getEventListController,
   deleteEventController,
@@ -13,11 +12,12 @@ const {
   updateEventController,
   getActiveEventsController,
   getEventByUrl,
-  getAvailableTimesForDay,
-} = require("../controller/event_controller");
+  getAvailableTimes,
+} from "../controller/event_controller";
 
-const { requireAuth } = require("../handlers/middleware");
+import { requireAuth } from "../handlers/middleware";
 
+const router = Router();
 /**
  * Route to add a new event.
  * @name post/addEvent
@@ -94,6 +94,6 @@ router.get("/getEventBy", getEventByUrl);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get("/getAvailable", getAvailableTimesForDay);
+router.get("/getAvailable", getAvailableTimes);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { Day, Event, Slot, Slots } from '@fhswf/bookme-common'
+import { Day, Event } from '@fhswf/bookme-common'
 
 
 
@@ -43,11 +43,6 @@ const eventSchema = new Schema<EventDocument>({
   isActive: {
     type: Boolean,
     default: false,
-  },
-
-  rangedays: {
-    type: Number,
-    default: 30,
   },
 
   calendardays: {
@@ -97,6 +92,20 @@ const eventSchema = new Schema<EventDocument>({
       default: [{ start: "8:00", end: "17:00" }],
     },
   },
+
+  minFuture: {
+    type: Number,
+    default: 2 * 86400,
+  },
+  maxFuture: {
+    type: Number,
+    default: 60 * 86400,
+  },
+  maxPerDay: {
+    type: Number,
+    default: 2,
+  },
+
 });
 
 eventSchema.index({ user: 1, url: 1 }, { unique: true });
