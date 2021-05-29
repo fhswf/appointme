@@ -50,6 +50,7 @@ jobs:
           node-version: 14.x
 
       - name: Install
+        working-directory: backend
         run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
