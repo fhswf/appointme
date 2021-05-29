@@ -16,6 +16,7 @@ type ChooseTimeProps = {
   slots: IntervalSet;
   duration: number;
   step?: number;
+  language: string;
   onSelect?: (time: TimeRange) => void;
 };
 
@@ -42,7 +43,11 @@ const ChooseTime = (props: ChooseTimeProps) => {
     }
     return times.map((time) => (
       <Chip
-        label={time.toLocaleTimeString().substring(0, 5)}
+        label={time
+          .toLocaleTimeString(props.language, {
+            timeStyle: "short",
+          })
+          .substring(0, 5)}
         onClick={handleClick(time)}
         color={
           selected && time.getTime() === selected.start.getTime()

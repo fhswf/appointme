@@ -397,6 +397,7 @@ const Schedule = (props: any) => {
                 <ChooseTime
                   slots={daySlots}
                   duration={event.duration}
+                  language={i18n.language}
                   onSelect={handleTime}
                 />
               </Box>
