@@ -49,7 +49,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "npx cypress run --spec cypress/integration/**/*.spec.js --record --key 88afd77b-9ecd-4def-9995-259a30ff168c",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
+    "cypress": "^7.4.0",
     "dotenv-cli": "^4.0.0",
     "i18next-parser": "^4.0.1",
     "i18next-scanner": "^3.0.0",
