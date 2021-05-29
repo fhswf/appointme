@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
 
 import { Grid, TextField } from "@material-ui/core";
-import { insertIntoGoogle } from "../helpers/services/google_services";
 import { Event } from "@fhswf/bookme-common";
-import { useTranslation, Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export type BookingFormData = {
   name: string;
@@ -22,12 +20,7 @@ export type BookDetailsProps = {
 };
 
 const BookDetails = (props: BookDetailsProps) => {
-  const history = useHistory();
-  const { t, i18n } = useTranslation();
-  const start = props.start;
-  const userid = props.userid;
-  const username = props.username;
-  const event = props.event;
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState<BookingFormData>({
     name: "",
@@ -35,16 +28,9 @@ const BookDetails = (props: BookDetailsProps) => {
     description: "",
   });
 
-  const { name, email, description } = formData;
-
   const handleOnChange = (text) => (event) => {
     setFormData({ ...formData, [text]: event.target.value });
     props.onChange(formData);
-  };
-
-  const handleBackClick = (event) => {
-    event.preventDefault();
-    history.goBack();
   };
 
   return (

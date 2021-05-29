@@ -1,7 +1,6 @@
-import React from "react";
-import { useLocation, Link as RouterLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { Button, Container, Link, Paper, Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { Event, TimeRange, User } from "@fhswf/bookme-common";
 import { useTranslation, Trans } from "react-i18next";
 
@@ -18,7 +17,6 @@ const Finished = (props: FinishedProps) => {
   const { t, i18n } = useTranslation();
   console.log(location.state);
   const time = location.state.time as TimeRange;
-  const event = location.state.event;
   const user = location.state.user;
 
   return (

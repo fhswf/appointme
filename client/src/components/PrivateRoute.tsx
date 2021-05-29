@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Route,
-  Redirect,
-  useHistory,
-  RouteProps,
-  RouteComponentProps,
-} from "react-router-dom";
+import { Route, Redirect, useHistory, RouteProps } from "react-router-dom";
 import { isAuthenticated, signout } from "../helpers/helpers";
 import { getUserByToken } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";

@@ -1,28 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { signout } from "../helpers/helpers";
-import { updateEvent } from "../helpers/services/event_services";
+import React, { useState } from "react";
 
-import { Chip, Grid } from "@material-ui/core";
+import { Chip } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { getUsersEvents } from "../helpers/services/event_services";
-import { EventCard } from "./EventCard";
-import { Event, IntervalSet, TimeRange } from "@fhswf/bookme-common";
-import { EventDocument } from "../helpers/EventDocument";
-import {
-  addDays,
-  addMonths,
-  addMinutes,
-  format,
-  isBefore,
-  isAfter,
-  isSameDay,
-  startOfDay,
-  startOfMonth,
-  endOfDay,
-  endOfMonth,
-} from "date-fns";
+import { IntervalSet, TimeRange } from "@fhswf/bookme-common";
+import { addMinutes } from "date-fns";
 
 export const useStyles = makeStyles((theme) => ({
   delete: {
@@ -63,7 +45,7 @@ const ChooseTime = (props: ChooseTimeProps) => {
         label={time.toLocaleTimeString().substring(0, 5)}
         onClick={handleClick(time)}
         color={
-          selected && time.getTime() == selected.start.getTime()
+          selected && time.getTime() === selected.start.getTime()
             ? "primary"
             : "default"
         }

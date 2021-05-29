@@ -1,21 +1,12 @@
-import React, {
-  useCallback,
-  useRef,
-  useState,
-  useEffect,
-  useContext,
-  MouseEventHandler,
-} from "react";
+import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { isAuthenticated, signout } from "../helpers/helpers";
-import { toast, ToastContainer } from "react-toastify";
 
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -28,9 +19,7 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import LinkIcon from "@material-ui/icons/Link";
 import LoginIcon from "@material-ui/icons/Login";
 import LogoutIcon from "@material-ui/icons/Logout";
-import MenuIcon from "@material-ui/icons/Menu";
 import PersonIcon from "@material-ui/icons/Person";
-import SettingsIcon from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,10 +40,7 @@ const AppNavbar = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [snack, setSnack] = React.useState<string | null>(null);
 
-  const token = JSON.parse(localStorage.getItem("access_token") as string);
   const link = user ? process.env.REACT_APP_URL + "users/" + user.user_url : "";
-
-  const menu = useRef(null);
 
   console.log("AppNavbar: user=%o", user);
 
@@ -81,8 +67,6 @@ const AppNavbar = () => {
   const handleOnClick = (target: string) => () => history.push(target);
 
   const menuId = "primary-search-account-menu";
-
-  const isMenuOpen = Boolean(anchorEl);
 
   const handleMenuClose = () => {
     setAnchorEl(null);

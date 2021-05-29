@@ -1,16 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router";
 import { toast } from "react-toastify";
 import { signout } from "../helpers/helpers";
 
 import { Container } from "@material-ui/core";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
-import { Day, EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event } from "@fhswf/bookme-common";
 import { EventForm } from "../components/EventForm";
 import { UserContext } from "../components/PrivateRoute";
 

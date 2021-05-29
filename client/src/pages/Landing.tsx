@@ -1,7 +1,7 @@
 import React from "react";
 
 import { isAuthenticated } from "../helpers/helpers";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
 import Paper from "@material-ui/core/Paper";

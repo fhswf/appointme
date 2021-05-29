@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { deleteEvent } from "../helpers/services/event_services";
@@ -10,19 +10,14 @@ import {
   CardHeader,
   Grid,
   IconButton,
-  Link,
   Snackbar,
   Switch,
 } from "@material-ui/core";
-import {
-  experimentalStyled as styled,
-  makeStyles,
-} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "@material-ui/lab";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import ShareIcon from "@material-ui/icons/Share";
-import { Event } from "@fhswf/bookme-common";
 import { EventDocument } from "../helpers/EventDocument";
 
 const useStyles = makeStyles({

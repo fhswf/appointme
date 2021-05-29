@@ -11,7 +11,7 @@ export const TimesForDay = (props) => {
   useEffect(() => {
     if (props.start) setStart(props.start);
     if (props.end) setEnd(props.end);
-  });
+  }, [props.start, props.end]);
 
   const cbStartTime = (event) => {
     setStart(event.target.value);

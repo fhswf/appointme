@@ -11,9 +11,7 @@ import {
   CardContent,
   Container,
   Grid,
-  IconButton,
   Typography,
-  Fab,
   CardActions,
   Button,
 } from "@material-ui/core";
@@ -24,7 +22,6 @@ import RoomIcon from "@material-ui/icons/Room";
 import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
 import { EventDocument } from "../helpers/EventDocument";
-import { UserDocument } from "../helpers/UserDocument";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -78,7 +75,7 @@ const Planning = (props: any) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [user_url, history]);
+  }, [user_url, history, user.name]);
 
   const handleOnClick = (bookingEvent: EventDocument) => {
     history.push({
@@ -88,7 +85,7 @@ const Planning = (props: any) => {
   };
 
   const renderEventlist = () => {
-    if (!events || events.length == 0) {
+    if (!events || events.length === 0) {
       return <h4 className="noevents">No events to book</h4>;
     } else {
       return (

@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import { isAuthenticated, authenticate } from "../helpers/helpers";
-import { Redirect, Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { GoogleLogin } from "react-google-login";
-import { postGoogleLogin, postLogin } from "../helpers/services/auth_services";
-import { Button, Container, SvgIcon, TextField } from "@material-ui/core";
+import { postGoogleLogin } from "../helpers/services/auth_services";
+import { Button, Container, SvgIcon } from "@material-ui/core";
 
 const GoogleIcon = (props) => {
   return (
@@ -56,54 +54,7 @@ const Login = (props: any) => {
 
   const errorResponseGoogle = (err) => {
     console.error("google login error: %o", err);
-    toast.error("Google Login failed, please try again");
-  };
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    changeBtnTxt: "Login",
-  });
-
-  const { email, password, changeBtnTxt } = formData;
-
-  const handleChangeEvent = (text) => (event) => {
-    setFormData({ ...formData, [text]: event.target.value });
-  };
-
-  const handleOnSubmit = (event) => {
-    event.preventDefault();
-    if (email && password) {
-      setFormData({ ...formData, changeBtnTxt: "Waiting" });
-      postLogin(email, password)
-        .then((res) => {
-          authenticate(res, () => {
-            setFormData({
-              ...formData,
-              email: "",
-              password: "",
-              changeBtnTxt: "Waiting",
-            });
-            isAuthenticated();
-            toast.success(`Hey ${res.data.user.name}, Welcome back!`);
-          });
-        })
-        .catch((err) => {
-          setFormData({
-            ...formData,
-            email: "",
-            password: "",
-            changeBtnTxt: "Sign In",
-          });
-          toast.error(err.response.data.errors);
-        });
-    } else {
-      toast.error("Please fill in all fields");
-    }
-  };
-
-  const onIconClick = () => {
-    history.push("/landing");
+    //TODO: Add Snackbar and Alert
   };
 
   return (

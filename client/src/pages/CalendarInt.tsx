@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import AppNavbar from "../components/AppNavbar";
@@ -26,7 +26,6 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 
@@ -40,8 +39,7 @@ import {
 
 import EditIcon from "@material-ui/icons/Edit";
 
-import { ToastContainer, toast } from "react-toastify";
-import { Avatar } from "@material-ui/core";
+import { toast } from "react-toastify";
 import { UserContext } from "../components/PrivateRoute";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
@@ -424,7 +425,7 @@ const Booking = (props: any) => {
                 </React.Fragment>
 
                 <Grid container spacing={2}>
-                  <Grid item hidden={activeStep != 0}>
+                  <Grid item hidden={activeStep !== 0}>
                     <StaticDatePicker
                       displayStaticWrapperAs="desktop"
                       value={selectedDate}
@@ -438,7 +439,7 @@ const Booking = (props: any) => {
                     />
                   </Grid>
 
-                  <Grid item hidden={activeStep != 1}>
+                  <Grid item hidden={activeStep !== 1}>
                     {renderSlots()}
                   </Grid>
 

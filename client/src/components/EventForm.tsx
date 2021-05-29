@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import DOM from "react-dom";
 import {
   Box,
   Button,
   Divider,
-  FilledInput,
   FormControl,
   FormHelperText,
   Grid,
@@ -16,7 +14,6 @@ import {
   Paper,
   FormControlLabel,
   Checkbox,
-  FormLabel,
   FormGroup,
   makeStyles,
 } from "@material-ui/core";
@@ -61,7 +58,7 @@ const EditSlot = (props: EditSlotProps) => {
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       // ensure at least one entry
-      if (slots.length == 0) {
+      if (slots.length === 0) {
         const _slots = [{ start: "09:00", end: "17:00" }];
         setSlots(_slots);
         props.onChange(_slots);

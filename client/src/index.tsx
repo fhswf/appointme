@@ -4,17 +4,9 @@ import ReactDOM from "react-dom";
 //import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import {
-  BrowserRouter,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 import App from "./pages/App";
-import Register from "./pages/Register";
-import Activate from "./pages/Activate";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import AddEvent from "./pages/AddEvent";
@@ -25,7 +17,6 @@ import Booking from "./pages/Booking";
 import EditEvent from "./pages/EditEvent";
 import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
-import BookDetails from "./components/BookDetails";
 import Finished, { FinishedProps } from "./pages/Finished";
 import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
@@ -113,11 +104,6 @@ ReactDOM.render(
               />
 
               <Route
-                path="/register"
-                exact
-                render={(props) => <Register {...props} />}
-              />
-              <Route
                 path="/login"
                 exact
                 render={(props) => <Login {...props} />}
@@ -126,11 +112,6 @@ ReactDOM.render(
                 path="/landing"
                 exact
                 render={(props) => <Landing {...props} />}
-              />
-              <Route
-                path="/activate/:token"
-                exact
-                render={(props) => <Activate {...props} />}
               />
               <Route
                 path="/schedule/:user_url/:url"

@@ -3,15 +3,7 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import EventList from "../components/EventList";
 import AppNavbar from "../components/AppNavbar";
 
-import {
-  Box,
-  Button,
-  Container,
-  Fab,
-  Grid,
-  Link,
-  Typography,
-} from "@material-ui/core";
+import { Box, Container, Fab, Grid, Link, Typography } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 

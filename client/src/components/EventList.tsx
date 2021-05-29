@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
-import { Event } from "@fhswf/bookme-common";
 import { EventDocument } from "../helpers/EventDocument";
 
 export const useStyles = makeStyles((theme) => ({
@@ -45,7 +44,7 @@ const EventList = (props: EventListProps) => {
   };
 
   const list =
-    events.length == 0 ? (
+    events.length === 0 ? (
       <div>No events yet, create one</div>
     ) : (
       events.map((event, index) => (
