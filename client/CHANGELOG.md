@@ -1,3 +1,10 @@
+# [@fhswf/bookme-client-v1.0.4](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.3...@fhswf/bookme-client-v1.0.4) (2021-05-29)
+
+
+### Bug Fixes
+
+* **error handling:** catch backend errors when querying available slots ([bc07116](https://github.com/fhswf/book_me/commit/bc07116a28326450179796b6a9f119160b0c2c96))
+
 # [@fhswf/bookme-client-v1.0.3](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.2...@fhswf/bookme-client-v1.0.3) (2021-05-28)
 
 
