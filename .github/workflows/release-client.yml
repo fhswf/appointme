@@ -25,7 +25,6 @@ jobs:
         working-directory: client
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cypress run
@@ -35,8 +34,7 @@ jobs:
           build: npm run-script build
           start: npm start
         env:
-          NPM_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           
@@ -59,17 +57,16 @@ jobs:
         working-directory: client
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         working-directory: client
         run: npm run-script build
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
 
       - name: Release
         working-directory: client
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}

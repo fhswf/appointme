@@ -53,7 +53,7 @@ jobs:
         working-directory: backend
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
         working-directory: backend

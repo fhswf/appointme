@@ -343,10 +343,10 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               <TextField
                 id="rangedays"
                 label="Days in advance"
-                value={formData.rangedays}
+                //value={formData.rangedays}
                 type="number"
                 variant="filled"
-                onChange={handleOnChange("rangedays")}
+                //onChange={handleOnChange("rangedays")}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">Days</InputAdornment>
@@ -365,8 +365,8 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 <Select
                   labelId="weekend-label"
                   id="weekend"
-                  value={formData.calendardays ? 1 : 0}
-                  onChange={handleSelect("calendardays")}
+                  //value={formData.calendardays ? 1 : 0}
+                  //onChange={handleSelect("calendardays")}
                 >
                   <MenuItem value={0}>Working Days</MenuItem>
                   <MenuItem value={1}>All Days</MenuItem>
