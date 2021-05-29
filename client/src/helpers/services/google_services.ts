@@ -1,5 +1,4 @@
 import axios from "axios";
-import moment from "moment";
 
 export async function deleteAccess(token) {
   const response = await axios.delete(

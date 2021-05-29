@@ -13,7 +13,6 @@ import {
   Typography,
   Link,
   CircularProgress,
-  LinearProgress,
   Snackbar,
   Alert,
 } from "@material-ui/core";
@@ -134,7 +133,6 @@ const Schedule = (props: any) => {
 
   const [user, setUser] = useState<UserDocument>();
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
-  const [timezone, setTimezone] = useState<string>("Europe/Berlin");
   const [selectedDate, setDate] = useState<Date | null>(null);
   const [selectedTime, setTime] = useState<TimeRange | null>(null);
   const [beginDate, setBeginDate] = useState<Date>(new Date());
@@ -195,7 +193,7 @@ const Schedule = (props: any) => {
           });
         });
     }
-  }, [user, event, beginDate]);
+  }, [user, event, beginDate, selectedDate]);
 
   const handleErrorClose = () => {
     history.push("/");

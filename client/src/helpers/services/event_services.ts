@@ -1,5 +1,4 @@
 import axios from "axios";
-import { GoogleTokens } from "../../../../backend/models/User";
 import { Event, IntervalSet } from "@fhswf/bookme-common";
 
 export async function saveUserEvent(
