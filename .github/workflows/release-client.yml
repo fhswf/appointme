@@ -21,10 +21,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install
+        working-directory: client
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
           working-directory: client
+          install: false
           build: npm run-script build
           start: npm start
         env:
