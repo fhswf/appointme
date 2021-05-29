@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.1.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.0.1...@fhswf/bookme-backend-v1.1.0) (2021-05-29)
+
+
+### Features
+
+* **freeBusy:** freeBusy should observe minFuture and maxFuture restrictictions of an event ([a670b7d](https://github.com/fhswf/book_me/commit/a670b7d8eadf01547009c35121bbe3062b545931))
+
 # [@fhswf/bookme-backend-v1.0.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.0.0...@fhswf/bookme-backend-v1.0.1) (2021-05-26)
 
 
