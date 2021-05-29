@@ -43,11 +43,10 @@ const ChooseTime = (props: ChooseTimeProps) => {
     }
     return times.map((time) => (
       <Chip
-        label={time
-          .toLocaleTimeString(props.language, {
-            timeStyle: "short",
-          })
-          .substring(0, 5)}
+        label={time.toLocaleTimeString(props.language, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
         onClick={handleClick(time)}
         color={
           selected && time.getTime() === selected.start.getTime()
