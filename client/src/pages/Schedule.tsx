@@ -174,19 +174,26 @@ const Schedule = (props: any) => {
         addDays(addMonths(beginDate, 1), 1),
         event.url,
         user._id
-      ).then((slots) => {
-        console.log("slots %o", slots);
-        setSlots(slots);
-        if (selectedDate == null) {
-          console.log("setDate: %o", slots[0].start);
-          let dayInt = new IntervalSet(
-            startOfDay(slots[0].start),
-            endOfDay(slots[0].start)
-          );
-          setDaySlots(dayInt.intersect(slots));
-          setDate(slots[0].start);
-        }
-      });
+      )
+        .then((slots) => {
+          console.log("slots %o", slots);
+          setSlots(slots);
+          if (selectedDate == null) {
+            console.log("setDate: %o", slots[0].start);
+            let dayInt = new IntervalSet(
+              startOfDay(slots[0].start),
+              endOfDay(slots[0].start)
+            );
+            setDaySlots(dayInt.intersect(slots));
+            setDate(slots[0].start);
+          }
+        })
+        .catch((err) => {
+          setError({
+            message: "could not get available time slots",
+            details: err,
+          });
+        });
     }
   }, [user, event, beginDate]);
 
