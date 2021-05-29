@@ -14,26 +14,18 @@ jobs:
     strategy:
       matrix:
         # Run the steps below with the following versions of Node.js
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
       # Fetch the latest commit
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Setup Node.js using the appropriate version
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
         with:
-          node-version: ${{ matrix.node-version }}
-
-      # Install package dependencies
-      - name: Install
-        run: npm ci
-
-      # Run tests
-      - name: Test
-        run: npm test
+          build: npm run build
+          start: npm start
 
   release:
     # Only release on push to master
@@ -47,10 +39,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
 
       - name: Install
+        working-directory: client
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        working-directory: client
+        run: npm run-script build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
