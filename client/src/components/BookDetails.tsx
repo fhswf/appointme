@@ -16,6 +16,7 @@ export type BookDetailsProps = {
   userid: string;
   username: string;
   event: Event;
+  errors: any;
   onChange: (form: BookingFormData) => void;
 };
 
@@ -37,8 +38,10 @@ const BookDetails = (props: BookDetailsProps) => {
     <Grid container alignItems="stretch" direction="column">
       <Grid item>
         <TextField
+          id="name"
           name="name"
           label={t("Name")}
+          error={"name" in props.errors}
           required
           fullWidth
           helperText={t("Please provide your name")}
@@ -50,9 +53,11 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
+          id="email"
           name="email"
           label={t("Email")}
           type="email"
+          error={"email" in props.errors}
           required
           fullWidth
           helperText={t("You will receive a confirmation email")}
@@ -64,9 +69,11 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
-          name=""
+          id="info"
+          name="info"
           label={t("Information")}
           multiline
+          error={"info" in props.errors}
           minRows="4"
           helperText={t(
             "Please share anything that will help me to prepare for our meeting"

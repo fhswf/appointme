@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
 
@@ -140,6 +140,7 @@ const Schedule = (props: any) => {
   const [daySlots, setDaySlots] = useState<IntervalSet>(new IntervalSet());
   const [details, setDetails] = useState<BookingFormData | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [validationErrors, setValidationErrors] = useState<any>({});
 
   useEffect(() => {
     getUserByUrl(data.user_url)
@@ -260,6 +261,18 @@ const Schedule = (props: any) => {
     setDetails(data);
   };
 
+  const handleInvalid = (e: FormEvent<HTMLElement>) => {
+    e.preventDefault();
+    console.log("formInvalid: %o", e);
+
+    if (e.target instanceof HTMLElement) {
+      const element = e.target;
+      if (element.id) {
+        setValidationErrors({ ...validationErrors, [element.id]: e.type });
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     console.log("submit: %o", details);
     e.preventDefault();
@@ -313,13 +326,14 @@ const Schedule = (props: any) => {
                 <Link onClick={() => setTime(null)}>{t("Change")}</Link>
               </Typography>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} onInvalid={handleInvalid}>
                 <BookDetails
                   userid={user._id}
                   username={user.name}
                   event={event}
                   start={selectedTime.start}
                   end={selectedTime.end}
+                  errors={validationErrors}
                   onChange={handleDetailChange}
                 />
                 <Grid container justifyContent="space-between" padding={2}>

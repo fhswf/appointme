@@ -452,6 +452,7 @@ const Booking = (props: any) => {
                           event={event}
                           start={selectedTime}
                           end={addMinutes(selectedTime, event.duration)}
+                          errors={{}}
                           onChange={handleDetailChange}
                         />
                       ) : (
