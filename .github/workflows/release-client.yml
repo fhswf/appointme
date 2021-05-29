@@ -27,6 +27,7 @@ jobs:
           working-directory: client
           build: npm run-script build
           start: npm start
+          record: true
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
