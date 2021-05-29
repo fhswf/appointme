@@ -53,13 +53,6 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install
-        working-directory: client
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build
         working-directory: client
         run: npm run-script build
