@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Grid, TextField } from "@material-ui/core";
 import { Event } from "@fhswf/bookme-common";
 import { useTranslation } from "react-i18next";
+import React from "react";
+import { eventManager } from "react-toastify/dist/core";
 
 export type BookingFormData = {
   name: string;
@@ -29,9 +31,24 @@ const BookDetails = (props: BookDetailsProps) => {
     description: "",
   });
 
+  const nameRef = React.createRef();
+  const emailRef = React.createRef();
+  const descriptionRef = React.createRef();
+  const inputs = {
+    name: nameRef,
+    email: emailRef,
+    description: descriptionRef,
+  };
+
   const handleOnChange = (text) => (event) => {
-    setFormData({ ...formData, [text]: event.target.value });
-    props.onChange(formData);
+    const newData = { ...formData, [text]: event.target.value };
+    setFormData(newData);
+    console.log(
+      "BookDetails: formData=%o %o",
+      formData,
+      inputs[event.target.id].current.value
+    );
+    props.onChange(newData);
   };
 
   return (
@@ -42,6 +59,7 @@ const BookDetails = (props: BookDetailsProps) => {
           name="name"
           label={t("Name")}
           error={"name" in props.errors}
+          inputRef={nameRef}
           required
           fullWidth
           helperText={t("Please provide your name")}
@@ -58,6 +76,7 @@ const BookDetails = (props: BookDetailsProps) => {
           label={t("Email")}
           type="email"
           error={"email" in props.errors}
+          inputRef={emailRef}
           required
           fullWidth
           helperText={t("You will receive a confirmation email")}
@@ -69,9 +88,10 @@ const BookDetails = (props: BookDetailsProps) => {
       </Grid>
       <Grid item>
         <TextField
-          id="info"
-          name="info"
+          id="description"
+          name="description"
           label={t("Information")}
+          inputRef={descriptionRef}
           multiline
           error={"info" in props.errors}
           minRows="4"
