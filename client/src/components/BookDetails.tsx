@@ -4,7 +4,6 @@ import { Grid, TextField } from "@material-ui/core";
 import { Event } from "@fhswf/bookme-common";
 import { useTranslation } from "react-i18next";
 import React from "react";
-import { eventManager } from "react-toastify/dist/core";
 
 export type BookingFormData = {
   name: string;
