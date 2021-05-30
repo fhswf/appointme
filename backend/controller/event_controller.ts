@@ -5,7 +5,7 @@
  */
 import { EventDocument, EventModel } from "../models/Event";
 import { Day, Event, IntervalSet, Slot } from "@fhswf/bookme-common";
-import { freeBusy } from "./google_controller";
+import { freeBusy, events } from "./google_controller";
 import { ValidationError, validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler";
 import { addMinutes, startOfHour, parseISO, parse } from 'date-fns';
@@ -44,38 +44,42 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
         timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture))
         timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture))
         console.log("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
-        freeBusy(userid, timeMin.toISOString(), timeMax.toISOString(), event)
-          .then(res => {
-            let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
-            for (const key in res.data.calendars) {
-              const calIntervals = new IntervalSet();
-              let current = timeMin;
-              for (const busy of res.data.calendars[key].busy) {
-                console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
-                const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-                const _end = addMinutes(new Date(busy.end), event.bufferafter);
-                if (current < _start)
-                  calIntervals.push({ start: current, end: _start });
-                current = _end;
-              }
-              if (current < timeMax) {
-                calIntervals.push({ start: current, end: timeMax });
-              }
-              freeSlots = freeSlots.intersect(calIntervals)
-            }
-            console.log('freeBusy: %j', freeSlots);
-            return freeSlots;
-          })
-          .catch(err => {
-            console.error('freebusy failed: %o', err);
-            throw err;
-          })
-          .then(slots => {
-            res.status(200).json(slots);
-          })
-          .catch(err => {
-            console.error('freeBusy failed: %o', err);
-            res.status(400).json({ error: <unknown>err });
+        return events(userid, timeMin.toISOString(), timeMax.toISOString())
+          .then(events => {
+            console.log('list events: %o', events)
+            freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
+              .then(res => {
+                let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+                for (const key in res.data.calendars) {
+                  const calIntervals = new IntervalSet();
+                  let current = timeMin;
+                  for (const busy of res.data.calendars[key].busy) {
+                    console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+                    const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
+                    const _end = addMinutes(new Date(busy.end), event.bufferafter);
+                    if (current < _start)
+                      calIntervals.push({ start: current, end: _start });
+                    current = _end;
+                  }
+                  if (current < timeMax) {
+                    calIntervals.push({ start: current, end: timeMax });
+                  }
+                  freeSlots = freeSlots.intersect(calIntervals)
+                }
+                console.log('freeBusy: %j', freeSlots);
+                return freeSlots;
+              })
+              .catch(err => {
+                console.error('freebusy failed: %o', err);
+                throw err;
+              })
+              .then(slots => {
+                res.status(200).json(slots);
+              })
+              .catch(err => {
+                console.error('freeBusy failed: %o', err);
+                res.status(400).json({ error: <unknown>err });
+              })
           });
       }
       catch (err) {
@@ -105,6 +109,7 @@ export const addEventController = (req: Request, res: Response): void => {
   console.log('event: %j', event)
 
   if (!errors.isEmpty()) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     const newError = errors.array().map<any>((error: ValidationError) => error.msg)[0];
     res.status(422).json({ error: newError });
   } else {

@@ -4,14 +4,15 @@
  */
 
 
-import { addMinutes, parseISO, parse } from 'date-fns';
+import { addMinutes } from 'date-fns';
 //const { body } = require("express-validator");
 import { calendar_v3, google } from 'googleapis';
-import { GaxiosPromise, GaxiosResponse } from "gaxios";
-import { OAuth2Client, Credentials } from 'google-auth-library';
+import { GaxiosResponse, GaxiosPromise } from "gaxios";
+import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { UserModel, User, GoogleTokens } from "../models/User";
+import { UserModel, User } from "../models/User";
 import { Request, Response } from 'express';
+import { EventDocument } from 'models/Event';
 
 
 const oAuth2Client = new OAuth2Client({
@@ -29,7 +30,7 @@ const SCOPES = [
  * @param {request} req
  * @param {response} res
  */
-export const generateAuthUrl = (req: Request, res: Response) => {
+export const generateAuthUrl = (req: Request, res: Response): Response => {
   const userid = req.user_id;
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
@@ -57,6 +58,7 @@ export const googleCallback = (req: Request, res: Response): void => {
         res.redirect(`${process.env.CLIENT_URL}/integration/select`);
       })
       .catch(error => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         res.status(400).json({ message: "Error retrieving access token", error });
       });
   } else {
@@ -108,13 +110,15 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
           res.json({ success: true, message: "Event wurde gebucht", event });
         })
         .catch(error => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           res.status(400).json({ error });
         })
     })
     .catch(error => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       res.status(400).json({ error });
     })
-};
+}
 
 /**
  * Middleware function to delete an google Access Token from a user
@@ -174,27 +178,52 @@ export async function getCalendarList(req: Request, res: Response): Promise<void
       res.json(list);
     })
     .catch(error => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       res.status(400).json({ error });
     })
 }
 
 
+export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
+  return UserModel.findOne({ _id: user_id })
+    .then((user: User) => {
+      const google_tokens = user.google_tokens;
+      oAuth2Client.setCredentials(google_tokens);
+      const items = user.pull_calendars.map(id => { return { id } });
+      const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+      return calendar.freebusy.query({
+        requestBody: {
+          timeMin,
+          timeMax,
+          items
+        }
+      })
+    })
+}
 
-export const freeBusy = async (user_id: string, timeMin: string, timeMax: string, event) => {
-  const user: User = await UserModel.findOne({ _id: user_id });
-  const google_tokens = user.google_tokens;
-  console.log('freeBusy: tokens: %o', google_tokens);
-  oAuth2Client.setCredentials(google_tokens);
-  const items = user.pull_calendars.map(id => { return { id } });
-  console.log('freeBusy: item=%o', items);
-  const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
-  return calendar.freebusy.query({
-    requestBody: {
-      timeMin,
-      timeMax,
-      items
-    }
-  })
+export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
+  return UserModel.findOne({ _id: user_id })
+    .then((user: User) => {
+      return getAuth(user_id)
+        .then(auth => {
+          const google_tokens = user.google_tokens;
+          oAuth2Client.setCredentials(google_tokens);
+          const calendar = google.calendar({ version: "v3", auth });
+          return calendar.events.list({
+            calendarId: user.push_calendar,
+            timeMin,
+            timeMax,
+            singleEvents: true
+          })
+        })
+        .then(response => {
+          return response.data.items
+        })
+        .catch(err => {
+          console.log('error in calendar.events.list: %o', err)
+          return []
+        })
+    })
 }
 
 function deleteTokens(userid: string) {

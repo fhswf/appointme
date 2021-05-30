@@ -36,7 +36,7 @@ const ChooseTime = (props: ChooseTimeProps) => {
     let times = [];
     for (
       let time = slot.start;
-      addMinutes(time, props.duration) < slot.end;
+      addMinutes(time, props.duration) <= slot.end;
       time = addMinutes(time, props.step)
     ) {
       times.push(time);
