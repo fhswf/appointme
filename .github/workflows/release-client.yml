@@ -55,6 +55,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install
+        working-directory: client
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Release
         working-directory: client
         run: npx semantic-release
