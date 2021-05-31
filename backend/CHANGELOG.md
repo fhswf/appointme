@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.2.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.1.0...@fhswf/bookme-backend-v1.2.0) (2021-05-31)
+
+
+### Features
+
+* **freeBusy:** check maxPerDay constraint ([ad49b95](https://github.com/fhswf/book_me/commit/ad49b957181a2717b179b4c52ce4ab84f1ddca34))
+
 # [@fhswf/bookme-backend-v1.1.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.0.1...@fhswf/bookme-backend-v1.1.0) (2021-05-29)
 
 
