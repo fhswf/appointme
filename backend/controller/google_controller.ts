@@ -12,7 +12,6 @@ import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
 import { UserModel, User } from "../models/User";
 import { Request, Response } from 'express';
-import { EventDocument } from 'models/Event';
 
 
 const oAuth2Client = new OAuth2Client({
@@ -137,7 +136,8 @@ export const revokeScopes = (req: Request, res: Response): void => {
         deleteTokens(userid);
       } else {
         oAuth2Client.revokeToken(tokens.access_token)
-          .then(value => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .then(_value => {
             deleteTokens(userid);
           })
           .catch(err => {

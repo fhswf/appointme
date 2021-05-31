@@ -4,12 +4,11 @@
  * @module event_controller
  */
 import { EventDocument, EventModel } from "../models/Event";
-import { Day, Event, IntervalSet, Slot } from "@fhswf/bookme-common";
+import { Event, IntervalSet } from "@fhswf/bookme-common";
 import { freeBusy, events } from "./google_controller";
 import { ValidationError, validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler";
-import { addMinutes, startOfHour, parseISO, parse } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
@@ -40,16 +39,40 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   )
     .then(event => {
       try {
-        console.log('now + ...: %o %o', Date.now() + 1000 * event.minFuture, event.minFuture)
+        // Calculate intersection of requested and 'feasible' tome interval
         timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture))
         timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture))
         console.log("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
+
+        // Request currently booked events. We need them for the maxPerDay restriction
         return events(userid, timeMin.toISOString(), timeMax.toISOString())
           .then(events => {
+            // Calculate number of booked events per day
             console.log('list events: %o', events)
-            freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
+            const days = {}
+            const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }])
+            events.forEach(evt => {
+              const day = startOfDay(new Date(evt.start.dateTime)).toISOString()
+              if (day in days) {
+                days[day] += 1
+              }
+              else {
+                days[day] = 1
+              }
+            })
+            for (const day in days) {
+              if (days[day] >= event.maxPerDay) {
+                blocked.addRange({ start: new Date(day), end: addDays(new Date(day), 1) })
+              }
+            }
+            console.log("blocked: %o", blocked)
+            console.log("free: %o", blocked.inverse())
+
+            // Now query freeBusy service
+            return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
               .then(res => {
                 let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+                freeSlots = freeSlots.intersect(blocked.inverse())
                 for (const key in res.data.calendars) {
                   const calIntervals = new IntervalSet();
                   let current = timeMin;
@@ -66,7 +89,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
                   }
                   freeSlots = freeSlots.intersect(calIntervals)
                 }
-                console.log('freeBusy: %j', freeSlots);
+                //console.log('freeBusy: %j', freeSlots);
                 return freeSlots;
               })
               .catch(err => {
@@ -109,8 +132,7 @@ export const addEventController = (req: Request, res: Response): void => {
   console.log('event: %j', event)
 
   if (!errors.isEmpty()) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    const newError = errors.array().map<any>((error: ValidationError) => error.msg)[0];
+    const newError = errors.array().map<unknown>((error: ValidationError) => error.msg)[0];
     res.status(422).json({ error: newError });
   } else {
     const eventToSave = new EventModel(event);
@@ -230,7 +252,7 @@ export const updateEventController = (req: Request, res: Response): void => {
     .then((doc: EventDocument) => {
       res.status(200).json({ msg: "Update successful", event: doc })
     })
-    .catch((err: any) => {
+    .catch((err: unknown) => {
       res.status(400).json({ error: err });
     });
 
