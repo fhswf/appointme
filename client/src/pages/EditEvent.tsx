@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AppNavbar from "../components/AppNavbar";
 
-import { Container } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 
 import { toast } from "react-toastify";
 import { getEventByID, updateEvent } from "../helpers/services/event_services";
@@ -58,7 +58,9 @@ const EditEvent = (props: EditEventProps): JSX.Element => {
       <AppNavbar />
 
       <Container maxWidth="md">
-        <h2>Edit Event Type</h2>
+        <Typography component="h1" variant="h3" gutterBottom>
+          Edit Event Type
+        </Typography>
         <EventForm
           event={formData ? formData : EMPTY_EVENT}
           handleOnSubmit={saveEvent}

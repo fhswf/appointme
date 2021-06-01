@@ -11,11 +11,13 @@ import {
   MenuItem,
   Select,
   TextField,
-  Paper,
   FormControlLabel,
   Checkbox,
   FormGroup,
   makeStyles,
+  Typography,
+  Stack,
+  Input,
 } from "@material-ui/core";
 import { Add, Delete } from "@material-ui/icons";
 import { EventFormProps } from "../pages/EditEvent";
@@ -23,13 +25,13 @@ import { Day, DayNames, Event, Slot } from "@fhswf/bookme-common";
 
 export const useStyles = makeStyles((theme) => ({
   row: {
-    alignItems: "baseline",
+    alignItems: "center",
+    width: "100%",
   },
   label: {
     fontSize: "0.7rem",
     display: "block",
-    paddingTop: "2ex",
-    marginBottom: "-1ex",
+    //marginBottom: "-1ex",
   },
   sep: {
     padding: "0.8ex",
@@ -99,10 +101,6 @@ const EditSlot = (props: EditSlotProps) => {
 
   return (
     <>
-      <Grid item>
-        <Divider variant="middle" />
-      </Grid>
-
       <Grid item container xs={12}>
         <Grid item xs={2}>
           <FormControl>
@@ -115,37 +113,41 @@ const EditSlot = (props: EditSlotProps) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={9}>
           <Grid container>
             {slots.map((slot, index) => (
               <>
-                <Grid item xs={12}>
-                  <FormGroup row className={classes.row}>
-                    <TextField
+                <FormGroup row className={classes.row}>
+                  <Grid item xs={4} textAlign="end">
+                    <Input
                       type="time"
-                      margin="normal"
                       placeholder="Starttime"
                       onChange={changeTime("start", index)}
                       value={slot.start}
                     />
-                    <span className={classes.sep}>&nbsp;–&nbsp;</span>
-                    <TextField
+                  </Grid>
+                  <Grid item xs={2} textAlign="center">
+                    –
+                  </Grid>
+                  <Grid item xs={4} textAlign="start">
+                    <Input
                       type="time"
-                      margin="normal"
                       placeholder="Endtime"
                       onChange={changeTime("end", index)}
                       value={slot.end}
                     />
+                  </Grid>
+                  <Grid item xs={2}>
                     <Button onClick={deleteSlot(index)}>
                       <Delete />
                     </Button>
-                  </FormGroup>
-                </Grid>
+                  </Grid>
+                </FormGroup>
               </>
             ))}
           </Grid>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={1}>
           <Button onClick={addSlot}>
             <Add />
           </Button>
@@ -176,13 +178,16 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   };
 
   const handleOnChange =
-    (key: keyof Event) => (evt: ChangeEvent<HTMLInputElement>) => {
+    (key: keyof Event, mult?: number) =>
+    (evt: ChangeEvent<HTMLInputElement>) => {
       setChanged(true);
       console.log("onChange: %o", evt);
       if (key === "name" && formData.url === generateSlug(formData.name)) {
         setFormData({
           ...formData,
-          [key]: evt.target.value,
+          [key]: mult
+            ? mult * Number.parseInt(evt.target.value)
+            : evt.target.value,
           url: generateSlug(evt.target.value),
         } as Event);
       } else {
@@ -211,179 +216,200 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <Paper>
-        <Box p="2em">
-          <h3>Basic Information</h3>
-          <div>
-            <TextField
-              id="event-title"
-              type="text"
-              label="Event title"
-              required
-              fullWidth
-              margin="normal"
-              variant="filled"
-              onChange={handleOnChange("name")}
-              value={formData.name}
-            />
-          </div>
+      <Box>
+        <Typography component="h2" variant="h5">
+          Basic Information
+        </Typography>
+        <div>
+          <TextField
+            id="event-title"
+            type="text"
+            label="Event title"
+            required
+            fullWidth
+            margin="normal"
+            variant="filled"
+            onChange={handleOnChange("name")}
+            value={formData.name}
+          />
+        </div>
 
-          <div>
-            <TextField
-              label="Description"
-              helperText="What is the purpose of this appointment type?"
-              multiline
-              fullWidth
-              margin="normal"
-              variant="filled"
-              onChange={handleOnChange("description")}
-              value={formData.description}
-            />
-          </div>
+        <div>
+          <TextField
+            label="Description"
+            helperText="What is the purpose of this appointment type?"
+            multiline
+            fullWidth
+            margin="normal"
+            variant="filled"
+            onChange={handleOnChange("description")}
+            value={formData.description}
+          />
+        </div>
 
-          <div>
-            <TextField
-              label="Location"
-              placeholder="Zoom Meeting"
-              helperText="Where does the meeting take place?"
-              defaultValue="Online via Zoom"
-              margin="normal"
-              variant="filled"
-              onChange={handleOnChange("location")}
-              value={formData.location}
-            />
-          </div>
+        <div>
+          <TextField
+            label="Location"
+            placeholder="Zoom Meeting"
+            helperText="Where does the meeting take place?"
+            defaultValue="Online via Zoom"
+            margin="normal"
+            variant="filled"
+            onChange={handleOnChange("location")}
+            value={formData.location}
+          />
+        </div>
 
-          <div>
-            <TextField
-              label="Event Slug"
-              margin="normal"
-              variant="filled"
-              placeholder="awesome-meeting"
-              helperText="Customizable part of the URL"
-              onChange={handleOnChange("url")}
-              value={formData.url}
-            />
-          </div>
-        </Box>
+        <div>
+          <TextField
+            label="Event Slug"
+            margin="normal"
+            variant="filled"
+            placeholder="awesome-meeting"
+            helperText="Customizable part of the URL"
+            onChange={handleOnChange("url")}
+            value={formData.url}
+          />
+        </div>
+      </Box>
 
-        <Divider variant="middle" />
+      <Box pt="1em">
+        <Typography component="h2" variant="h5">
+          Duration
+        </Typography>
 
-        <Box pt="1em" m="2em">
-          <h3>Duration</h3>
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <FormControl margin="normal" variant="filled">
-                <InputLabel id="duration-label">Duration</InputLabel>
-                <Select
-                  labelId="duration-label"
-                  id="duration"
-                  value={formData.duration}
-                  onChange={handleSelect("duration")}
-                >
-                  <MenuItem value={15}>15 min</MenuItem>
-                  <MenuItem value={30}>30 min</MenuItem>
-                  <MenuItem value={45}>45 min</MenuItem>
-                  <MenuItem value={60}>60 min</MenuItem>
-                </Select>
-                <FormHelperText>How long is this event?</FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item container xs={12} md={8}>
-              <Grid item xs={12} sm={6}>
-                <FormControl component="span" margin="normal" variant="filled">
-                  <InputLabel id="buffer-before-label">
-                    Buffer before
-                  </InputLabel>
-                  <Select
-                    labelId="buffer-before-label"
-                    id="buffer-before"
-                    value={formData.bufferbefore}
-                    onChange={handleSelect("bufferbefore")}
-                  >
-                    <MenuItem value={0}>none</MenuItem>
-                    <MenuItem value={5}>5 min</MenuItem>
-                    <MenuItem value={15}>15 min</MenuItem>
-                    <MenuItem value={30}>30 min</MenuItem>
-                    <MenuItem value={60}>60 min</MenuItem>
-                  </Select>
-                  <FormHelperText>Buffer berfore this event</FormHelperText>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl component="span" margin="normal" variant="filled">
-                  <InputLabel id="buffer-after-label">Buffer after</InputLabel>
-                  <Select
-                    labelId="buffer-after-label"
-                    id="buffer-after"
-                    value={formData.bufferafter}
-                    onChange={handleSelect("bufferafter")}
-                  >
-                    <MenuItem value={0}>none</MenuItem>
-                    <MenuItem value={5}>5 min</MenuItem>
-                    <MenuItem value={15}>15 min</MenuItem>
-                    <MenuItem value={30}>30 min</MenuItem>
-                    <MenuItem value={60}>60 min</MenuItem>
-                  </Select>
-                  <FormHelperText>Buffer after this event</FormHelperText>
-                </FormControl>
-              </Grid>
-            </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <FormControl margin="normal" variant="filled">
+              <InputLabel id="duration-label">Duration</InputLabel>
+              <Select
+                labelId="duration-label"
+                id="duration"
+                value={formData.duration}
+                onChange={handleSelect("duration")}
+              >
+                <MenuItem value={15}>15 min</MenuItem>
+                <MenuItem value={30}>30 min</MenuItem>
+                <MenuItem value={45}>45 min</MenuItem>
+                <MenuItem value={60}>60 min</MenuItem>
+              </Select>
+              <FormHelperText>How long is this event?</FormHelperText>
+            </FormControl>
           </Grid>
-          <Divider variant="middle" />
 
-          <h3>Availability</h3>
-          <Grid container spacing={3} alignItems="flex-start">
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="rangedays"
-                label="Days in advance"
-                //value={formData.rangedays}
-                type="number"
-                variant="filled"
-                //onChange={handleOnChange("rangedays")}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Days</InputAdornment>
-                  ),
-                }}
-                aria-describedby="rangedays-helper-text"
-                inputProps={{
-                  "aria-label": "days",
-                }}
-                helperText="How many days in advance is this event available?"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl variant="filled">
-                <InputLabel id="weekend-label">Available on</InputLabel>
-                <Select
-                  labelId="weekend-label"
-                  id="weekend"
-                  //value={formData.calendardays ? 1 : 0}
-                  //onChange={handleSelect("calendardays")}
-                >
-                  <MenuItem value={0}>Working Days</MenuItem>
-                  <MenuItem value={1}>All Days</MenuItem>
-                </Select>
-                <FormHelperText>
-                  Is this event avalable on weekends?
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-
-            {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-              <EditSlot
-                day={day}
-                slots={formData.available[day as Day]}
-                onChange={onChangeSlot(day)}
-              />
-            ))}
+          <Grid item xs={12} sm={4}>
+            <FormControl component="span" margin="normal" variant="filled">
+              <InputLabel id="buffer-before-label">Buffer before</InputLabel>
+              <Select
+                labelId="buffer-before-label"
+                id="buffer-before"
+                value={formData.bufferbefore}
+                onChange={handleSelect("bufferbefore")}
+              >
+                <MenuItem value={0}>none</MenuItem>
+                <MenuItem value={5}>5 min</MenuItem>
+                <MenuItem value={15}>15 min</MenuItem>
+                <MenuItem value={30}>30 min</MenuItem>
+                <MenuItem value={60}>60 min</MenuItem>
+              </Select>
+              <FormHelperText>Buffer berfore this event</FormHelperText>
+            </FormControl>
           </Grid>
-        </Box>
-      </Paper>
+
+          <Grid item xs={12} sm={4}>
+            <FormControl component="span" margin="normal" variant="filled">
+              <InputLabel id="buffer-after-label">Buffer after</InputLabel>
+              <Select
+                labelId="buffer-after-label"
+                id="buffer-after"
+                value={formData.bufferafter}
+                onChange={handleSelect("bufferafter")}
+              >
+                <MenuItem value={0}>none</MenuItem>
+                <MenuItem value={5}>5 min</MenuItem>
+                <MenuItem value={15}>15 min</MenuItem>
+                <MenuItem value={30}>30 min</MenuItem>
+                <MenuItem value={60}>60 min</MenuItem>
+              </Select>
+              <FormHelperText>Buffer after this event</FormHelperText>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box pt="1em">
+        <Typography component="h2" variant="h5" gutterBottom>
+          Availability
+        </Typography>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              id="maxFuture"
+              label="Maximum days in advance"
+              value={formData.maxFuture / 86400}
+              type="number"
+              variant="filled"
+              onChange={handleOnChange("maxFuture", 86400)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">Days</InputAdornment>
+                ),
+              }}
+              helperText="How many days in advance is this event available?"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              id="rangedays"
+              label="Minimum days in advance"
+              value={formData.minFuture / 86400}
+              type="number"
+              variant="filled"
+              onChange={handleOnChange("minFuture", 86400)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">Days</InputAdornment>
+                ),
+              }}
+              helperText="Events cannot be scheduled less than this time in advance"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField
+              id="maxPerDay"
+              label="Maximum per day"
+              value={formData.maxPerDay}
+              type="number"
+              variant="filled"
+              onChange={handleOnChange("maxPerDay")}
+              helperText="Maximum number of events of this type per day"
+            />
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box pt="1em">
+        <Typography component="h2" variant="h5">
+          Daily availability
+        </Typography>
+
+        <Stack
+          width="fit-content"
+          margin="auto"
+          spacing={2}
+          divider={<Divider orientation="horizontal" flexItem />}
+        >
+          {[0, 1, 2, 3, 4, 5, 6].map((day) => (
+            <EditSlot
+              day={day}
+              slots={formData.available[day as Day]}
+              onChange={onChangeSlot(day)}
+            />
+          ))}
+        </Stack>
+      </Box>
+
       <Button
         variant="contained"
         type="submit"
