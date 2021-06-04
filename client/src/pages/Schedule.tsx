@@ -150,26 +150,40 @@ const Schedule = (props: any) => {
   const [validationErrors, setValidationErrors] = useState<any>({});
 
   if (!user) {
-    getUserByUrl(param.user_url).then((res) => {
-      if (res.data.length === 0) {
-        history.push("/notfound");
-      } else {
-        setUser(res.data);
-      }
-    });
+    getUserByUrl(param.user_url)
+      .then((res) => {
+        if (res.data.length === 0) {
+          history.push("/notfound");
+        } else {
+          setUser(res.data);
+        }
+      })
+      .catch((err) => {
+        setError({
+          message: "could not get user data",
+          details: err,
+        });
+      });
   }
 
   if (user && !event) {
-    getEventByUrlAndUser(user._id, param.url).then((res) => {
-      if (res.data == null) {
-        history.push("/notfound");
-      }
-      if (res.data.isActive === false) {
-        history.push("/notfound");
-      } else {
-        setEvent(res.data);
-      }
-    });
+    getEventByUrlAndUser(user._id, param.url)
+      .then((res) => {
+        if (res.data == null) {
+          history.push("/notfound");
+        }
+        if (res.data.isActive === false) {
+          history.push("/notfound");
+        } else {
+          setEvent(res.data);
+        }
+      })
+      .catch((err) => {
+        setError({
+          message: "could not get event data",
+          details: err,
+        });
+      });
   }
 
   useEffect(() => {
