@@ -24,7 +24,7 @@ const Finished = (props: FinishedProps) => {
       <Typography variant="h4" component="h1" gutterBottom>
         {t("Confirmation")}
       </Typography>
-      <p>
+      <Typography variant="body1">
         <Trans i18nKey="confirmationText">
           You booked an appointment with {{ user: user.name }} appointment on{" "}
           {{
@@ -40,7 +40,7 @@ const Finished = (props: FinishedProps) => {
           }}
           .
         </Trans>
-      </p>
+      </Typography>
     </Container>
   );
 };

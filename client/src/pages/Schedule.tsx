@@ -146,8 +146,8 @@ const Schedule = (props: any) => {
   //let user: UserDocument = null;
   //let event: Event = null;
 
-  const [selectedDate, setDate] = useState<Date | null>(null);
-  const [selectedTime, setTime] = useState<TimeRange | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<TimeRange | null>(null);
   const [beginDate, setBeginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>(new IntervalSet());
   const [daySlots, setDaySlots] = useState<IntervalSet>(new IntervalSet());
@@ -208,7 +208,7 @@ const Schedule = (props: any) => {
           endOfDay(slots[0].start)
         );
         setDaySlots(dayInt.intersect(slots));
-        setDate(slots[0].start);
+        setSelectedDate(slots[0].start);
       }
     }
   }, [selectedDate, slots]);
@@ -264,13 +264,24 @@ const Schedule = (props: any) => {
     if (user) {
       let dayInt = new IntervalSet(startOfDay(newValue), endOfDay(newValue));
       setDaySlots(dayInt.intersect(slots));
-      setDate(newValue);
+      setSelectedDate(newValue);
     }
   };
 
-  const handleTime = (time: TimeRange) => {
+  const handleTimeChange = (time: TimeRange) => {
     console.log("select slot: %o", time);
-    setTime(time);
+    //history.push(window.location.pathname, { selectedTime });
+    window.history.pushState({ time }, "Enter Details");
+    setSelectedTime(time);
+  };
+
+  window.onpopstate = (evt) => {
+    console.log("popState: %o %o", evt, evt.state);
+    if (evt.state) {
+      setSelectedTime(evt.state.time);
+    } else {
+      setSelectedTime(null);
+    }
   };
 
   const handleDetailChange = (data: BookingFormData) => {
@@ -340,7 +351,7 @@ const Schedule = (props: any) => {
                 {selectedTime.end.toLocaleTimeString(i18n.language, {
                   timeStyle: "short",
                 })}{" "}
-                <Link onClick={() => setTime(null)}>{t("Change")}</Link>
+                <Link onClick={() => setSelectedTime(null)}>{t("Change")}</Link>
               </Typography>
 
               <form onSubmit={handleSubmit} onInvalid={handleInvalid}>
@@ -357,7 +368,7 @@ const Schedule = (props: any) => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => setTime(null)}
+                    onClick={() => history.goBack()}
                   >
                     {t("Back")}
                   </Button>
@@ -446,7 +457,7 @@ const Schedule = (props: any) => {
                   slots={daySlots}
                   duration={event.duration}
                   language={i18n.language}
-                  onSelect={handleTime}
+                  onSelect={handleTimeChange}
                 />
               </Box>
             </Box>

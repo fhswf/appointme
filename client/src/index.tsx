@@ -79,7 +79,7 @@ ReactDOM.render(
     <Suspense fallback="loading">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <BrowserRouter basename="/bookme">
+          <BrowserRouter basename={process.env.REACT_APP_URL}>
             <Switch>
               <Route exact path="/">
                 {isAuthenticated() ? (
