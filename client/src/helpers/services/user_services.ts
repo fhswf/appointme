@@ -26,11 +26,10 @@ export async function updateUser(token: string, user: any) {
 }
 
 export async function getUserByUrl(url: string) {
-  const response = await axios.get(
+  return axios.get(
     `${process.env.REACT_APP_API_URI}/users/findUserByUrl`,
     {
       params: { url: url },
     }
   );
-  return response;
 }

@@ -102,11 +102,10 @@ export async function getUsersEvents(token: string) {
 }
 
 export async function getEventByUrlAndUser(user_id: string, event_url: string) {
-  const response = await axios.get(
+  return axios.get(
     `${process.env.REACT_APP_API_URI}/events/getEventBy`,
     {
       params: { user: user_id, url: event_url },
     }
   );
-  return response;
 }
