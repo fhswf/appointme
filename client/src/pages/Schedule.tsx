@@ -1,7 +1,6 @@
-import React, { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
-import ReactMarkdown from "react-markdown";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -36,12 +35,7 @@ import {
 import { de, enUS } from "date-fns/locale";
 import BookDetails, { BookingFormData } from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import {
-  EMPTY_EVENT,
-  Event,
-  IntervalSet,
-  TimeRange,
-} from "@fhswf/bookme-common";
+import { Event, IntervalSet, TimeRange } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
 import { useTranslation, Trans } from "react-i18next";
@@ -400,17 +394,16 @@ const Schedule = (props: any) => {
                     {t("Meeting with")} {user.name}
                   </Typography>
                   <Typography variant="h4">{event.description}</Typography>
-                  <Typography variant="body1" className={classes.description}>
-                    <HourglassTop className={classes.textBottom} />{" "}
-                    {event.duration} {t("minutes")}
-                    <Room className={classes.textBottom} />
-                    <ReactMarkdown
-                      components={{ a: Link }}
-                      className={classes.description}
-                    >
+                  <Box display="flex" flexWrap="wrap">
+                    <Typography variant="body1" className={classes.description}>
+                      <HourglassTop className={classes.textBottom} />{" "}
+                      {event.duration} {t("minutes")}
+                    </Typography>
+                    <Typography variant="body1" className={classes.description}>
+                      <Room className={classes.textBottom} />
                       {event.location}
-                    </ReactMarkdown>
-                  </Typography>
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
               <Box sx={{ gridArea: "picker_l" }}>
