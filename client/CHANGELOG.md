@@ -1,3 +1,19 @@
+# [@fhswf/bookme-client-v1.0.5](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.4...@fhswf/bookme-client-v1.0.5) (2021-06-02)
+
+
+### Bug Fixes
+
+* **build:** fix all typescrpt warnings ([89b3820](https://github.com/fhswf/book_me/commit/89b38207e0e8f4da67793318b36137cf8834c66c))
+* **build:** fix all warnings ([84571c2](https://github.com/fhswf/book_me/commit/84571c2aa4342c25b5d6a22fa639cd236f067cb2))
+* **dependencies:** add missing @emotion/react ([839b522](https://github.com/fhswf/book_me/commit/839b522d099ad9db003bcaa25074cff916fdb501))
+* **dependencies:** fix dependencies & removed fields in Event type ([d75b572](https://github.com/fhswf/book_me/commit/d75b572c5c7b0a47d0b1e15ead675fa46fa3fc94))
+* **localization:** fix display of local times in ChooseTime ([88b1a16](https://github.com/fhswf/book_me/commit/88b1a1675361316095e2a7b59108cd88996de8aa))
+* **localization:** fix time display ([5bd8c09](https://github.com/fhswf/book_me/commit/5bd8c095d270021f69d56e291c353e3978a6f4d9))
+* **ui:** fix validation in BookingDetails ([eabd645](https://github.com/fhswf/book_me/commit/eabd64587d56b17d6685abcd7c9bec549ae3b49b))
+* **UI:** fix data handling in BookDetails form ([7a0cf77](https://github.com/fhswf/book_me/commit/7a0cf77ba54c0207cc63b35d94f03b009258c57f))
+* **UI:** fix editing of event types ([a80b3c5](https://github.com/fhswf/book_me/commit/a80b3c50263e08c58e97051840a4016b971c3585))
+* **UI:** fix unused import in BookDetails ([404dfaa](https://github.com/fhswf/book_me/commit/404dfaab0b85faeef206a0dd61cee980e4b4ae52))
+
 # [@fhswf/bookme-client-v1.0.4](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.3...@fhswf/bookme-client-v1.0.4) (2021-05-29)
 
 
