@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FormEvent } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { StaticDatePicker, PickersDay } from "@material-ui/lab";
-
+import ReactMarkdown from "react-markdown";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Avatar,
@@ -45,6 +45,7 @@ import {
 import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
 import { useTranslation, Trans } from "react-i18next";
+import { HourglassTop, Room } from "@material-ui/icons";
 
 const LOCALES = { en: enUS, de: de, "de-DE": de };
 
@@ -108,6 +109,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
   },
+  description: {
+    display: "inline-block",
+    "&p": {
+      display: "inline-block",
+    },
+  },
+  textBottom: {
+    verticalAlign: "text-bottom",
+  },
   container: {
     display: "grid",
     gridTemplateColumns: "1.5em 1fr",
@@ -126,13 +136,16 @@ type Error = {
 } & any;
 
 const Schedule = (props: any) => {
-  const data = useParams<{ user_url: string; url: string }>();
+  const param = useParams<{ user_url: string; url: string }>();
   const history = useHistory();
   const classes = useStyles();
   const { t, i18n } = useTranslation();
 
   const [user, setUser] = useState<UserDocument>();
-  const [event, setEvent] = useState<Event>(EMPTY_EVENT);
+  const [event, setEvent] = useState<Event>();
+  //let user: UserDocument = null;
+  //let event: Event = null;
+
   const [selectedDate, setDate] = useState<Date | null>(null);
   const [selectedTime, setTime] = useState<TimeRange | null>(null);
   const [beginDate, setBeginDate] = useState<Date>(new Date());
@@ -142,29 +155,28 @@ const Schedule = (props: any) => {
   const [error, setError] = useState<Error | null>(null);
   const [validationErrors, setValidationErrors] = useState<any>({});
 
-  useEffect(() => {
-    getUserByUrl(data.user_url)
-      .then((res) => {
-        if (res.data.length === 0) {
-          history.push("/notfound");
-        } else {
-          setUser(res.data);
-          getEventByUrlAndUser(res.data._id, data.url).then((res) => {
-            if (res.data == null) {
-              history.push("/notfound");
-            }
-            if (res.data.isActive === false) {
-              history.push("/notfound");
-            } else {
-              setEvent(res.data);
-            }
-          });
-        }
-      })
-      .catch((err) => {
-        setError({ message: "could not load data", details: err });
-      });
-  }, [data.url, data.user_url, history, selectedDate]);
+  if (!user) {
+    getUserByUrl(param.user_url).then((res) => {
+      if (res.data.length === 0) {
+        history.push("/notfound");
+      } else {
+        setUser(res.data);
+      }
+    });
+  }
+
+  if (user && !event) {
+    getEventByUrlAndUser(user._id, param.url).then((res) => {
+      if (res.data == null) {
+        history.push("/notfound");
+      }
+      if (res.data.isActive === false) {
+        history.push("/notfound");
+      } else {
+        setEvent(res.data);
+      }
+    });
+  }
 
   useEffect(() => {
     if (user && event && event.url) {
@@ -177,15 +189,6 @@ const Schedule = (props: any) => {
         .then((slots) => {
           console.log("slots %o", slots);
           setSlots(slots);
-          if (selectedDate == null) {
-            console.log("setDate: %o", slots[0].start);
-            let dayInt = new IntervalSet(
-              startOfDay(slots[0].start),
-              endOfDay(slots[0].start)
-            );
-            setDaySlots(dayInt.intersect(slots));
-            setDate(slots[0].start);
-          }
         })
         .catch((err) => {
           setError({
@@ -194,7 +197,21 @@ const Schedule = (props: any) => {
           });
         });
     }
-  }, [user, event, beginDate, selectedDate]);
+  }, [beginDate, event, user]);
+
+  useEffect(() => {
+    if (slots && slots.length > 0) {
+      if (selectedDate == null) {
+        console.log("setDate: %o", slots[0].start);
+        let dayInt = new IntervalSet(
+          startOfDay(slots[0].start),
+          endOfDay(slots[0].start)
+        );
+        setDaySlots(dayInt.intersect(slots));
+        setDate(slots[0].start);
+      }
+    }
+  }, [selectedDate, slots]);
 
   const handleErrorClose = () => {
     history.push("/");
@@ -306,7 +323,7 @@ const Schedule = (props: any) => {
       locale={LOCALES[i18n.language]}
     >
       <Container>
-        {user ? (
+        {user && event ? (
           selectedTime ? (
             <>
               <Typography variant="h5">{t("Confirm meeting")}</Typography>
@@ -357,15 +374,33 @@ const Schedule = (props: any) => {
             </>
           ) : (
             <Box className={classes.grid} padding={2}>
-              <Box sx={{ gridArea: "header_l" }} justifyContent="center">
+              <Box
+                sx={{ gridColumn: "1 / span 2", gridRow: "1" }}
+                justifySelf="center"
+                justifyItems="center"
+              >
                 <Avatar
                   alt={user ? user.name : ""}
                   src={user ? user.picture_url : ""}
                   sx={{ width: 72, height: 72, margin: "auto" }}
                 />
-                <Typography variant="h5" textAlign="center">
-                  {t("Meeting with")} {user.name}
-                </Typography>
+                <Box display="grid" justifyItems="center">
+                  <Typography variant="h5">
+                    {t("Meeting with")} {user.name}
+                  </Typography>
+                  <Typography variant="h4">{event.description}</Typography>
+                  <Typography variant="body1" className={classes.description}>
+                    <HourglassTop className={classes.textBottom} />{" "}
+                    {event.duration} {t("minutes")}
+                    <Room className={classes.textBottom} />
+                    <ReactMarkdown
+                      components={{ a: Link }}
+                      className={classes.description}
+                    >
+                      {event.location}
+                    </ReactMarkdown>
+                  </Typography>
+                </Box>
               </Box>
               <Box sx={{ gridArea: "picker_l" }}>
                 <StaticDatePicker
@@ -381,7 +416,14 @@ const Schedule = (props: any) => {
                 />
               </Box>
 
-              <Box sx={{ gridArea: "header_r" }} alignSelf="end">
+              <Box sx={{ gridArea: "header_r" }} alignSelf="end"></Box>
+              <Box
+                sx={{ gridArea: "picker_r" }}
+                display="flex"
+                flexWrap="wrap"
+                gap={2}
+                padding={2}
+              >
                 <Typography>
                   {selectedDate ? (
                     <>
@@ -400,14 +442,6 @@ const Schedule = (props: any) => {
                     <>Please choose a date to check available times.</>
                   )}
                 </Typography>
-              </Box>
-              <Box
-                sx={{ gridArea: "picker_r" }}
-                display="flex"
-                flexWrap="wrap"
-                gap={2}
-                padding={2}
-              >
                 <ChooseTime
                   slots={daySlots}
                   duration={event.duration}
