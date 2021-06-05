@@ -31,7 +31,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          REACT_APP_URL: http://localhost:3000/meeting
+          REACT_APP_URL: /meeting
           HOST: localhost
           PORT: 3000
       
