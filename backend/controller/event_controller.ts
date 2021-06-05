@@ -35,7 +35,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   const url = <string>req.query.url;
   const userid = <string>req.query.userid;
   EventModel.findOne({ url: url, user: userid }).select(
-    `available bufferbefore bufferafter minFuture maxFuture maxPerDay -_id`
+    `available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id`
   )
     .then(event => {
       try {
@@ -77,7 +77,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
                   const calIntervals = new IntervalSet();
                   let current = timeMin;
                   for (const busy of res.data.calendars[key].busy) {
-                    console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+                    //console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
                     const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
                     const _end = addMinutes(new Date(busy.end), event.bufferafter);
                     if (current < _start)
@@ -89,7 +89,9 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
                   }
                   freeSlots = freeSlots.intersect(calIntervals)
                 }
-                //console.log('freeBusy: %j', freeSlots);
+                console.log('freeSlots before filtering: %j', freeSlots);
+                freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000))
+                console.log('freeSlots after filtering: %j', freeSlots);
                 return freeSlots;
               })
               .catch(err => {
