@@ -58,7 +58,7 @@ context('Scheduling page', () => {
             cy.get('[name=name]').type('Max Mustermann')
             cy.get('[name=email]').type('mustermann.max@fh-swf.de')
             cy.get('form').submit()
-            cy.wait('@apiCheck, { timeout: 10000 })
+            cy.wait('@apiCheck', { timeout: 10000 })
             cy.get('.error')
         })
     })
