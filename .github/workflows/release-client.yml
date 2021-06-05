@@ -33,8 +33,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          HOST: localhost
-          PORT: 3000
+          PUBLIC_URL: http://localhost:3000/meeting
       
       - uses: actions/upload-artifact@v1
         if: failure()
