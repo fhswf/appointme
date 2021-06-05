@@ -23,8 +23,6 @@ type ChooseTimeProps = {
 const ChooseTime = (props: ChooseTimeProps) => {
   const [selected, setSelected] = useState<TimeRange | null>(null);
 
-  if (!props.step) props.step = 30;
-
   console.log("ChooseTime: %o", props.slots);
 
   const handleClick = (time: Date) => () => {
