@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.2.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.2.0...@fhswf/bookme-backend-v1.2.1) (2021-06-05)
+
+
+### Bug Fixes
+
+* **freeBusy:** filter out free slots shorter than the event duration ([2eedf77](https://github.com/fhswf/book_me/commit/2eedf7789c6158827c6ffc2d9ebf61c6c4682879))
+
 # [@fhswf/bookme-backend-v1.2.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.1.0...@fhswf/bookme-backend-v1.2.0) (2021-05-31)
 
 
