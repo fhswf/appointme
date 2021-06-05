@@ -46,6 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           REACT_APP_URL: /meeting
+          REACT_APP_API_URI: /bookme/api/v1
           HOST: localhost
           PORT: 3000
       
