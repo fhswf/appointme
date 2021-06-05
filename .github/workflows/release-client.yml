@@ -25,15 +25,12 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: client
-          build: npm run-script build
-          start: npm start & npx wait-on http://localhost:3000
-          config: baseUrl=http://localhost:3000/meeting
+          command: npm run ci
           record: true
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.BM_GITHUB_TOKEN }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          PUBLIC_URL: http://localhost:3000/meeting
           HOST: localhost
           PORT: 3000
       
