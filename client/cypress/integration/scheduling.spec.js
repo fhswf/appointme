@@ -8,7 +8,7 @@ context('Error handling', () => {
         })
 
         it('Should show error message', () => {
-            cy.wait(['@getUser'])
+            cy.wait(['@getUser'], { timeout: 10000 })
             cy.get('.error')
         })
     })
@@ -30,14 +30,14 @@ context('Scheduling page', () => {
         })
 
         it('Check simple schedule flow', () => {
-            cy.wait(['@getUser', '@getEvent', '@getAvailable'])
+            cy.wait(['@getUser', '@getEvent', '@getAvailable'], { timeout: 10000 })
             cy.get('h6').should('contain', 'Christian Gawron')
             cy.get('.MuiPickersDay-today').should('contain', '25')
             cy.contains('07:00').click()
             cy.get('[name=name]').type('Max Mustermann')
             cy.get('[name=email]').type('mustermann.max@fh-swf.de')
             cy.get('form').submit()
-            cy.wait('@apiCheck').then((interception) => {
+            cy.wait('@apiCheck', { timeout: 10000 }).then((interception) => {
                 cy.log(interception.request.body)
                 assert.equal(interception.request.body.name, 'Max Mustermann')
             })
@@ -51,14 +51,14 @@ context('Scheduling page', () => {
         })
 
         it('should show an error message', () => {
-            cy.wait(['@getUser', '@getEvent', '@getAvailable'])
+            cy.wait(['@getUser', '@getEvent', '@getAvailable'], { timeout: 10000 })
             cy.get('h6').should('contain', 'Christian Gawron')
             cy.get('.MuiPickersDay-today').should('contain', '25')
             cy.contains('07:00').click()
             cy.get('[name=name]').type('Max Mustermann')
             cy.get('[name=email]').type('mustermann.max@fh-swf.de')
             cy.get('form').submit()
-            cy.wait('@apiCheck')
+            cy.wait('@apiCheck, { timeout: 10000 })
             cy.get('.error')
         })
     })
