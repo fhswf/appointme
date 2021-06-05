@@ -52,7 +52,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "npx cypress run --spec cypress/integration/**/*.spec.js --record",
-    "cy:ci": "npx cypress run --spec cypress/integration/**/*.spec.js --config-file cypress_ci.json --record",
+    "cy:ci": "npx cypress run --spec cypress/integration/**/*.spec.js --headless --config-file cypress_ci.json --record",
     "ci": "start-server-and-test start http://localhost:3000/meeting cy:ci"
   },
   "eslintConfig": {
