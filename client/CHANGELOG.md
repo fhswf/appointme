@@ -1,3 +1,10 @@
+# [@fhswf/bookme-client-v1.0.7](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.6...@fhswf/bookme-client-v1.0.7) (2021-06-05)
+
+
+### Bug Fixes
+
+* **i18n:** add missing translation ([ad9e70f](https://github.com/fhswf/book_me/commit/ad9e70f891d3d0b4e99e95501c14b4b04e65e41b))
+
 # [@fhswf/bookme-client-v1.0.6](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.5...@fhswf/bookme-client-v1.0.6) (2021-06-05)
 
 
