@@ -15,7 +15,7 @@ export const useStyles = makeStyles((theme) => ({
 type ChooseTimeProps = {
   slots: IntervalSet;
   duration: number;
-  step?: number;
+  step: number;
   language: string;
   onSelect?: (time: TimeRange) => void;
 };
