@@ -27,7 +27,7 @@ jobs:
           working-directory: client
           build: npm run-script build
           start: npm start
-          config: baseUrl=http://localhost:3000
+          config: baseUrl=http://localhost:3000/meeting
           record: true
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
