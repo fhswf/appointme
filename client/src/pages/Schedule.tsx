@@ -386,7 +386,7 @@ const Schedule = (props: any) => {
                     name="submit"
                     type="submit"
                   >
-                    {t("Confirm &amp; Book")}
+                    {t("Confirm & Book")}
                   </Button>
                 </Grid>
               </form>

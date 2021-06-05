@@ -9,8 +9,9 @@
     "Meeting with": "Meeting mit",
     "Change": "ändern",
     "Back": "Zurück",
-    "Confirm &amp; Book": "Termin bestätigen",
+    "Confirm & Book": "Termin bestätigen",
     "Confirmation": "Bestätigung",
     "confirmationText": "Sie haben einen Termin mit {{user}} am {{date}} um {{time}} Uhr gebucht.",
-    "availableSlots": "Am {{date}} sind die folgenden Termine verfügbar. Reservieren Sie einen oder wählen Sie einen anderen Tag."
+    "availableSlots": "Am {{date}} sind die folgenden Termine verfügbar. Reservieren Sie einen oder wählen Sie einen anderen Tag.",
+    "minutes": "Minuten"
 }
