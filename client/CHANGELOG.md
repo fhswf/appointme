@@ -1,3 +1,16 @@
+# [@fhswf/bookme-client-v1.0.6](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.5...@fhswf/bookme-client-v1.0.6) (2021-06-05)
+
+
+### Bug Fixes
+
+* **ChooseTime:** do not modify read-only variable step ([ab37be3](https://github.com/fhswf/book_me/commit/ab37be3ccb9805f6311273256591fb78a1020fa3))
+* **client:** fix typescript issue in ChooseTime ([a84db13](https://github.com/fhswf/book_me/commit/a84db131e5f801f5045882026619f5ce1300c733))
+* **deployment:** make deployment path configurable ([8f77c48](https://github.com/fhswf/book_me/commit/8f77c4871df2baaf16f26ed9eace9a385e025f98))
+* **frontend:** avoid repeated backend calls ([52a33aa](https://github.com/fhswf/book_me/commit/52a33aa3b128e2c5a092ea2aff8a5bf70993c2da))
+* **imports:** remove unused imports ([c9db46b](https://github.com/fhswf/book_me/commit/c9db46b3cd0bd7ada2a09dcf7063dd2f8631f704))
+* **ui:** fix error handling ([53a0a3d](https://github.com/fhswf/book_me/commit/53a0a3d1ab0c53e5720a97b2baf3a182d17048e2))
+* **UI:** handle errors from backend ([9ecc7b3](https://github.com/fhswf/book_me/commit/9ecc7b3f310112cd4635fd02dd65514274ff55cd))
+
 # [@fhswf/bookme-client-v1.0.5](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.4...@fhswf/bookme-client-v1.0.5) (2021-06-02)
 
 
