@@ -24,8 +24,12 @@ jobs:
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - name: Install
         run: npm ci
+        with:
+          working-directory: client
       - name: Build
         run: npm run build
+        with:
+          working-directory: client
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
