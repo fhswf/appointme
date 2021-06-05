@@ -32,6 +32,8 @@ jobs:
       - name: Build
         working-directory: client
         run: npm run build
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Cypress run
         uses: cypress-io/github-action@v2
