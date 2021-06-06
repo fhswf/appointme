@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.3.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.3.0...@fhswf/bookme-backend-v1.3.1) (2021-06-06)
+
+
+### Bug Fixes
+
+* **insertEvent:** check availablility of requested slot in backend ([54c9e92](https://github.com/fhswf/book_me/commit/54c9e92b3b7d4c452954e30c8442bc483e654ed1)), closes [#27](https://github.com/fhswf/book_me/issues/27)
+
 # [@fhswf/bookme-backend-v1.3.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.2.1...@fhswf/bookme-backend-v1.3.0) (2021-06-06)
 
 
