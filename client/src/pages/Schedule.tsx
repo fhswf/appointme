@@ -40,6 +40,7 @@ import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
 import { useTranslation, Trans } from "react-i18next";
 import { HourglassTop, Room } from "@material-ui/icons";
+import ReactMarkdown from "react-markdown";
 
 const LOCALES = { en: enUS, de: de, "de-DE": de };
 
@@ -407,7 +408,11 @@ const Schedule = (props: any) => {
                   <Typography variant="h5">
                     {t("Meeting with")} {user.name}
                   </Typography>
-                  <Typography variant="h4">{event.description}</Typography>
+                  <Typography variant="h4">
+                    <ReactMarkdown components={{ a: Link }}>
+                      {event.description}
+                    </ReactMarkdown>
+                  </Typography>
                   <Box display="flex" flexWrap="wrap">
                     <Typography variant="body1" className={classes.description}>
                       <HourglassTop className={classes.textBottom} />{" "}

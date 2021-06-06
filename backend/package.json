@@ -44,7 +44,9 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^5.12.9",
-    "nodemailer": "^6.4.14"
+    "nodemailer": "^6.4.14",
+    "remark": "13.0.0",
+    "remark-html": "13.0.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
