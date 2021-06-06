@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 
 import remark = require('remark');
 import html = require('remark-html');
+import { Event, IntervalSet } from '@fhswf/bookme-common';
 
 
 const oAuth2Client = new OAuth2Client({
@@ -68,6 +69,50 @@ export const googleCallback = (req: Request, res: Response): void => {
   }
 };
 
+export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
+  return UserModel.findOne({ _id: user_id })
+    .then((user: User) => {
+      const google_tokens = user.google_tokens;
+      oAuth2Client.setCredentials(google_tokens);
+      const items = user.pull_calendars.map(id => { return { id } });
+      const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+      return calendar.freebusy.query({
+        requestBody: {
+          timeMin,
+          timeMax,
+          items
+        }
+      })
+    })
+}
+
+async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
+  const interval = new IntervalSet(timeMin, timeMax)
+  return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
+    .then(res => {
+      let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+
+      for (const key in res.data.calendars) {
+        const calIntervals = new IntervalSet();
+        let current = timeMin;
+        for (const busy of res.data.calendars[key].busy) {
+          //console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+          const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
+          const _end = addMinutes(new Date(busy.end), event.bufferafter);
+          if (current < _start)
+            calIntervals.push({ start: current, end: _start });
+          current = _end;
+        }
+        if (current < timeMax) {
+          calIntervals.push({ start: current, end: timeMax });
+        }
+        freeSlots = freeSlots.intersect(calIntervals)
+      }
+      const intersection = freeSlots.intersect(interval)
+      return intersection.length == 1 && IntervalSet.equals(intersection[0], interval[0]);
+    })
+}
+
 /**
  * Middleware to insert an event to google calendar.
  * @function
@@ -78,6 +123,11 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
   const starttime = new Date(Number.parseInt(req.body.starttime));
   const endtime = addMinutes(starttime, req.body.event.duration);
   console.log("insertEvent: %s %o", req.body.starttime, starttime);
+
+  if (!await checkFree(req.body.event, req.params.user_id, starttime, endtime)) {
+    res.status(400).json({ error: "requested slot not available" });
+    return;
+  }
 
   const htmlDescription = await remark()
     .use(html)
@@ -217,22 +267,7 @@ export async function getCalendarList(req: Request, res: Response): Promise<void
 }
 
 
-export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
-  return UserModel.findOne({ _id: user_id })
-    .then((user: User) => {
-      const google_tokens = user.google_tokens;
-      oAuth2Client.setCredentials(google_tokens);
-      const items = user.pull_calendars.map(id => { return { id } });
-      const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
-      return calendar.freebusy.query({
-        requestBody: {
-          timeMin,
-          timeMax,
-          items
-        }
-      })
-    })
-}
+
 
 export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
   return UserModel.findOne({ _id: user_id })
