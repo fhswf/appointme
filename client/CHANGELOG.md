@@ -1,3 +1,10 @@
+# [@fhswf/bookme-client-v1.1.0](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.7...@fhswf/bookme-client-v1.1.0) (2021-06-07)
+
+
+### Features
+
+* **markdown:** handle event type description as markdown. ([4bedade](https://github.com/fhswf/book_me/commit/4bedade846876fe6eedb5b0f4d986a33c8d283b2))
+
 # [@fhswf/bookme-client-v1.0.7](https://github.com/fhswf/book_me/compare/@fhswf/bookme-client-v1.0.6...@fhswf/bookme-client-v1.0.7) (2021-06-05)
 
 
