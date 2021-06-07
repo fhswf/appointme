@@ -23,7 +23,20 @@ import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
 import { isAuthenticated } from "./helpers/helpers";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+
 import "./i18n";
+
+Sentry.init({
+  dsn: "https://34bc45cc40504167a7d922e04d2ca941@o809458.ingest.sentry.io/5804475",
+  integrations: [new Integrations.BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 const theme = createTheme({
   components: {
