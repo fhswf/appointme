@@ -61,3 +61,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.BM_GITHUB_USERNAME }}
+          password: ${{ secrets.BM_GITHUB_TOKEN }}
+
+      - name: Publish
+        uses: docker/build-push-action@v2
+        with:
+          working-directory: backend
+          context: .
+          push: true
+          tags: fhswf/bookme-backend:latest
