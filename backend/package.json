@@ -25,7 +25,6 @@
       "email": "gawron.christian@fh-swf.de"
     }
   ],
-  "private": true,
   "license": "MIT",
   "dependencies": {
     "@fhswf/bookme-common": "^1.3.1",
