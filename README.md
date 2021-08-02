@@ -1,5 +1,8 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 ![GitHub issues](https://img.shields.io/github/issues/fhswf/book_me)
+![GitHub pull request check state](https://img.shields.io/github/status/s/pulls/fhswf/book_me/10)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fhswf/book_me/release-backend)
+[![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/fhswf/book_me)](https://libraries.io/github/fhswf/book_me)
 
 # APPointment
 
