@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         # Run the steps below with the following versions of Node.js
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
       # Fetch the latest commit
@@ -30,6 +30,10 @@ jobs:
       # Install package dependencies
       - name: Install
         run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       # Run tests
       - name: Test
@@ -47,12 +51,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
 
       - name: Install
         working-directory: backend
         run: npm ci
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
