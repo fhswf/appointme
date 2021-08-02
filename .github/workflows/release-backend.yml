@@ -62,17 +62,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish:
-    if: $RELEASE_VERSION
-    runs-on: ubuntu-latest
-    needs: [release]
-    steps:
       - name: Publish to container registry
         working-directory: backend
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker build . --tag ghcr.io/fhswf/bookme:$RELEASE_VERSION
-          docker push ghcr.io/fhswf/bookme:$RELEASE_VERSION
+          if [ -n "$RELEASE_VERSION" ]; then
+            docker build . --tag ghcr.io/fhswf/bookme:$RELEASE_VERSION
+            docker push ghcr.io/fhswf/bookme:$RELEASE_VERSION
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
