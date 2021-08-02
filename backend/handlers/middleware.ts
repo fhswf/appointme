@@ -1,7 +1,9 @@
 /**
  * @module authentication_middleware
  */
-const jwt = require("jsonwebtoken");
+
+import { NextFunction, Request, Response } from "express";
+import { verify } from "jsonwebtoken";
 
 /**
  * Middleware to check if User is authorized
@@ -10,23 +12,30 @@ const jwt = require("jsonwebtoken");
  * @param {response} res
  * @param {callback} next
  */
-exports.requireAuth = (req, res, next) => {
+export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   const header = req.headers.authorization;
+  if (!header) {
+    res.json({
+      success: false,
+      message: "Unauthorized! Sign in again!",
+    });
+    return
+  }
   const token = header.split(" ")[1];
   if (!token) {
-    return res.json({
+    res.json({
       success: false,
       message: "Unauthorized! Sign in again!",
     });
   } else {
-    jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
+    verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
       if (err) {
         return res.json({
           success: false,
           message: "Unauthorized! Sign in again!",
         });
       } else {
-        req.user_id = decoded._id;
+        req.user_id = decoded._id as string;
         next();
       }
     });
