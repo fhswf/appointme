@@ -34,7 +34,7 @@
   "homepage": "https://github.com/fhswf/book_me#readme",
   "dependencies": {
     "@fhswf/bookme-common": "^1.3.0",
-    "@fhswf/bookme-backend": "^1.2.2",
+    "@fhswf/bookme-backend": "^1.0.1",
     "@fhswf/bookme-client": "^1.1.0"
   },
   "devDependencies": {
