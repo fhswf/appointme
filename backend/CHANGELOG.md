@@ -1,3 +1,10 @@
+# [@fhswf/bookme-backend-v1.3.2](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.3.1...@fhswf/bookme-backend-v1.3.2) (2021-08-10)
+
+
+### Bug Fixes
+
+* **bump dependencies:** upgrade several dependencies ([ca905e2](https://github.com/fhswf/book_me/commit/ca905e241e31bbbe69d05a7e4bec76b0bd4a9bcc))
+
 # [@fhswf/bookme-backend-v1.3.1](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.3.0...@fhswf/bookme-backend-v1.3.1) (2021-06-06)
 
 
