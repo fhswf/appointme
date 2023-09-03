@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import AppNavbar from "../components/AppNavbar";
 
@@ -12,22 +12,23 @@ import {
   CardContent,
   Checkbox,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormGroup,  
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Grid from "@material-ui/core/Grid";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Typography from "@material-ui/core/Typography";
+
 
 //import { Button, Modal } from "react-bootstrap";
 import { updateUser } from "../helpers/services/user_services";
@@ -37,7 +38,7 @@ import {
   getCalendarList,
 } from "../helpers/services/google_services";
 
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 
 import { toast } from "react-toastify";
 import { UserContext } from "../components/PrivateRoute";
@@ -262,7 +263,7 @@ const PullCalendars = ({ user, calendarList }) => {
 
 const Calendarintegration = () => {
   const token = JSON.parse(localStorage.getItem("access_token") as string);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [connected, setConnected] = useState(false);
   const [url, setUrl] = useState("");
   const [calendarList, setCalendarList] = useState(null);
@@ -273,7 +274,7 @@ const Calendarintegration = () => {
     deleteAccess(token).then((res) => {
       if (res.data.success === false) {
         signout();
-        history.push("/landing");
+        navigate("/landing");
       }
       setConnected(false);
     });
@@ -316,12 +317,12 @@ const Calendarintegration = () => {
     getAuthUrl(token).then((res) => {
       if (res.data.success === false) {
         signout();
-        history.push("/landing");
+        navigate("/landing");
       } else {
         setUrl(res.data.url as string);
       }
     });
-  }, [history, token, user]);
+  }, [navigate, token, user]);
 
   const renderConnectButton = () =>
     connected ? (

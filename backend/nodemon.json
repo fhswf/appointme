@@ -1,10 +1,10 @@
 {
   "watch": [
-    "./src"
+    "./**"
   ],
-  "ext": "ts",
+  "ext": ".ts",
   "ignore": [
     "./src/public"
   ],
-  "exec": "ts-node --files ./server.ts"
+  "exec": "ts-node --esm --files"
 }

@@ -1,4 +1,4 @@
-"use strict";
+
 
 const uniqueMessage = (error) => {
   let output;
@@ -15,7 +15,7 @@ const uniqueMessage = (error) => {
   return output;
 };
 
-exports.errorHandler = (error) => {
+export const errorHandler = (error) => {
   let message = "";
 
   if (error.code) {

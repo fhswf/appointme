@@ -1,10 +1,11 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import App from "./pages/App";
 import Login from "./pages/Login";
@@ -18,25 +19,16 @@ import EditEvent from "./pages/EditEvent";
 import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
 import Finished, { FinishedProps } from "./pages/Finished";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import { isAuthenticated } from "./helpers/helpers";
-import { createTheme, ThemeProvider } from "@material-ui/core";
 
-import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import { isAuthenticated } from "./helpers/helpers";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import "./i18n";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-Sentry.init({
-  dsn: "https://34bc45cc40504167a7d922e04d2ca941@o809458.ingest.sentry.io/5804475",
-  integrations: [new Integrations.BrowserTracing()],
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: 1.0,
-});
 
 const theme = createTheme({
   components: {
@@ -87,67 +79,82 @@ const theme = createTheme({
   },
 });
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <Suspense fallback="loading">
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <BrowserRouter basename={process.env.REACT_APP_URL}>
-            <Switch>
-              <Route exact path="/">
-                {isAuthenticated() ? (
-                  <Redirect to="/app" />
+      <GoogleOAuthProvider clientId="692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com">
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter basename={process.env.REACT_APP_URL}>
+              <Routes>
+                <Route path="/" element={isAuthenticated() ? (
+                  <Navigate to="/app" />
                 ) : (
-                  <Redirect to="/landing" />
-                )}
-              </Route>
+                  <Navigate to="/landing" />
+                )} />
 
-              <PrivateRoute path="/app" exact component={App} />
-              <PrivateRoute path="/addevent" exact component={AddEvent} />
-              <PrivateRoute path="/editevent/:id" exact component={EditEvent} />
-              <PrivateRoute
-                path="/integration"
-                component={Calendarintegration}
-              />
+                <Route path="/app" element={
+                  <PrivateRoute>
+                    <App />
+                  </PrivateRoute>
+                } />
 
-              <Route
-                path="/booked"
-                exact
-                render={(props: FinishedProps) => <Finished {...props} />}
-              />
+                <Route path="/addevent" element={
+                  <PrivateRoute>
+                    <AddEvent />
+                  </PrivateRoute>
+                } />
 
-              <Route
-                path="/login"
-                exact
-                render={(props) => <Login {...props} />}
-              />
-              <Route
-                path="/landing"
-                exact
-                render={(props) => <Landing {...props} />}
-              />
-              <Route
-                path="/schedule/:user_url/:url"
-                exact
-                render={(props) => <Schedule {...props} />}
-              />
-              <Route
-                path="/users/:user_url"
-                exact
-                render={(props) => <Planning {...props} />}
-              />
-              <Route
-                path="/users/:user_url/:url"
-                exact
-                render={(props) => <Booking {...props} />}
-              />
-              <Route path="*" component={NotFound} />
-              <Route path="/notfound" component={NotFound} />
-            </Switch>
-          </BrowserRouter>
-        </ThemeProvider>
-      </LocalizationProvider>
+                <Route path="/editevent/:id" element={
+                  <PrivateRoute>
+                    <EditEvent />
+                  </PrivateRoute>
+                } />
+
+                <Route
+                  path="/integration"
+                  element={
+                    <PrivateRoute>
+                      <Calendarintegration />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/booked"
+                  element={<Finished />}
+                />
+
+                <Route
+                  path="/login"
+                  element={<Login />}
+                />
+                <Route
+                  path="/landing"
+                  element={<Landing />}
+                />
+                <Route
+                  path="/schedule/:user_url/:url"
+                  element={<Schedule />}
+                />
+                <Route
+                  path="/users/:user_url"
+                  element={<Planning />}
+                />
+                <Route
+                  path="/users/:user_url/:url"
+                  element={<Booking />}
+                />
+                <Route path="*" element={<NotFound />} />
+                <Route path="/notfound" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </ThemeProvider>
+        </LocalizationProvider>
+      </GoogleOAuthProvider>
     </Suspense>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

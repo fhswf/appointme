@@ -1,15 +1,15 @@
 import React from "react";
 
 import { isAuthenticated } from "../helpers/helpers";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 
 const Landing = (props: any) => {
   return (
     <div className="landing">
-      {isAuthenticated() ? <Redirect to="/app" /> : null}
+      {isAuthenticated() ? <Navigate to="/app" /> : null}
       <AppNavbar />
       <Paper>
         <div className="section">

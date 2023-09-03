@@ -1,11 +1,14 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const dataBaseConn = require("./config/dbConn");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { dataBaseConn } from "./config/dbConn.js";
+
 
 // Dotenv Config
-require("dotenv").config({
+import dotenv from "dotenv";
+dotenv.config({
   path: "./config/config.env",
 });
 
@@ -30,10 +33,10 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //Load routes
-const authenticationRouter = require("./routes/authentication_route");
-const eventRouter = require("./routes/event_routes");
-const googleRouter = require("./routes/google_routes");
-const userRouter = require("./routes/user_routes");
+import { authenticationRouter } from "./routes/authentication_route.js";
+import { eventRouter } from "./routes/event_routes.js";
+import { googleRouter } from "./routes/google_routes.js";
+import { userRouter } from "./routes/user_routes.js";
 
 //Use routes
 const router = express.Router();

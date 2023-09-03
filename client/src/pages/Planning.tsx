@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import {
   Avatar,
   Box,
@@ -14,10 +14,10 @@ import {
   Typography,
   CardActions,
   Button,
-} from "@material-ui/core";
-import HourglassFullIcon from "@material-ui/icons/HourglassFull";
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import RoomIcon from "@material-ui/icons/Room";
+} from "@mui/material";
+import HourglassFullIcon from "@mui/icons-material/HourglassFull";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import RoomIcon from "@mui/icons-material/Room";
 
 import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Planning = (props: any) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const { user_url } = useParams<{ user_url: string }>();
@@ -51,7 +51,7 @@ const Planning = (props: any) => {
     getUserByUrl(user_url)
       .then((res) => {
         if (res.data.length === 0) {
-          history.push("/notfound");
+          navigate("/notfound");
         } else {
           setUser(res.data);
           getActiveEvents(res.data._id)
@@ -75,11 +75,10 @@ const Planning = (props: any) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [user_url, history, user.name]);
+  }, [user_url, navigate, user.name]);
 
   const handleOnClick = (bookingEvent: EventDocument) => {
-    history.push({
-      pathname: `/users/${user_url}/${bookingEvent.url}`,
+    navigate(`/users/${user_url}/${bookingEvent.url}`,{
       state: { bookingEvent, user },
     });
   };

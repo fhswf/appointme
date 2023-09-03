@@ -1,16 +1,23 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import EventList from "../components/EventList";
 import AppNavbar from "../components/AppNavbar";
 
-import { Box, Container, Fab, Grid, Link, Typography } from "@material-ui/core";
+import { Theme } from '@mui/material/styles';
+import { Box, Container, Fab, Grid, Link, Typography } from "@mui/material";
 
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@mui/icons-material/Add";
 
 import { UserContext } from "../components/PrivateRoute";
 
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
+
+
+
 const App = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const user = useContext(UserContext).user;
   const [connected, setConnected] = useState(false);
 
@@ -68,9 +75,7 @@ const App = () => {
                   {user.name}
                   <br />
                   <Link component={RouterLink} to={"/users/" + user.user_url}>
-                    {history.createHref({
-                      pathname: `/users/${user.user_url}`,
-                    })}
+                    {user.user_url}
                   </Link>
                 </Grid>
                 <Grid item>{addEventButton()}</Grid>

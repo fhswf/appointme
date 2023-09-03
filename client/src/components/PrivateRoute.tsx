@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Redirect, useHistory, RouteProps } from "react-router-dom";
+import { Route, Navigate, useNavigate, RouteProps, Outlet, useLocation } from "react-router-dom";
 import { isAuthenticated, signout } from "../helpers/helpers";
 import { getUserByToken } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";
@@ -15,17 +15,17 @@ export type PrivateRouteProps<P> = RouteProps & {
   component: React.FunctionComponent<P>;
 };
 
-const PrivateRoute = <P,>(p: PrivateRouteProps<P>) => {
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<UserDocument>();
   const token = JSON.parse(localStorage.getItem("access_token") as string);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUserByToken(token)
       .then((res) => {
         if (res.data.success === false) {
           signout();
-          history.push("/landing");
+          navigate("/landing");
         } else {
           console.log("getUserById: %o", res);
           setUser(res.data);
@@ -35,33 +35,15 @@ const PrivateRoute = <P,>(p: PrivateRouteProps<P>) => {
         // TODO: Add SnackBar
         //toast.error(err);
       });
-  }, [history, token]);
+  }, [navigate, token]);
 
   console.log("privateRoute: %o", user);
-  let Component = p.component;
-  return (
-    <UserContext.Provider value={{ user: user }}>
-      <Route
-        {...p}
-        render={(props: any) =>
-          isAuthenticated() ? (
-            user ? (
-              <Component {...props} />
-            ) : (
-              <span>Waiting to get User</span>
-            )
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/landing",
-                state: { from: p.location },
-              }}
-            />
-          )
-        }
-      />
-    </UserContext.Provider>
-  );
+  let location = useLocation();
+
+  if (!isAuthenticated()) {
+    return <Navigate to={"/landing"} state={{ from: location }} />;
+  }
+  return children;
 };
 
 export default PrivateRoute;

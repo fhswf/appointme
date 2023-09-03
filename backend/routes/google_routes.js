@@ -1,19 +1,13 @@
 /**
  * @module router/google
  */
-const express = require("express");
+import { Router } from "express";
 
-const router = express.Router();
+export const googleRouter = Router();
 
-const {
-  generateAuthUrl,
-  googleCallback,
-  revokeScopes,
-  insertEventToGoogleCal,
-  getCalendarList
-} = require("../controller/google_controller");
+import { generateAuthUrl, googleCallback, revokeScopes, insertEventToGoogleCal, getCalendarList } from "../controller/google_controller.js";
 
-const { requireAuth } = require("../handlers/middleware");
+import { requireAuth } from "../handlers/middleware.js";
 
 /**
  * Route to delete an access token from a given user
@@ -23,7 +17,7 @@ const { requireAuth } = require("../handlers/middleware");
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.delete("/revoke", requireAuth, revokeScopes);
+googleRouter.delete("/revoke", requireAuth, revokeScopes);
 
 /**
  * Route to generate an URL to connect the google cal api
@@ -33,9 +27,9 @@ router.delete("/revoke", requireAuth, revokeScopes);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get("/generateUrl", requireAuth, generateAuthUrl);
+googleRouter.get("/generateUrl", requireAuth, generateAuthUrl);
 
-router.get("/calendarList", requireAuth, getCalendarList);
+googleRouter.get("/calendarList", requireAuth, getCalendarList);
 
 /**
  * Callback function - Set in google developer console
@@ -45,7 +39,7 @@ router.get("/calendarList", requireAuth, getCalendarList);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get("/oauthcallback", googleCallback);
+googleRouter.get("/oauthcallback", googleCallback);
 
 /**
  * Route to insert an event into the google calendar of a given user
@@ -55,6 +49,6 @@ router.get("/oauthcallback", googleCallback);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.post("/insertEvent/:user_id", insertEventToGoogleCal);
+googleRouter.post("/insertEvent/:user_id", insertEventToGoogleCal);
 
-module.exports = router;
+export default googleRouter;

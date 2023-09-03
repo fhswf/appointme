@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, FormEvent } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import { StaticDatePicker, PickersDay } from "@material-ui/lab";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
+
+import { makeStyles, createStyles } from '@mui/styles';
 
 import {
-  createMuiTheme,
-  makeStyles,
+  createTheme,
   ThemeProvider,
-} from "@material-ui/core/styles";
+} from "@mui/material/styles";
+
 import {
   Avatar,
   Box,
@@ -20,10 +23,12 @@ import {
   StepLabel,
   TextField,
   Typography,
-} from "@material-ui/core";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import { HourglassFull, Room } from "@material-ui/icons";
+} from "@mui/material";
+
+
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { HourglassFull, Room } from "@mui/icons-material";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
@@ -35,7 +40,7 @@ import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   components: {
     MuiTextField: {
       styleOverrides: {
@@ -128,7 +133,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Booking = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   type Details = { name: string; email: string; description: string };
@@ -146,16 +151,16 @@ const Booking = (props: any) => {
     getUserByUrl(data.user_url)
       .then((res) => {
         if (res.data.length === 0) {
-          history.push("/notfound");
+          navigate("/notfound");
         } else {
           setUser(res.data);
           getEventByUrlAndUser(res.data._id, data.url)
             .then((res) => {
               if (res.data == null) {
-                history.push("/notfound");
+                navigate("/notfound");
               }
               if (res.data.isActive === false) {
-                history.push("/notfound");
+                navigate("/notfound");
               } else {
                 setEvent(res.data);
               }
@@ -168,7 +173,7 @@ const Booking = (props: any) => {
       .catch((err) => {
         return err;
       });
-  }, [data.url, data.user_url, history, selectedDate]);
+  }, [data.url, data.user_url, navigate, selectedDate]);
 
   const isStepOptional = (step: number) => {
     return false;
@@ -212,7 +217,7 @@ const Booking = (props: any) => {
     setActiveStep(0);
   };
 
-  const handleMonthChange = (date: Date) => {};
+  const handleMonthChange = (date: Date) => { };
 
   const handleDateChange = (newValue: Date) => {
     console.log("date: %o", newValue);
@@ -245,18 +250,16 @@ const Booking = (props: any) => {
   };
 
   const renderPickerDay = (
-    date: Date,
-    selectedDates: any,
-    pickersDayProps: any
-  ) => {
+    props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
+      const { day, selectedDate, ...other } = props;
     return (
       <PickersDay
-        {...pickersDayProps}
+        {...props}
         disableMargin
-        disabled={!checkDay(date)}
+        disabled={!checkDay(day)}
         className={clsx({
           [classes.date]: true,
-          highlight: checkDay(date),
+          highlight: checkDay(day),
         })}
       />
     );
@@ -331,8 +334,7 @@ const Booking = (props: any) => {
         details.description
       ).then(() => {
         //toast.success("Event successfully booked!");
-        history.push({
-          pathname: `/booked`,
+        navigate(`/booked`, {
           state: { userid: user._id, event, time: selectedTime },
         });
       });
@@ -432,10 +434,8 @@ const Booking = (props: any) => {
                       className={classes.picker}
                       onChange={handleDateChange}
                       onMonthChange={handleMonthChange}
-                      renderDay={renderPickerDay}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" />
-                      )}
+                      slots={{ day: renderPickerDay }}
+                      slotProps={{ day: { selectedDay: selectedDate } as any }}
                     />
                   </Grid>
 

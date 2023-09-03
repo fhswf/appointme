@@ -1,15 +1,13 @@
 /**
  * @module router/user
  */
-const express = require("express");
-const router = express.Router();
-const {
-  getUser,
-  getUserByUrl,
-  putUser
-} = require("../controller/user_controller");
+import { Router } from "express";
+import { getUser, getUserByUrl, putUser } from "../controller/user_controller.js";
 
-const { requireAuth } = require("../handlers/middleware");
+import { requireAuth } from "../handlers/middleware.js";
+
+export const userRouter = Router();
+
 
 /**
  * Route to fetch a the currently logged in user
@@ -19,7 +17,7 @@ const { requireAuth } = require("../handlers/middleware");
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get("/user", requireAuth, getUser);
+userRouter.get("/user", requireAuth, getUser);
 
 /**
  * Route to fetch a user by a given url
@@ -29,11 +27,11 @@ router.get("/user", requireAuth, getUser);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-router.get("/findUserByUrl", getUserByUrl);
+userRouter.get("/findUserByUrl", getUserByUrl);
 
 /**
  * Update the currently logged in user
  */
-router.put("/user", requireAuth, putUser);
+userRouter.put("/user", requireAuth, putUser);
 
-module.exports = router;
+export default userRouter;

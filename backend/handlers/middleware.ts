@@ -3,7 +3,8 @@
  */
 
 import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import jwt_pkg from 'jsonwebtoken';
+const { decode, sign, verify } = jwt_pkg;
 
 /**
  * Middleware to check if User is authorized
@@ -35,7 +36,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
           message: "Unauthorized! Sign in again!",
         });
       } else {
-        req.user_id = decoded._id as string;
+        //req.user_id = decoded._id as string;
         next();
       }
     });

@@ -1,8 +1,12 @@
 import { isAuthenticated, authenticate } from "../helpers/helpers";
-import { useHistory } from "react-router-dom";
-import { GoogleLogin } from "react-google-login";
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from '@react-oauth/google';
 import { postGoogleLogin } from "../helpers/services/auth_services";
-import { Button, Container, SvgIcon } from "@material-ui/core";
+import { Button, Container, SvgIcon } from "@mui/material";
+
+
+
+
 
 const GoogleIcon = (props) => {
   return (
@@ -32,14 +36,24 @@ const GoogleIcon = (props) => {
   );
 };
 const Login = (props: any) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const sendGoogleToken = (idToken) => {
-    postGoogleLogin(idToken)
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => { 
+      console.log(codeResponse);
+      sendGoogleToken(codeResponse.code);
+    },
+    onError: errorResponseGoogle => console.log(errorResponseGoogle), 
+    scope: "email profile openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+    flow: 'auth-code',
+  });
+
+  const sendGoogleToken = (code) => {
+    postGoogleLogin(code)
       .then((res) => {
         authenticate(res, () => {
           if (isAuthenticated()) {
-            history.push("/app");
+            navigate("/app");
           }
         });
       })
@@ -53,27 +67,20 @@ const Login = (props: any) => {
   };
 
   const errorResponseGoogle = (err) => {
-    console.error("google login error: %o", err);
+    console.error("google login error: %j", err);
     //TODO: Add Snackbar and Alert
   };
 
   return (
     <Container>
-      <GoogleLogin
-        clientId={process.env.REACT_APP_GOOGLE_ID}
-        onSuccess={responseGoogle}
-        onFailure={errorResponseGoogle}
-        cookiePolicy={"single_host_origin"}
-        render={(renderProps) => (
+   
           <Button
-            onClick={renderProps.onClick}
-            disabled={renderProps.disabled}
+            onClick={() => login()}
             startIcon={<GoogleIcon />}
           >
             Sign in with Google
           </Button>
-        )}
-      />
+
     </Container>
   );
 };

@@ -1,22 +1,20 @@
 import { useState, useEffect, FormEvent } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import { StaticDatePicker, PickersDay } from "@material-ui/lab";
-import { makeStyles } from "@material-ui/core/styles";
+import { useNavigate, useParams } from "react-router-dom";
+import { makeStyles } from '@mui/styles';
+import { DateCalendar, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
+
 import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Grid,
+  Alert, Avatar, Box, Button, Container, Grid,
   TextField,
+  Snackbar,
   Typography,
   Link,
-  CircularProgress,
-  Snackbar,
-  Alert,
-} from "@material-ui/core";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
+  CircularProgress
+} from '@mui/material';
+
+
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
@@ -39,7 +37,7 @@ import { Event, IntervalSet, TimeRange } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
 import { useTranslation, Trans } from "react-i18next";
-import { HourglassTop, Room } from "@material-ui/icons";
+import { HourglassTop, Room } from "@mui/icons-material";
 import ReactMarkdown from "react-markdown";
 
 const LOCALES = { en: enUS, de: de, "de-DE": de };
@@ -132,7 +130,7 @@ type Error = {
 
 const Schedule = (props: any) => {
   const param = useParams<{ user_url: string; url: string }>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const { t, i18n } = useTranslation();
 
@@ -154,7 +152,7 @@ const Schedule = (props: any) => {
     getUserByUrl(param.user_url)
       .then((res) => {
         if (res.data.length === 0) {
-          history.push("/notfound");
+          navigate("/notfound");
         } else {
           setUser(res.data);
         }
@@ -171,10 +169,10 @@ const Schedule = (props: any) => {
     getEventByUrlAndUser(user._id, param.url)
       .then((res) => {
         if (res.data == null) {
-          history.push("/notfound");
+          navigate("/notfound");
         }
         if (res.data.isActive === false) {
-          history.push("/notfound");
+          navigate("/notfound");
         } else {
           setEvent(res.data);
         }
@@ -223,7 +221,7 @@ const Schedule = (props: any) => {
   }, [selectedDate, slots]);
 
   const handleErrorClose = () => {
-    history.push("/");
+    navigate("/");
   };
 
   const checkDay = (date: Date) => {
@@ -246,19 +244,17 @@ const Schedule = (props: any) => {
   };
 
   const renderPickerDay = (
-    date: Date,
-    selectedDates: any,
-    pickersDayProps: any
-  ) => {
+    props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
+      const { day, selectedDate, ...other } = props;
     return (
       <PickersDay
-        {...pickersDayProps}
+        {...props}
         disableMargin
-        disabled={!checkDay(date)}
+        disabled={!checkDay(day)}
         className={clsx({
           [classes.date]: true,
-          selected: selectedDate && isSameDay(date, selectedDate),
-          highlight: checkDay(date),
+          selected: selectedDate && isSameDay(day, selectedDate),
+          highlight: checkDay(day),
         })}
       />
     );
@@ -323,8 +319,7 @@ const Schedule = (props: any) => {
       details.description
     )
       .then(() => {
-        history.push({
-          pathname: `/booked`,
+        navigate('/booked', {
           state: { user, event, time: selectedTime },
         });
       })
@@ -340,7 +335,6 @@ const Schedule = (props: any) => {
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
-      locale={LOCALES[i18n.language]}
     >
       <Container>
         {user && event ? (
@@ -377,7 +371,7 @@ const Schedule = (props: any) => {
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => history.goBack()}
+                    onClick={() => props.navigation.goBack()}
                   >
                     {t("Back")}
                   </Button>
@@ -426,16 +420,13 @@ const Schedule = (props: any) => {
                 </Box>
               </Box>
               <Box sx={{ gridArea: "picker_l" }}>
-                <StaticDatePicker
-                  displayStaticWrapperAs="desktop"
+                <DateCalendar
                   value={selectedDate}
                   className={classes.picker}
                   onChange={handleDateChange}
                   onMonthChange={handleMonthChange}
-                  renderDay={renderPickerDay}
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" />
-                  )}
+                  slots={{ day: renderPickerDay }}
+                  slotProps={{ day: { selectedDay: selectedDate } as any }}
                 />
               </Box>
 

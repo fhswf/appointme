@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { Chip } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Chip } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import { IntervalSet, TimeRange } from "@fhswf/bookme-common";
 import { addMinutes } from "date-fns";

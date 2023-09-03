@@ -3,11 +3,11 @@
 /**
  * @module event_controller
  */
-import { EventDocument, EventModel } from "../models/Event";
+import { EventDocument, EventModel } from "../models/Event.js";
 import { Event, IntervalSet } from "@fhswf/bookme-common";
-import { freeBusy, events } from "./google_controller";
+import { freeBusy, events } from "./google_controller.js";
 import { ValidationError, validationResult } from "express-validator";
-import { errorHandler } from "../handlers/errorhandler";
+import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
 
@@ -193,17 +193,17 @@ export const getEventListController = (req: Request, res: Response): void => {
  * @param {request} req
  * @param {response} res
  */
-export const getActiveEventsController = (req: Request, res: Response): void => {
+export const getActiveEventsController = (req: Request, res: Response): Promise<void> => {
   const userid = <string>req.query.user;
   const query = EventModel.find({ user: userid, isActive: true });
 
-  void query.exec(function (err, event) {
-    if (err) {
-      res.status(400).json({ error: err });
-    } else {
+  return query.exec()
+    .then(event => {
       res.status(200).json(event);
-    }
-  });
+    })
+    .catch(err => {
+      res.status(400).json({ error: err });
+    });
 };
 
 /**

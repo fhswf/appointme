@@ -18,7 +18,7 @@ const eventSchema = new Schema<EventDocument>({
   },
   location: {
     type: String,
-    default: "No explizit Location",
+    default: "Online",
     trim: true,
   },
 
@@ -43,11 +43,6 @@ const eventSchema = new Schema<EventDocument>({
   isActive: {
     type: Boolean,
     default: false,
-  },
-
-  calendardays: {
-    type: Boolean,
-    default: true,
   },
 
   /** reserved buffer before an event (in minutes) */

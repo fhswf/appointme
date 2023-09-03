@@ -2,17 +2,12 @@
  * @module routers/auth
  */
 
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+export const authenticationRouter = Router();
 
-const {
-  registerController,
-  activationController,
-  loginController,
-  googleLoginController,
-} = require("../controller/authentication_controller");
+import { registerController, activationController, loginController, googleLoginController } from "../controller/authentication_controller.js";
 
-const { validateRegister, validateLogin } = require("../handlers/validation");
+import { validateRegister, validateLogin } from "../handlers/validation.js";
 
 /**
  * Route to register a new user.
@@ -23,7 +18,7 @@ const { validateRegister, validateLogin } = require("../handlers/validation");
  * @param {callback} middleware - Express middleware.
  * @access public
  */
-router.post("/register", validateRegister, registerController);
+authenticationRouter.post("/register", validateRegister, registerController);
 
 /**
  * Route to login a user.
@@ -34,7 +29,7 @@ router.post("/register", validateRegister, registerController);
  * @param {callback} middleware - Express middleware.
  * @access public
  */
-router.post("/login", validateLogin, loginController);
+authenticationRouter.post("/login", validateLogin, loginController);
 
 /**
  * Route persist a new user into the DB.
@@ -45,7 +40,7 @@ router.post("/login", validateLogin, loginController);
  * @param {callback} middleware - Express middleware.
  * @access public
  */
-router.post("/activate", activationController);
+authenticationRouter.post("/activate", activationController);
 
 /**
  * Route to login a user. When the user does not exist we create one.
@@ -56,6 +51,6 @@ router.post("/activate", activationController);
  * @param {callback} middleware - Express middleware.
  * @access public
  */
-router.post("/google_oauth2_oidc", googleLoginController);
+authenticationRouter.post("/google_oauth2_oidc", googleLoginController);
 
-module.exports = router;
+export default authenticationRouter;

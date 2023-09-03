@@ -81,13 +81,9 @@ const userSchema = new Schema<UserDocument>(
       default: "",
       unique: true,
     },
-    welcome: {
-      type: String,
-      default: "Willkommen auf meiner Planungsseite",
-    },
     pull_calendars: {
-      type: Array,
-      default: null
+      type: [String],
+      default: []
     },
     push_calendar: {
       type: String
@@ -97,23 +93,5 @@ const userSchema = new Schema<UserDocument>(
     timestamps: true,
   }
 );
-
-userSchema.pre("save", function (next) {
-
-  // only hash the password if it has been modified (or is new)
-  if (!this.isModified("password")) {
-    return next();
-  }
-
-  // generate a salt
-  genSalt(10)
-    .then((salt: string) =>    // hash the password using our new salt
-      hash(this.password, salt)
-        .then((hsh: string) => { this.password = hsh; next(); })
-        .catch(next)
-    )
-    .catch(next);
-
-});
 
 export const UserModel = model<UserDocument>("User", userSchema);

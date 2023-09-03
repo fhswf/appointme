@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import AppNavbar from "../components/AppNavbar";
 
-import { Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@mui/material";
 
 import { toast } from "react-toastify";
 import { getEventByID, updateEvent } from "../helpers/services/event_services";
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { EventForm } from "../components/EventForm";
 import { EMPTY_EVENT, Event } from "@fhswf/bookme-common";
@@ -15,35 +15,35 @@ export type EventFormProps = {
   handleOnSubmit: (evt: Event) => void;
 };
 
-export type EditEventProps = RouteComponentProps<{ id: string }> & {};
+// export type EditEventProps = RouteComponentProps<{ id: string }> & {};
 
-const EditEvent = (props: EditEventProps): JSX.Element => {
-  const eventID = props.match.params.id;
+const EditEvent = (): JSX.Element => {
+  const eventID = useParams<{ id: string }>().id;
   const token = JSON.parse(localStorage.getItem("access_token"));
-  const history = useHistory();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(EMPTY_EVENT);
 
   useEffect(() => {
     getEventByID(token, eventID).then((res) => {
       if (res.data.success === false) {
         signout();
-        history.push("/landing");
+        navigate("/landing");
       } else {
         console.log("editEvent: getEventById returned %o", res.data);
         setFormData(res.data as Event);
       }
     });
-  }, [eventID, token, history]);
+  }, [eventID, token, navigate]);
 
   const saveEvent = (formData: Event) => {
     updateEvent(token, eventID, formData)
       .then((res) => {
         if (res.data.success === false) {
           signout();
-          history.push("/landing");
+          navigate("/landing");
         } else {
           toast.success(res.data.msg);
-          history.push("/app");
+          navigate("/app");
         }
       })
       .catch((err) => {

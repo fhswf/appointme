@@ -1,0 +1,126 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn --help
+
+PATH: 
+  /home/cgawron/.vscode-server-insiders/cli/servers/Insiders-35be9bf683eace09796e59d54f1f225bbc3a7866/server/bin/remote-cli:/home/cgawron/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/opt/dell/srvadmin/iSM/bin:/home/cgawron/git/flutter/bin:/home/cgawron/git/flutter/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  18.7.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: Failed to replace env in config: ${NPM_TOKEN}
+      at /usr/lib/node_modules/yarn/lib/cli.js:98430:13
+      at String.replace (<anonymous>)
+      at envReplace (/usr/lib/node_modules/yarn/lib/cli.js:98425:16)
+      at Function.normalizeConfig (/usr/lib/node_modules/yarn/lib/cli.js:31887:69)
+      at NpmRegistry.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:31917:34)
+      at Generator.next (<anonymous>)
+      at step (/usr/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "@fhswf/bookme-client",
+    "version": "1.1.0",
+    "homepage": "https://jupiter.fh-swf.de/meeting",
+    "contributors": [
+      {
+        "name": "Felix Hinnemann"
+      },
+      {
+        "name": "Christian Gawron",
+        "email": "gawron.christian@fh-swf.de"
+      }
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/fhswf/book_me.git"
+    },
+    "publishConfig": {
+      "registry": "https://npm.pkg.github.com"
+    },
+    "license": "MIT",
+    "proxy": "https://jupiter.fh-swf.de/",
+    "dependencies": {
+      "@emotion/react": "^11.4.0",
+      "@emotion/styled": "^11.3.0",
+      "@fhswf/bookme-common": "^1.3.0",
+      "@material-ui/core": "^5.0.0-alpha.32",
+      "@material-ui/icons": "^5.0.0-alpha.29",
+      "@material-ui/lab": "^5.0.0-alpha.32",
+      "@sentry/react": "^6.11.0",
+      "@sentry/tracing": "^6.5.1",
+      "@testing-library/react": "^12.0.0",
+      "@testing-library/user-event": "^13.2.1",
+      "@types/react": "^17.0.5",
+      "axios": "^0.21.1",
+      "date-fns": "^2.22.1",
+      "i18next": "^20.3.0",
+      "i18next-browser-languagedetector": "^6.1.1",
+      "i18next-http-backend": "^1.2.4",
+      "js-cookie": "^2.2.1",
+      "jsonwebtoken": "^8.5.1",
+      "moment": "^2.29.1",
+      "react": "^17.0.0",
+      "react-dom": "^17.0.0",
+      "react-google-login": "^5.1.22",
+      "react-i18next": "^11.11.4",
+      "react-markdown": "^6.0.2",
+      "react-router-dom": "^5.2.0",
+      "react-time-picker": "^4.0.1",
+      "react-toastify": "^6.0.9"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "npx cypress run --spec cypress/integration/**/*.spec.js --record",
+      "cy:ci": "npx cypress run --spec cypress/integration/**/*.spec.js --headless --config-file cypress_ci.json --record",
+      "ci": "start-server-and-test start http://localhost:3000/meeting cy:ci"
+    },
+    "eslintConfig": {
+      "extends": "react-app"
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "@semantic-release/changelog": "^5.0.1",
+      "@semantic-release/commit-analyzer": "^8.0.1",
+      "@semantic-release/git": "^9.0.0",
+      "@semantic-release/github": "^7.2.0",
+      "@semantic-release/npm": "^7.1.3",
+      "@semantic-release/release-notes-generator": "^9.0.3",
+      "@types/react-router-dom": "^5.1.7",
+      "cypress": "^8.2.0",
+      "dotenv-cli": "^4.0.0",
+      "i18next-parser": "4.4.0",
+      "i18next-scanner": "3.0.0",
+      "node-sass": "^6.0.1",
+      "react-scripts": "^4.0.3",
+      "semantic-release": "^17.4.4",
+      "semantic-release-monorepo": "^7.0.5",
+      "start-server-and-test": "^1.13.1",
+      "wait-on": "^5.3.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

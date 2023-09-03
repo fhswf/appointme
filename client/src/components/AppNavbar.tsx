@@ -1,25 +1,30 @@
 import React, { useState, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isAuthenticated, signout } from "../helpers/helpers";
 
-import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
-import { UserContext } from "./PrivateRoute";
-import { Divider, Snackbar } from "@material-ui/core";
+import {
+  AppBar,
+  Avatar,
+  Divider,
+  Toolbar,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Snackbar
+} from "@mui/material";
 
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import LinkIcon from "@material-ui/icons/Link";
-import LoginIcon from "@material-ui/icons/Login";
-import LogoutIcon from "@material-ui/icons/Logout";
-import PersonIcon from "@material-ui/icons/Person";
+import { makeStyles } from "@mui/styles";
+import { UserContext } from "./PrivateRoute";
+
+import CalendarTodayIcon  from "@mui/icons-material/CalendarToday";
+import LinkIcon from "@mui/icons-material/Link";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AppNavbar = () => {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const user = useContext(UserContext).user;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [snack, setSnack] = React.useState<string | null>(null);
@@ -46,11 +51,11 @@ const AppNavbar = () => {
 
   const handleLogout = () => {
     signout();
-    history.push("/landing");
+    navigate("/landing");
   };
 
   const handleLogin = () => {
-    history.push("/login");
+    navigate("/login");
   };
 
   const copyToClipboard = () => {
@@ -64,7 +69,7 @@ const AppNavbar = () => {
     setSnack("Link copied");
   };
 
-  const handleOnClick = (target: string) => () => history.push(target);
+  const handleOnClick = (target: string) => () => navigate(target);
 
   const menuId = "primary-search-account-menu";
 

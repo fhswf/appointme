@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-import { Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@mui/material";
 import { Event, TimeRange, User } from "@fhswf/bookme-common";
 import { useTranslation, Trans } from "react-i18next";
 
@@ -13,7 +13,7 @@ type LocationState = {
 export type FinishedProps = {};
 
 const Finished = (props: FinishedProps) => {
-  const location = useLocation<LocationState>();
+  const location = useLocation();
   const { t, i18n } = useTranslation();
   console.log(location.state);
   const time = location.state.time as TimeRange;

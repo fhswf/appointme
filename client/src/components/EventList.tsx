@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
-import { Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
@@ -23,7 +23,7 @@ type EventListProps = {
 
 const EventList = (props: EventListProps) => {
   const token = JSON.parse(localStorage.getItem("access_token") as string);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
@@ -31,13 +31,13 @@ const EventList = (props: EventListProps) => {
     getUsersEvents(token).then((res) => {
       if (res.data.success === false) {
         signout();
-        history.push("/landing");
+        navigate("/landing");
       } else {
         console.log("events: %o", res.data);
         setEvents(res.data);
       }
     });
-  }, [token, history]);
+  }, [token, navigate]);
 
   const onDelete = (event: EventDocument) => {
     setEvents(events.filter((ev) => ev._id !== event._id));

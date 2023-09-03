@@ -10,11 +10,11 @@ import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { UserModel, User } from "../models/User";
+import { UserModel, User } from "../models/User.js";
 import { Request, Response } from 'express';
 
-import remark = require('remark');
-import html = require('remark-html');
+import remark from 'remark';
+import html from 'remark-html';
 import { Event, IntervalSet } from '@fhswf/bookme-common';
 
 

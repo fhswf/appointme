@@ -3,15 +3,18 @@
 /**
  * @module authentication_controller
  */
-import { UserModel } from "../models/User";
-import { decode, sign, verify } from "jsonwebtoken";
-// const _ = require("lodash");
+import { UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
 import { createTransport } from "nodemailer";
-import { compare } from "bcryptjs";
 import { google } from "googleapis";
 import { OAuth2Client, Credentials } from 'google-auth-library';
 import { Request, Response } from "express";
+
+import bcrypt_pkg from 'bcryptjs';
+const { compare } = bcrypt_pkg;
+
+import jwt_pkg from 'jsonwebtoken';
+const { decode, sign, verify } = jwt_pkg;
 
 const oAuth2Client = new OAuth2Client({
   clientId: process.env.GOOGLE_ID,
@@ -116,16 +119,16 @@ export const activationController = (req, res): void => {
         //Create a new User
         const userToSave = new UserModel({ name, email, password, user_url });
         //Save the new created User to the DB
-        void userToSave.save(err => {
-          if (err) {
-            res.status(400).json({ errors: "You already have an Account" });
-          } else {
+        userToSave.save()
+          .then(() => {
             res.status(201).json({
               success: true,
               message: "You successfully signed up!",
             });
-          }
-        });
+          })
+          .catch(err => {
+            res.status(400).json({ errors: "You already have an Account", err });
+          });
       }
     });
   } else {

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useContext, useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { signout } from "../helpers/helpers";
 
-import { Container } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Container } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme) => ({
 type AddEventProps = {};
 
 const AddEvent = (props: AddEventProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("access_token") as string);
   const [formData, setFormData] = useState(EMPTY_EVENT);
   const user = useContext(UserContext).user;
@@ -43,10 +43,10 @@ const AddEvent = (props: AddEventProps) => {
         .then((res) => {
           if (res.data.success === false) {
             signout();
-            history.push("/landing");
+            navigate("/landing");
           } else {
             toast.success(res.data.msg);
-            history.push("/app");
+            navigate("/app");
           }
         })
         .catch((err) => {

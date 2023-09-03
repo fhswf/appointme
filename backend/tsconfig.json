@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es6",
     "allowJs": true,
     "strict": false,
     "baseUrl": "./",
@@ -11,10 +11,10 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "types": [
-      "node"
     ],
     "typeRoots": [
       "./types",

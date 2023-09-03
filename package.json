@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
-  "private": "true",
   "directories": {
     "doc": "docs"
   },
@@ -32,11 +31,11 @@
     "url": "https://github.com/fhswf/book_me/issues"
   },
   "homepage": "https://github.com/fhswf/book_me#readme",
-  "dependencies": {
-    "@fhswf/bookme-backend": "^1.2.2",
-    "@fhswf/bookme-client": "^1.1.0",
-    "@fhswf/bookme-common": "^1.3.0"
-  },
+  "workspaces": [
+    "common",
+    "backend",
+    "client"
+  ],
   "devDependencies": {
     "@lerna/project": "^4.0.0",
     "@semantic-release/changelog": "^5.0.1",

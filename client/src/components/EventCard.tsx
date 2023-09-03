@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { deleteEvent } from "../helpers/services/event_services";
 import {
@@ -12,12 +12,12 @@ import {
   IconButton,
   Snackbar,
   Switch,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Alert } from "@material-ui/lab";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import ShareIcon from "@material-ui/icons/Share";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Alert } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ShareIcon from "@mui/icons-material/Share";
 import { EventDocument } from "../helpers/EventDocument";
 
 const useStyles = makeStyles({
@@ -40,7 +40,7 @@ export const EventCard = (props: EventCardProps) => {
   const [failure, setFailure] = useState(false);
   const token = props.token;
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
     setActive(evt.target.checked);
@@ -49,9 +49,7 @@ export const EventCard = (props: EventCardProps) => {
 
   const handleCopy = () => {
     let loc = window.location;
-    let url = history.createHref({
-      pathname: `/users/${props.url}/${props.event.url}`,
-    });
+    let url = `/users/${props.url}/${props.event.url}`;
     url = loc.protocol + "//" + loc.host + url;
     console.log("url: %s", url);
 
@@ -68,7 +66,7 @@ export const EventCard = (props: EventCardProps) => {
     deleteEvent(token, props.event._id).then((res) => {
       if (res.data.success === false) {
         signout();
-        history.push("/landing");
+        navigate("/landing");
       }
     });
     if (props.onDelete) {

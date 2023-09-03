@@ -14,12 +14,13 @@ import {
   FormControlLabel,
   Checkbox,
   FormGroup,
-  makeStyles,
   Typography,
   Stack,
   Input,
-} from "@material-ui/core";
-import { Add, Delete } from "@material-ui/icons";
+  SelectChangeEvent,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { Add, Delete } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "@fhswf/bookme-common";
 
@@ -200,8 +201,8 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   }
 
   const handleSelect =
-    <X extends EvtType>(key: keyof Event) =>
-    (evt: ChangeEvent<X>) => {
+    (key: keyof Event) =>
+    (evt: SelectChangeEvent<number>, child: React.ReactNode) => {
       setChanged(true);
       console.log("onChange: %o", evt);
       setFormData({ ...formData, [key]: evt.target.value } as Event);
