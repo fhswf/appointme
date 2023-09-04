@@ -19,7 +19,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "license": "MIT",
-  "proxy": "https://jupiter.fh-swf.de/",
+  "__proxy": "https://jupiter.fh-swf.de/",
   "dependencies": {
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
