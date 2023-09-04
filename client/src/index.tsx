@@ -81,11 +81,12 @@ const theme = createTheme({
 
 const container = document.getElementById("root");
 const root = createRoot(container);
+const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
 
 root.render(
   <React.StrictMode>
     <Suspense fallback="loading">
-      <GoogleOAuthProvider clientId="692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={GOOGLE_ID}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
             <BrowserRouter basename={process.env.REACT_APP_URL}>

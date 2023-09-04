@@ -27,14 +27,13 @@ export async function postToActivate(token) {
   return response;
 }
 
-export async function postGoogleLogin(idToken) {
+export async function postGoogleLogin(code) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/auth/google_oauth2_oidc`,
-    {},
+    `${process.env.REACT_APP_API_URI}/auth/google_oauth2_code`,
     {
-      headers: {
-        Authorization: "Bearer " + idToken,
-      },
+      code,
+    },
+    {
     }
   );
 

@@ -1,6 +1,6 @@
 import { isAuthenticated, authenticate } from "../helpers/helpers";
 import { useNavigate } from "react-router-dom";
-import { useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin, useGoogleOneTapLogin, GoogleLogin } from '@react-oauth/google';
 import { postGoogleLogin } from "../helpers/services/auth_services";
 import { Button, Container, SvgIcon } from "@mui/material";
 
@@ -38,19 +38,11 @@ const GoogleIcon = (props) => {
 const Login = (props: any) => {
   const navigate = useNavigate();
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => { 
-      console.log(codeResponse);
-      sendGoogleToken(codeResponse.code);
-    },
-    onError: errorResponseGoogle => console.log(errorResponseGoogle), 
-    scope: "email profile openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
-    flow: 'auth-code',
-  });
-
-  const sendGoogleToken = (code) => {
-    postGoogleLogin(code)
+  const sendGoogleToken = (credential) => {
+    console.log("postGoogleLogin: code=%s", credential)
+    postGoogleLogin(credential)
       .then((res) => {
+        console.log("postGoogleLogin: %o", res);
         authenticate(res, () => {
           if (isAuthenticated()) {
             navigate("/app");
@@ -73,13 +65,17 @@ const Login = (props: any) => {
 
   return (
     <Container>
-   
-          <Button
-            onClick={() => login()}
-            startIcon={<GoogleIcon />}
-          >
-            Sign in with Google
-          </Button>
+
+      <GoogleLogin
+        onSuccess={credentialResponse => {
+          console.log(credentialResponse);
+          sendGoogleToken(credentialResponse.credential);
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+        useOneTap
+      />;
 
     </Container>
   );

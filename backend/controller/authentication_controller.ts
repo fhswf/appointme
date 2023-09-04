@@ -10,17 +10,29 @@ import { google } from "googleapis";
 import { OAuth2Client, Credentials } from 'google-auth-library';
 import { Request, Response } from "express";
 
+import dotenv from "dotenv";
+dotenv.config({
+  path: "./config/config.env",
+});
+
 import bcrypt_pkg from 'bcryptjs';
 const { compare } = bcrypt_pkg;
 
 import jwt_pkg from 'jsonwebtoken';
 const { decode, sign, verify } = jwt_pkg;
 
+const REDIRECT_URI = "http://localhost:5000/bookme/api/v1/google/oauthcallback";
+// `${process.env.API_URL}/oauthcallback`
+console.log("redirectUri: %s", REDIRECT_URI);
+console.log("clientId: %s", process.env.GOOGLE_ID);
+
 const oAuth2Client = new OAuth2Client({
   clientId: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
-  redirectUri: `${process.env.API_URL}/oauthcallback`,
+  redirectUri: REDIRECT_URI,
 });
+
+
 
 const transporter = createTransport({
   service: "gmail",
@@ -189,9 +201,10 @@ export const loginController = (req, res): void => {
 };
 
 export const googleLoginController = (req: Request, res: Response): void => {
-  //Fetch the google idToken from req.body
-  const idToken = req.headers.authorization.split(" ")[1];
-  void oAuth2Client
+  // Get authorization code from request
+  const idToken = req.body.code;
+
+  oAuth2Client
     .verifyIdToken({ idToken, audience: process.env.GOOGLE_ID })
     .then(response => {
       const { email_verified, name, email, picture, sub } = response.getAttributes().payload;
@@ -223,6 +236,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
             });
           })
           .catch(error => {
+            console.error('Error saving user: %o', error);
             res.status(400).json({ message: "User signup failed with google", error })
           });
       } else {
@@ -230,6 +244,12 @@ export const googleLoginController = (req: Request, res: Response): void => {
           errors: "Google login failed. Try again",
         });
       }
+    })
+    .catch((err) => {
+      console.error('Error retrieving access token', err);
+      res.status(400).json({
+        errors: "Google login failed. Try again",
+      });
     });
 }
 

@@ -44,13 +44,13 @@ authenticationRouter.post("/activate", activationController);
 
 /**
  * Route to login a user. When the user does not exist we create one.
- * @name post/google_oauth2_oidc
+ * @name post/google_oauth2_code
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  * @access public
  */
-authenticationRouter.post("/google_oauth2_oidc", googleLoginController);
+authenticationRouter.post("/google_oauth2_code", googleLoginController);
 
 export default authenticationRouter;

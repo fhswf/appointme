@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 
 // Dev Loggin Middleware
 if (process.env.NODE_ENV === "development") {
+  console.log("enabling CORS for %s", process.env.CLIENT_URL);
   app.use(
     cors({
       origin: process.env.CLIENT_URL,

@@ -13,7 +13,7 @@ import Schema$Event = calendar_v3.Schema$Event;
 import { UserModel, User } from "../models/User.js";
 import { Request, Response } from 'express';
 
-import remark from 'remark';
+import { remark } from 'remark';
 import html from 'remark-html';
 import { Event, IntervalSet } from '@fhswf/bookme-common';
 
