@@ -15,8 +15,9 @@ export type FinishedProps = {};
 const Finished = (props: FinishedProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  console.log(location.state);
-  const time = location.state.time as TimeRange;
+  console.log("state: %o", location.state);
+  const time = location.state.time as Date;
+  const event = location.state.event;
   const user = location.state.user;
 
   return (
@@ -26,15 +27,15 @@ const Finished = (props: FinishedProps) => {
       </Typography>
       <Typography variant="body1">
         <Trans i18nKey="confirmationText">
-          You booked an appointment with {{ user: user.name }} appointment on{" "}
+          You booked an {{ event: event?.name }} appointment on{" "}
           {{
-            date: time.start.toLocaleDateString(i18n.language, {
+            date: time?.toLocaleDateString(i18n.language, {
               dateStyle: "short",
             }),
           }}
           at
           {{
-            time: time.start.toLocaleTimeString(i18n.language, {
+            time: time?.toLocaleTimeString(i18n.language, {
               timeStyle: "short",
             }),
           }}

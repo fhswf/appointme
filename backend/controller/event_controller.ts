@@ -52,6 +52,10 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
             const days = {}
             const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }])
             events.forEach(evt => {
+              console.log('event: %o', evt)
+              if (!evt.start.dateTime) {
+                return
+              }
               const day = startOfDay(new Date(evt.start.dateTime)).toISOString()
               if (day in days) {
                 days[day] += 1
@@ -77,7 +81,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
                   const calIntervals = new IntervalSet();
                   let current = timeMin;
                   for (const busy of res.data.calendars[key].busy) {
-                    //console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+                    console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
                     const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
                     const _end = addMinutes(new Date(busy.end), event.bufferafter);
                     if (current < _start)

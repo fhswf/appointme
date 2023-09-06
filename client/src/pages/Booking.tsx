@@ -34,10 +34,10 @@ import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
-import { addMonths, addMinutes, format } from "date-fns";
+import { addMonths, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event, Slot, IntervalSet } from "@fhswf/bookme-common";
 import { UserDocument } from "../helpers/UserDocument";
 
 const theme = createTheme({
@@ -143,7 +143,7 @@ const Booking = (props: any) => {
   const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setDate] = useState<Date>(new Date());
-  const [slots, setSlots] = useState<Slot[]>([]);
+  const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
 
@@ -220,12 +220,12 @@ const Booking = (props: any) => {
   const handleMonthChange = (date: Date) => { };
 
   const handleDateChange = (newValue: Date) => {
-    console.log("date: %o", newValue);
+    console.log("change date: %o", startOfDay(newValue));
     if (user) {
-      getAvailableTimes(newValue, addMonths(newValue, 1), event.url, user._id)
+      getAvailableTimes(startOfDay(newValue), endOfDay(newValue), event.url, user._id)
         .then((slots) => {
           console.log("slots: %j", slots);
-          //setSlots(slots);
+          setSlots(slots);
         })
         .catch((err) => {
           console.error("failed to get available times");

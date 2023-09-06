@@ -29,6 +29,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
         } else {
           console.log("getUserById: %o", res);
           setUser(res.data);
+          console.log("user set to %o", res.data);
         }
       })
       .catch(() => {
@@ -37,13 +38,12 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
       });
   }, [navigate, token]);
 
-  console.log("privateRoute: %o", user);
   let location = useLocation();
 
   if (!isAuthenticated()) {
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }
-  return children;
+  return <UserContext.Provider value={{user}}>{children}</UserContext.Provider>;
 };
 
 export default PrivateRoute;

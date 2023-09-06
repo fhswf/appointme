@@ -59,14 +59,7 @@ const AppNavbar = () => {
   };
 
   const copyToClipboard = () => {
-    var dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = link;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-    setAnchorEl(null);
-    setSnack("Link copied");
+    navigator.clipboard.writeText(link).then(() => setSnack("Link copied"));
   };
 
   const handleOnClick = (target: string) => () => navigate(target);
@@ -108,29 +101,27 @@ const AppNavbar = () => {
     </MenuItem>
   );
 
-  const userMenu = (
-    <>
+  const userMenu = [
       <MenuItem onClick={handleMenuClose}>
         <ListItemIcon>
           <PersonIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Profile</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      </MenuItem>,
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
       <MenuItem component={Link} to="/integration">
         <ListItemIcon>
           <CalendarTodayIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Calendar Integration</ListItemText>
-      </MenuItem>
+      </MenuItem>,
       <MenuItem onClick={copyToClipboard}>
         <ListItemIcon>
           <LinkIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Copy your link</ListItemText>
       </MenuItem>
-    </>
-  );
+  ];
 
   const renderMenu = (
     <Menu
@@ -148,6 +139,7 @@ const AppNavbar = () => {
     </Menu>
   );
 
+  console.log("AppNavbar: user=%o", user);
   return (
     <>
       <AppBar position="static">

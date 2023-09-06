@@ -58,7 +58,7 @@ export const googleCallback = (req: Request, res: Response): void => {
     void oAuth2Client.getToken(code)
       .then(token => {
         saveTokens(user, token);
-        res.redirect(`${process.env.CLIENT_URL}/integration/select`);
+        res.redirect(`${process.env.CLIENT_URL}${process.env.BASE_PATH}/integration/select`);
       })
       .catch(error => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

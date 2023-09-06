@@ -42,6 +42,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import { toast } from "react-toastify";
 import { UserContext } from "../components/PrivateRoute";
+import { tr } from "date-fns/locale";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);
@@ -80,7 +81,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
       <FormControlLabel
         control={
           <Checkbox
-            checked={state[item.id]}
+            checked={state[item.id] ? true : false}
             onChange={(event) => {
               console.log(
                 "onChange: %s %o\n%o",
@@ -129,7 +130,7 @@ const PushCalendar = ({ user, calendarList }) => {
     return <div></div>;
   }
 
-  console.log("pushCalendar: %o %o", user, calendarList);
+  console.log("pushCalendar: %o %o", pushCal, calendarList);
 
   return (
     <>
@@ -283,6 +284,7 @@ const Calendarintegration = () => {
   useEffect(() => {
     if (!user || !user.google_tokens || !user.google_tokens.access_token) {
       setConnected(false);
+      console.log("no user or no access token: %o", user);
     } else {
       setConnected(true);
       console.log("user: %o", user);
@@ -319,6 +321,7 @@ const Calendarintegration = () => {
         signout();
         navigate("/landing");
       } else {
+        console.log("getAuthUrl: %o", res.data.url);
         setUrl(res.data.url as string);
       }
     });
@@ -354,7 +357,7 @@ const Calendarintegration = () => {
               <img
                 className="icon"
                 alt="Google Calendar"
-                src="/icons/google_calendar_icon.svg"
+                src="/meeting/icons/google_calendar_icon.svg"
                 width="32"
               />{" "}
               Google Calendar

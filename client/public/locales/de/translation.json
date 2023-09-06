@@ -11,7 +11,7 @@
     "Back": "Zurück",
     "Confirm & Book": "Termin bestätigen",
     "Confirmation": "Bestätigung",
-    "confirmationText": "Sie haben einen Termin mit {{user}} am {{date}} um {{time}} Uhr gebucht.",
+    "confirmationText": "Sie haben eine {{event}} am {{date}} um {{time}} Uhr gebucht.",
     "availableSlots": "Am {{date}} sind die folgenden Termine verfügbar. Reservieren Sie einen oder wählen Sie einen anderen Tag.",
     "minutes": "Minuten"
 }

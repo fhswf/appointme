@@ -29,7 +29,7 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
-//import de from "date-fns/locale/de";
+
 import { de, enUS } from "date-fns/locale";
 import BookDetails, { BookingFormData } from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
@@ -265,7 +265,7 @@ const Schedule = (props: any) => {
   };
 
   const handleDateChange = (newValue: Date) => {
-    console.log("date: %o", newValue);
+    console.log("selected date: %o", startOfDay(newValue));
     if (user) {
       let dayInt = new IntervalSet(startOfDay(newValue), endOfDay(newValue));
       setDaySlots(dayInt.intersect(slots));

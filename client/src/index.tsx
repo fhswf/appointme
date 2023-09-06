@@ -83,6 +83,8 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
 
+console.log("base url: %s", process.env.REACT_APP_URL);
+
 root.render(
   <React.StrictMode>
     <Suspense fallback="loading">
@@ -116,7 +118,7 @@ root.render(
                 } />
 
                 <Route
-                  path="/integration"
+                  path="/integration/*"
                   element={
                     <PrivateRoute>
                       <Calendarintegration />

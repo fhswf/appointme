@@ -12,6 +12,7 @@ import { Request, Response } from 'express';
  */
 export const getUser = (req: Request, res: Response): void => {
   const userid = req.user_id;
+  console.log('getUser: %s', userid);
   void UserModel.findOne({ _id: userid },
     {
       "_id": 1,
