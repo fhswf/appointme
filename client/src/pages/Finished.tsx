@@ -27,7 +27,7 @@ const Finished = (props: FinishedProps) => {
       </Typography>
       <Typography variant="body1">
         <Trans i18nKey="confirmationText">
-          You booked an {{ event: event?.name }} appointment on{" "}
+          You booked an {{ event: event?.name }} with {{ name: user.name }} appointment on{" "}
           {{
             date: time?.toLocaleDateString(i18n.language, {
               dateStyle: "short",

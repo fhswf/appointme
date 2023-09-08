@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense,  } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from 'react-dom/client';
 

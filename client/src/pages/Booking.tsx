@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useTransition, useEffect, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
@@ -34,7 +34,7 @@ import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
-import { addMonths, addMinutes, format, startOfDay, endOfDay } from "date-fns";
+import { addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot, IntervalSet } from "@fhswf/bookme-common";
@@ -131,6 +131,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Error = {
+  message: string;
+} & any;
+
 const Booking = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
@@ -143,9 +147,31 @@ const Booking = (props: any) => {
   const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setDate] = useState<Date>(new Date());
+  const [beginDate, setBeginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
+  const [error, setError] = useState<Error | null>(null);
+  const [isPending, startTransition] = useTransition()
+
+  const updateSlots = () => {
+    getAvailableTimes(
+      beginDate,
+      addDays(addMonths(beginDate, 1), 1),
+      event.url,
+      user._id
+    )
+      .then((slots) => {
+        console.log("slots %o", slots);
+        setSlots(slots);
+      })
+      .catch((err) => {
+        setError({
+          message: "could not get available time slots",
+          details: err,
+        });
+      });
+  }
 
   useEffect(() => {
     getUserByUrl(data.user_url)
@@ -174,6 +200,15 @@ const Booking = (props: any) => {
         return err;
       });
   }, [data.url, data.user_url, navigate, selectedDate]);
+
+  useEffect(() => {
+    if (user && event && event.url) {
+      startTransition(() => updateSlots());
+    }
+
+  }, [beginDate, user, event]);
+
+
 
   const isStepOptional = (step: number) => {
     return false;
@@ -217,22 +252,14 @@ const Booking = (props: any) => {
     setActiveStep(0);
   };
 
-  const handleMonthChange = (date: Date) => { };
+  const handleMonthChange = (date: Date) => {
+    setBeginDate(date);
+  };
 
   const handleDateChange = (newValue: Date) => {
     console.log("change date: %o", startOfDay(newValue));
-    if (user) {
-      getAvailableTimes(startOfDay(newValue), endOfDay(newValue), event.url, user._id)
-        .then((slots) => {
-          console.log("slots: %j", slots);
-          setSlots(slots);
-        })
-        .catch((err) => {
-          console.error("failed to get available times");
-        });
-      setActiveStep(1);
-      setDate(newValue);
-    }
+    setDate(newValue);
+    setActiveStep(1);
   };
 
   const steps = ["Choose date", "Choose time", "Provide details"];
@@ -244,14 +271,15 @@ const Booking = (props: any) => {
       return (
         date > new Date() &&
         event.available[date.getDay() as Day].length > 0 &&
-        event.available[date.getDay() as Day][0].start !== ""
+        event.available[date.getDay() as Day][0].start !== "" &&
+        slots?.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
       );
     }
   };
 
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
-      const { day, selectedDate, ...other } = props;
+    const { day, selectedDate, ...other } = props;
     return (
       <PickersDay
         {...props}
@@ -265,10 +293,11 @@ const Booking = (props: any) => {
     );
   };
 
-  const getTimes = () => {
+  const getTimes = (day: Date) => {
     if (slots) {
       let times = [];
-      for (let slot of slots) {
+      const target = new IntervalSet(startOfDay(day), endOfDay(day));
+      for (let slot of slots.intersect(target)) {
         console.log("Slot: %o", slot);
         let start = new Date(slot.start);
         let end = new Date(slot.end);
@@ -294,14 +323,14 @@ const Booking = (props: any) => {
 
   const renderSlots = () => {
     console.log("renderSlots: %o", slots);
-    const times = getTimes();
+    const times = getTimes(selectedDate);
     return (
       <>
         <Grid
           className={classes.slots}
           spacing={2}
           container
-          direction="column"
+          direction="row"
           alignItems="flex-start"
         >
           {times.map((time) => (
@@ -335,7 +364,7 @@ const Booking = (props: any) => {
       ).then(() => {
         //toast.success("Event successfully booked!");
         navigate(`/booked`, {
-          state: { userid: user._id, event, time: selectedTime },
+          state: { user, event, time: selectedTime },
         });
       });
     }
