@@ -8,6 +8,11 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
+    "backend": "yarn workspace backend start",
+    "client": "yarn workspace client start",
+    "build:common": "yarn workspace common build",
+    "build:backend": "yarn workspace backend build",
+    "build:client": "yarn workspace client build",
     "release": "semantic-release"
   },
   "repository": {
@@ -44,5 +49,6 @@
     "@semantic-release/github": "^9.0.4",
     "@semantic-release/release-notes-generator": "^11.0.7",
     "semantic-release": "^21.1.1"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }

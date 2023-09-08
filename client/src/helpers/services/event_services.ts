@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Event, IntervalSet } from "@fhswf/bookme-common";
+import { Event, IntervalSet } from "common";
 
 export async function saveUserEvent(
   token: string,

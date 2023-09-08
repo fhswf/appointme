@@ -37,7 +37,7 @@ import clsx from "clsx";
 import { addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot, IntervalSet } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 
 const theme = createTheme({

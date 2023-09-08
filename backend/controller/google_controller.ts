@@ -15,7 +15,7 @@ import { Request, Response } from 'express';
 
 import { remark } from 'remark';
 import html from 'remark-html';
-import { Event, IntervalSet } from '@fhswf/bookme-common';
+import { Event, IntervalSet } from 'common';
 
 
 const oAuth2Client = new OAuth2Client({

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Grid, TextField } from "@mui/material";
-import { Event } from "@fhswf/bookme-common";
+import { Event } from "common";
 import { useTranslation } from "react-i18next";
 import React from "react";
 

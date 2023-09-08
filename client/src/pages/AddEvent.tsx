@@ -10,7 +10,7 @@ import { makeStyles } from "@mui/styles";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
-import { EMPTY_EVENT, Event } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event } from "common";
 import { EventForm } from "../components/EventForm";
 import { UserContext } from "../components/PrivateRoute";
 

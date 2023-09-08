@@ -22,7 +22,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import { Add, Delete } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
-import { Day, DayNames, Event, Slot } from "@fhswf/bookme-common";
+import { Day, DayNames, Event, Slot } from "common";
 
 export const useStyles = makeStyles((theme) => ({
   row: {

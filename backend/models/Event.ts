@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { Day, Event } from '@fhswf/bookme-common'
+import { Day, Event } from 'common'
 
 
 

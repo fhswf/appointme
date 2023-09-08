@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Chip } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-import { IntervalSet, TimeRange } from "@fhswf/bookme-common";
+import { IntervalSet, TimeRange } from "common";
 import { addMinutes } from "date-fns";
 
 export const useStyles = makeStyles((theme) => ({

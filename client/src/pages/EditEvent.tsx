@@ -8,7 +8,7 @@ import { getEventByID, updateEvent } from "../helpers/services/event_services";
 import { useNavigate, useParams } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { EventForm } from "../components/EventForm";
-import { EMPTY_EVENT, Event } from "@fhswf/bookme-common";
+import { EMPTY_EVENT, Event } from "common";
 
 export type EventFormProps = {
   event: Event;

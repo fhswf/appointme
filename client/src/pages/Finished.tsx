@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 import { Container, Typography } from "@mui/material";
-import { Event, TimeRange, User } from "@fhswf/bookme-common";
+import { Event, TimeRange, User } from "common";
 import { useTranslation, Trans } from "react-i18next";
 
 type LocationState = {

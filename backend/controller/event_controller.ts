@@ -4,7 +4,7 @@
  * @module event_controller
  */
 import { EventDocument, EventModel } from "../models/Event.js";
-import { Event, IntervalSet } from "@fhswf/bookme-common";
+import { Event, IntervalSet } from "common";
 import { freeBusy, events } from "./google_controller.js";
 import { ValidationError, validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler.js";
