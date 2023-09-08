@@ -8,8 +8,8 @@ ARG NPM_TOKEN
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
 COPY .npmrc /usr/src/app
-RUN npm install 
+RUN yarn install 
 COPY . /usr/src/app
 EXPOSE 5000
-RUN npm run-script build
-CMD [ "npm", "start" ]
+RUN yarn run-script build
+CMD [ "yarn", "start" ]
