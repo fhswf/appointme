@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /home/cgawron/bin/kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo-bookme
+  name: mongo-bookme
+  namespace: bookme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongo-bookme
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /home/cgawron/bin/kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/traefik: "true"
+        io.kompose.service: mongo-bookme
+    spec:
+      containers:
+        - image: mongo
+          name: mongo-bookme
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-bookme-claim0
+      restartPolicy: Always
+      volumes:
+        - name: mongo-bookme-claim0
+          persistentVolumeClaim:
+            claimName: mongo-bookme-claim0
+status: {}
