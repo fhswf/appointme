@@ -29,18 +29,16 @@ jobs:
 
       # Install package dependencies
       - name: Install
-        working-directory: common
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       # Build
       - name: Build
-        working-directory: common
-        run: npm run-script build
+        run: yarn workspace common build
 
       # Run tests
       - name: Test
         working-directory: common
-        run: npm test
+        run: yarn workspace common test
 
   release:
     # Only release on push to master
@@ -54,21 +52,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install
         working-directory: common
-        run: npm ci
+        run: yarn install --frozen-lockfile
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         working-directory: common
-        run: npm run-script build
+        run: yarn workspace common build
 
       - name: Release
         working-directory: common
-        run: npx semantic-release
+        run: yarn exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
