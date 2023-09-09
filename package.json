@@ -53,5 +53,5 @@
     "@semantic-release/release-notes-generator": "^11.0.7",
     "semantic-release": "^21.1.1"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@4.0.0-rc.50"
 }
