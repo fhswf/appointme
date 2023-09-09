@@ -2,3 +2,4 @@ node_modules/**
 .yarn/**
 types.js
 types.js.map
+docker.env
