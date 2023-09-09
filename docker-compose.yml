@@ -1,21 +1,38 @@
 version: "3" 
 
 services:
-  bookme:
-    container_name: bookme
-    image: bookme:latest
+  client:
+    container_name: client
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: client
     restart: always
-    build: .
     env_file:
       - docker.env
     ports:
-      - "127.0.0.1:47001:5000"
+      - "127.0.0.1:48002:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bookme_client.rule=PathPrefix(`/bookme`)"
+      - "traefik.http.routers.bookme_client.entrypoints=web,websecure"
+  bookme:
+    container_name: bookme
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    restart: always
+    env_file:
+      - docker.env
+    ports:
+      - "127.0.0.1:48001:5000"
     links:
       - mongo-bookme
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bookme.rule=PathPrefix(`/bookme`)"
-      - "traefik.http.routers.bookme.entrypoints=web,websecure"
+      - "traefik.http.routers.bookme_api.rule=PathPrefix(`/bookme/api`)"
+      - "traefik.http.routers.bookme_api.entrypoints=web,websecure"
       
 
   mongo-bookme:

@@ -45,7 +45,7 @@ router.use("/auth/", authenticationRouter);
 router.use("/events/", eventRouter);
 router.use("/google/", googleRouter);
 router.use("/users/", userRouter);
-app.use("/bookme/api/v1", router);
+app.use("/meeting/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 

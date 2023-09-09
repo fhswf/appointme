@@ -15,7 +15,6 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "types": [
-      "node"
     ]
   },
   "include": [

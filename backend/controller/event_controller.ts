@@ -181,7 +181,7 @@ export const deleteEventController = (req: Request, res: Response): void => {
  * @param {response} res
  */
 export const getEventListController = (req: Request, res: Response): void => {
-  const userid = req.user_id;
+  const userid = req["user_id"];
   EventModel.find({ user: userid })
     .then(event => {
       res.status(200).json(event);

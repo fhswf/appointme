@@ -11,7 +11,7 @@ import { Request, Response } from 'express';
  * @param {response} res
  */
 export const getUser = (req: Request, res: Response): void => {
-  const userid = req.user_id;
+  const userid = req['user_id'];
   console.log('getUser: %s', userid);
   void UserModel.findOne({ _id: userid },
     {
@@ -44,7 +44,7 @@ const filterUser = (user) => Object.keys(user)
   .reduce((obj, key) => { obj[key] = user[key]; return obj }, {});
 
 export const putUser = (req: Request, res: Response): void => {
-  const userid = req.user_id;
+  const userid = req['user_id'];
   const user = filterUser(req.body.data as User);
   console.log('putUser: %o', user);
   void UserModel.findByIdAndUpdate(userid, user,

@@ -84,7 +84,7 @@
     "dotenv-cli": "^4.0.0",
     "i18next-parser": "4.4.0",
     "i18next-scanner": "3.0.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^9.0.0",
     "react-scripts": "^5.0.1",
     "semantic-release": "^17.4.4",
     "semantic-release-monorepo": "^7.0.5",

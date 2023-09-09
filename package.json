@@ -42,6 +42,9 @@
     "backend",
     "client"
   ],
+  "engines": {
+    "yarn": "3.6.3"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^10.0.4",

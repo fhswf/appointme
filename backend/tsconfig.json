@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es6",
+    "module": "nodenext",
     "allowJs": true,
     "strict": false,
     "baseUrl": "./",
@@ -12,13 +12,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "importHelpers": true,
     "types": [
+      "node",
     ],
     "typeRoots": [
-      "./types",
-      "node_modules/@types"
+      "../node_modules/@types"
     ],
     "paths": {
       "*": [

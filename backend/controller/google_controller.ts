@@ -34,7 +34,7 @@ const SCOPES = [
  * @param {response} res
  */
 export const generateAuthUrl = (req: Request, res: Response): Response => {
-  const userid = req.user_id;
+  const userid = req['user_id'];
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
@@ -209,7 +209,7 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
  * @param {response} res
  */
 export const revokeScopes = (req: Request, res: Response): void => {
-  const userid = req.user_id;
+  const userid = req['user_id'];
   let tokens = null;
   const query = UserModel.findOne({ _id: userid });
   void query.exec()
@@ -254,7 +254,7 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
  * @param res 
  */
 export async function getCalendarList(req: Request, res: Response): Promise<void> {
-  google.calendar({ version: "v3", auth: await getAuth(req.user_id) })
+  google.calendar({ version: "v3", auth: await getAuth(req['user_id']) })
     .calendarList.list()
     .then(list => {
       console.log("calendarList: %j", list);
