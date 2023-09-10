@@ -1649,6 +1649,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@codedependant/semantic-release-docker@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "@codedependant/semantic-release-docker@npm:4.4.0"
+  dependencies:
+    "@semantic-release/error": "npm:^3.0.0"
+    debug: "npm:^4.1.1"
+    execa: "npm:^4.0.2"
+    handlebars: "npm:^4.7.7"
+    semver: "npm:^7.3.2"
+  checksum: 6fbd7dc689eb9d37322cec6a8bf335629eafc31c5943b5531120db175fce2105b437271ac43dd5ce32a9d69dc068e67cad345f3eb31e238b8b45aed07eaaea4a
+  languageName: node
+  linkType: hard
+
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -6914,6 +6927,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "book_me@workspace:."
   dependencies:
+    "@codedependant/semantic-release-docker": "npm:^4.4.0"
     "@semantic-release/changelog": "npm:^6.0.3"
     "@semantic-release/commit-analyzer": "npm:^10.0.4"
     "@semantic-release/git": "npm:^10.0.1"
@@ -10400,7 +10414,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:4.1.0, execa@npm:^4.1.0":
+"execa@npm:4.1.0, execa@npm:^4.0.2, execa@npm:^4.1.0":
   version: 4.1.0
   resolution: "execa@npm:4.1.0"
   dependencies:

@@ -70,5 +70,30 @@
       "react-app/jest"
     ]
   },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/git",
+      "@semantic-release/github",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "bookme-backend",
+          "dockerRegistry": "ghcr.io",
+          "dockerBuildFlags": {
+            "target": "backend"
+          }
+        }
+      ]
+    ]
+  },
   "gitHead": "a4b1d2cc78703828c99149277115e8434b675afc"
 }
