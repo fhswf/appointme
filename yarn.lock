@@ -6935,6 +6935,7 @@ __metadata:
     "@semantic-release/release-notes-generator": "npm:^11.0.7"
     multi-semantic-release: "npm:^3.0.2"
     semantic-release: "npm:^21.1.1"
+    semantic-release-yarn: "npm:^2.0.1"
   languageName: unknown
   linkType: soft
 
@@ -8342,7 +8343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cosmiconfig@npm:^8.0.0":
+"cosmiconfig@npm:^8.0.0, cosmiconfig@npm:^8.1.0":
   version: 8.3.5
   resolution: "cosmiconfig@npm:8.3.5"
   dependencies:
@@ -10464,7 +10465,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"execa@npm:^8.0.0":
+"execa@npm:^8.0.0, execa@npm:^8.0.1":
   version: 8.0.1
   resolution: "execa@npm:8.0.1"
   dependencies:
@@ -11077,7 +11078,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^11.0.0":
+"fs-extra@npm:^11.0.0, fs-extra@npm:^11.1.0":
   version: 11.1.1
   resolution: "fs-extra@npm:11.1.1"
   dependencies:
@@ -20923,6 +20924,26 @@ __metadata:
   dependencies:
     node-forge: "npm:^1"
   checksum: 6005206e0d005448274aceceaded5195b944f67a42b72d212a6169d2e5f4bdc87c15a3fe45732c544db8c7175702091aaf95403ad6632585294a6ec8cca63638
+  languageName: node
+  linkType: hard
+
+"semantic-release-yarn@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "semantic-release-yarn@npm:2.0.1"
+  dependencies:
+    "@semantic-release/error": "npm:^4.0.0"
+    aggregate-error: "npm:^4.0.1"
+    cosmiconfig: "npm:^8.1.0"
+    execa: "npm:^8.0.1"
+    fs-extra: "npm:^11.1.0"
+    js-yaml: "npm:^4.1.0"
+    lodash: "npm:^4.17.21"
+    nerf-dart: "npm:^1.0.0"
+    read-pkg: "npm:^8.0.0"
+    semver: "npm:^7.3.8"
+  peerDependencies:
+    semantic-release: ">=19.0.0"
+  checksum: d2f2a944b7fabc5b783728092b2e8b5beeff93ad53adb37979a2987d781b00cffeaed3d0883a4e7403e80eb0b22c78dbbf9c149fea2da24bd7abf058cdb83725
   languageName: node
   linkType: hard
 

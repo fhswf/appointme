@@ -53,7 +53,8 @@
     "@semantic-release/github": "^9.0.4",
     "@semantic-release/release-notes-generator": "^11.0.7",
     "multi-semantic-release": "^3.0.2",
-    "semantic-release": "^21.1.1"
+    "semantic-release": "^21.1.1",
+    "semantic-release-yarn": "^2.0.1"
   },
   "release": {
     "plugins": [
@@ -61,14 +62,7 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
       "@semantic-release/git",
-      "@semantic-release/github",
-      [
-        "semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "tarballDir": "dist"
-        }
-      ]
+      "@semantic-release/github"
     ],
     "noCi": true
   },
