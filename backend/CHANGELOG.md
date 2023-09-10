@@ -1,3 +1,41 @@
+# backend 1.0.0 (2023-09-10)
+
+
+### Bug Fixes
+
+* **bump dependencies:** upgrade several dependencies ([ca905e2](https://github.com/fhswf/book_me/commit/ca905e241e31bbbe69d05a7e4bec76b0bd4a9bcc))
+* do not overwrite calendar settings upon login ([8923777](https://github.com/fhswf/book_me/commit/892377784cc94f2243c193f0763c82e7e58e7c16))
+* do not update google tokens via user controller ([c1a04da](https://github.com/fhswf/book_me/commit/c1a04dad850e091a217fc06e7976c1f6fc1f603a))
+* edit available times ([#5](https://github.com/fhswf/book_me/issues/5)) ([46500a9](https://github.com/fhswf/book_me/commit/46500a9c33da1279c612938652eb765c0dd76b91))
+* freeBusy service corrected ([c2d8590](https://github.com/fhswf/book_me/commit/c2d85904dfb2393faadf1caa4dd1b4af107e44f9))
+* **freeBusy:** filter out free slots shorter than the event duration ([2eedf77](https://github.com/fhswf/book_me/commit/2eedf7789c6158827c6ffc2d9ebf61c6c4682879))
+* github actions for semantic release fixed ([72ac08f](https://github.com/fhswf/book_me/commit/72ac08ff062d91c2e05b1671c31eaa64d11de74f))
+* **insertEvent:** check availablility of requested slot in backend ([54c9e92](https://github.com/fhswf/book_me/commit/54c9e92b3b7d4c452954e30c8442bc483e654ed1)), closes [#27](https://github.com/fhswf/book_me/issues/27)
+* Migrate to Google Sign In ([e3e51e4](https://github.com/fhswf/book_me/commit/e3e51e4dde061b522641194ef2c1374e924797ba))
+* security updates ([9e359b1](https://github.com/fhswf/book_me/commit/9e359b187ca2f5496fc1ef384172c49ff562ae3f))
+* semantic release config ([981919d](https://github.com/fhswf/book_me/commit/981919d114991237ba83a04dbc95e04f29ed30f1))
+* semantic-release config ([7ac94ec](https://github.com/fhswf/book_me/commit/7ac94ec675b5b1a9644a013e208f214aeb7300fe))
+* transfer timestamp as integer ([37dd14a](https://github.com/fhswf/book_me/commit/37dd14a5b0ddfa4a9e5126eb345616cf3e6e5c64))
+* typescript issues ([46e85ca](https://github.com/fhswf/book_me/commit/46e85cab96b0180b999151d8909b5afaaf69a2fd))
+* UI glitches fixed ([2720b9d](https://github.com/fhswf/book_me/commit/2720b9d26ee4779988d71275e1d7ff4e3cc94bb1))
+* update docker build to use yarn ([e0618f7](https://github.com/fhswf/book_me/commit/e0618f71e36062ae0745df42a87139aaf432ec26))
+* yarn build/dependency management & docker ([eaae025](https://github.com/fhswf/book_me/commit/eaae025680d1a840765406f2c3fb2eed9c238c43))
+
+
+### Features
+
+* **freeBusy:** check maxPerDay constraint ([ad49b95](https://github.com/fhswf/book_me/commit/ad49b957181a2717b179b4c52ce4ab84f1ddca34))
+* **freeBusy:** freeBusy should observe minFuture and maxFuture restrictictions of an event ([a670b7d](https://github.com/fhswf/book_me/commit/a670b7d8eadf01547009c35121bbe3062b545931))
+* **markdown:** handle event type description as markdown. ([4bedade](https://github.com/fhswf/book_me/commit/4bedade846876fe6eedb5b0f4d986a33c8d283b2))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.0.0
+
 # [@fhswf/bookme-backend-v1.3.2](https://github.com/fhswf/book_me/compare/@fhswf/bookme-backend-v1.3.1...@fhswf/bookme-backend-v1.3.2) (2021-08-10)
 
 
