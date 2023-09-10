@@ -61,7 +61,7 @@ jobs:
         run: yarn workspace common build
 
       - name: Release
-        run: yarn exec semantic-release
+        run: yarn exec multi-semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
