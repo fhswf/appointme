@@ -55,17 +55,12 @@ jobs:
           node-version: 18.x
 
       - name: Install
-        working-directory: common
         run: yarn install --frozen-lockfile
-        env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        working-directory: common
         run: yarn workspace common build
 
       - name: Release
-        working-directory: common
         run: yarn exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
