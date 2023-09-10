@@ -62,7 +62,18 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
       "@semantic-release/git",
-      "@semantic-release/github"
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "bookme-backend",
+          "dockerRegistry": "ghcr.io",
+          "dockerFile": "../Dockerfile",
+          "dockerBuildFlags": {
+            "target": "backend"
+          }
+        }
+      ]
     ],
     "noCi": true
   },
