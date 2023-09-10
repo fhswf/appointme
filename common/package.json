@@ -4,7 +4,7 @@
   "description": "Common types for backend and frontend",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fhswf/book_me.git"
+    "url": "git@github.com:fhswf/book_me.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
