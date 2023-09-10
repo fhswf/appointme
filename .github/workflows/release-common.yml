@@ -67,3 +67,14 @@ jobs:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_REGISTRY_USER:  ${{ github. actor }} 
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to container registry
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          if [ -n "$RELEASE_VERSION" ]; then
+            docker build . --tag ghcr.io/fhswf/bookme-backend:$RELEASE_VERSION --tag ghcr.io/fhswf/bookme-backend:latest --target backend
+            docker push -a ghcr.io/fhswf/bookme-backend:$RELEASE_VERSION
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
