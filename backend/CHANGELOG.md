@@ -3,6 +3,17 @@
 
 ### Features
 
+* docker build in release ([cce03b0](https://github.com/fhswf/book_me/commit/cce03b0ca8a8970b4d65fa1e8729227035c95108))
+* docker build in release ([a2e1c1f](https://github.com/fhswf/book_me/commit/a2e1c1feae44eae6987a016a6f73a4f4991a20ef))
+* docker build in release ([891bb01](https://github.com/fhswf/book_me/commit/891bb017ef0580385696d1c6f84bb810a027e25f))
+* docker build in release ([f1c3366](https://github.com/fhswf/book_me/commit/f1c3366e78a3e6cbe8c048572dd49b664fb1c980))
+* docker build in release ([af3b7c4](https://github.com/fhswf/book_me/commit/af3b7c449225e7ef9c26181c0a21482856521644))
+
+# backend [1.2.0](https://github.com/fhswf/book_me/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
+
+
+### Features
+
 * docker build in release ([891bb01](https://github.com/fhswf/book_me/commit/891bb017ef0580385696d1c6f84bb810a027e25f))
 * docker build in release ([f1c3366](https://github.com/fhswf/book_me/commit/f1c3366e78a3e6cbe8c048572dd49b664fb1c980))
 * docker build in release ([af3b7c4](https://github.com/fhswf/book_me/commit/af3b7c449225e7ef9c26181c0a21482856521644))
