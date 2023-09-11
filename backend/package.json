@@ -78,7 +78,8 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "yarn exec node ../utility/patch-workspace-versions.js"
+          "execCwd": "..",
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
         }
       ],
       "@semantic-release/git",
