@@ -1,3 +1,10 @@
+# backend [1.4.0](https://github.com/fhswf/book_me/compare/backend@1.3.0...backend@1.4.0) (2023-09-11)
+
+
+### Features
+
+* docker build in release ([8302272](https://github.com/fhswf/book_me/commit/8302272c2f07a72dff498b9da46eec034e10fa37))
+
 # backend [1.3.0](https://github.com/fhswf/book_me/compare/backend@1.2.0...backend@1.3.0) (2023-09-10)
 
 
