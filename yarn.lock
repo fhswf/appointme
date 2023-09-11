@@ -4006,7 +4006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:^10.0.2":
+"@semantic-release/npm@npm:^10.0.2, @semantic-release/npm@npm:^10.0.5":
   version: 10.0.5
   resolution: "@semantic-release/npm@npm:10.0.5"
   dependencies:
@@ -6949,6 +6949,7 @@ __metadata:
     "@semantic-release/exec": "npm:^6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
     "@semantic-release/github": "npm:^9.0.4"
+    "@semantic-release/npm": "npm:^10.0.5"
     "@semantic-release/release-notes-generator": "npm:^11.0.7"
     multi-semantic-release: "npm:^3.0.2"
     semantic-release: "npm:^21.1.1"
