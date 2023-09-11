@@ -6712,7 +6712,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^4.15.0"
     bcryptjs: "npm:^2.4.3"
     body-parser: "npm:^1.20.1"
-    common: "workspace:^"
+    common: "workspace:*"
     concurrently: "npm:^8.2.1"
     cookie-parser: "npm:^1.4.5"
     cors: "npm:^2.8.5"
@@ -7964,7 +7964,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"common@workspace:^, common@workspace:common":
+"common@workspace:*, common@workspace:^, common@workspace:common":
   version: 0.0.0-use.local
   resolution: "common@workspace:common"
   dependencies:
