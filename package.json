@@ -61,6 +61,12 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
+        }
+      ],
       "@semantic-release/git",
       "@semantic-release/github"
     ],

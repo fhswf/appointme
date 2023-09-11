@@ -7660,7 +7660,7 @@ __metadata:
     "@types/react": "npm:^18.2.21"
     "@types/react-router-dom": "npm:^5.3.3"
     axios: "npm:^1.5.0"
-    common: "workspace:^"
+    common: "workspace:*"
     cypress: "npm:^13.1.0"
     date-fns: "npm:^2.30.0"
     dotenv-cli: "npm:^4.0.0"
@@ -7964,7 +7964,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"common@workspace:*, common@workspace:^, common@workspace:common":
+"common@workspace:*, common@workspace:common":
   version: 0.0.0-use.local
   resolution: "common@workspace:common"
   dependencies:
