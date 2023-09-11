@@ -1,3 +1,12 @@
+# backend [1.5.0](https://github.com/fhswf/book_me/compare/backend@1.4.0...backend@1.5.0) (2023-09-11)
+
+
+### Features
+
+* docker build in release ([408acff](https://github.com/fhswf/book_me/commit/408acff2177b69a7745c925f7e944859400b1b0d))
+* docker build in release ([c697153](https://github.com/fhswf/book_me/commit/c697153957f3ddac263f110fad88ce1fb612c55b))
+* docker build in release ([4f05ee3](https://github.com/fhswf/book_me/commit/4f05ee3f72cc8ab6482a22498bb2069b1b1a03c4))
+
 # backend [1.4.0](https://github.com/fhswf/book_me/compare/backend@1.3.0...backend@1.4.0) (2023-09-11)
 
 
