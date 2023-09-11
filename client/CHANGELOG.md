@@ -1,3 +1,10 @@
+# client [1.1.0](https://github.com/fhswf/book_me/compare/client@1.0.0...client@1.1.0) (2023-09-11)
+
+
+### Features
+
+* docker build in release ([4f05ee3](https://github.com/fhswf/book_me/commit/4f05ee3f72cc8ab6482a22498bb2069b1b1a03c4))
+
 # client 1.0.0 (2023-09-10)
 
 
