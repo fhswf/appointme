@@ -1,3 +1,10 @@
+## backend [1.5.1](https://github.com/fhswf/book_me/compare/backend@1.5.0...backend@1.5.1) (2023-09-12)
+
+
+### Bug Fixes
+
+* automated docker build ([3647c57](https://github.com/fhswf/book_me/commit/3647c579e5e261f60d503f3989a591043d8288a6))
+
 # backend [1.5.0](https://github.com/fhswf/book_me/compare/backend@1.4.0...backend@1.5.0) (2023-09-11)
 
 
