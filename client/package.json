@@ -30,7 +30,7 @@
     "@react-oauth/google": "latest",
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.5.1",
-    "@testing-library/react": "^12.0.0",
+    "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.2.1",
     "@types/react": "^18.2.21",
     "axios": "^1.5.0",
@@ -73,14 +73,48 @@
     ]
   },
   "devDependencies": {
+    "@types/eslint": "^8",
     "@types/react-router-dom": "^5.3.3",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
     "cypress": "^13.1.0",
     "dotenv-cli": "^4.0.0",
+    "eslint": "^8.49.0",
     "i18next-parser": "4.4.0",
     "i18next-scanner": "3.0.0",
     "node-sass": "^9.0.0",
     "react-scripts": "^5.0.1",
     "start-server-and-test": "^1.13.1",
     "wait-on": "^5.3.0"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": "..",
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
+        }
+      ],
+      "@semantic-release/git",
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "frontend",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/book_me",
+          "dockerContext": ".."
+        }
+      ]
+    ]
   }
 }
