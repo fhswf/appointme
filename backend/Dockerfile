@@ -22,11 +22,24 @@ RUN yarn --version
 COPY ./common ./common
 RUN yarn workspace common build
 
-COPY ./client ./client
-RUN yarn workspace client build
+COPY ./backend ./backend
+RUN yarn workspace backend build
 
-# Create client container
-FROM nginx:1.21.3-alpine as client
-COPY --from=build /base/client/build /usr/share/nginx/html/meeting
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Create backend container
+FROM node:18-bullseye as backend
+ARG TZ=Europe/Berlin
+ENV TZ=${TZ}
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN yarn set version 4
+
+WORKDIR /usr/src/app 
+COPY --from=build /base/package.json .
+COPY --from=build /base/yarn.lock .
+COPY --from=build /base/backend backend
+COPY --from=build /base/common common
+COPY --from=build /base/.yarn .yarn
+COPY --from=build /base/.yarnrc.yml .yarnrc.yml
+RUN yarn install
+EXPOSE 5000
+CMD [ "yarn", "run", "backend"]
