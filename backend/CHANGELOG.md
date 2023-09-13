@@ -1,3 +1,10 @@
+## backend [1.5.2](https://github.com/fhswf/book_me/compare/backend@1.5.1...backend@1.5.2) (2023-09-13)
+
+
+### Bug Fixes
+
+* build backend image via gh action ([64cc709](https://github.com/fhswf/book_me/commit/64cc7099d0613010aba03c75a8b4169915dbd767))
+
 ## backend [1.5.1](https://github.com/fhswf/book_me/compare/backend@1.5.0...backend@1.5.1) (2023-09-12)
 
 
