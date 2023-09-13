@@ -1,4 +1,11 @@
 FROM node:18-bullseye as build
+ARG REACT_APP_GOOGLE_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
+ARG REACT_APP_URL=/meeting
+ARG REACT_APP_API_URL=https://www.ki.fh-swf.de/meeting/api/v1
+
+ENV REACT_APP_GOOGLE_ID=${REACT_APP_GOOGLE_ID}
+ENV REACT_APP_URL=${REACT_APP_URL}
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 
 WORKDIR /base
 COPY .yarn .yarn
