@@ -1,3 +1,11 @@
+## client [1.1.1](https://github.com/fhswf/book_me/compare/client@1.1.0...client@1.1.1) (2023-09-12)
+
+
+### Bug Fixes
+
+* automated docker build ([ef0f3d0](https://github.com/fhswf/book_me/commit/ef0f3d0c6f85fd934dd607e446d68599ba0fd2f3))
+* automated docker build ([3647c57](https://github.com/fhswf/book_me/commit/3647c579e5e261f60d503f3989a591043d8288a6))
+
 # client [1.1.0](https://github.com/fhswf/book_me/compare/client@1.0.0...client@1.1.0) (2023-09-11)
 
 
