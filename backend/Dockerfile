@@ -15,7 +15,7 @@ RUN yarn set version 4
 COPY package.json .
 COPY yarn.lock .
 COPY ./common/package.json ./common/package.json 
-COPY ./client/package.json ./client/package.json 
+COPY ./backend/package.json ./backend/package.json 
 RUN yarn install 
 RUN yarn --version
 
