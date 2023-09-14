@@ -1,3 +1,10 @@
+## backend [1.5.5](https://github.com/fhswf/book_me/compare/backend@1.5.4...backend@1.5.5) (2023-09-14)
+
+
+### Bug Fixes
+
+* **workflow:** update version in package.json ([c0d9d2f](https://github.com/fhswf/book_me/commit/c0d9d2fcc609c6e0fe56d3377bae0450fcb10701))
+
 ## backend [1.5.4](https://github.com/fhswf/book_me/compare/backend@1.5.3...backend@1.5.4) (2023-09-14)
 
 
