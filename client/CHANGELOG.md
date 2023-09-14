@@ -3,6 +3,14 @@
 
 ### Bug Fixes
 
+* nginx configuration ([ef62804](https://github.com/fhswf/book_me/commit/ef62804450ea6926c32ce99b691e0263c7364a6c))
+* nginx configuration ([638b983](https://github.com/fhswf/book_me/commit/638b983052ca60c28b344e55469a1d1e5ece7989))
+
+## client [1.1.7](https://github.com/fhswf/book_me/compare/client@1.1.6...client@1.1.7) (2023-09-14)
+
+
+### Bug Fixes
+
 * nginx configuration ([638b983](https://github.com/fhswf/book_me/commit/638b983052ca60c28b344e55469a1d1e5ece7989))
 
 ## client [1.1.6](https://github.com/fhswf/book_me/compare/client@1.1.5...client@1.1.6) (2023-09-14)
