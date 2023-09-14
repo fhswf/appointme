@@ -1,3 +1,10 @@
+## client [1.1.5](https://github.com/fhswf/book_me/compare/client@1.1.4...client@1.1.5) (2023-09-14)
+
+
+### Bug Fixes
+
+* correct api url configuration ([8afb172](https://github.com/fhswf/book_me/commit/8afb1726902e67c12b9a6f3485142d4adb050b49))
+
 ## client [1.1.4](https://github.com/fhswf/book_me/compare/client@1.1.3...client@1.1.4) (2023-09-14)
 
 
