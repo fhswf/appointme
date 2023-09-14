@@ -100,6 +100,14 @@
           "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
         }
       ],
+      [
+        "@dmeents/semantic-release-yarn",
+        {
+          "npmPublish": false,
+          "changeVersion": true,
+          "tarballDir": "build"
+        }
+      ],
       "@semantic-release/git",
       "@semantic-release/github",
       [
