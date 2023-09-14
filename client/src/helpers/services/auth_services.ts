@@ -28,6 +28,7 @@ export async function postToActivate(token) {
 }
 
 export async function postGoogleLogin(code) {
+  console.log("postGoogleLogin: %s", `${process.env.REACT_APP_API_URI}/auth/google_oauth2_code`);
   const response = await axios.post(
     `${process.env.REACT_APP_API_URI}/auth/google_oauth2_code`,
     {
