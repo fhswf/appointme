@@ -1,3 +1,10 @@
+## client [1.1.6](https://github.com/fhswf/book_me/compare/client@1.1.5...client@1.1.6) (2023-09-14)
+
+
+### Bug Fixes
+
+* improve logging of requests ([39d985f](https://github.com/fhswf/book_me/commit/39d985f306c89163384a9a45c3436213f08f939e))
+
 ## client [1.1.5](https://github.com/fhswf/book_me/compare/client@1.1.4...client@1.1.5) (2023-09-14)
 
 
