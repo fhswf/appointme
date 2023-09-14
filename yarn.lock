@@ -2713,6 +2713,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/private-theming@npm:^5.14.9":
+  version: 5.14.9
+  resolution: "@mui/private-theming@npm:5.14.9"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.15"
+    "@mui/utils": "npm:^5.14.9"
+    prop-types: "npm:^15.8.1"
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 9c6cdcdc06f02cdee740b071e68dd549e451bdad76f8e01f0337077bb1ac71fd77031999c491c2a84a3565a295cf7fb273ba317093471d5a028f951bb3d7a1ea
+  languageName: node
+  linkType: hard
+
 "@mui/styled-engine@npm:^5.14.8":
   version: 5.14.8
   resolution: "@mui/styled-engine@npm:5.14.8"
@@ -2731,6 +2748,28 @@ __metadata:
     "@emotion/styled":
       optional: true
   checksum: 84610408f19905de3203173cc7cb2c778f544b772bed87bf91997f811b4f96bfa8dfc583cb449d6e49d90db86c2816f8edbd82be1e0cfb9758fe5de7397ee467
+  languageName: node
+  linkType: hard
+
+"@mui/styled-engine@npm:^5.14.9":
+  version: 5.14.9
+  resolution: "@mui/styled-engine@npm:5.14.9"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.15"
+    "@emotion/cache": "npm:^11.11.0"
+    csstype: "npm:^3.1.2"
+    prop-types: "npm:^15.8.1"
+    react: "npm:^18.2.0"
+  peerDependencies:
+    "@emotion/react": ^11.4.1
+    "@emotion/styled": ^11.3.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+  checksum: 0c0908ee8bfb23ab87c5931c13010589d0774d7c9f592675d9197f1be805adde5595752d8c620463f49922d03d5cece478ac628aa2b0b57f64bc26f2130480db
   languageName: node
   linkType: hard
 
@@ -2793,6 +2832,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/system@npm:^5.14.9":
+  version: 5.14.9
+  resolution: "@mui/system@npm:5.14.9"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.15"
+    "@mui/private-theming": "npm:^5.14.9"
+    "@mui/styled-engine": "npm:^5.14.9"
+    "@mui/types": "npm:^7.2.4"
+    "@mui/utils": "npm:^5.14.9"
+    clsx: "npm:^2.0.0"
+    csstype: "npm:^3.1.2"
+    prop-types: "npm:^15.8.1"
+  peerDependencies:
+    "@emotion/react": ^11.5.0
+    "@emotion/styled": ^11.3.0
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    "@types/react":
+      optional: true
+  checksum: 01a8ad4bfdd4af41da077470d795e5cbe9326450357d3bea257b9874f8d7b8ce848a9e871a688695f2b90afa5b05fd9a5cd889932594b310cebc83e7aad73348
+  languageName: node
+  linkType: hard
+
 "@mui/types@npm:^7.2.4":
   version: 7.2.4
   resolution: "@mui/types@npm:7.2.4"
@@ -2817,6 +2884,24 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
   checksum: a542ab1847daee880a296936458145403e153947a51c6f786427523d1ef9b49ff406deda9a83f33d1310b75b064c09a32b5dec2d91dd2c06bfb2f0e841cee151
+  languageName: node
+  linkType: hard
+
+"@mui/utils@npm:^5.14.9":
+  version: 5.14.9
+  resolution: "@mui/utils@npm:5.14.9"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.15"
+    prop-types: "npm:^15.8.1"
+    react-is: "npm:^18.2.0"
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 3ea5dee3b1a58cc2b842bba981acbc03e091c7a32279f4566b5d4af4a28e64b386e20c4d542e86efa74dca6d2e262226bcc2e7002b83334793ee7d25b6729123
   languageName: node
   linkType: hard
 
@@ -6365,6 +6450,7 @@ __metadata:
     concurrently: "npm:^8.2.1"
     cookie-parser: "npm:^1.4.5"
     cors: "npm:^2.8.5"
+    date-fns: "npm:^2.30.0"
     date-fns-tz: "npm:^1.1.1"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.48.0"
@@ -7288,6 +7374,7 @@ __metadata:
     "@mui/icons-material": "npm:5.14.7"
     "@mui/material": "npm:^5.14.8"
     "@mui/styles": "npm:5.14.7"
+    "@mui/system": "npm:^5.14.9"
     "@mui/x-date-pickers": "npm:^6.13.0"
     "@react-oauth/google": "npm:latest"
     "@sentry/react": "npm:^6.11.0"
