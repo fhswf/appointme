@@ -1,3 +1,10 @@
+## client [1.1.4](https://github.com/fhswf/book_me/compare/client@1.1.3...client@1.1.4) (2023-09-14)
+
+
+### Bug Fixes
+
+* **workflow:** update version in package.json ([5eefdb8](https://github.com/fhswf/book_me/commit/5eefdb8936a0316df16ad79fc2cc9d9e54addb83))
+
 ## client [1.1.3](https://github.com/fhswf/book_me/compare/client@1.1.2...client@1.1.3) (2023-09-14)
 
 
