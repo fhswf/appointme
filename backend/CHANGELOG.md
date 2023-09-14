@@ -1,3 +1,10 @@
+## backend [1.5.4](https://github.com/fhswf/book_me/compare/backend@1.5.3...backend@1.5.4) (2023-09-14)
+
+
+### Bug Fixes
+
+* **workflow:** delete obsolete workflow files ([f98ed45](https://github.com/fhswf/book_me/commit/f98ed4583dd5c440be19e832e1517fde6405cfad))
+
 ## backend [1.5.3](https://github.com/fhswf/book_me/compare/backend@1.5.2...backend@1.5.3) (2023-09-14)
 
 
