@@ -28,5 +28,6 @@ RUN yarn workspace client build
 # Create client container
 FROM nginx:1.21.3-alpine as client
 COPY --from=build /base/client/build /usr/share/nginx/html/meeting
+COPY nginx/default.conf /etc/nginx/conf.d
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
