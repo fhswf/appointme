@@ -1,3 +1,11 @@
+## backend [1.5.3](https://github.com/fhswf/book_me/compare/backend@1.5.2...backend@1.5.3) (2023-09-14)
+
+
+### Bug Fixes
+
+* build backend image via gh action ([debf186](https://github.com/fhswf/book_me/commit/debf18672509d5bd0610c9a9c80bddd315430c4a))
+* make redirect URL configurable ([b2fe616](https://github.com/fhswf/book_me/commit/b2fe616e62a4f14910fe22e412537e771471ecd9))
+
 ## backend [1.5.2](https://github.com/fhswf/book_me/compare/backend@1.5.1...backend@1.5.2) (2023-09-13)
 
 
