@@ -21,8 +21,7 @@ const { compare } = bcrypt_pkg;
 import jwt_pkg from 'jsonwebtoken';
 const { decode, sign, verify } = jwt_pkg;
 
-const REDIRECT_URI = "https://jupiter.fh-swf.de/meeting/api/v1/google/oauthcallback";
-// `${process.env.API_URL}/oauthcallback`
+const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
 console.log("clientId: %s", process.env.GOOGLE_ID);
 
