@@ -1,3 +1,10 @@
+## backend [1.5.6](https://github.com/fhswf/book_me/compare/backend@1.5.5...backend@1.5.6) (2023-09-14)
+
+
+### Bug Fixes
+
+* correct api url configuration ([8afb172](https://github.com/fhswf/book_me/commit/8afb1726902e67c12b9a6f3485142d4adb050b49))
+
 ## backend [1.5.5](https://github.com/fhswf/book_me/compare/backend@1.5.4...backend@1.5.5) (2023-09-14)
 
 
