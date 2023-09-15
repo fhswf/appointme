@@ -83,7 +83,7 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
 
-console.log("base url: %s", process.env.REACT_APP_URL);
+console.log("base url: %s %s", process.env.REACT_APP_URL, process.env.REACT_BASE_PATH);
 
 root.render(
   <React.StrictMode>
