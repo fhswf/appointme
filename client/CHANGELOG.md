@@ -1,3 +1,10 @@
+## client [1.1.8](https://github.com/fhswf/book_me/compare/client@1.1.7...client@1.1.8) (2023-09-15)
+
+
+### Bug Fixes
+
+* **client:** relative paths in frontend ([133f7e3](https://github.com/fhswf/book_me/commit/133f7e3e3b07d1039420f931e372c657de23f52a))
+
 ## client [1.1.7](https://github.com/fhswf/book_me/compare/client@1.1.6...client@1.1.7) (2023-09-14)
 
 
