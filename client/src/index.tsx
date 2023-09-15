@@ -82,6 +82,7 @@ const theme = createTheme({
 const container = document.getElementById("root");
 const root = createRoot(container);
 const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
+const BASE_PATH = process.env.REACT_BASE_PATH || "/meeting";
 
 console.log("base url: %s %s", process.env.REACT_APP_URL, process.env.REACT_BASE_PATH);
 
@@ -91,7 +92,7 @@ root.render(
       <GoogleOAuthProvider clientId={GOOGLE_ID}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
-            <BrowserRouter basename={process.env.REACT_BASE_PATH}>
+            <BrowserRouter basename={BASE_PATH}>
               <Routes>
                 <Route path="/" element={isAuthenticated() ? (
                   <Navigate to="/app" />
