@@ -81,6 +81,7 @@ const theme = createTheme({
 
 const container = document.getElementById("root");
 const root = createRoot(container);
+
 const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
 const BASE_PATH = process.env.REACT_BASE_PATH || "/meeting";
 
