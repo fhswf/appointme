@@ -1,0 +1,12 @@
+name: deploy
+
+on:
+    registry_package:
+        types: [published]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "Deploying ${{ github.event.client_payload.package.name }} ${{ github.event.client_payload.package.version }} to ${{ github.event.client_payload.package.registry }}"
+            
