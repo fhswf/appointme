@@ -1,6 +1,10 @@
 name: deploy
 
 on:
+    deployment:
+        types: [created]
+    release:
+        types: [published, updated]
     registry_package:
         types: [published, updated]
 
