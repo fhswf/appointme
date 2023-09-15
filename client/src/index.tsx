@@ -91,7 +91,7 @@ root.render(
       <GoogleOAuthProvider clientId={GOOGLE_ID}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
-            <BrowserRouter basename={process.env.REACT_APP_URL}>
+            <BrowserRouter basename={process.env.REACT_BASE_PATH}>
               <Routes>
                 <Route path="/" element={isAuthenticated() ? (
                   <Navigate to="/app" />

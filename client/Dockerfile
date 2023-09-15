@@ -1,9 +1,11 @@
 FROM node:18-bullseye as build
 ARG REACT_APP_GOOGLE_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG REACT_APP_URL=/meeting
+ARG REACT_BASE_PATH=/meeting
+ARG REACT_APP_URL=https://www.ki.fh-swf.de/meeting
 ARG REACT_APP_API_URI=https://www.ki.fh-swf.de/meeting/api/v1
 
 ENV REACT_APP_GOOGLE_ID=${REACT_APP_GOOGLE_ID}
+ENV REACT_BASE_PATH=${REACT_BASE_PATH}
 ENV REACT_APP_URL=${REACT_APP_URL}
 ENV REACT_APP_API_URI=${REACT_APP_API_URI}
 
