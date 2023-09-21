@@ -1,3 +1,10 @@
+## client [1.1.12](https://github.com/fhswf/book_me/compare/client@1.1.11...client@1.1.12) (2023-09-21)
+
+
+### Bug Fixes
+
+* **client:** small ui fixes ([e4c88e8](https://github.com/fhswf/book_me/commit/e4c88e866c1ba35cb3f283507f8e33b57054b083))
+
 ## client [1.1.11](https://github.com/fhswf/book_me/compare/client@1.1.10...client@1.1.11) (2023-09-15)
 
 
