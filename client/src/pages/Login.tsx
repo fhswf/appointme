@@ -33,8 +33,9 @@ const GoogleIcon = (props) => {
       />
       <path clipPath="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z" />
     </SvgIcon>
-  );
-};
+  )
+}
+
 const Login = (props: any) => {
   const navigate = useNavigate();
 
@@ -75,7 +76,7 @@ const Login = (props: any) => {
           console.log('Login Failed');
         }}
         useOneTap
-      />;
+      />
 
     </Container>
   );

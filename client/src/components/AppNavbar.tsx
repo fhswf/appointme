@@ -85,7 +85,7 @@ const AppNavbar = () => {
     setSnack(null);
   };
 
-  const loginOut = isAuthenticated() ? (
+  const loginOut = user && isAuthenticated() ? (
     <MenuItem onClick={handleLogout}>
       <ListItemIcon>
         <LogoutIcon fontSize="small" />
@@ -102,20 +102,20 @@ const AppNavbar = () => {
   );
 
   const userMenu = [
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={handleMenuClose} disabled={!user}>
         <ListItemIcon>
           <PersonIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Profile</ListItemText>
       </MenuItem>,
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>,
-      <MenuItem component={Link} to="/integration">
+      <MenuItem onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
+      <MenuItem component={Link} to="/integration" disabled={!user}>
         <ListItemIcon>
           <CalendarTodayIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>Calendar Integration</ListItemText>
       </MenuItem>,
-      <MenuItem onClick={copyToClipboard}>
+      <MenuItem onClick={copyToClipboard} disabled={!user}>
         <ListItemIcon>
           <LinkIcon fontSize="small" />
         </ListItemIcon>
