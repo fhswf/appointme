@@ -27,6 +27,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "common": "workspace:*",
@@ -53,7 +54,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.11",
-    "@types/jsonwebtoken": "^8.5.0",
+    "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "^20.5.9",
     "@types/nodemailer": "^6.4.0",
     "@typescript-eslint/eslint-plugin": "^6.7.0",

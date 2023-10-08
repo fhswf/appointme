@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "development") {
   console.log("enabling CORS for %s", process.env.CLIENT_URL);
   app.use(
     cors({
-      origin: process.env.CLIENT_URL,
+      origin: [process.env.CLIENT_URL, "http://localhost:5007"],
       credentials: true,
     })
   );

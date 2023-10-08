@@ -15,11 +15,9 @@ dotenv.config({
   path: "./config/config.env",
 });
 
-import bcrypt_pkg from 'bcryptjs';
-const { compare } = bcrypt_pkg;
+import { compare } from 'bcrypt';
 
-import jwt_pkg from 'jsonwebtoken';
-const { decode, sign, verify } = jwt_pkg;
+import { JwtPayload, decode, sign, verify } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
@@ -108,39 +106,42 @@ export const activationController = (req, res): void => {
   const token = header.split(" ")[1];
 
   if (token) {
-    verify(token, process.env.ACCOUNT_ACTIVATION, err => {
+
+    verify(token, process.env.ACCOUNT_ACTIVATION, (err, decoded: JwtPayload) => {
       if (err) {
         res.status(400).json({ errors: "Error! Please signup again!" }); //Verify failed
-      } else {
-        //Decode the jwt for User information
-        let name = "";
-        let email = "";
-        let password = "";
-        const _t = <Record<string, string>>decode(token);
-        if ('name' in _t) {
-          name = _t['name']
-        }
-        if ('email' in _t) {
-          email = _t['email']
-        }
-        if ('password' in _t) {
-          password = _t['password']
-        }
-        const user_url = validateUrl(email);
-        //Create a new User
-        const userToSave = new UserModel({ name, email, password, user_url });
-        //Save the new created User to the DB
-        userToSave.save()
-          .then(() => {
-            res.status(201).json({
-              success: true,
-              message: "You successfully signed up!",
-            });
-          })
-          .catch(err => {
-            res.status(400).json({ errors: "You already have an Account", err });
-          });
+        return
       }
+
+      //Decode the jwt for User information
+      let name = "";
+      let email = "";
+      let password = "";
+
+      if ('name' in decoded) {
+        name = decoded['name']
+      }
+      if ('email' in decoded) {
+        email = decoded['email']
+      }
+      if ('password' in decoded) {
+        password = decoded['password']
+      }
+      const user_url = validateUrl(email);
+      //Create a new User
+      const userToSave = new UserModel({ name, email, password, user_url });
+      //Save the new created User to the DB
+      userToSave.save()
+        .then(() => {
+          res.status(201).json({
+            success: true,
+            message: "You successfully signed up!",
+          });
+        })
+        .catch(err => {
+          res.status(400).json({ errors: "You already have an Account", err });
+        });
+
     });
   } else {
     res.status(400).json({ errors: "Error! Please signup again!" });

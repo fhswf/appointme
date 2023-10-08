@@ -38,7 +38,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     `available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id`
   )
     .then(event => {
-      try {
+    
         // Calculate intersection of requested and 'feasible' tome interval
         timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture))
         timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture))
@@ -110,11 +110,6 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
                 res.status(400).json({ error: <unknown>err });
               })
           });
-      }
-      catch (err) {
-        console.error("Exception in getAvailableTimesForDay: %o", err);
-        res.status(400).json({ erorr: err });
-      }
     })
     .catch(err => {
       console.error('getAvailableTime: event not found: %o', err);
