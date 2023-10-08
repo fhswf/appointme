@@ -10,12 +10,6 @@ import AddIcon from "@mui/icons-material/Add";
 
 import { UserContext } from "../components/PrivateRoute";
 
-declare module '@mui/styles/defaultTheme' {
-  interface DefaultTheme extends Theme {}
-}
-
-
-
 const App = () => {
   const navigate = useNavigate();
   const user = useContext(UserContext).user;

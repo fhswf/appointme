@@ -16,30 +16,16 @@ import {
   Snackbar
 } from "@mui/material";
 
-import { makeStyles } from "@mui/styles";
 import { UserContext } from "./PrivateRoute";
 
-import CalendarTodayIcon  from "@mui/icons-material/CalendarToday";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LinkIcon from "@mui/icons-material/Link";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
-
 const AppNavbar = () => {
-  const classes = useStyles();
   const navigate = useNavigate();
   const user = useContext(UserContext).user;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -102,25 +88,25 @@ const AppNavbar = () => {
   );
 
   const userMenu = [
-      <MenuItem onClick={handleMenuClose} disabled={!user}>
-        <ListItemIcon>
-          <PersonIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>Profile</ListItemText>
-      </MenuItem>,
-      <MenuItem onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
-      <MenuItem component={Link} to="/integration" disabled={!user}>
-        <ListItemIcon>
-          <CalendarTodayIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>Calendar Integration</ListItemText>
-      </MenuItem>,
-      <MenuItem onClick={copyToClipboard} disabled={!user}>
-        <ListItemIcon>
-          <LinkIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>Copy your link</ListItemText>
-      </MenuItem>
+    <MenuItem onClick={handleMenuClose} disabled={!user}>
+      <ListItemIcon>
+        <PersonIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Profile</ListItemText>
+    </MenuItem>,
+    <MenuItem onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
+    <MenuItem component={Link} to="/integration" disabled={!user}>
+      <ListItemIcon>
+        <CalendarTodayIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Calendar Integration</ListItemText>
+    </MenuItem>,
+    <MenuItem onClick={copyToClipboard} disabled={!user}>
+      <ListItemIcon>
+        <LinkIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Copy your link</ListItemText>
+    </MenuItem>
   ];
 
   const renderMenu = (
@@ -146,7 +132,6 @@ const AppNavbar = () => {
         <Toolbar>
           <IconButton
             edge="start"
-            className={classes.menuButton}
             color="inherit"
             aria-label="menu"
             onClick={handleOnClick("/app")}
@@ -154,7 +139,7 @@ const AppNavbar = () => {
             <CalendarTodayIcon />
           </IconButton>
 
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
             BookMe
           </Typography>
           <div>

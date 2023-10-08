@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { signout } from "../helpers/helpers";
 
 import { Container } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
@@ -14,6 +14,7 @@ import { EMPTY_EVENT, Event } from "common";
 import { EventForm } from "../components/EventForm";
 import { UserContext } from "../components/PrivateRoute";
 
+/*
 export const useStyles = makeStyles((theme) => ({
   row: {
     alignItems: "baseline",
@@ -28,6 +29,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: "0.8ex",
   },
 }));
+*/
 
 type AddEventProps = {};
 

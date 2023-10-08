@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormGroup, FormLabel, Grid, TextField } from "@mui/material";
-import { useStyles } from "../pages/AddEvent";
 
 export const TimesForDay = (props) => {
-  const classes = useStyles();
   const [start, setStart] = useState(props.start);
   const [end, setEnd] = useState(props.end);
   console.log("TimeForDay: props: %o start=%o, end=%o", props, start, end);
@@ -27,8 +25,8 @@ export const TimesForDay = (props) => {
   return (
     <>
       <Grid item xs={6}>
-        <FormLabel className={classes.label}>{props.day}</FormLabel>
-        <FormGroup row className={classes.row}>
+        <FormLabel>{props.day}</FormLabel>
+        <FormGroup row>
           <TextField
             type="time"
             margin="normal"
@@ -36,7 +34,7 @@ export const TimesForDay = (props) => {
             onChange={cbStartTime}
             value={start}
           />
-          <span className={classes.sep}>&nbsp;–&nbsp;</span>
+          <span>&nbsp;–&nbsp;</span>
           <TextField
             type="time"
             margin="normal"

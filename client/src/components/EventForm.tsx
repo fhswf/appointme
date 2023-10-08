@@ -19,11 +19,12 @@ import {
   Input,
   SelectChangeEvent,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+
 import { Add, Delete } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "common";
 
+/*
 export const useStyles = makeStyles((theme) => ({
   row: {
     alignItems: "center",
@@ -38,6 +39,7 @@ export const useStyles = makeStyles((theme) => ({
     padding: "0.8ex",
   },
 }));
+*/
 
 type EditSlotProps = {
   day: Day;
@@ -46,7 +48,6 @@ type EditSlotProps = {
 };
 
 const EditSlot = (props: EditSlotProps) => {
-  const classes = useStyles();
   const [slots, setSlots] = useState<Slot[]>([]);
 
   useEffect(() => {
@@ -92,13 +93,13 @@ const EditSlot = (props: EditSlotProps) => {
 
   const changeTime =
     (key: keyof Slot, index: number) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log("ChangeTime: %s %d %o", key, index, event.target.value);
-      let _slots = slots.slice();
-      _slots[index][key] = event.target.value;
-      setSlots(_slots);
-      props.onChange(_slots);
-    };
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("ChangeTime: %s %d %o", key, index, event.target.value);
+        let _slots = slots.slice();
+        _slots[index][key] = event.target.value;
+        setSlots(_slots);
+        props.onChange(_slots);
+      };
 
   return (
     <>
@@ -106,7 +107,6 @@ const EditSlot = (props: EditSlotProps) => {
         <Grid item xs={2}>
           <FormControl>
             <FormControlLabel
-              className={classes.label}
               control={
                 <Checkbox checked={slots.length > 0} onChange={handleCheck} />
               }
@@ -118,7 +118,7 @@ const EditSlot = (props: EditSlotProps) => {
           <Grid container>
             {slots.map((slot, index) => (
               <>
-                <FormGroup row className={classes.row}>
+                <FormGroup row>
                   <Grid item xs={4} textAlign="end">
                     <Input
                       type="time"
@@ -180,21 +180,21 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const handleOnChange =
     (key: keyof Event, mult?: number) =>
-    (evt: ChangeEvent<HTMLInputElement>) => {
-      setChanged(true);
-      console.log("onChange: %o", evt);
-      if (key === "name" && formData.url === generateSlug(formData.name)) {
-        setFormData({
-          ...formData,
-          [key]: mult
-            ? mult * Number.parseInt(evt.target.value)
-            : evt.target.value,
-          url: generateSlug(evt.target.value),
-        } as Event);
-      } else {
-        setFormData({ ...formData, [key]: evt.target.value } as Event);
-      }
-    };
+      (evt: ChangeEvent<HTMLInputElement>) => {
+        setChanged(true);
+        console.log("onChange: %o", evt);
+        if (key === "name" && formData.url === generateSlug(formData.name)) {
+          setFormData({
+            ...formData,
+            [key]: mult
+              ? mult * Number.parseInt(evt.target.value)
+              : evt.target.value,
+            url: generateSlug(evt.target.value),
+          } as Event);
+        } else {
+          setFormData({ ...formData, [key]: evt.target.value } as Event);
+        }
+      };
 
   interface EvtType {
     value: number;
@@ -202,11 +202,11 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const handleSelect =
     (key: keyof Event) =>
-    (evt: SelectChangeEvent<number>, child: React.ReactNode) => {
-      setChanged(true);
-      console.log("onChange: %o", evt);
-      setFormData({ ...formData, [key]: evt.target.value } as Event);
-    };
+      (evt: SelectChangeEvent<number>, child: React.ReactNode) => {
+        setChanged(true);
+        console.log("onChange: %o", evt);
+        setFormData({ ...formData, [key]: evt.target.value } as Event);
+      };
 
   const onChangeSlot = (day: Day) => (slots: Slot[]) => {
     setChanged(true);

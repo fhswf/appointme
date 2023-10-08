@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 
-import { makeStyles, createStyles } from '@mui/styles';
 
 import {
   createTheme,
@@ -77,6 +76,7 @@ const theme = createTheme({
   },
 });
 
+/*
 const useStyles = makeStyles((theme) => ({
   picker: {
     "& button": {
@@ -130,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "300px",
   },
 }));
+*/
 
 type Error = {
   message: string;
@@ -138,7 +139,6 @@ type Error = {
 const Booking = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
-  const classes = useStyles();
 
   type Details = { name: string; email: string; description: string };
 
@@ -286,7 +286,6 @@ const Booking = (props: any) => {
         disableMargin
         disabled={!checkDay(day)}
         className={clsx({
-          [classes.date]: true,
           highlight: checkDay(day),
         })}
       />
@@ -327,7 +326,7 @@ const Booking = (props: any) => {
     return (
       <>
         <Grid
-          className={classes.slots}
+
           spacing={2}
           container
           direction="row"
@@ -378,24 +377,24 @@ const Booking = (props: any) => {
             Schedule an appointment
           </Typography>
 
-          <div className={classes.container}>
-            <div className={classes.item}>
+          <div >
+            <div >
               <Avatar
                 sx={{ width: 24, height: 24 }}
                 alt={user ? user.name : ""}
                 src={user ? user.picture_url : ""}
               />
             </div>
-            <div className={classes.item}>{event.name}</div>
-            <div className={classes.item}>
+            <div >{event.name}</div>
+            <div >
               <HourglassFull />
             </div>
-            <div className={classes.item}>{event.duration + " minutes"}</div>
+            <div>{event.duration + " minutes"}</div>
 
-            <div className={classes.item}>
+            <div>
               <Room />
             </div>
-            <div className={classes.item}>{event.location}</div>
+            <div>{event.location}</div>
           </div>
 
           <Paper>
@@ -422,24 +421,24 @@ const Booking = (props: any) => {
                 </Stepper>
 
                 <React.Fragment>
-                  <Typography className={classes.instructions}>
+                  <Typography>
                     Step {activeStep + 1}
                   </Typography>
-                  <div className={classes.buttonWrapper}>
+                  <div>
                     <Button
                       color="inherit"
                       disabled={activeStep === 0}
                       onClick={handleBack}
-                      className={classes.button}
+
                     >
                       Back
                     </Button>
-                    <div className={classes.spacer} />
+                    <div />
                     {isStepOptional(activeStep) && (
                       <Button
                         color="inherit"
                         onClick={handleSkip}
-                        className={classes.button}
+
                       >
                         Skip
                       </Button>
@@ -460,7 +459,6 @@ const Booking = (props: any) => {
                     <StaticDatePicker
                       displayStaticWrapperAs="desktop"
                       value={selectedDate}
-                      className={classes.picker}
                       onChange={handleDateChange}
                       onMonthChange={handleMonthChange}
                       slots={{ day: renderPickerDay }}

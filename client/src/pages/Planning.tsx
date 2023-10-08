@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
-import { makeStyles } from "@mui/styles";
 import {
   Avatar,
   Box,
@@ -23,6 +22,7 @@ import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
 import { EventDocument } from "../helpers/EventDocument";
 
+/*
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "grid",
@@ -34,10 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
   item: {},
 }));
+*/
 
 const Planning = (props: any) => {
   const navigate = useNavigate();
-  const classes = useStyles();
 
   const { user_url } = useParams<{ user_url: string }>();
   const [events, setEvents] = useState<EventDocument[]>([]);
@@ -78,7 +78,7 @@ const Planning = (props: any) => {
   }, [user_url, navigate, user.name]);
 
   const handleOnClick = (bookingEvent: EventDocument) => {
-    navigate(`/users/${user_url}/${bookingEvent.url}`,{
+    navigate(`/users/${user_url}/${bookingEvent.url}`, {
       state: { bookingEvent, user },
     });
   };
@@ -103,19 +103,26 @@ const Planning = (props: any) => {
                   title={event.name}
                 />
                 <CardContent>
-                  <div className={classes.container}>
-                    <div className={classes.item}>
+                  <Container
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "1.5em 1fr",
+                      alignItems: "center",
+                      verticalAlign: "center",
+                      paddingBottom: "16px"
+                    }}>
+                    <div>
                       <HourglassFullIcon />
                     </div>
-                    <div className={classes.item}>
+                    <div>
                       {event.duration + " minutes"}
                     </div>
 
-                    <div className={classes.item}>
+                    <div>
                       <RoomIcon />
                     </div>
-                    <div className={classes.item}>{event.location}</div>
-                  </div>
+                    <div>{event.location}</div>
+                  </Container>
                   {event.description}
                 </CardContent>
                 <CardActions>

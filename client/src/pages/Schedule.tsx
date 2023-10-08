@@ -1,6 +1,5 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { makeStyles } from '@mui/styles';
 import { DateCalendar, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 
 import {
@@ -42,6 +41,7 @@ import ReactMarkdown from "react-markdown";
 
 const LOCALES = { en: enUS, de: de, "de-DE": de };
 
+/*
 const useStyles = makeStyles((theme) => ({
   picker: {
     "& button": {
@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "300px",
   },
 }));
+*/
 
 type Error = {
   message: string;
@@ -131,7 +132,6 @@ type Error = {
 const Schedule = (props: any) => {
   const param = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
-  const classes = useStyles();
   const { t, i18n } = useTranslation();
 
   const [user, setUser] = useState<UserDocument>();
@@ -245,14 +245,13 @@ const Schedule = (props: any) => {
 
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
-      const { day, selectedDate, ...other } = props;
+    const { day, selectedDate, ...other } = props;
     return (
       <PickersDay
         {...props}
         disableMargin
         disabled={!checkDay(day)}
         className={clsx({
-          [classes.date]: true,
           selected: selectedDate && isSameDay(day, selectedDate),
           highlight: checkDay(day),
         })}
@@ -387,7 +386,7 @@ const Schedule = (props: any) => {
               </form>
             </>
           ) : (
-            <Box className={classes.grid} padding={2}>
+            <Box padding={2}>
               <Box
                 sx={{ gridColumn: "1 / span 2", gridRow: "1" }}
                 justifySelf="center"
@@ -408,12 +407,12 @@ const Schedule = (props: any) => {
                     </ReactMarkdown>
                   </Typography>
                   <Box display="flex" flexWrap="wrap">
-                    <Typography variant="body1" className={classes.description}>
-                      <HourglassTop className={classes.textBottom} />{" "}
+                    <Typography variant="body1">
+                      <HourglassTop />{" "}
                       {event.duration} {t("minutes")}
                     </Typography>
-                    <Typography variant="body1" className={classes.description}>
-                      <Room className={classes.textBottom} />
+                    <Typography variant="body1">
+                      <Room />
                       {event.location}
                     </Typography>
                   </Box>
@@ -422,7 +421,6 @@ const Schedule = (props: any) => {
               <Box sx={{ gridArea: "picker_l" }}>
                 <DateCalendar
                   value={selectedDate}
-                  className={classes.picker}
                   onChange={handleDateChange}
                   onMonthChange={handleMonthChange}
                   slots={{ day: renderPickerDay }}

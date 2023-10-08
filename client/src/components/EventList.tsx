@@ -4,17 +4,12 @@ import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
 import { Grid } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+
 
 import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 
-export const useStyles = makeStyles((theme) => ({
-  delete: {
-    marginLeft: "auto",
-  },
-}));
 
 type EventListProps = {
   url: string;

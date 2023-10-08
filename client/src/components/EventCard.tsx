@@ -13,18 +13,20 @@ import {
   Snackbar,
   Switch,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+
 import { Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ShareIcon from "@mui/icons-material/Share";
 import { EventDocument } from "../helpers/EventDocument";
 
+/*
 const useStyles = makeStyles({
   delete: {
     marginLeft: "auto",
   },
 });
+*/
 
 type EventCardProps = {
   event: EventDocument;
@@ -39,7 +41,6 @@ export const EventCard = (props: EventCardProps) => {
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const token = props.token;
-  const classes = useStyles();
   const navigate = useNavigate();
 
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +111,6 @@ export const EventCard = (props: EventCardProps) => {
             </Button>
             <IconButton
               aria-label="delete"
-              className={classes.delete}
               onClick={handleDelete}
             >
               <DeleteIcon />
