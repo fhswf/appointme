@@ -96,10 +96,24 @@ export interface User {
   pull_calendars: string[];
 };
 
-export type TimeRange = {
+export class TimeRange {
   start: Date;
   end: Date;
+
+  constructor(start: Date, end: Date);
+  constructor(start: string, end: string);
+
+  constructor(start: any, end: any) {
+    if (typeof start == 'string') start = new Date(start);
+    if (typeof end == 'string') end = new Date(end);
+    if (start > end) {
+      throw new RangeError('Illegal time interval, start > end');
+    }
+    this.start = start;
+    this.end = end;
+  }
 }
+
 
 /**
  * This class represents a set of non-overlapping time intervals.
@@ -110,7 +124,10 @@ export class IntervalSet extends Array<TimeRange> {
 
   constructor();
   constructor(timeMin: Date, timeMax: Date);
+  constructor(timeMin: string, timeMax: string);
   constructor(other: TimeRange[]);
+  constructor(other: any[]);
+  constructor(timeMin: Date, timeMax: Date, slots: Slots);
   constructor(timeMin: Date, timeMax: Date, slots: Slots, timeZone: string);
   constructor(...args: any) {
     if (args.length == 0) {
@@ -165,7 +182,7 @@ export class IntervalSet extends Array<TimeRange> {
   }
 
   static equals(r1: TimeRange, r2: TimeRange): boolean {
-    console.log('equals: %o, %o, %o', r1, r2, (r1.start.getTime() == r2.start.getTime()) && (r1.end.getTime() == r2.end.getTime()))
+    //console.log('equals: %o, %o, %o', r1, r2, (r1.start.getTime() == r2.start.getTime()) && (r1.end.getTime() == r2.end.getTime()))
     return (r1.start.getTime() == r2.start.getTime()) && (r1.end.getTime() == r2.end.getTime())
   }
 
