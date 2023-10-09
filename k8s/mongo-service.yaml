@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: mongo-bookme
+  name: mongo-bookme
+  namespace: bookme
+spec:
+  ports:
+    - name: mongo-bookme
+      port: 27017
+      targetPort: 27017
+  selector:
+    io.kompose.service: mongo-bookme

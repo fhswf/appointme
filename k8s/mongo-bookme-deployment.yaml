@@ -30,6 +30,8 @@ spec:
         - image: mongo
           name: mongo-bookme
           resources: {}
+          ports:
+            - containerPort: 27017
           volumeMounts:
             - mountPath: /data/db
               name: mongo-bookme-claim0
