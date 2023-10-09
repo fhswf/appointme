@@ -1,4 +1,4 @@
-import React, { Suspense, } from "react";
+import React, { Suspense,  } from "react";
 import ReactDOM from "react-dom";
 import { createRoot } from 'react-dom/client';
 
@@ -82,15 +82,15 @@ const theme = createTheme({
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-const CLIENT_ID = process.env.CLIENT_ID;
-const BASE_PATH = process.env.BASE_PATH || "/meeting";
+const GOOGLE_ID = process.env.REACT_APP_GOOGLE_ID;
+const BASE_PATH = process.env.REACT_BASE_PATH || "/meeting";
 
-console.log("base url: %s %s", process.env.APP_URL, process.env.BASE_PATH);
+console.log("base url: %s %s", process.env.REACT_APP_URL, process.env.REACT_BASE_PATH);
 
 root.render(
   <React.StrictMode>
     <Suspense fallback="loading">
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <GoogleOAuthProvider clientId={GOOGLE_ID}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <ThemeProvider theme={theme}>
             <BrowserRouter basename={BASE_PATH}>
