@@ -1,3 +1,10 @@
+## backend [1.6.1](https://github.com/fhswf/book_me/compare/backend@1.6.0...backend@1.6.1) (2023-10-09)
+
+
+### Bug Fixes
+
+* **backend:** typescript config ([48376f7](https://github.com/fhswf/book_me/commit/48376f7fb2b36535fa037ea76c8f8e32a1c403ae))
+
 # backend [1.6.0](https://github.com/fhswf/book_me/compare/backend@1.5.6...backend@1.6.0) (2023-10-09)
 
 
