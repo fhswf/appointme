@@ -25,7 +25,7 @@ i18n
 
         backend: {
             // for all available options read the backend's repository readme file
-            loadPath: process.env.REACT_APP_URL + '/locales/{{lng}}/{{ns}}.json'
+            loadPath: process.env.PP_URL + '/locales/{{lng}}/{{ns}}.json'
         },
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default

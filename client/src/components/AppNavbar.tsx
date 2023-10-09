@@ -31,7 +31,7 @@ const AppNavbar = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [snack, setSnack] = React.useState<string | null>(null);
 
-  const link = user ? process.env.REACT_APP_URL + "/users/" + user.user_url : "";
+  const link = user ? process.env.APP_URL + "/users/" + user.user_url : "";
 
   console.log("AppNavbar: user=%o", user);
 

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function getUserByToken(token: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/users/user`,
+    `${process.env.API_URL}/users/user`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -14,7 +14,7 @@ export async function getUserByToken(token: string) {
 
 export async function updateUser(token: string, user: any) {
   const response = await axios.put(
-    `${process.env.REACT_APP_API_URI}/users/user`,
+    `${process.env.API_URL}/users/user`,
     { data: user },
     {
       headers: {
@@ -27,7 +27,7 @@ export async function updateUser(token: string, user: any) {
 
 export async function getUserByUrl(url: string) {
   return axios.get(
-    `${process.env.REACT_APP_API_URI}/users/findUserByUrl`,
+    `${process.env.API_URL}/users/findUserByUrl`,
     {
       params: { url: url },
     }
