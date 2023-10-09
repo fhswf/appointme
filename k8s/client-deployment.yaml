@@ -58,7 +58,7 @@ spec:
           image: ghcr.io/fhswf/book_me/frontend:latest
           name: client
           ports:
-            - containerPort: 3000
+            - containerPort: 80
           resources: {}
       restartPolicy: Always
 status: {}
@@ -78,4 +78,4 @@ spec:
     kind: Rule
     services:
     - name: client
-      port: 3000
+      port: 80

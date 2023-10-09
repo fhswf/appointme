@@ -25,4 +25,10 @@ COPY ./common ./common
 RUN yarn workspace common build
 
 COPY ./client ./client
-CMD ["yarn", "workspace", "client", "start"]
+RUN yarn workspace client build
+
+FROM nginx:1.21.3-alpine
+COPY --from=build /base/client/build /usr/share/nginx/html
+COPY ./client/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
