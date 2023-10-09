@@ -1,3 +1,10 @@
+# common [1.1.0](https://github.com/fhswf/book_me/compare/common@1.0.0...common@1.1.0) (2023-10-09)
+
+
+### Features
+
+* quality assurance ([#124](https://github.com/fhswf/book_me/issues/124)) ([2f457e5](https://github.com/fhswf/book_me/commit/2f457e52251110d6f6eb695e2467e41d2bfe9b73))
+
 # common 1.0.0 (2023-09-10)
 
 
