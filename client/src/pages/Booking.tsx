@@ -134,7 +134,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Error = {
   message: string;
-} & any;
+  details: any;
+};
 
 const Booking = (props: any) => {
   const data = useParams<{ user_url: string; url: string }>();

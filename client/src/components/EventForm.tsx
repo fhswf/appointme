@@ -211,8 +211,9 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   const onChangeSlot = (day: Day) => (slots: Slot[]) => {
     setChanged(true);
     console.log("onChangeSlot: %d %o", day, slots);
-    formData.available[day] = slots;
-    setFormData(formData);
+    let event: Event = { ...formData };
+    event.available[day] = slots;
+    setFormData(event);
   };
 
   return (

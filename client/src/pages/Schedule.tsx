@@ -127,7 +127,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Error = {
   message: string;
-} & any;
+  details: any;
+};
 
 const Schedule = (props: any) => {
   const param = useParams<{ user_url: string; url: string }>();
