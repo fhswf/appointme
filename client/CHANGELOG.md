@@ -1,3 +1,24 @@
+# client [1.2.0](https://github.com/fhswf/book_me/compare/client@1.1.12...client@1.2.0) (2023-10-09)
+
+
+### Bug Fixes
+
+* **client:** docker deployment & typing ([57111e9](https://github.com/fhswf/book_me/commit/57111e909d4abce2f2df79f5d830ec78dbfafed5))
+* update mui ([#123](https://github.com/fhswf/book_me/issues/123)) ([ec35bb3](https://github.com/fhswf/book_me/commit/ec35bb35b2869091411465920d95c6c5339fad72))
+
+
+### Features
+
+* quality assurance ([#124](https://github.com/fhswf/book_me/issues/124)) ([2f457e5](https://github.com/fhswf/book_me/commit/2f457e52251110d6f6eb695e2467e41d2bfe9b73))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.0
+
 ## client [1.1.12](https://github.com/fhswf/book_me/compare/client@1.1.11...client@1.1.12) (2023-09-21)
 
 
