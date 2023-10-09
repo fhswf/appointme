@@ -1,13 +1,13 @@
-FROM node:18-bullseye as build
-ARG REACT_APP_GOOGLE_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG REACT_BASE_PATH=/meeting
-ARG REACT_APP_URL=https://hopper.fh-swf.de/meeting
-ARG REACT_APP_API_URI=https://hopper.fh-swf.de/meeting/api/v1
+FROM node:18-bullseye AS build
+ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
+ARG BASE_PATH=/meeting
+ARG APP_URL=https://hopper.fh-swf.de/meeting
+ARG API_URL=https://hopper.fh-swf.de/meeting/api/v1
 
-ENV REACT_APP_GOOGLE_ID=${REACT_APP_GOOGLE_ID}
-ENV REACT_BASE_PATH=${REACT_BASE_PATH}
-ENV REACT_APP_URL=${REACT_APP_URL}
-ENV REACT_APP_API_URI=${REACT_APP_API_URI}
+ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
+ENV REACT_APP_BASE_PATH=${BASE_PATH}
+ENV REACT_APP_URL=${APP_URL}
+ENV REACT_APP_API_URL=${API_URL}
 
 WORKDIR /base
 COPY .yarn .yarn
