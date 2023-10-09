@@ -1,11 +1,13 @@
 FROM node:18-bullseye as build
-ARG REACT_APP_GOOGLE_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG REACT_APP_URL=/meeting
-ARG REACT_APP_API_URL=https://www.ki.fh-swf.de/meeting/api/v1
+ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
+ARG CLIENT_SECRET
+ARG APP_URL=/meeting
+ARG APP_API_URL=https://hopper.fh-swf.de/meeting/api/v1
 
-ENV REACT_APP_GOOGLE_ID=${REACT_APP_GOOGLE_ID}
-ENV REACT_APP_URL=${REACT_APP_URL}
-ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+ENV CLIENT_ID=${CLIENT_ID}
+ENV CLIENT_SECRET=${CLIENT_SECRET}
+ENV APP_URL=${APP_URL}
+ENV APP_API_URL=${APP_API_URL}
 
 WORKDIR /base
 COPY .yarn .yarn
@@ -41,4 +43,4 @@ COPY --from=build /base/.yarnrc.yml .yarnrc.yml
 RUN yarn set version 4
 RUN yarn install
 EXPOSE 5000
-CMD [ "yarn", "run", "backend"]
+CMD [ "yarn", "workspace", "backend", "start"]

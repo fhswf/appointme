@@ -1,5 +1,5 @@
 docker.env
-config/config.env
+src/config/config.env
 node_modules/**
 build/**
 

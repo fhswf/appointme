@@ -30,6 +30,16 @@ spec:
     spec:
       containers:
         - env:
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_ID
+                  name: bookme-secret
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_SECRET
+                  name: bookme-secret
             - name: API_URL
               valueFrom:
                 configMapKeyRef:

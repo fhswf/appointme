@@ -19,8 +19,8 @@ import { Event, IntervalSet } from 'common';
 
 
 const oAuth2Client = new OAuth2Client({
-  clientId: process.env.GOOGLE_ID,
-  clientSecret: process.env.GOOGLE_SECRET,
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
   redirectUri: `${process.env.API_URL}/google/oauthcallback`,
 });
 const SCOPES = [

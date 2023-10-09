@@ -24,8 +24,8 @@ console.log("redirectUri: %s", REDIRECT_URI);
 console.log("clientId: %s", process.env.GOOGLE_ID);
 
 const oAuth2Client = new OAuth2Client({
-  clientId: process.env.GOOGLE_ID,
-  clientSecret: process.env.GOOGLE_SECRET,
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
   redirectUri: REDIRECT_URI,
 });
 
@@ -205,7 +205,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
   const idToken = req.body.code;
 
   oAuth2Client
-    .verifyIdToken({ idToken, audience: process.env.GOOGLE_ID })
+    .verifyIdToken({ idToken, audience: process.env.CLIENT_ID })
     .then(response => {
       const { email_verified, name, email, picture, sub } = response.getAttributes().payload;
       console.log('picture: %s', picture);
