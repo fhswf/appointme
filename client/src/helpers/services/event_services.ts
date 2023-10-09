@@ -7,7 +7,7 @@ export async function saveUserEvent(
   userid: string
 ) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/events/addEvent`,
+    `${process.env.API_URL}/events/addEvent`,
     { ...event, user: userid },
     {
       headers: {
@@ -20,7 +20,7 @@ export async function saveUserEvent(
 
 export async function deleteEvent(token: string, id: string) {
   const response = await axios.delete(
-    `${process.env.REACT_APP_API_URI}/events/deleteEvent/${id}`,
+    `${process.env.API_URL}/events/deleteEvent/${id}`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -33,7 +33,7 @@ export async function deleteEvent(token: string, id: string) {
 
 export async function getEventByID(token: string, id: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/events/getEvent/${id}`,
+    `${process.env.API_URL}/events/getEvent/${id}`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -51,7 +51,7 @@ export async function updateEvent(
 ) {
   console.log('available: %o', event.available);
   const response = await axios.put(
-    `${process.env.REACT_APP_API_URI}/events/updateEvent/${id}`,
+    `${process.env.API_URL}/events/updateEvent/${id}`,
     {
       data: event
     },
@@ -66,7 +66,7 @@ export async function updateEvent(
 
 export async function getActiveEvents(user_id: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/events/getActiveEvents`,
+    `${process.env.API_URL}/events/getActiveEvents`,
     {
       params: { user: user_id },
     }
@@ -76,7 +76,7 @@ export async function getActiveEvents(user_id: string) {
 
 export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, userid: string) {
   return axios.get(
-    `${process.env.REACT_APP_API_URI}/events/getAvailable`,
+    `${process.env.API_URL}/events/getAvailable`,
     {
       params: {
         timeMin,
@@ -91,7 +91,7 @@ export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, use
 
 export async function getUsersEvents(token: string) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/events/getEvents`,
+    `${process.env.API_URL}/events/getEvents`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -103,7 +103,7 @@ export async function getUsersEvents(token: string) {
 
 export async function getEventByUrlAndUser(user_id: string, event_url: string) {
   return axios.get(
-    `${process.env.REACT_APP_API_URI}/events/getEventBy`,
+    `${process.env.API_URL}/events/getEventBy`,
     {
       params: { user: user_id, url: event_url },
     }

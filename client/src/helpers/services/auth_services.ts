@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function postToRegister(name, email, password) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/auth/register`,
+    `${process.env.API_URL}/auth/register`,
     {
       name,
       email,
@@ -15,7 +15,7 @@ export async function postToRegister(name, email, password) {
 
 export async function postToActivate(token) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/auth/activate`,
+    `${process.env.API_URL}/auth/activate`,
     {},
     {
       headers: {
@@ -28,9 +28,9 @@ export async function postToActivate(token) {
 }
 
 export async function postGoogleLogin(code) {
-  console.log("postGoogleLogin: %s", `${process.env.REACT_APP_API_URI}/auth/google_oauth2_code`);
+  console.log("postGoogleLogin: %s", `${process.env.API_URL}/auth/google_oauth2_code`);
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/auth/google_oauth2_code`,
+    `${process.env.API_URL}/auth/google_oauth2_code`,
     {
       code,
     },
@@ -43,7 +43,7 @@ export async function postGoogleLogin(code) {
 
 export async function postLogin(email, password) {
   const response = await axios.post(
-    `${process.env.REACT_APP_API_URI}/auth/login`,
+    `${process.env.API_URL}/auth/login`,
     {
       email,
       password: password,
