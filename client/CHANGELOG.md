@@ -1,3 +1,10 @@
+## client [1.2.1](https://github.com/fhswf/book_me/compare/client@1.2.0...client@1.2.1) (2023-10-09)
+
+
+### Bug Fixes
+
+* **client:** deployment configuration ([710b9dc](https://github.com/fhswf/book_me/commit/710b9dc77386aeb02bd1130696bafe7b0bbb385e))
+
 # client [1.2.0](https://github.com/fhswf/book_me/compare/client@1.1.12...client@1.2.0) (2023-10-09)
 
 
