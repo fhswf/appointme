@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
-  API_URL: https://jupiter.fh-swf.de/bookme/api/v1
-  CLIENT_URL: https://jupiter.fh-swf.de/bookme
+  API_URL: https://hopper.fh-swf.de/bookme/api/v1
+  CLIENT_URL: https://hopper.fh-swf.de/bookme
   MONGO_URI: mongodb://mongo-bookme:27017
   TZ: Europe/Berlin
 kind: ConfigMap
@@ -9,5 +9,5 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: bookme-docker-env
-  name: docker-env
+  name: bookme
   namespace: bookme

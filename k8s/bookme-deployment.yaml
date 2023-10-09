@@ -23,9 +23,6 @@ spec:
       annotations:
         kompose.cmd: /home/cgawron/bin/kompose convert
         kompose.version: 1.26.0 (40646f47)
-        traefik.enable: "true"
-        traefik.http.routers.bookme_api.entrypoints: web,websecure
-        traefik.http.routers.bookme_api.rule: PathPrefix(`/bookme/api`)
       creationTimestamp: null
       labels:
         io.kompose.network/traefik: "true"
@@ -37,26 +34,43 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: API_URL
-                  name: docker-env
+                  name: bookme
             - name: CLIENT_URL
               valueFrom:
                 configMapKeyRef:
                   key: CLIENT_URL
-                  name: docker-env
+                  name: bookme
             - name: MONGO_URI
               valueFrom:
                 configMapKeyRef:
                   key: MONGO_URI
-                  name: docker-env
+                  name: bookme
             - name: TZ
               valueFrom:
                 configMapKeyRef:
                   key: TZ
-                  name: docker-env
-          image: bookme
+                  name: bookme
+          image: ghcr.io/fhswf/book_me/backend:latest
           name: bookme
           ports:
             - containerPort: 5000
           resources: {}
       restartPolicy: Always
 status: {}
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: bookme-ingress
+  namespace: bookme
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+  - match: Host(`hopper.fh-swf.de`) && PathPrefix(`/meeting/api`)
+    kind: Rule
+    services:
+    - name: bookme
+      port: 5000
