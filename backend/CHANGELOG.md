@@ -1,3 +1,10 @@
+## backend [1.6.2](https://github.com/fhswf/book_me/compare/backend@1.6.1...backend@1.6.2) (2023-10-09)
+
+
+### Bug Fixes
+
+* **backend:** config warnings ([6c004e4](https://github.com/fhswf/book_me/commit/6c004e47ce927e66ba4470ec79f930c572fe8982))
+
 ## backend [1.6.1](https://github.com/fhswf/book_me/compare/backend@1.6.0...backend@1.6.1) (2023-10-09)
 
 
