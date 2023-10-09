@@ -1,3 +1,23 @@
+# backend [1.6.0](https://github.com/fhswf/book_me/compare/backend@1.5.6...backend@1.6.0) (2023-10-09)
+
+
+### Bug Fixes
+
+* **client:** docker deployment & typing ([57111e9](https://github.com/fhswf/book_me/commit/57111e909d4abce2f2df79f5d830ec78dbfafed5))
+
+
+### Features
+
+* local development ([867fd81](https://github.com/fhswf/book_me/commit/867fd81d834a5c47bf57e9b2ef3ce3f17ce2048b))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.0
+
 ## backend [1.5.6](https://github.com/fhswf/book_me/compare/backend@1.5.5...backend@1.5.6) (2023-09-14)
 
 
