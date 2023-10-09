@@ -21,8 +21,15 @@ import { JwtPayload, decode, sign, verify } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
-console.log("clientId: %s", process.env.GOOGLE_ID);
-
+if (!process.env.CLIENT_SECRET) {
+  console.error("CLIENT_SECRET not set!")
+}
+if (!process.env.CLIENT_ID) {
+  console.error("CLIENT_ID not set!")
+}
+else {
+  console.log("clientId: %s", process.env.CLIENT_ID);
+}
 const oAuth2Client = new OAuth2Client({
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
