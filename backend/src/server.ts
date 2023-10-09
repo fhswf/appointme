@@ -3,8 +3,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { dataBaseConn } from "./config/dbConn.js";
+import { dataBaseConn } from "./config/dbConn";
 
+//Load routes
+import { authenticationRouter } from "./routes/authentication_route";
+import { eventRouter } from "./routes/event_routes";
+import { googleRouter } from "./routes/google_routes";
+import { userRouter } from "./routes/user_routes";
 
 // Dotenv Config
 import dotenv from "dotenv";
@@ -33,11 +38,6 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-//Load routes
-import { authenticationRouter } from "./routes/authentication_route.js";
-import { eventRouter } from "./routes/event_routes.js";
-import { googleRouter } from "./routes/google_routes.js";
-import { userRouter } from "./routes/user_routes.js";
 
 //Use routes
 const router = express.Router();
@@ -45,10 +45,13 @@ router.use("/auth/", authenticationRouter);
 router.use("/events/", eventRouter);
 router.use("/google/", googleRouter);
 router.use("/users/", userRouter);
+router.get("/ping", (req, res) => {
+  res.status(200).send("OK")
+})
 app.use("/meeting/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+export const server = app.listen(PORT, () => {
   console.log(`Server running on Port ${PORT}`);
 });

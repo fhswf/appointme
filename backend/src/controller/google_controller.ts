@@ -10,11 +10,11 @@ import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { UserModel, User } from "../models/User.js";
+import { UserModel, User } from "../models/User";
 import { Request, Response } from 'express';
 
-import { remark } from 'remark';
-import html from 'remark-html';
+//import { remark } from 'remark';
+//import html from 'remark-html';
 import { Event, IntervalSet } from 'common';
 
 
@@ -129,9 +129,9 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
     return;
   }
 
-  const htmlDescription = await remark()
-    .use(html)
-    .process(req.body.event.description as string)
+  //const htmlDescription = await remark()
+  //  .use(html)
+  //  .process(req.body.event.description as string)
 
   void UserModel.findOne({ _id: req.params.user_id })
     .then(user => {
@@ -139,7 +139,7 @@ export async function insertEventToGoogleCal(req: Request, res: Response): Promi
       const event: Schema$Event = {
         summary: <string>req.body.event.name + " mit " + <string>req.body.name,
         location: <string>req.body.event.location,
-        description: String(htmlDescription) + "<br>" + (req.body.description as string),
+        description: String(req.body.event.description) + "<br>" + (req.body.description as string),
         start: {
           dateTime: starttime.toISOString(),
           timeZone: "Europe/Berlin",

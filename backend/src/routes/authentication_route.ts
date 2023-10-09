@@ -5,9 +5,9 @@
 import { Router } from "express";
 export const authenticationRouter = Router();
 
-import { registerController, activationController, loginController, googleLoginController } from "../controller/authentication_controller.js";
+import { registerController, activationController, loginController, googleLoginController } from "../controller/authentication_controller";
 
-import { validateRegister, validateLogin } from "../handlers/validation.js";
+import { validateRegister, validateLogin } from "../handlers/validation";
 
 /**
  * Route to register a new user.

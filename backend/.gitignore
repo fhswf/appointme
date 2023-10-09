@@ -2,3 +2,5 @@ docker.env
 config/config.env
 node_modules/**
 build/**
+
+coverage/**

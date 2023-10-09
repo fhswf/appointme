@@ -2,9 +2,9 @@
  * @module router/user
  */
 import { Router } from "express";
-import { getUser, getUserByUrl, putUser } from "../controller/user_controller.js";
+import { getUser, getUserByUrl, putUser } from "../controller/user_controller";
 
-import { requireAuth } from "../handlers/middleware.js";
+import { requireAuth } from "../handlers/middleware";
 
 export const userRouter = Router();
 

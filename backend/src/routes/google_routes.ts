@@ -5,9 +5,9 @@ import { Router } from "express";
 
 export const googleRouter = Router();
 
-import { generateAuthUrl, googleCallback, revokeScopes, insertEventToGoogleCal, getCalendarList } from "../controller/google_controller.js";
+import { generateAuthUrl, googleCallback, revokeScopes, insertEventToGoogleCal, getCalendarList } from "../controller/google_controller";
 
-import { requireAuth } from "../handlers/middleware.js";
+import { requireAuth } from "../handlers/middleware";
 
 /**
  * Route to delete an access token from a given user

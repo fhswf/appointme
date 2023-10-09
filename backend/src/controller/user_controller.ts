@@ -1,7 +1,7 @@
 /**
  * @module user_controller
  */
-import { User, UserModel } from "../models/User.js";
+import { User, UserModel } from "../models/User";
 import { Request, Response } from 'express';
 
 /**

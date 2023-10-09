@@ -3,7 +3,7 @@
 /**
  * @module authentication_controller
  */
-import { UserModel } from "../models/User.js";
+import { UserModel } from "../models/User";
 import { validationResult } from "express-validator";
 import { createTransport } from "nodemailer";
 import { google } from "googleapis";

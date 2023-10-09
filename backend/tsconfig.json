@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
+    "module": "commonjs",
     "allowJs": true,
     "strict": false,
     "baseUrl": "./",
@@ -12,28 +12,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "importHelpers": true,
-    "types": [
-      "node",
-    ],
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
-    "paths": {
-      "*": [
-        "*",
-        "../client/src/*"
-      ]
-    }
+    "types": ["node", "jest"],
+    "typeRoots": ["../node_modules/@types"]
   },
-  "include": [
-    "./**/*",
-    "./.eslintrc.js"
-  ],
-  "exclude": [
-    "./build",
-    "./src/public/"
-  ],
-  
+  "include": ["./src/**/*"]
 }
