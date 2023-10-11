@@ -18,11 +18,13 @@ COPY package.json .
 COPY yarn.lock .
 COPY ./common/package.json ./common/package.json 
 COPY ./client/package.json ./client/package.json 
-RUN yarn install 
-RUN yarn --version
+RUN yarn install && yarn --version
 
 COPY ./common ./common
 RUN yarn workspace common build
+
+COPY ./client ./client
+RUN yarn workspace client build
 
 FROM nginx:1.21.3-alpine
 COPY --from=build /base/client/build /usr/share/nginx/html
