@@ -1,3 +1,10 @@
+## client [1.2.4](https://github.com/fhswf/book_me/compare/client@1.2.3...client@1.2.4) (2023-10-11)
+
+
+### Bug Fixes
+
+* **client:** environment variables ([b2d80ff](https://github.com/fhswf/book_me/commit/b2d80ff1779409fedcbe75e9203d2396959e1209))
+
 ## client [1.2.3](https://github.com/fhswf/book_me/compare/client@1.2.2...client@1.2.3) (2023-10-11)
 
 
