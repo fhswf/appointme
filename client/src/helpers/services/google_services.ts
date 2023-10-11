@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function deleteAccess(token) {
   const response = await axios.delete(
-    `${process.env.REACT_APP_API_URI}/google/revoke`,
+    `${process.env.REACT_APP_API_URL}/google/revoke`,
     {
       data: null,
       headers: {
@@ -15,7 +15,7 @@ export async function deleteAccess(token) {
 
 export async function getAuthUrl(token) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/google/generateUrl`,
+    `${process.env.REACT_APP_API_URL}/google/generateUrl`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -27,7 +27,7 @@ export async function getAuthUrl(token) {
 
 export async function getCalendarList(token) {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URI}/google/calendarList`,
+    `${process.env.REACT_APP_API_URL}/google/calendarList`,
     {
       headers: {
         Authorization: "Bearer " + token,
@@ -47,7 +47,7 @@ export async function insertIntoGoogle(
 ) {
   const starttime = time.valueOf();
   const response = axios.post(
-    `${process.env.REACT_APP_API_URI}/google/insertEvent/${user_id}`,
+    `${process.env.REACT_APP_API_URL}/google/insertEvent/${user_id}`,
     {
       event,
       starttime,
