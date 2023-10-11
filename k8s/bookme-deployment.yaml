@@ -4,9 +4,6 @@ metadata:
   annotations:
     kompose.cmd: /home/cgawron/bin/kompose convert
     kompose.version: 1.26.0 (40646f47)
-    traefik.enable: "true"
-    traefik.http.routers.bookme_api.entrypoints: web,websecure
-    traefik.http.routers.bookme_api.rule: PathPrefix(`/bookme/api`)
   creationTimestamp: null
   labels:
     io.kompose.service: bookme
@@ -30,6 +27,21 @@ spec:
     spec:
       containers:
         - env:
+            - name: EMAIL_FROM
+              valueFrom:
+                secretKeyRef:
+                  key: EMAIL_FROM
+                  name: bookme-secret
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: EMAIL_PASSWORD
+                  name: bookme-secret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_SECRET
+                  name: bookme-secret
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -72,11 +84,10 @@ status: {}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: bookme-ingress
+  name: bookme-backend-ingress
   namespace: bookme
 spec:
   entryPoints:
-    - web
     - websecure
   routes:
   - match: Host(`hopper.fh-swf.de`) && PathPrefix(`/meeting/api`)

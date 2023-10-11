@@ -42,7 +42,7 @@ const transporter = createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_FROM,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
@@ -181,7 +181,7 @@ export const loginController = (req, res): void => {
               const { _id, name, email } = user;
               const access_token = sign(
                 { _id, name, email },
-                process.env.JWT_SECRET_TOKEN,
+                process.env.JWT_SECRET,
                 {
                   expiresIn: "1d",
                 }
@@ -218,7 +218,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
       console.log('picture: %s', picture);
       if (email_verified) {
         const randompw = makePassword(15);
-        const password = randompw + process.env.JWT_SECRET_TOKEN;
+        const password = randompw + process.env.JWT_SECRET;
         const user_url = validateUrl(email);
 
         const user = new UserModel({ name, email, password, picture_url: picture, user_url });
@@ -231,7 +231,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
             const { _id, name, email } = user;
             const access_token = sign(
               { _id, name, email },
-              process.env.JWT_SECRET_TOKEN,
+              process.env.JWT_SECRET,
               {
                 expiresIn: "1d",
               }

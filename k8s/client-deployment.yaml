@@ -4,9 +4,6 @@ metadata:
   annotations:
     kompose.cmd: /home/cgawron/bin/kompose convert
     kompose.version: 1.26.0 (40646f47)
-    traefik.enable: "true"
-    traefik.http.routers.bookme_client.entrypoints: web,websecure
-    traefik.http.routers.bookme_client.rule: PathPrefix(`/bookme`)
   creationTimestamp: null
   labels:
     io.kompose.service: client
@@ -67,11 +64,10 @@ status: {}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: bookme-ingress
+  name: bookme-client-ingress
   namespace: bookme
 spec:
   entryPoints:
-    - web
     - websecure
   routes:
   - match: Host(`hopper.fh-swf.de`) && PathPrefix(`/meeting`)
