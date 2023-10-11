@@ -1,3 +1,10 @@
+## backend [1.6.3](https://github.com/fhswf/book_me/compare/backend@1.6.2...backend@1.6.3) (2023-10-11)
+
+
+### Bug Fixes
+
+* **backend:** JWT_SECRET and email passwords ([032df16](https://github.com/fhswf/book_me/commit/032df1659925782e2e91dfa7e061cde3ba5655be))
+
 ## backend [1.6.2](https://github.com/fhswf/book_me/compare/backend@1.6.1...backend@1.6.2) (2023-10-09)
 
 
