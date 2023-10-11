@@ -25,4 +25,4 @@ COPY ./common ./common
 RUN yarn workspace common build
 
 COPY ./client ./client
-CMD ["yarn", "worspace", "client", "start"]
+CMD ["yarn", "workspace", "client", "start"]
