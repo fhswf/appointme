@@ -27,7 +27,7 @@ COPY ./client ./client
 RUN yarn workspace client build
 
 FROM nginx:1.21.3-alpine
-COPY --from=build /base/client/build /usr/share/nginx/html
+COPY --from=build /base/client/build /usr/share/nginx/html/meeting
 COPY ./client/nginx/default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
