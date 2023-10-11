@@ -4,6 +4,15 @@
 ### Bug Fixes
 
 * **client:** deployment config at build time ([862ba0b](https://github.com/fhswf/book_me/commit/862ba0bcf0d52b798f441a0874b3fbed4403756d))
+* **client:** issue in Dockerfile fixed ([1080481](https://github.com/fhswf/book_me/commit/1080481cc686c599c7e04c83b8d7d17ac3098449))
+* **client:** typo in Dockerfile fixed ([7d1898b](https://github.com/fhswf/book_me/commit/7d1898bc04cf48100ed3effa05caf41de20da082))
+
+## client [1.2.3](https://github.com/fhswf/book_me/compare/client@1.2.2...client@1.2.3) (2023-10-11)
+
+
+### Bug Fixes
+
+* **client:** deployment config at build time ([862ba0b](https://github.com/fhswf/book_me/commit/862ba0bcf0d52b798f441a0874b3fbed4403756d))
 * **client:** typo in Dockerfile fixed ([7d1898b](https://github.com/fhswf/book_me/commit/7d1898bc04cf48100ed3effa05caf41de20da082))
 
 ## client [1.2.3](https://github.com/fhswf/book_me/compare/client@1.2.2...client@1.2.3) (2023-10-09)
