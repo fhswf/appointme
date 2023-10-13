@@ -1,16 +1,18 @@
-name: deploy
+name: Deployment
 
 on:
-    deployment:
-        types: [created]
-    release:
-        types: [published, updated]
-    registry_package:
-        types: [published, updated]
+  deployment:
+      types: [created]
+  release:
+      types: [published, updated]
+  registry_package:
+      types: [published, updated]
+  workflow_dispatch:
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - run: echo "Deploying ${{ github.event.client_payload.package.name }} ${{ github.event.client_payload.package.version }} to ${{ github.event.client_payload.package.registry }}"
-            
+  deploy:
+    runs-on: ubuntu-latest
+    environment: hopper
+    steps:
+        - run: echo "Deploying ${{ github.event.client_payload.package.name }} ${{ github.event.client_payload.package.version }} to ${{ github.event.client_payload.package.registry }}"
+        
