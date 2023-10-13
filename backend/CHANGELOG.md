@@ -1,3 +1,10 @@
+## backend [1.6.4](https://github.com/fhswf/book_me/compare/backend@1.6.3...backend@1.6.4) (2023-10-13)
+
+
+### Bug Fixes
+
+* **backend:** token verification ([6b95be6](https://github.com/fhswf/book_me/commit/6b95be610ccc77f788917d5cec35e8133b15c0fb))
+
 ## backend [1.6.3](https://github.com/fhswf/book_me/compare/backend@1.6.2...backend@1.6.3) (2023-10-11)
 
 
