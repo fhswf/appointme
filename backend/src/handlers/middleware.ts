@@ -16,6 +16,7 @@ const { decode, sign, verify } = jwt_pkg;
 export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   const header = req.headers.authorization;
   if (!header) {
+    console.log("No authorization header");
     res.json({
       success: false,
       message: "Unauthorized! Sign in again!",
@@ -24,13 +25,15 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
   }
   const token = header.split(" ")[1];
   if (!token) {
+    console.log("No authorization token");
     res.json({
       success: false,
       message: "Unauthorized! Sign in again!",
     });
   } else {
-    verify(token, process.env.JWT_SECRET_TOKEN, (err, decoded) => {
+    verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
+        console.log("Invalid token: ", err);
         return res.json({
           success: false,
           message: "Unauthorized! Sign in again!",

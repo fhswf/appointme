@@ -13,9 +13,15 @@ import { userRouter } from "./routes/user_routes";
 
 // Dotenv Config
 import dotenv from "dotenv";
-dotenv.config({
-  path: "./config/config.env",
+const env = dotenv.config({
+  path: "./src/config/config.env",
 });
+
+console.log("env: ", env);
+console.log("NODE_ENV: ", process.env.NODE_ENV);
+console.log("CLIENT_URL: ", process.env.CLIENT_URL);
+console.log("MONGO_URI: ", process.env.MONGO_URI);
+console.log("CLIENT_ID: ", process.env.CLIENT_ID);
 
 const app = express();
 
@@ -32,7 +38,7 @@ if (process.env.NODE_ENV === "development") {
   console.log("enabling CORS for %s", process.env.CLIENT_URL);
   app.use(
     cors({
-      origin: [process.env.CLIENT_URL, "http://localhost:5000", "http://localhost:5007"],
+      origin: [process.env.CLIENT_URL, "http://localhost:5000", "http://localhost:3000"],
       credentials: true,
     })
   );
