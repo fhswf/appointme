@@ -1,11 +1,11 @@
 FROM node:18-bullseye as build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG CLIENT_SECRET
 ARG APP_URL=/meeting
 ARG APP_API_URL=https://hopper.fh-swf.de/meeting/api/v1
 
 ENV CLIENT_ID=${CLIENT_ID}
-ENV CLIENT_SECRET=${CLIENT_SECRET}
+# Not set via ARG to prevent it from being stored in the image!
+# ENV CLIENT_SECRET
 ENV APP_URL=${APP_URL}
 ENV APP_API_URL=${APP_API_URL}
 
