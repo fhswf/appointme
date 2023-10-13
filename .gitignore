@@ -3,6 +3,12 @@ types.js
 types.js.map
 docker.env
 
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
+
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
