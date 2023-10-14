@@ -1,4 +1,5 @@
 import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz"
+import { th } from "date-fns/locale";
 
 /** Enum type representing a day of week.
  *  The ordering is compatible with the native `Date.prototype.getDay()`, which uses 0 for Sunday.
@@ -178,6 +179,9 @@ export class IntervalSet extends Array<TimeRange> {
     }
     else if (args.length == 1) {
       super(args[0])
+    }
+    else {
+      throw new Error('Illegal arguments');
     }
   }
 
