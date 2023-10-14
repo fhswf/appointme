@@ -192,11 +192,11 @@ export const getEventListController = (req: Request, res: Response): void => {
  * @param {request} req
  * @param {response} res
  */
-export const getActiveEventsController = (req: Request, res: Response): Promise<void> => {
+export const getActiveEventsController = (req: Request, res: Response): void => {
   const userid = <string>req.query.user;
   const query = EventModel.find({ user: userid, isActive: true });
 
-  return query.exec()
+  query.exec()
     .then(event => {
       res.status(200).json(event);
     })
