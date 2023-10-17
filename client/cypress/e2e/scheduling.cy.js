@@ -3,7 +3,7 @@
 context('Error handling', () => {
     describe('Error getting user', () => {
         before(() => {
-            cy.intercept('/bookme/api/v1/users/findUserByUrl?url=christian-gawron', { statusCode: 500, body: { error: "no data" } }).as('getUser')
+            cy.intercept('/meeting/api/v1/users/findUserByUrl?url=christian-gawron', { statusCode: 500, body: { error: "no data" } }).as('getUser')
             cy.visit('/schedule/christian-gawron/sprechstunde')
         })
 
@@ -18,14 +18,14 @@ context('Scheduling page', () => {
     beforeEach(() => {
         //const now = new Date(2021, 4, 25).getTime()
         cy.clock(Date.UTC(2021, 4, 25), ['Date'])
-        cy.intercept('/bookme/api/v1/users/findUserByUrl?url=christian-gawron', { fixture: 'userByURL' }).as('getUser')
-        cy.intercept('/bookme/api/v1/events/getEventBy?user=109150731150582581691&url=sprechstunde', { fixture: 'event' }).as('getEvent')
-        cy.intercept('/bookme/api/v1/events/getAvailable?*', { fixture: 'available' }).as('getAvailable')
+        cy.intercept('/meeting/api/v1/users/findUserByUrl?url=christian-gawron', { fixture: 'userByURL' }).as('getUser')
+        cy.intercept('/meeting/api/v1/events/getEventBy?user=109150731150582581691&url=sprechstunde', { fixture: 'event' }).as('getEvent')
+        cy.intercept('/meeting/api/v1/events/getAvailable?*', { fixture: 'available' }).as('getAvailable')
     })
 
     describe('Visit scheduling page and schedule appointment', () => {
         before(() => {
-            cy.intercept('POST', '/bookme/api/v1/**', { body: { error: 'not possible' } }).as('apiCheck')
+            cy.intercept('POST', '/meeting/api/v1/**', { body: { error: 'not possible' } }).as('apiCheck')
             cy.visit('/schedule/christian-gawron/sprechstunde')
         })
 
@@ -46,7 +46,7 @@ context('Scheduling page', () => {
 
     describe('Error creating appointment', () => {
         before(() => {
-            cy.intercept('POST', '/bookme/api/v1/**', { statusCode: 400, body: { error: 'not possible' } }).as('apiCheck')
+            cy.intercept('POST', '/meeting/api/v1/**', { statusCode: 400, body: { error: 'not possible' } }).as('apiCheck')
             cy.visit('/schedule/christian-gawron/sprechstunde')
         })
 
