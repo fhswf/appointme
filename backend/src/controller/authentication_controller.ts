@@ -10,9 +10,10 @@ import { google } from "googleapis";
 import { OAuth2Client, Credentials } from 'google-auth-library';
 import { Request, Response } from "express";
 
+// Dotenv Config
 import dotenv from "dotenv";
-dotenv.config({
-  path: "./config/config.env",
+const env = dotenv.config({
+  path: "./src/config/config.env",
 });
 
 import { compare } from 'bcrypt';

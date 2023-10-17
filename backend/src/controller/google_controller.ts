@@ -17,12 +17,21 @@ import { Request, Response } from 'express';
 //import html from 'remark-html';
 import { Event, IntervalSet } from 'common';
 
+// Dotenv Config
+import dotenv from "dotenv";
+const env = dotenv.config({
+  path: "./src/config/config.env",
+});
 
-const oAuth2Client = new OAuth2Client({
+const config = {
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
   redirectUri: `${process.env.API_URL}/google/oauthcallback`,
-});
+}
+
+console.log("google_controller: ", config);
+
+const oAuth2Client = new OAuth2Client(config);
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar",
   "https://www.googleapis.com/auth/calendar.events",
@@ -253,16 +262,19 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
  * @param req 
  * @param res 
  */
-export async function getCalendarList(req: Request, res: Response): Promise<void> {
-  google.calendar({ version: "v3", auth: await getAuth(req['user_id']) })
-    .calendarList.list()
-    .then(list => {
-      console.log("calendarList: %j", list);
-      res.json(list);
-    })
-    .catch(error => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      res.status(400).json({ error });
+export function getCalendarList(req: Request, res: Response): void {
+  getAuth(req['user_id'])
+    .then(auth => {
+      google.calendar({ version: "v3", auth })
+        .calendarList.list()
+        .then(list => {
+          console.log("calendarList: %j", list);
+          res.json(list);
+        })
+        .catch(error => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          res.status(400).json({ error });
+        })
     })
 }
 
