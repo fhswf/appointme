@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import EventList from "../components/EventList";
 import AppNavbar from "../components/AppNavbar";
 
-import { Theme } from '@mui/material/styles';
 import { Box, Container, Fab, Grid, Link, Typography } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -11,7 +10,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { UserContext } from "../components/PrivateRoute";
 
 const App = () => {
-  const navigate = useNavigate();
   const user = useContext(UserContext).user;
   const [connected, setConnected] = useState(false);
 

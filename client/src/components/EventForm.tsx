@@ -196,10 +196,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         }
       };
 
-  interface EvtType {
-    value: number;
-  }
-
   const handleSelect =
     (key: keyof Event) =>
       (evt: SelectChangeEvent<number>, child: React.ReactNode) => {

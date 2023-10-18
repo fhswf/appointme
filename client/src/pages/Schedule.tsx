@@ -4,7 +4,6 @@ import { DateCalendar, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
 
 import {
   Alert, Avatar, Box, Button, Container, Grid,
-  TextField,
   Snackbar,
   Typography,
   Link,
@@ -29,7 +28,6 @@ import {
   endOfDay,
 } from "date-fns";
 
-import { de, enUS } from "date-fns/locale";
 import BookDetails, { BookingFormData } from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { Event, IntervalSet, TimeRange } from "common";
@@ -39,7 +37,7 @@ import { useTranslation, Trans } from "react-i18next";
 import { HourglassTop, Room } from "@mui/icons-material";
 import ReactMarkdown from "react-markdown";
 
-const LOCALES = { en: enUS, de: de, "de-DE": de };
+
 
 /*
 const useStyles = makeStyles((theme) => ({
@@ -246,7 +244,7 @@ const Schedule = (props: any) => {
 
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
-    const { day, selectedDate, ...other } = props;
+    const { day, selectedDate } = props;
     return (
       <PickersDay
         {...props}

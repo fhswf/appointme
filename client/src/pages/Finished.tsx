@@ -1,14 +1,8 @@
 import { useLocation } from "react-router-dom";
-
 import { Container, Typography } from "@mui/material";
-import { Event, TimeRange, User } from "common";
 import { useTranslation, Trans } from "react-i18next";
 
-type LocationState = {
-  time: TimeRange;
-  event: Event;
-  user: User;
-};
+
 
 export type FinishedProps = {};
 

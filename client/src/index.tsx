@@ -1,5 +1,4 @@
 import React, { Suspense, } from "react";
-import ReactDOM from "react-dom";
 import { createRoot } from 'react-dom/client';
 
 //import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,7 +17,7 @@ import Booking from "./pages/Booking";
 import EditEvent from "./pages/EditEvent";
 import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
-import Finished, { FinishedProps } from "./pages/Finished";
+import Finished from "./pages/Finished";
 
 import { isAuthenticated } from "./helpers/helpers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";

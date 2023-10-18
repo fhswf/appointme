@@ -42,7 +42,6 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import { toast } from "react-toastify";
 import { UserContext } from "../components/PrivateRoute";
-import { tr } from "date-fns/locale";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);

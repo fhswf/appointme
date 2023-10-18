@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Navigate, useNavigate, RouteProps, Outlet, useLocation } from "react-router-dom";
+import { Navigate, useNavigate, RouteProps, useLocation } from "react-router-dom";
 import { isAuthenticated, signout } from "../helpers/helpers";
 import { getUserByToken } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";
@@ -43,7 +43,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   if (!isAuthenticated()) {
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }
-  return <UserContext.Provider value={{user}}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
 };
 
 export default PrivateRoute;
