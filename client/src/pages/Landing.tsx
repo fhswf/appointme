@@ -4,7 +4,7 @@ import { isAuthenticated } from "../helpers/helpers";
 import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
-import Paper from "@mui/material/Paper";
+import { Paper, Container, Typography, List, ListItem, ListItemText } from "@mui/material";
 
 const Landing = (props: any) => {
   return (
@@ -12,54 +12,34 @@ const Landing = (props: any) => {
       {isAuthenticated() ? <Navigate to="/app" /> : null}
       <AppNavbar />
       <Paper>
-        <div className="section">
-          <div className="subsection">
-            <div className="container">
-              <h1 className="sectionheader">How Bookme works</h1>
-              <div className="steps">
-                <div className="row">
-                  <div className="stepone">
-                    <div className="step-description">
-                      <p>
-                        <strong>Create Events</strong>
-                      </p>
+        <Container>
+          <h2>How Bookme works</h2>
+          <Typography variant="body1">
+            Bookme is a simple, easy to use, appointment booking system. It
+            allows you to create events, share your link and let users book
+            appointments with you.
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemText primary="Step 1: Configure your calendars"
+                secondary="Specify where BookMe adds your appointments and where it checks whether you are busy." />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Step 2: Create events"
+                secondary="Add your available times and you're
+                good to go!"/>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Step 3: Share your link"
+                secondary="Users can use this link to book appointments." />
+            </ListItem>
+            <ListItem>
+              <ListItemText primary="Done! Congrats!"
+                secondary="Once a user books an appointment, the event is added to your calendar." />
+            </ListItem>
+          </List>
+        </Container>
 
-                      <p>
-                        Create events. Setup your available times and you're
-                        good to go!
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="steptwo">
-                    <div className="step-description">
-                      <p>
-                        <strong>Share your Link</strong>
-                      </p>
-
-                      <p>Users can use this link to book appointments.</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="stepthree">
-                    <div className="step-description">
-                      <p>
-                        <strong>Done! Congrats!</strong>
-                      </p>
-
-                      <p>
-                        Once a user books a appointment, the event is added to
-                        your Calendar.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </Paper>
     </div>
   );
