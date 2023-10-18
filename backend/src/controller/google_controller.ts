@@ -13,12 +13,15 @@ import Schema$Event = calendar_v3.Schema$Event;
 import { UserModel, User } from "../models/User";
 import { Request, Response } from 'express';
 
+import { Event, IntervalSet } from 'common';
+
 //import { remark } from 'remark';
 //import html from 'remark-html';
-import { Event, IntervalSet } from 'common';
+
 
 // Dotenv Config
 import dotenv from "dotenv";
+
 const env = dotenv.config({
   path: "./src/config/config.env",
 });
@@ -128,82 +131,88 @@ async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: D
  * @param {request} req
  * @param {response} res
  */
-export async function insertEventToGoogleCal(req: Request, res: Response): Promise<void> {
+export function insertEventToGoogleCal(req: Request, res: Response) {
   const starttime = new Date(Number.parseInt(req.body.starttime));
   const endtime = addMinutes(starttime, req.body.event.duration);
   console.log("insertEvent: %s %o", req.body.starttime, starttime);
 
-  if (!await checkFree(req.body.event, req.params.user_id, starttime, endtime)) {
-    res.status(400).json({ error: "requested slot not available" });
-    return;
-  }
+  checkFree(req.body.event, req.params.user_id, starttime, endtime)
+    .then(free => {
+      if (!free) {
+        res.status(400).json({ error: "requested slot not available" });
+        return;
+      }
 
-  //const htmlDescription = await remark()
-  //  .use(html)
-  //  .process(req.body.event.description as string)
+      /*
+        const htmlDescription = await remark()
+        .use(html)
+        .process(req.body.event.description as string)
+      */
 
-  void UserModel.findOne({ _id: req.params.user_id })
-    .then(user => {
+      void UserModel.findOne({ _id: req.params.user_id })
+        .then(user => {
 
-      const event: Schema$Event = {
-        summary: <string>req.body.event.name + " mit " + <string>req.body.name,
-        location: <string>req.body.event.location,
-        description: String(req.body.event.description) + "<br>" + (req.body.description as string),
-        start: {
-          dateTime: starttime.toISOString(),
-          timeZone: "Europe/Berlin",
-        },
-        end: {
-          dateTime: endtime.toISOString(),
-          timeZone: "Europe/Berlin",
-        },
-        organizer: {
-          email: user.email,
-          id: user._id as string
-        },
-        attendees: [
-          {
-            displayName: req.body.name as string,
-            email: req.body.email as string,
-          },
-        ],
-        conferenceData: {
-          conferenceId: "privateZoom",
-          conferenceSolution: {
-            iconUri: "https://jupiter.fh-swf.de/icons/zoom.svg",
-            key: {
-              type: "addOn"
+          const event: Schema$Event = {
+            summary: <string>req.body.event.name + " mit " + <string>req.body.name,
+            location: <string>req.body.event.location,
+            description: String(req.body.event.description) + "<br>" + (req.body.description as string),
+            start: {
+              dateTime: starttime.toISOString(),
+              timeZone: "Europe/Berlin",
             },
-            name: "Zoom"
-          },
-          entryPoints: [
-            {
-              entryPointType: "video",
-              label: "fh-swf.zoom.us/my/cgawron",
-              uri: "https://fh-swf.zoom.us/my/cgawron",
-              passcode: "none"
+            end: {
+              dateTime: endtime.toISOString(),
+              timeZone: "Europe/Berlin",
+            },
+            organizer: {
+              email: user.email,
+              id: user._id as string
+            },
+            attendees: [
+              {
+                displayName: req.body.name as string,
+                email: req.body.email as string,
+              },
+            ],
+            conferenceData: {
+              conferenceId: "privateZoom",
+              conferenceSolution: {
+                iconUri: "https://jupiter.fh-swf.de/icons/zoom.svg",
+                key: {
+                  type: "addOn"
+                },
+                name: "Zoom"
+              },
+              entryPoints: [
+                {
+                  entryPointType: "video",
+                  label: "fh-swf.zoom.us/my/cgawron",
+                  uri: "https://fh-swf.zoom.us/my/cgawron",
+                  passcode: "none"
+                }
+              ]
             }
-          ]
-        }
-      };
+          };
 
-      oAuth2Client.setCredentials(user.google_tokens);
-      console.log('insert: event=%j', event)
-      void google.calendar({ version: "v3" }).events
-        .insert({
-          auth: oAuth2Client,
-          calendarId: user.push_calendar,
-          sendUpdates: "all",
-          requestBody: event,
+          oAuth2Client.setCredentials(user.google_tokens);
+          console.log('insert: event=%j', event)
+          void google.calendar({ version: "v3" }).events
+            .insert({
+              auth: oAuth2Client,
+              calendarId: user.push_calendar,
+              sendUpdates: "all",
+              requestBody: event,
+            })
+            .then((evt: GaxiosResponse<Schema$Event>) => {
+              console.log('insert returned %j', evt)
+              res.json({ success: true, message: "Event wurde gebucht", event: evt });
+            })
+            .catch(error => {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              res.status(400).json({ error });
+            })
         })
-        .then((evt: GaxiosResponse<Schema$Event>) => {
-          console.log('insert returned %j', evt)
-          res.json({ success: true, message: "Event wurde gebucht", event: evt });
-        })
-        .catch(error => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          res.status(400).json({ error });
-        })
+
     })
     .catch(error => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
