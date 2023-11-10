@@ -7890,7 +7890,7 @@ __metadata:
     "@types/react-router-dom": "npm:^5.3.3"
     axios: "npm:^1.5.0"
     common: "workspace:*"
-    cypress: "npm:^13.1.0"
+    cypress: "npm:^13.5.0"
     date-fns: "npm:^2.30.0"
     dotenv-cli: "npm:^4.0.0"
     eslint: "npm:^8.49.0"
@@ -8894,7 +8894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^13.1.0":
+"cypress@npm:^13.5.0":
   version: 13.5.0
   resolution: "cypress@npm:13.5.0"
   dependencies:
