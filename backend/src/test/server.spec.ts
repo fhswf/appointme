@@ -1,5 +1,7 @@
-import request from "supertest";
+
+import { expect } from 'vitest';
 import { server } from "../server";
+import request from "supertest";
 
 describe("Server", () => {
   let app: any;
