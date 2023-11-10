@@ -61,7 +61,7 @@ jobs:
           node-version: 18.x
 
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build
         run: yarn workspace common build
