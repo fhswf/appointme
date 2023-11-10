@@ -74,10 +74,8 @@
     ]
   },
   "devDependencies": {
-    "@types/eslint": "^8",
+    "@types/eslint": "^8.44.7",
     "@types/react-router-dom": "^5.3.3",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
     "cypress": "^13.1.0",
     "dotenv-cli": "^4.0.0",
     "eslint": "^8.49.0",
