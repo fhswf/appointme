@@ -1,3 +1,10 @@
+## backend [1.6.5](https://github.com/fhswf/book_me/compare/backend@1.6.4...backend@1.6.5) (2023-10-13)
+
+
+### Bug Fixes
+
+* **security:** remove secret from docker image ([64446b5](https://github.com/fhswf/book_me/commit/64446b53362e89dd2aa9b9b1dc2f874dc103738e))
+
 ## backend [1.6.4](https://github.com/fhswf/book_me/compare/backend@1.6.3...backend@1.6.4) (2023-10-13)
 
 
