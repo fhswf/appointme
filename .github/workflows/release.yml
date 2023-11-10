@@ -37,8 +37,7 @@ jobs:
 
       # Run tests
       - name: Test
-        working-directory: common
-        run: yarn workspace common test
+        run: yarn workspaces foreach --all run ci
 
       - name: Test Summary
         uses: EnricoMi/publish-unit-test-result-action@v2
