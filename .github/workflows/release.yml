@@ -40,6 +40,12 @@ jobs:
         working-directory: common
         run: yarn workspace common test
 
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "**/TEST-*.xml"
+        if: always()
+
   release:
     # Only release on push to master
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -65,5 +71,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY_USER:  ${{ github. actor }} 
+          DOCKER_REGISTRY_USER: ${{ github. actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
