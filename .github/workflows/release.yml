@@ -11,6 +11,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: cypress/included:13.5.0
+      options: --user 1001
     strategy:
       matrix:
         # Run the steps below with the following versions of Node.js
