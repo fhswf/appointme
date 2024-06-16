@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bookme
+  namespace: argocd
+spec:
+  destination:
+    namespace: book_me
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: k8s
+    repoURL: https://github.com/fhswf/book_me
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
