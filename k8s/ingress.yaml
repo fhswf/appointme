@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    traefik.frontend.passHostHeader: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+  name: bookme-frontend
+  namespace: bookme
+spec:
+  rules:
+  - host: appoint.gawron.cloud
+    http:
+      paths:
+      - frontend:
+          service:
+            name: client
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: bookme
+            port:
+              number: 5000
+        path: /api
+        pathType: Prefix
