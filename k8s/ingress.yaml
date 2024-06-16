@@ -11,9 +11,10 @@ spec:
   - host: appoint.gawron.cloud
     http:
       paths:
-      - frontend:
+      - backend:
           service:
             name: client
+            namespace: bookme
             port:
               number: 80
         path: /
@@ -21,6 +22,7 @@ spec:
       - backend:
           service:
             name: bookme
+            namespace: bookme
             port:
               number: 5000
         path: /api
