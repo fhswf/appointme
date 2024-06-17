@@ -1,3 +1,20 @@
+## backend [1.6.6](https://github.com/fhswf/book_me/compare/backend@1.6.5...backend@1.6.6) (2024-06-17)
+
+
+### Bug Fixes
+
+* **backend:** quality improvement ([3836ca6](https://github.com/fhswf/book_me/commit/3836ca673f1f01639902bbbdcedca5a8cbab4ac2))
+* controller should not return a promise ([91a0bb1](https://github.com/fhswf/book_me/commit/91a0bb1bbea3ab68a506c77c9632d4bac15fb84d))
+* dotenv config for backend ([02df94c](https://github.com/fhswf/book_me/commit/02df94c4cdb1b85b7d52edea491d515e14f91ece))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.1
+
 ## backend [1.6.5](https://github.com/fhswf/book_me/compare/backend@1.6.4...backend@1.6.5) (2023-10-13)
 
 
