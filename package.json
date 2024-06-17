@@ -43,7 +43,7 @@
     "client"
   ],
   "engines": {
-    "yarn": "3.6.3"
+    "yarn": "4.3.0"
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^4.4.0",
@@ -98,5 +98,5 @@
     ],
     "noCi": true
   },
-  "packageManager": "yarn@4.0.1"
+  "packageManager": "yarn@4.3.0"
 }
