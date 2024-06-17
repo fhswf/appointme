@@ -117,7 +117,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ghcr.io/fhswf/openai-ui
+            ghcr.io/fhswf/bookme-client
           # generate Docker tags based on the following events/attributes
           tags: |
             type=sha,prefix=sha-,format=short,enable=true,priority=1100
@@ -132,8 +132,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: client
+          file: client/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -142,7 +142,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           token: ${{ steps.cicd.outputs.token }}
-          valueFile: "k8s/deployment-dev.yaml"
+          valueFile: "k8s/client-deployment.yaml"
           propertyPath: "spec.template.spec.containers[0].image"
           value: ghcr.io/fhswf/openai-ui:${{ env.DOCKER_METADATA_OUTPUT_VERSION }}
           branch: main
