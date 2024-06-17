@@ -1,3 +1,10 @@
+## common [1.1.1](https://github.com/fhswf/book_me/compare/common@1.1.0...common@1.1.1) (2024-06-17)
+
+
+### Bug Fixes
+
+* **common:** fix IntervalSet constructor ([bd113bb](https://github.com/fhswf/book_me/commit/bd113bbc1e0ef5fd4b613de53a16f4dae74ee98f))
+
 # common [1.1.0](https://github.com/fhswf/book_me/compare/common@1.0.0...common@1.1.0) (2023-10-09)
 
 
