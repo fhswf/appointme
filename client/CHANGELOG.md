@@ -1,3 +1,18 @@
+## client [1.2.5](https://github.com/fhswf/book_me/compare/client@1.2.4...client@1.2.5) (2024-06-17)
+
+
+### Bug Fixes
+
+* **ui:** Layout of landing page ([382126f](https://github.com/fhswf/book_me/commit/382126fef3d281d6711fc6264f85e1d4ad631f0b))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.1
+
 ## client [1.2.4](https://github.com/fhswf/book_me/compare/client@1.2.3...client@1.2.4) (2023-10-11)
 
 
