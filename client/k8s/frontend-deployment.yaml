@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: bookme
+spec:
+  containers:
+    - env:
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: CLIENT_ID
+              name: bookme-secret
+        - name: API_URL
+          valueFrom:
+            configMapKeyRef:
+              key: API_URL
+              name: bookme
+        - name: CLIENT_URL
+          valueFrom:
+            configMapKeyRef:
+              key: CLIENT_URL
+              name: bookme
+        - name: MONGO_URI
+          valueFrom:
+            configMapKeyRef:
+              key: MONGO_URI
+              name: bookme
+        - name: TZ
+          valueFrom:
+            configMapKeyRef:
+              key: TZ
+              name: bookme
+      image: ghcr.io/fhswf/book_me/frontend:latest
+      name: client
+      ports:
+        - containerPort: 80
+      resources: {}
+  restartPolicy: Always
