@@ -1,3 +1,10 @@
+## backend [1.6.7](https://github.com/fhswf/book_me/compare/backend@1.6.6...backend@1.6.7) (2024-06-19)
+
+
+### Bug Fixes
+
+* multi-release ([15f0acf](https://github.com/fhswf/book_me/commit/15f0acf4854398bbccd8b28e679a568729b8ab7a))
+
 ## backend [1.6.6](https://github.com/fhswf/book_me/compare/backend@1.6.5...backend@1.6.6) (2024-06-17)
 
 
