@@ -119,7 +119,7 @@
           "assets": [
             "package.json",
             "CHANGELOG.md",
-            "k8s/frontend-deployment.yaml"
+            "../k8s/frontend-deployment.yaml"
           ]
         }
       ],
