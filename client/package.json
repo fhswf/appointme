@@ -106,6 +106,13 @@
           "tarballDir": "build"
         }
       ],
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": ".",
+          "prepareCmd": "yarn exec node ../utility/patch-k8s.js ../k8s/frontend-deployment.yaml"
+        }
+      ],
       "@semantic-release/git",
       "@semantic-release/github",
       [
@@ -115,7 +122,7 @@
             "latest",
             "{{major}}-latest",
             "{{version}}",
-            "{{git-sha}}"
+            "sha-{{git-sha}}"
           ],
           "dockerImage": "frontend",
           "dockerRegistry": "ghcr.io",
