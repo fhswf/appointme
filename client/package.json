@@ -124,21 +124,21 @@
         }
       ],
       "@semantic-release/github",
-        [
-          "@codedependant/semantic-release-docker",
-          {
-            "dockerTags": [
-              "latest",
-              "{{major}}-latest",
-              "{{version}}",
-              "sha-{{git-sha}}"
-            ],
-            "dockerImage": "frontend",
-            "dockerRegistry": "ghcr.io",
-            "dockerProject": "fhswf/book_me",
-            "dockerContext": ".."
-          }
-        ]
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerTags": [
+            "latest",
+            "{{major}}-latest",
+            "{{version}}",
+            "sha-{{git-sha}}"
+          ],
+          "dockerImage": "frontend",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/book_me",
+          "dockerContext": ".."
+        }
       ]
-    }
+    ]
   }
+}
