@@ -122,7 +122,7 @@
             "k8s/frontend-deployment.yaml"
           ]
         }
-      
+      ],
       "@semantic-release/github",
         [
           "@codedependant/semantic-release-docker",
