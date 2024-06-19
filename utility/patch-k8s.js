@@ -7,7 +7,7 @@ console.log(config.version)
 /* read arguments */
 const args = process.argv.slice(2);
 
-const git_sha = process.env.GIT_SHA;
+const git_sha = process.env.GITHUB_SHA;
 const k8sConfig = yaml.load(fs.readFileSync(args[0], 'utf8'));
 
 console.log('Patching k8s config...');

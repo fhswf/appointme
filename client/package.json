@@ -113,23 +113,32 @@
           "prepareCmd": "yarn exec node ../utility/patch-k8s.js ../k8s/frontend-deployment.yaml"
         }
       ],
-      "@semantic-release/git",
-      "@semantic-release/github",
       [
-        "@codedependant/semantic-release-docker",
+        "@semantic-release/git",
         {
-          "dockerTags": [
-            "latest",
-            "{{major}}-latest",
-            "{{version}}",
-            "sha-{{git-sha}}"
-          ],
-          "dockerImage": "frontend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/book_me",
-          "dockerContext": ".."
+          "assets": [
+            "package.json",
+            "CHANGELOG.md",
+            "k8s/frontend-deployment.yaml"
+          ]
         }
+      
+      "@semantic-release/github",
+        [
+          "@codedependant/semantic-release-docker",
+          {
+            "dockerTags": [
+              "latest",
+              "{{major}}-latest",
+              "{{version}}",
+              "sha-{{git-sha}}"
+            ],
+            "dockerImage": "frontend",
+            "dockerRegistry": "ghcr.io",
+            "dockerProject": "fhswf/book_me",
+            "dockerContext": ".."
+          }
+        ]
       ]
-    ]
+    }
   }
-}
