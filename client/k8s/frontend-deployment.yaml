@@ -31,7 +31,7 @@ spec:
             configMapKeyRef:
               key: TZ
               name: bookme
-      image: ghcr.io/fhswf/book_me/frontend:latest
+      image: ghcr.io/fhswf/book_me/frontend:1877fb39b9146da6d876f154049e5055e5f67410
       name: client
       ports:
         - containerPort: 80

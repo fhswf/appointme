@@ -1,3 +1,18 @@
+## client [1.2.11](https://github.com/fhswf/book_me/compare/client@1.2.10...client@1.2.11) (2024-06-19)
+
+
+### Bug Fixes
+
+* multi-release ([98cf08b](https://github.com/fhswf/book_me/commit/98cf08b1792c949fee32a08c9722d06c527d93dd))
+
+
+
+
+
+1.2.10
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:1877fb39b9146da6d876f154049e5055e5f67410
+
 ## client [1.2.10](https://github.com/fhswf/book_me/compare/client@1.2.9...client@1.2.10) (2024-06-19)
 
 
