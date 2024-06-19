@@ -118,7 +118,7 @@
             "latest",
             "{{major}}-latest",
             "{{version}}",
-            "{{git-sha}}"
+            "{{git_sha}}"
           ],
           "dockerImage": "backend",
           "dockerRegistry": "ghcr.io",

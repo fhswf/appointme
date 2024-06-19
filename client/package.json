@@ -110,7 +110,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "prepareCmd": "yarn exec node ../utility/patch-k8s.js ../k8s/frontend-deployment.yaml"
+          "generateNotesCmd": "yarn exec node ../utility/patch-k8s.js ../k8s/frontend-deployment.yaml"
         }
       ],
       [
@@ -131,7 +131,7 @@
             "latest",
             "{{major}}-latest",
             "{{version}}",
-            "sha-{{git-sha}}"
+            "{{git_sha}}"
           ],
           "dockerImage": "frontend",
           "dockerRegistry": "ghcr.io",
