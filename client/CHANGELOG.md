@@ -1,3 +1,12 @@
+## client [1.2.8](https://github.com/fhswf/book_me/compare/client@1.2.7...client@1.2.8) (2024-06-19)
+
+
+### Bug Fixes
+
+* multi-release ([03d02e7](https://github.com/fhswf/book_me/commit/03d02e74c5317b79a0a2ba5928027a6ab266354f))
+* multi-release ([b15a0f8](https://github.com/fhswf/book_me/commit/b15a0f8e22edd83575b0545fe1e9b1db68c3e3ee))
+* multi-release ([2bd39ef](https://github.com/fhswf/book_me/commit/2bd39ef5735b3a2989b611455cff3b0a1df64619))
+
 ## client [1.2.7](https://github.com/fhswf/book_me/compare/client@1.2.6...client@1.2.7) (2024-06-19)
 
 
