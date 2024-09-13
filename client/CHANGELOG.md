@@ -1,3 +1,18 @@
+## client [1.2.12](https://github.com/fhswf/book_me/compare/client@1.2.11...client@1.2.12) (2024-09-13)
+
+
+### Bug Fixes
+
+* **deployment:** correct routes ([66100f5](https://github.com/fhswf/book_me/commit/66100f5002b50843190482ed26fe97ec6334e926))
+
+
+
+
+
+1.2.11
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:66100f5002b50843190482ed26fe97ec6334e926
+
 ## client [1.2.11](https://github.com/fhswf/book_me/compare/client@1.2.10...client@1.2.11) (2024-06-19)
 
 
