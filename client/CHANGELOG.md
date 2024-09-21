@@ -1,3 +1,18 @@
+## client [1.2.13](https://github.com/fhswf/book_me/compare/client@1.2.12...client@1.2.13) (2024-09-21)
+
+
+### Bug Fixes
+
+* **ui:** make base path more flexible ([ad78835](https://github.com/fhswf/book_me/commit/ad78835682ce8cb157cf51340e761a162a3c0db2))
+
+
+
+
+
+1.2.12
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:ad78835682ce8cb157cf51340e761a162a3c0db2
+
 ## client [1.2.12](https://github.com/fhswf/book_me/compare/client@1.2.11...client@1.2.12) (2024-09-13)
 
 
