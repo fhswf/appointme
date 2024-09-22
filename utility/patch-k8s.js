@@ -14,7 +14,7 @@ console.log('Patching k8s config...');
 
 const image_name = k8sConfig.spec.template.spec.containers[0].image.split(':')[0];
 
-if (git_sha) {
+if (!config.version) {
   k8sConfig.spec.template.spec.containers[0].image = `${image_name}:${git_sha}`;
 }
 else {
