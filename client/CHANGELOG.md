@@ -1,3 +1,19 @@
+## client [1.2.14](https://github.com/fhswf/book_me/compare/client@1.2.13...client@1.2.14) (2024-09-22)
+
+
+### Bug Fixes
+
+* **deployment:** client deployment ([69d0b3b](https://github.com/fhswf/book_me/commit/69d0b3b2b50904377e45b5d575a99cf3bb02733b))
+* **deployment:** frontend yaml file updated ([ab63cd1](https://github.com/fhswf/book_me/commit/ab63cd1fea1cdf16eed9adb6371838b1512dad82))
+
+
+
+
+
+1.2.13
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:c23617ed03c5994374ecf083941cc7bed49495cf
+
 ## client [1.2.13](https://github.com/fhswf/book_me/compare/client@1.2.12...client@1.2.13) (2024-09-21)
 
 
