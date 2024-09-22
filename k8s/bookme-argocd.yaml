@@ -9,7 +9,9 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: ./**/k8s
+    directory:
+      recurse: true
+    path: k8s
     repoURL: https://github.com/fhswf/book_me
     targetRevision: HEAD
   syncPolicy:
