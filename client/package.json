@@ -110,7 +110,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "generateNotesCmd": "yarn exec node ../utility/patch-k8s.js ../k8s/frontend-deployment.yaml"
+          "generateNotesCmd": "yarn exec node ../utility/patch-k8s.js k8s/frontend-deployment.yaml"
         }
       ],
       [
