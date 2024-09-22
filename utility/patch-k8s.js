@@ -15,10 +15,10 @@ console.log('Patching k8s config...');
 const image_name = k8sConfig.spec.containers[0].image.split(':')[0];
 
 if (git_sha) {
-  k8sConfig.spec.containers[0].image = `${image_name}:${git_sha}`;
+  k8sConfig.spec.template.spec.containers[0].image = `${image_name}:${git_sha}`;
 }
 else {
-  k8sConfig.spec.containers[0].image = `${image_name}:${config.version}`;
+  k8sConfig.spec.template.spec.containers[0].image = `${image_name}:${config.version}`;
 }
 console.log(k8sConfig.spec.containers[0].image)
 /* write the new k8s config */
