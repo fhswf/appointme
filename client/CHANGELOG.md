@@ -1,3 +1,18 @@
+## client [1.2.16](https://github.com/fhswf/book_me/compare/client@1.2.15...client@1.2.16) (2024-09-22)
+
+
+### Bug Fixes
+
+* **vclient:** update version tag manually ([faff7fd](https://github.com/fhswf/book_me/commit/faff7fd11beffaf8c40d2cebe89f65d6a4fe6ab8))
+
+
+
+
+
+1.2.15
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:1.2.15
+
 ## client [1.2.15](https://github.com/fhswf/book_me/compare/client@1.2.14...client@1.2.15) (2024-09-22)
 
 
