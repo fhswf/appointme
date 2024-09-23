@@ -1,3 +1,18 @@
+# client [1.3.0](https://github.com/fhswf/book_me/compare/client@1.2.16...client@1.3.0) (2024-09-23)
+
+
+### Features
+
+* **backend:** CORS entry for appoint.gawron.cloud ([c629be7](https://github.com/fhswf/book_me/commit/c629be707d33facc2135995aa72494a4db72f435))
+
+
+
+
+
+config: {"name":"client","version":"1.2.16","homepage":"https://jupiter.fh-swf.de/meeting","contributors":[{"name":"Felix Hinnemann"},{"name":"Christian Gawron","email":"gawron.christian@fh-swf.de"}],"repository":{"type":"git","url":"git@github.com:fhswf/book_me.git"},"publishConfig":{"registry":"https://npm.pkg.github.com"},"license":"MIT","__proxy":"https://jupiter.fh-swf.de/","dependencies":{"@emotion/react":"^11.11.1","@emotion/styled":"^11.11.0","@mui/icons-material":"5.14.7","@mui/material":"^5.14.8","@mui/system":"^5.14.12","@mui/x-date-pickers":"^6.13.0","@react-oauth/google":"latest","@sentry/react":"^6.11.0","@sentry/tracing":"^6.5.1","@testing-library/dom":"^9.3.1","@testing-library/react":"^14.0.0","@testing-library/user-event":"^13.2.1","@types/react":"^18.2.21","axios":"^1.5.0","common":"workspace:*","date-fns":"^2.30.0","i18next":"^23.4.6","i18next-browser-languagedetector":"^7.1.0","i18next-http-backend":"^2.2.1","js-cookie":"^3.0.5","jsonwebtoken":"^9.0.2","moment":"^2.29.1","react":"^18.2.0","react-dom":"^18.2.0","react-i18next":"^13.2.1","react-markdown":"^8.0.7","react-router-dom":"^6.15.0","react-time-picker":"^6.5.0","react-toastify":"^9.1.3"},"scripts":{"start":"react-scripts start","build":"react-scripts build","test":"npx cypress run --spec cypress/integration/**/*.spec.js --record","cy:ci":"cypress run --headless  --e2e","ci":"start-server-and-test start http://localhost:3000/meeting cy:ci"},"eslintConfig":{"extends":"react-app"},"browserslist":{"production":[">0.2%","not dead","not op_mini all"],"development":["last 1 chrome version","last 1 firefox version","last 1 safari version"]},"devDependencies":{"@types/eslint":"^8.44.7","@types/react-router-dom":"^5.3.3","cypress":"^13.5.0","dotenv-cli":"^4.0.0","eslint":"^8.49.0","i18next-parser":"4.4.0","i18next-scanner":"3.0.0","node-sass":"^9.0.0","react-scripts":"^5.0.1","start-server-and-test":"^1.13.1","wait-on":"^5.3.0"},"release":{"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator","@semantic-release/changelog",["@semantic-release/exec",{"execCwd":"..","prepareCmd":"yarn exec node utility/patch-workspace-versions.js"}],["@dmeents/semantic-release-yarn",{"npmPublish":false,"changeVersion":true,"tarballDir":"build"}],["@semantic-release/exec",{"execCwd":".","generateNotesCmd":"yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"}],["@semantic-release/git",{"assets":["package.json","CHANGELOG.md","k8s/deployment.yaml"]}],"@semantic-release/github",["@codedependant/semantic-release-docker",{"dockerTags":["latest","{{major}}-latest","{{version}}","{{git_sha}}"],"dockerImage":"frontend","dockerRegistry":"ghcr.io","dockerProject":"fhswf/book_me","dockerContext":".."}]]}}
+Patching k8s config...
+ghcr.io/fhswf/book_me/frontend:1.2.16
+
 ## client [1.2.16](https://github.com/fhswf/book_me/compare/client@1.2.15...client@1.2.16) (2024-09-22)
 
 
