@@ -110,7 +110,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "generateNotesCmd": "yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"
+          "prepareCmd": "yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"
         }
       ],
       [
@@ -120,7 +120,8 @@
             "package.json",
             "CHANGELOG.md",
             "k8s/deployment.yaml"
-          ]
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
       ],
       "@semantic-release/github",

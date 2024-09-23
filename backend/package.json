@@ -104,7 +104,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "generateNotesCmd": "yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"
+          "prepareCmd": "yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"
         }
       ],
       [
