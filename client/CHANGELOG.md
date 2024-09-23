@@ -1,3 +1,10 @@
+## client [1.3.9](https://github.com/fhswf/book_me/compare/client@1.3.8...client@1.3.9) (2024-09-23)
+
+
+### Bug Fixes
+
+* **client:** make asset paths relative ([99ee6e0](https://github.com/fhswf/book_me/commit/99ee6e0433b1d6410bf09842de1523e5835a2e42))
+
 ## client [1.3.8](https://github.com/fhswf/book_me/compare/client@1.3.7...client@1.3.8) (2024-09-23)
 
 
