@@ -1,3 +1,10 @@
+## client [1.3.7](https://github.com/fhswf/book_me/compare/client@1.3.6...client@1.3.7) (2024-09-23)
+
+
+### Bug Fixes
+
+* **nginx:** regex issue ([dcff426](https://github.com/fhswf/book_me/commit/dcff426699316f2f979972b979490c418da02be2))
+
 ## client [1.3.6](https://github.com/fhswf/book_me/compare/client@1.3.5...client@1.3.6) (2024-09-23)
 
 
