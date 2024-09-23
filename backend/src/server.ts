@@ -35,10 +35,11 @@ app.use(bodyParser.json());
 
 // Dev Loggin Middleware
 if (process.env.NODE_ENV === "development") {
-  console.log("enabling CORS for %s", process.env.CLIENT_URL);
+  const ORIGINS = [process.env.CLIENT_URL, "http://localhost:5000", "http://localhost:3000"];
+  console.log("enabling CORS for %j", ORIGINS);
   app.use(
     cors({
-      origin: [process.env.CLIENT_URL, "http://localhost:5000", "http://localhost:3000"],
+      origin: ORIGINS,
       credentials: true,
     })
   );
