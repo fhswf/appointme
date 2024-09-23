@@ -30,7 +30,7 @@ import {
 
 import BookDetails, { BookingFormData } from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { Event, IntervalSet, TimeRange } from "common";
+import type { Event, IntervalSet, TimeRange } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import ChooseTime from "../components/ChooseTime";
 import { useTranslation, Trans } from "react-i18next";

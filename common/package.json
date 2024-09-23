@@ -9,6 +9,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "type": "module",
   "main": "./lib/types.js",
   "types": "./lib/types.d.ts",
   "scripts": {

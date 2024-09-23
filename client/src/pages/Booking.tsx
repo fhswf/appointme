@@ -36,7 +36,7 @@ import clsx from "clsx";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
+import type { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 
 const theme = createTheme({
@@ -155,26 +155,10 @@ const Booking = (props: any) => {
   const [error, setError] = useState<Error | null>(null);
   const [isPending, startTransition] = useTransition()
 
-  const updateSlots = () => {
-    getAvailableTimes(
-      beginDate,
-      addDays(addMonths(beginDate, 1), 1),
-      event.url,
-      user._id
-    )
-      .then((slots) => {
-        console.log("slots %o", slots);
-        setSlots(slots);
-      })
-      .catch((err) => {
-        setError({
-          message: "could not get available time slots",
-          details: err,
-        });
-      });
-  }
+
 
   useEffect(() => {
+
     getUserByUrl(data.user_url)
       .then((res) => {
         if (res.data.length === 0) {
@@ -203,6 +187,25 @@ const Booking = (props: any) => {
   }, [data.url, data.user_url, navigate, selectedDate]);
 
   useEffect(() => {
+    const updateSlots = () => {
+      getAvailableTimes(
+        beginDate,
+        addDays(addMonths(beginDate, 1), 1),
+        event.url,
+        user._id
+      )
+        .then((slots) => {
+          console.log("slots %o", slots);
+          setSlots(slots);
+        })
+        .catch((err) => {
+          setError({
+            message: "could not get available time slots",
+            details: err,
+          });
+        });
+    }
+
     if (user && event && event.url) {
       startTransition(() => updateSlots());
     }

@@ -19,7 +19,7 @@ export const signout = () => {
 };
 
 export const isAuthenticated = () => {
-  console.log('isAuthenticated: %s', localStorage.getItem("access_token"));
+  console.log('isAuthenticated: %s', localStorage.getItem("access_token") || 'false');
   if (localStorage.getItem("access_token")) {
     return JSON.parse(localStorage.getItem("access_token") as string);
   }

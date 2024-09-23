@@ -81,10 +81,10 @@ const theme = createTheme({
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const BASE_PATH = process.env.REACT_APP_BASE_PATH || "/meeting";
+const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
+const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/meeting";
 
-console.log("base url: %s %s", BASE_PATH, process.env.REACT_APP_API_URL, CLIENT_ID);
+console.log("base url: %s %s", BASE_PATH, import.meta.env.REACT_APP_API_URL, CLIENT_ID);
 
 root.render(
   <React.StrictMode>
