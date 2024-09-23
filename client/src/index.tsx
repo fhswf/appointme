@@ -24,7 +24,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import "./i18n";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

@@ -26,14 +26,14 @@ import {
 
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { HourglassFull, Room } from "@mui/icons-material";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
 import { getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
-import { addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
+import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
