@@ -8,11 +8,15 @@ spec:
     namespace: book_me
     server: https://kubernetes.default.svc
   project: default
-  source:
-    directory:
-      recurse: true
-    path: k8s
-    repoURL: https://github.com/fhswf/book_me
-    targetRevision: HEAD
+  sources:
+    - repoURL: 'https://github.com/fhswf/book_me'
+      path: k8s
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/fhswf/book_me'
+      path: client/k8s
+      targetRevision: HEAD
+    - repoURL: 'https://github.com/fhswf/book_me'
+      path: backend/k8s
+      targetRevision: HEAD
   syncPolicy:
     automated: {}

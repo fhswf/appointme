@@ -43,6 +43,14 @@ if (process.env.NODE_ENV === "development") {
     })
   );
 }
+else {
+  app.use(
+    cors({
+      origin: [process.env.CLIENT_URL, "https://appoint.gawron.cloud"],
+      credentials: true,
+    })
+  );
+}
 
 
 //Use routes

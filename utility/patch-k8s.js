@@ -2,7 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 
 const config = JSON.parse(fs.readFileSync(`package.json`, 'utf8'));
-console.log(config.version)
+console.log("config: %j", config)
 
 /* read arguments */
 const args = process.argv.slice(2);
