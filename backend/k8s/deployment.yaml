@@ -80,18 +80,3 @@ spec:
       restartPolicy: Always
 status: {}
 
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: bookme-backend-ingress
-  namespace: bookme
-spec:
-  entryPoints:
-    - websecure
-  routes:
-  - match: Host(`hopper.fh-swf.de`) && PathPrefix(`/meeting/api`)
-    kind: Rule
-    services:
-    - name: bookme
-      port: 5000
