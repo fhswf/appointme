@@ -72,7 +72,7 @@ spec:
                 configMapKeyRef:
                   key: TZ
                   name: bookme
-          image: ghcr.io/fhswf/book_me/backend:1.7.1
+          image: ghcr.io/fhswf/book_me/backend:1.7.2
           name: bookme
           ports:
             - containerPort: 5000
