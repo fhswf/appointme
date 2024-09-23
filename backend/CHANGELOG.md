@@ -1,3 +1,10 @@
+## backend [1.7.3](https://github.com/fhswf/book_me/compare/backend@1.7.2...backend@1.7.3) (2024-09-23)
+
+
+### Bug Fixes
+
+* **logging:** log CORS config ([ebfd5d1](https://github.com/fhswf/book_me/commit/ebfd5d1b413137a3d5c79b0dec7eab7ae4ee34b2))
+
 ## backend [1.7.2](https://github.com/fhswf/book_me/compare/backend@1.7.1...backend@1.7.2) (2024-09-23)
 
 
