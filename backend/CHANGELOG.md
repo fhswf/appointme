@@ -1,3 +1,10 @@
+## backend [1.7.1](https://github.com/fhswf/book_me/compare/backend@1.7.0...backend@1.7.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deployment:** update via semantic release ([52619ba](https://github.com/fhswf/book_me/commit/52619bad54f3eb702164d2909f01c52b1c7e7425))
+
 # backend [1.7.0](https://github.com/fhswf/book_me/compare/backend@1.6.8...backend@1.7.0) (2024-09-23)
 
 
