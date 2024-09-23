@@ -1,3 +1,10 @@
+## client [1.3.8](https://github.com/fhswf/book_me/compare/client@1.3.7...client@1.3.8) (2024-09-23)
+
+
+### Bug Fixes
+
+* **client:** temporary fix for path issue ([65f47bc](https://github.com/fhswf/book_me/commit/65f47bcdf63273d0cca12966ef8aca512056d32d))
+
 ## client [1.3.7](https://github.com/fhswf/book_me/compare/client@1.3.6...client@1.3.7) (2024-09-23)
 
 
