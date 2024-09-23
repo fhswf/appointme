@@ -1,3 +1,10 @@
+## client [1.3.6](https://github.com/fhswf/book_me/compare/client@1.3.5...client@1.3.6) (2024-09-23)
+
+
+### Bug Fixes
+
+* release after migration to vite ([cea8ce5](https://github.com/fhswf/book_me/commit/cea8ce5b0dd5aec6a1f4aa717cc9874ee74be773))
+
 ## client [1.3.5](https://github.com/fhswf/book_me/compare/client@1.3.4...client@1.3.5) (2024-09-23)
 
 
