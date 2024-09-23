@@ -1,17 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: '9'
-  creationTimestamp: '2023-10-08T20:43:03Z'
-  generation: 11
   labels:
     app.kubernetes.io/instance: bookme
     io.kompose.service: client
   name: client
   namespace: bookme
-  resourceVersion: '35584990'
-  uid: 0305df72-f130-4f1b-b7ab-d267d90c8d92
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
