@@ -1,3 +1,10 @@
+## client [1.3.2](https://github.com/fhswf/book_me/compare/client@1.3.1...client@1.3.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deployment:** remove runtime values ([d9ca052](https://github.com/fhswf/book_me/commit/d9ca052d0a320c9661d3530daac6440cd2932cee))
+
 ## client [1.3.1](https://github.com/fhswf/book_me/compare/client@1.3.0...client@1.3.1) (2024-09-23)
 
 
