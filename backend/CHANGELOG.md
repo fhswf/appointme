@@ -1,3 +1,10 @@
+## backend [1.7.4](https://github.com/fhswf/book_me/compare/backend@1.7.3...backend@1.7.4) (2024-09-23)
+
+
+### Bug Fixes
+
+* **config:** update config values ([a2d2e63](https://github.com/fhswf/book_me/commit/a2d2e639d3667c186142fcd6f6b7d28823551680))
+
 ## backend [1.7.3](https://github.com/fhswf/book_me/compare/backend@1.7.2...backend@1.7.3) (2024-09-23)
 
 
