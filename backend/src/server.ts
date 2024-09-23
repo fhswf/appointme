@@ -44,9 +44,11 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 else {
+  const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
+  console.log("enabling CORS for %j", ORIGINS);
   app.use(
     cors({
-      origin: [process.env.CLIENT_URL, "https://appoint.gawron.cloud"],
+      origin: ORIGINS,
       credentials: true,
     })
   );
