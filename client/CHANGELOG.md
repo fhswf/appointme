@@ -1,3 +1,10 @@
+## client [1.3.4](https://github.com/fhswf/book_me/compare/client@1.3.3...client@1.3.4) (2024-09-23)
+
+
+### Bug Fixes
+
+* add CORS for translation.json ([017bedb](https://github.com/fhswf/book_me/commit/017bedb592309668e408743c0bb2f356f1d31dc9))
+
 ## client [1.3.3](https://github.com/fhswf/book_me/compare/client@1.3.2...client@1.3.3) (2024-09-23)
 
 
