@@ -5,7 +5,7 @@ metadata:
     traefik.frontend.passHostHeader: "true"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
-  name: bookme-frontend
+  name: bookme-ingress
   namespace: bookme
 spec:
   rules:
@@ -15,7 +15,6 @@ spec:
       - backend:
           service:
             name: client
-            namespace: bookme
             port:
               number: 80
         path: /
@@ -23,7 +22,6 @@ spec:
       - backend:
           service:
             name: bookme
-            namespace: bookme
             port:
               number: 5000
         path: /api
@@ -34,7 +32,6 @@ spec:
       - backend:
           service:
             name: client
-            namespace: bookme
             port:
               number: 80
         path: /meeting
@@ -42,7 +39,6 @@ spec:
       - backend:
           service:
             name: bookme
-            namespace: bookme
             port:
               number: 5000
         path: /meeting/api
