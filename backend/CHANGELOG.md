@@ -1,3 +1,23 @@
+# backend [1.7.0](https://github.com/fhswf/book_me/compare/backend@1.6.8...backend@1.7.0) (2024-09-23)
+
+
+### Bug Fixes
+
+* **deployment:** separate deployment & ingress config ([bd3b800](https://github.com/fhswf/book_me/commit/bd3b8006d94567282f2f2e636ab83b5e7a775915))
+
+
+### Features
+
+* **backend:** CORS entry for appoint.gawron.cloud ([c629be7](https://github.com/fhswf/book_me/commit/c629be707d33facc2135995aa72494a4db72f435))
+
+
+
+
+
+config: {"name":"backend","version":"1.6.8","description":"","repository":{"type":"git","url":"git@github.com:fhswf/book_me.git"},"main":"server.js","scripts":{"test":"vitest run src/**/*.spec.ts --coverage","ci":"vitest run src/**/*.spec.ts --coverage","start":"node build/server.js","server":"nodemon src/server.ts","dev":"concurrently \"npm run server\" \"npm run client\"","build":"tsc","doc":"jsdoc -c jsdoc.json"},"contributors":[{"name":"Felix Hinnemann"},{"name":"Christian Gawron","email":"gawron.christian@fh-swf.de"}],"license":"MIT","dependencies":{"bcrypt":"^5.0.1","bcryptjs":"^2.4.3","body-parser":"^1.20.1","common":"workspace:*","concurrently":"^8.2.1","cookie-parser":"^1.4.5","cors":"^2.8.5","date-fns":"^2.30.0","date-fns-tz":"^1.1.1","dotenv":"^16.3.1","express":"^4.18.2","express-jwt":"^8.4.1","express-validator":"^7.0.1","google-auth-library":"9.0.0","googleapis":"^126.0.1","ical-generator":"^5.0.1","jsonwebtoken":"^9.0.2","moment":"^2.29.1","mongoose":"^7.5.0","nodemailer":"^6.4.14","remark":"15.0.1","remark-html":"16.0.1"},"devDependencies":{"@babel/core":"^7.23.3","@babel/preset-typescript":"^7.23.3","@jest/globals":"^29.7.0","@types/babel__core":"^7","@types/bcrypt":"^5.0.0","@types/bcryptjs":"^2.4.2","@types/express":"^4.17.11","@types/jest":"^29.5.8","@types/jsonwebtoken":"^9.0.3","@types/node":"^20.5.9","@types/nodemailer":"^6.4.0","@vitest/coverage-v8":"^0.34.6","eslint":"^8.48.0","eslint-config-prettier":"^8.3.0","eslint-config-react-app":"^7.0.1","jest":"^29.7.0","nodemon":"^3.0.1","supertest":"^6.3.3","ts-jest":"^29.1.1","ts-node":"^10.9.1","typescript":"^5.2.2","vitest":"^0.34.6"},"eslintConfig":{"extends":["react-app","react-app/jest"]},"release":{"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator","@semantic-release/changelog",["@semantic-release/exec",{"execCwd":"..","prepareCmd":"yarn exec node utility/patch-workspace-versions.js"}],["@dmeents/semantic-release-yarn",{"npmPublish":false,"changeVersion":true,"tarballDir":"build"}],["@semantic-release/exec",{"execCwd":".","generateNotesCmd":"yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"}],["@semantic-release/git",{"assets":["package.json","CHANGELOG.md","k8s/deployment.yaml"],"message":"chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"}],"@semantic-release/github",["@codedependant/semantic-release-docker",{"dockerTags":["latest","{{major}}-latest","{{version}}","{{git_sha}}"],"dockerImage":"backend","dockerRegistry":"ghcr.io","dockerProject":"fhswf/book_me","dockerContext":".."}]]},"gitHead":"a4b1d2cc78703828c99149277115e8434b675afc"}
+Patching k8s config...
+ghcr.io/fhswf/book_me/backend:1.6.8
+
 ## backend [1.6.8](https://github.com/fhswf/book_me/compare/backend@1.6.7...backend@1.6.8) (2024-06-19)
 
 

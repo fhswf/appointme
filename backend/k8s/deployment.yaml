@@ -22,7 +22,7 @@ spec:
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
-        io.kompose.network/traefik: "true"
+        io.kompose.network/traefik: 'true'
         io.kompose.service: bookme
     spec:
       containers:
@@ -72,11 +72,10 @@ spec:
                 configMapKeyRef:
                   key: TZ
                   name: bookme
-          image: ghcr.io/fhswf/book_me/backend:latest
+          image: ghcr.io/fhswf/book_me/backend:1.6.8
           name: bookme
           ports:
             - containerPort: 5000
           resources: {}
       restartPolicy: Always
 status: {}
-
