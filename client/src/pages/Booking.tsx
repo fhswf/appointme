@@ -264,7 +264,7 @@ const Booking = (props: any) => {
   const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
 
   const checkDay = (date: Date) => {
-    console.log("checkDay: %o %o", slots, event.available);
+    //console.log("checkDay: %o %o", slots, event.available);
     if (!event.available) {
       return false;
     } else {
@@ -382,132 +382,130 @@ const Booking = (props: any) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <ThemeProvider theme={theme}>
-        <Container>
-          <Typography variant="h3" component="h1" gutterBottom>
-            {t("Schedule an appointment")}
-          </Typography>
 
-          <div >
-            <div >
-              <Avatar
-                sx={{ width: 24, height: 24 }}
-                alt={user ? user.name : ""}
-                src={user ? user.picture_url : ""}
-              />
-            </div>
-            <div >{event.name}</div>
-            <div >
-              <HourglassFull />
-            </div>
-            <div>{event.duration + " minutes"}</div>
+    <Container>
+      <Typography variant="h3" component="h1" gutterBottom>
+        {t("Schedule an appointment")}
+      </Typography>
 
-            <div>
-              <Room />
-            </div>
-            <div>{event.location}</div>
-          </div>
+      <div >
+        <div >
+          <Avatar
+            sx={{ width: 24, height: 24 }}
+            alt={user ? user.name : ""}
+            src={user ? user.picture_url : ""}
+          />
+        </div>
+        <div >{event.name}</div>
+        <div >
+          <HourglassFull />
+        </div>
+        <div>{event.duration + " minutes"}</div>
 
-          <Paper>
-            <form onSubmit={handleSubmit}>
-              <Box pt="1em" m="2em">
-                <Stepper activeStep={activeStep}>
-                  {steps.map((label, index) => {
-                    const stepProps: any = {};
-                    const labelProps: any = {};
-                    if (isStepOptional(index)) {
-                      labelProps.optional = (
-                        <Typography variant="caption">Optional</Typography>
-                      );
-                    }
-                    if (isStepSkipped(index)) {
-                      stepProps.completed = false;
-                    }
-                    return (
-                      <Step key={label} {...stepProps}>
-                        <StepLabel {...labelProps}>{label}</StepLabel>
-                      </Step>
-                    );
-                  })}
-                </Stepper>
+        <div>
+          <Room />
+        </div>
+        <div>{event.location}</div>
+      </div>
 
-                <React.Fragment>
-                  <Typography>
-                    Step {activeStep + 1}
-                  </Typography>
-                  <div>
-                    <Button
-                      color="inherit"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
+      <Paper>
+        <form onSubmit={handleSubmit}>
+          <Box pt="1em" m="2em">
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps: any = {};
+                const labelProps: any = {};
+                if (isStepOptional(index)) {
+                  labelProps.optional = (
+                    <Typography variant="caption">Optional</Typography>
+                  );
+                }
+                if (isStepSkipped(index)) {
+                  stepProps.completed = false;
+                }
+                return (
+                  <Step key={label} {...stepProps}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
 
-                    >
-                      Back
-                    </Button>
-                    <div />
-                    {isStepOptional(activeStep) && (
-                      <Button
-                        color="inherit"
-                        onClick={handleSkip}
+            <React.Fragment>
+              <Typography>
+                Step {activeStep + 1}
+              </Typography>
+              <div>
+                <Button
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
 
-                      >
-                        Skip
-                      </Button>
-                    )}
+                >
+                  Back
+                </Button>
+                <div />
+                {isStepOptional(activeStep) && (
+                  <Button
+                    color="inherit"
+                    onClick={handleSkip}
 
-                    {activeStep === steps.length - 1 ? (
-                      <Button variant="contained" type="submit">
-                        Book appointment
-                      </Button>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </React.Fragment>
+                  >
+                    Skip
+                  </Button>
+                )}
 
-                <Grid container spacing={2}>
-                  <Grid item hidden={activeStep !== 0}>
-                    <StaticDatePicker
-                      displayStaticWrapperAs="desktop"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                      onMonthChange={handleMonthChange}
-                      slots={{ day: renderPickerDay }}
+                {activeStep === steps.length - 1 ? (
+                  <Button variant="contained" type="submit">
+                    Book appointment
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
+            </React.Fragment>
 
+            <Grid container spacing={2}>
+              <Grid item hidden={activeStep !== 0}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  onMonthChange={handleMonthChange}
+                  slots={{ day: renderPickerDay }}
+
+                />
+              </Grid>
+
+              <Grid item hidden={activeStep !== 1}>
+                {renderSlots()}
+              </Grid>
+
+              {activeStep > 1 ? (
+                <Grid item>
+                  {user ? (
+                    <BookDetails
+                      userid={user._id}
+                      username={user.name}
+                      event={event}
+                      start={selectedTime}
+                      end={addMinutes(selectedTime, event.duration)}
+                      errors={{}}
+                      onChange={handleDetailChange}
                     />
-                  </Grid>
-
-                  <Grid item hidden={activeStep !== 1}>
-                    {renderSlots()}
-                  </Grid>
-
-                  {activeStep > 1 ? (
-                    <Grid item>
-                      {user ? (
-                        <BookDetails
-                          userid={user._id}
-                          username={user.name}
-                          event={event}
-                          start={selectedTime}
-                          end={addMinutes(selectedTime, event.duration)}
-                          errors={{}}
-                          onChange={handleDetailChange}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </Grid>
                   ) : (
                     ""
                   )}
                 </Grid>
-              </Box>
-            </form>
-          </Paper>
-        </Container>
-      </ThemeProvider>
-    </LocalizationProvider>
+              ) : (
+                ""
+              )}
+            </Grid>
+          </Box>
+        </form>
+      </Paper>
+    </Container>
+
   );
 };
 

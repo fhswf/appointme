@@ -27,6 +27,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { de } from 'date-fns/locale/de';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/de';
 
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -79,7 +81,7 @@ const theme = createTheme({
       '"Segoe UI Symbol"',
     ].join(","),
   },
-});
+}, deDE);
 
 const container = document.getElementById("root");
 const root = createRoot(container);

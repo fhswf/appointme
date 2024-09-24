@@ -7740,6 +7740,7 @@ __metadata:
     common: "workspace:*"
     cypress: "npm:^13.5.0"
     date-fns: "npm:^4.0.0"
+    dayjs: "npm:^1.11.13"
     dotenv-cli: "npm:^7.4.2"
     eslint: "npm:^8.49.0"
     i18next: "npm:^23.15.1"
@@ -8547,6 +8548,13 @@ __metadata:
   version: 1.11.10
   resolution: "dayjs@npm:1.11.10"
   checksum: 10/27e8f5bc01c0a76f36c656e62ab7f08c2e7b040b09e613cd4844abf03fb258e0350f0a83b02c887b84d771c1f11e092deda0beef8c6df2a1afbc3f6c1fade279
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.13":
+  version: 1.11.13
+  resolution: "dayjs@npm:1.11.13"
+  checksum: 10/7374d63ab179b8d909a95e74790def25c8986e329ae989840bacb8b1888be116d20e1c4eee75a69ea0dfbae13172efc50ef85619d304ee7ca3c01d5878b704f5
   languageName: node
   linkType: hard
 
