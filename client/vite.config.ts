@@ -7,7 +7,7 @@ export default defineConfig(() => {
       outDir: 'build',
       publicDir: 'public',
       plugins: [react()],
-      base: './',
+      base: '/',
       rollupOptions: {
         onwarn(warning, warn) {
           if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
