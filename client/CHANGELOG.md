@@ -1,3 +1,19 @@
+## client [1.3.12](https://github.com/fhswf/book_me/compare/client@1.3.11...client@1.3.12) (2024-09-24)
+
+
+### Bug Fixes
+
+* **i18n:** loading of localized strings ([a64b15d](https://github.com/fhswf/book_me/commit/a64b15d4c67c84496f67d868b8c525e7e678c067))
+* **ui:** changes for vite & mui 6 ([2aab61e](https://github.com/fhswf/book_me/commit/2aab61e7b67692c40872960b9f4d6fad35e239f9))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.3
+
 ## client [1.3.11](https://github.com/fhswf/book_me/compare/client@1.3.10...client@1.3.11) (2024-09-24)
 
 
