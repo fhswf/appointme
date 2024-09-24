@@ -1,3 +1,10 @@
+## common [1.1.2](https://github.com/fhswf/book_me/compare/common@1.1.1...common@1.1.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* module deps ([630b92b](https://github.com/fhswf/book_me/commit/630b92b70e7ba1382d284fba0c80faa28276090c))
+
 ## common [1.1.1](https://github.com/fhswf/book_me/compare/common@1.1.0...common@1.1.1) (2024-06-17)
 
 
