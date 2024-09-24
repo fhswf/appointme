@@ -1,3 +1,19 @@
+## backend [1.7.9](https://github.com/fhswf/book_me/compare/backend@1.7.8...backend@1.7.9) (2024-09-24)
+
+
+### Bug Fixes
+
+* module resolution ([c2f37d6](https://github.com/fhswf/book_me/commit/c2f37d645eeab8bc85301736d24304f198f7496e))
+* module resolution ([6263324](https://github.com/fhswf/book_me/commit/6263324b72feff539720dffd264891b8dbd4b52d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.5
+
 ## backend [1.7.8](https://github.com/fhswf/book_me/compare/backend@1.7.7...backend@1.7.8) (2024-09-24)
 
 
