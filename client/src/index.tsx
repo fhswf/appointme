@@ -24,7 +24,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import "./i18n";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { de } from 'date-fns/locale/de';
+
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -85,12 +88,12 @@ const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/";
 
 console.log("base url: %s %s", BASE_PATH, import.meta.env.REACT_APP_API_URL, CLIENT_ID);
-
+console.log("localeText: %o", deDE.components.MuiLocalizationProvider.defaultProps.localeText);
 root.render(
   <StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}>
           <ThemeProvider theme={theme}>
             <BrowserRouter basename={BASE_PATH}>
               <Routes>

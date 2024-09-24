@@ -39,6 +39,7 @@ import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
+import { useTranslation } from "react-i18next";
 
 const theme = createTheme({
   components: {
@@ -131,6 +132,7 @@ type Error = {
 };
 
 const Booking = (props: any) => {
+  const { t } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
 
@@ -259,7 +261,7 @@ const Booking = (props: any) => {
     setActiveStep(1);
   };
 
-  const steps = ["Choose date", "Choose time", "Provide details"];
+  const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
 
   const checkDay = (date: Date) => {
     if (!event.available) {
@@ -383,7 +385,7 @@ const Booking = (props: any) => {
       <ThemeProvider theme={theme}>
         <Container>
           <Typography variant="h3" component="h1" gutterBottom>
-            Schedule an appointment
+            {t("Schedule an appointment")}
           </Typography>
 
           <div >
