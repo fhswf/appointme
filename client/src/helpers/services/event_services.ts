@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Event, IntervalSet } from "common";
+import { Event, IntervalSet } from "common";
 
 export async function saveUserEvent(
   token: string,
