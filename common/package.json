@@ -9,7 +9,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "type": "commonjs",
+  "type": "module",
   "main": "./lib/types.js",
   "types": "./lib/types.d.ts",
   "scripts": {
@@ -50,7 +50,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "date-fns": "^2.22.1",
-    "date-fns-tz": "^1.1.4"
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.1.3"
   }
 }

@@ -3,7 +3,7 @@
 /**
  * @module authentication_controller
  */
-import { UserModel } from "../models/User";
+import { UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
 import { createTransport } from "nodemailer";
 import { google } from "googleapis";
@@ -18,7 +18,9 @@ const env = dotenv.config({
 
 import { compare } from 'bcrypt';
 
-import { JwtPayload, decode, sign, verify } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { sign, verify } = pkg;
+import { JwtPayload } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);

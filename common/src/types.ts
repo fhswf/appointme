@@ -1,4 +1,4 @@
-import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz"
+import { toZonedTime, fromZonedTime } from "date-fns-tz"
 import { th } from "date-fns/locale";
 
 /** Enum type representing a day of week.
@@ -152,8 +152,8 @@ export class IntervalSet extends Array<TimeRange> {
           let end = new Date(t)//utcToZonedTime(t, timezone)
           start.setHours(start_h, start_m, 0, 0)
           end.setHours(end_h, end_m, 0, 0)
-          start = zonedTimeToUtc(start, timezone)
-          end = zonedTimeToUtc(end, timezone)
+          start = fromZonedTime(start, timezone)
+          end = fromZonedTime(end, timezone)
           this.push({ start, end })
         })
         t = new Date(t.getTime() + 1000 * 86400)

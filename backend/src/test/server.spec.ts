@@ -1,6 +1,6 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { server } from "../server";
+import { server } from "../server.js";
 import request from "supertest";
 
 describe("Server", () => {

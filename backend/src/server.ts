@@ -2,13 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { dataBaseConn } from "./config/dbConn";
+import { dataBaseConn } from "./config/dbConn.js";
 
 //Load routes
-import { authenticationRouter } from "./routes/authentication_route";
-import { eventRouter } from "./routes/event_routes";
-import { googleRouter } from "./routes/google_routes";
-import { userRouter } from "./routes/user_routes";
+import { authenticationRouter } from "./routes/authentication_route.js";
+import { eventRouter } from "./routes/event_routes.js";
+import { googleRouter } from "./routes/google_routes.js";
+import { userRouter } from "./routes/user_routes.js";
 
 // Dotenv Config
 import dotenv from "dotenv";

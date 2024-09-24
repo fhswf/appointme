@@ -3,11 +3,11 @@
 /**
  * @module event_controller
  */
-import { EventDocument, EventModel } from "../models/Event";
+import { EventDocument, EventModel } from "../models/Event.js";
 import { Event, IntervalSet } from "common";
-import { freeBusy, events } from "./google_controller";
+import { freeBusy, events } from "./google_controller.js";
 import { ValidationError, validationResult } from "express-validator";
-import { errorHandler } from "../handlers/errorhandler";
+import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
 

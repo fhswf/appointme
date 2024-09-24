@@ -13,9 +13,9 @@ import {
   getActiveEventsController,
   getEventByUrl,
   getAvailableTimes,
-} from "../controller/event_controller";
+} from "../controller/event_controller.js";
 
-import { requireAuth } from "../handlers/middleware";
+import { requireAuth } from "../handlers/middleware.js";
 
 export const eventRouter = Router();
 /**
