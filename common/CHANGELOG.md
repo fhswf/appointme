@@ -1,3 +1,10 @@
+## common [1.1.3](https://github.com/fhswf/book_me/compare/common@1.1.2...common@1.1.3) (2024-09-24)
+
+
+### Bug Fixes
+
+* **ui:** changes for vite & mui 6 ([2aab61e](https://github.com/fhswf/book_me/commit/2aab61e7b67692c40872960b9f4d6fad35e239f9))
+
 ## common [1.1.2](https://github.com/fhswf/book_me/compare/common@1.1.1...common@1.1.2) (2024-09-24)
 
 
