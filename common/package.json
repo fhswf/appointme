@@ -9,7 +9,7 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "type": "module",
+  "type": "commonjs",
   "main": "./lib/types.js",
   "types": "./lib/types.d.ts",
   "scripts": {
