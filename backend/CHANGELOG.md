@@ -1,3 +1,18 @@
+## backend [1.7.7](https://github.com/fhswf/book_me/compare/backend@1.7.6...backend@1.7.7) (2024-09-24)
+
+
+### Bug Fixes
+
+* **ui:** changes for vite & mui 6 ([2aab61e](https://github.com/fhswf/book_me/commit/2aab61e7b67692c40872960b9f4d6fad35e239f9))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.3
+
 ## backend [1.7.6](https://github.com/fhswf/book_me/compare/backend@1.7.5...backend@1.7.6) (2024-09-24)
 
 
