@@ -1,3 +1,10 @@
+## backend [1.7.6](https://github.com/fhswf/book_me/compare/backend@1.7.5...backend@1.7.6) (2024-09-24)
+
+
+### Bug Fixes
+
+* module deps ([d12fc5b](https://github.com/fhswf/book_me/commit/d12fc5b4db2447ea0db16519964797a023fd549d))
+
 ## backend [1.7.5](https://github.com/fhswf/book_me/compare/backend@1.7.4...backend@1.7.5) (2024-09-24)
 
 
