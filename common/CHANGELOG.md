@@ -1,3 +1,10 @@
+## common [1.1.5](https://github.com/fhswf/book_me/compare/common@1.1.4...common@1.1.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* module resolution ([c2f37d6](https://github.com/fhswf/book_me/commit/c2f37d645eeab8bc85301736d24304f198f7496e))
+
 ## common [1.1.4](https://github.com/fhswf/book_me/compare/common@1.1.3...common@1.1.4) (2024-09-24)
 
 

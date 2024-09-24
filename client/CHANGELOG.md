@@ -1,3 +1,23 @@
+# client [1.4.0](https://github.com/fhswf/book_me/compare/client@1.3.12...client@1.4.0) (2024-09-24)
+
+
+### Bug Fixes
+
+* module resolution ([c2f37d6](https://github.com/fhswf/book_me/commit/c2f37d645eeab8bc85301736d24304f198f7496e))
+
+
+### Features
+
+* **i18n:** add translations ([f859dc7](https://github.com/fhswf/book_me/commit/f859dc7fe2802a28537ee45e21f27b1145b94ec5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.5
+
 ## client [1.3.12](https://github.com/fhswf/book_me/compare/client@1.3.11...client@1.3.12) (2024-09-24)
 
 
