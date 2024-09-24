@@ -264,6 +264,7 @@ const Booking = (props: any) => {
   const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
 
   const checkDay = (date: Date) => {
+    console.log("checkDay: %o %o", slots, event.available);
     if (!event.available) {
       return false;
     } else {
