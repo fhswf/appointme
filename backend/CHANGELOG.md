@@ -1,3 +1,10 @@
+## backend [1.7.8](https://github.com/fhswf/book_me/compare/backend@1.7.7...backend@1.7.8) (2024-09-24)
+
+
+### Bug Fixes
+
+* **backend:** change type to module ([f80c257](https://github.com/fhswf/book_me/commit/f80c25736bfc9be332b35d704fd976712fbba119))
+
 ## backend [1.7.7](https://github.com/fhswf/book_me/compare/backend@1.7.6...backend@1.7.7) (2024-09-24)
 
 
