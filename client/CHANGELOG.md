@@ -1,3 +1,10 @@
+## client [1.3.11](https://github.com/fhswf/book_me/compare/client@1.3.10...client@1.3.11) (2024-09-24)
+
+
+### Bug Fixes
+
+* module deps ([630b92b](https://github.com/fhswf/book_me/commit/630b92b70e7ba1382d284fba0c80faa28276090c))
+
 ## client [1.3.10](https://github.com/fhswf/book_me/compare/client@1.3.9...client@1.3.10) (2024-09-24)
 
 
