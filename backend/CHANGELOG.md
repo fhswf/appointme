@@ -1,3 +1,10 @@
+## backend [1.7.5](https://github.com/fhswf/book_me/compare/backend@1.7.4...backend@1.7.5) (2024-09-24)
+
+
+### Bug Fixes
+
+* CORS for debugging ([59b7983](https://github.com/fhswf/book_me/commit/59b798336f7959bd77e5ad2b35ad23244bc95847))
+
 ## backend [1.7.4](https://github.com/fhswf/book_me/compare/backend@1.7.3...backend@1.7.4) (2024-09-23)
 
 
