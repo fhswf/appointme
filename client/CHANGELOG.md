@@ -1,3 +1,10 @@
+## client [1.3.10](https://github.com/fhswf/book_me/compare/client@1.3.9...client@1.3.10) (2024-09-24)
+
+
+### Bug Fixes
+
+* vite changes ([632d394](https://github.com/fhswf/book_me/commit/632d394050be8e61a2c317b7fe546fce9999036f))
+
 ## client [1.3.9](https://github.com/fhswf/book_me/compare/client@1.3.8...client@1.3.9) (2024-09-23)
 
 
