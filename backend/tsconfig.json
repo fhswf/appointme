@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es6",
+    "module": "CommonJS",
     "allowJs": true,
     "strict": false,
     "skipLibCheck": true,
@@ -8,7 +8,7 @@
     "outDir": "build",
     "removeComments": true,
     "sourceMap": true,
-    "target": "es6",
+    "target": "esnext",
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
