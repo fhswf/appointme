@@ -1,3 +1,11 @@
+## client [1.4.1](https://github.com/fhswf/book_me/compare/client@1.4.0...client@1.4.1) (2024-09-24)
+
+
+### Bug Fixes
+
+* **i18n:** localization path ([c47a2b2](https://github.com/fhswf/book_me/commit/c47a2b295d565bf6ca41fc03a75c0ecc71a17179))
+* **ui:** Booking page ([2c50749](https://github.com/fhswf/book_me/commit/2c5074918d04491f4f208b3c259212452ea1a9da))
+
 # client [1.4.0](https://github.com/fhswf/book_me/compare/client@1.3.12...client@1.4.0) (2024-09-24)
 
 
