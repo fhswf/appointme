@@ -31,7 +31,7 @@ const AppNavbar = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [snack, setSnack] = React.useState<string | null>(null);
 
-  const link = user ? process.env.REACT_APP_URL + "/users/" + user.user_url : "";
+  const link = user ? import.meta.env.REACT_APP_URL + "/users/" + user.user_url : "";
 
   console.log("AppNavbar: user=%o", user);
 
@@ -88,20 +88,20 @@ const AppNavbar = () => {
   );
 
   const userMenu = [
-    <MenuItem onClick={handleMenuClose} disabled={!user}>
+    <MenuItem key="profile" onClick={handleMenuClose} disabled={!user}>
       <ListItemIcon>
         <PersonIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>Profile</ListItemText>
     </MenuItem>,
-    <MenuItem onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
-    <MenuItem component={Link} to="/integration" disabled={!user}>
+    <MenuItem key="account" onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
+    <MenuItem key="calendar" component={Link} to="/integration" disabled={!user}>
       <ListItemIcon>
         <CalendarTodayIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>Calendar Integration</ListItemText>
     </MenuItem>,
-    <MenuItem onClick={copyToClipboard} disabled={!user}>
+    <MenuItem key="link" onClick={copyToClipboard} disabled={!user}>
       <ListItemIcon>
         <LinkIcon fontSize="small" />
       </ListItemIcon>

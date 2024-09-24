@@ -1,4 +1,4 @@
-import React, { Suspense, } from "react";
+import React, { Suspense, StrictMode } from "react";
 import { createRoot } from 'react-dom/client';
 
 //import "bootstrap/dist/css/bootstrap.min.css";
@@ -82,12 +82,12 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 
 const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
-const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/meeting";
+const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/";
 
 console.log("base url: %s %s", BASE_PATH, import.meta.env.REACT_APP_API_URL, CLIENT_ID);
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -160,5 +160,5 @@ root.render(
         </LocalizationProvider>
       </GoogleOAuthProvider>
     </Suspense>
-  </React.StrictMode>
+  </StrictMode>
 );
