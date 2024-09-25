@@ -1,3 +1,10 @@
+# client [1.5.0](https://github.com/fhswf/book_me/compare/client@1.4.2...client@1.5.0) (2024-09-25)
+
+
+### Features
+
+* **backend:** make nginx config more flexible ([31136f0](https://github.com/fhswf/book_me/commit/31136f0030fad57f62feca54433746fd6ae1a328))
+
 ## client [1.4.2](https://github.com/fhswf/book_me/compare/client@1.4.1...client@1.4.2) (2024-09-24)
 
 
