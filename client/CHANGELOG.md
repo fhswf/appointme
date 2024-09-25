@@ -1,3 +1,10 @@
+## client [1.4.2](https://github.com/fhswf/book_me/compare/client@1.4.1...client@1.4.2) (2024-09-24)
+
+
+### Bug Fixes
+
+* **i18n:** Localization of date picker ([9d7dda2](https://github.com/fhswf/book_me/commit/9d7dda2aaa7de515b29f17123ffafa7b02571417))
+
 ## client [1.4.1](https://github.com/fhswf/book_me/compare/client@1.4.0...client@1.4.1) (2024-09-24)
 
 
