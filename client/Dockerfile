@@ -1,6 +1,6 @@
 FROM node:18-bullseye AS build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG BASE_PATH=/meeting
+ARG BASE_PATH=/
 ARG APP_URL=https://hopper.fh-swf.de/meeting
 ARG API_URL=https://hopper.fh-swf.de/meeting/api/v1
 
