@@ -44,6 +44,7 @@ const EventList = (props: EventListProps) => {
     ) : (
       events.map((event, index) => (
         <EventCard
+          key={index}
           event={event}
           url={props.url}
           setActive={(active) => {

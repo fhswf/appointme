@@ -5,7 +5,6 @@ import {
   Divider,
   FormControl,
   FormHelperText,
-  Grid,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -20,9 +19,12 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-import { Add, Delete } from "@mui/icons-material";
+import Grid from '@mui/material/Grid2';
+
+import { Add, Delete, VerticalAlignCenter } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
-import type { Day, DayNames, Event, Slot } from "common";
+import { Day, DayNames, Event, Slot } from "common";
+import { t } from "i18next";
 
 /*
 export const useStyles = makeStyles((theme) => ({
@@ -54,7 +56,7 @@ const EditSlot = (props: EditSlotProps) => {
     setSlots(
       props.slots.filter(
         (slot) =>
-          slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0
+          true || (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
       )
     );
   }, [props.slots]);
@@ -101,10 +103,11 @@ const EditSlot = (props: EditSlotProps) => {
         props.onChange(_slots);
       };
 
+  console.log("EditSlot: %o", slots);
   return (
     <>
-      <Grid item container xs={12}>
-        <Grid item xs={2}>
+      <Grid container xs={12}>
+        <Grid xs={2}>
           <FormControl>
             <FormControlLabel
               control={
@@ -117,43 +120,44 @@ const EditSlot = (props: EditSlotProps) => {
         <Grid item xs={9}>
           <Grid container>
             {slots.map((slot, index) => (
-              <>
-                <FormGroup row>
-                  <Grid item xs={4} textAlign="end">
-                    <Input
-                      type="time"
-                      placeholder="Starttime"
-                      onChange={changeTime("start", index)}
-                      value={slot.start}
-                    />
-                  </Grid>
-                  <Grid item xs={2} textAlign="center">
-                    –
-                  </Grid>
-                  <Grid item xs={4} textAlign="start">
-                    <Input
-                      type="time"
-                      placeholder="Endtime"
-                      onChange={changeTime("end", index)}
-                      value={slot.end}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Button onClick={deleteSlot(index)}>
-                      <Delete />
-                    </Button>
-                  </Grid>
-                </FormGroup>
-              </>
+
+              <FormGroup row key={index} style={{ "alignItems": "baseline" }}>
+                <Grid item xs={4} textAlign="end">
+                  <Input
+                    type="time"
+                    placeholder="Starttime"
+                    onChange={changeTime("start", index)}
+                    value={slot.start}
+                  />
+                </Grid>
+                <Grid item xs={2} textAlign="center">
+                  –
+                </Grid>
+                <Grid item xs={4} textAlign="start">
+                  <Input
+                    type="time"
+                    placeholder="Endtime"
+                    onChange={changeTime("end", index)}
+                    value={slot.end}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button onClick={deleteSlot(index)}>
+                    <Delete />
+                  </Button>
+                </Grid>
+              </FormGroup >
+
             ))}
           </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Button onClick={addSlot}>
-            <Add />
-          </Button>
+        <Grid xs={1}>
+          {slots.length > 0 ?
+            <Button onClick={addSlot} hidden={slots.length <= 0}>
+              <Add />
+            </Button> : null}
         </Grid>
-      </Grid>
+      </Grid >
     </>
   );
 };
@@ -182,7 +186,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
     (key: keyof Event, mult?: number) =>
       (evt: ChangeEvent<HTMLInputElement>) => {
         setChanged(true);
-        console.log("onChange: %o", evt);
+        console.log("onChange: %o %s", evt, key);
         if (key === "name" && formData.url === generateSlug(formData.name)) {
           setFormData({
             ...formData,
@@ -216,13 +220,13 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
     <form onSubmit={handleOnSubmit}>
       <Box>
         <Typography component="h2" variant="h5">
-          Basic Information
+          {t("these_zesty_duck_nudge")}
         </Typography>
         <div>
           <TextField
             id="event-title"
             type="text"
-            label="Event title"
+            label={t("lazy_just_duck_spin")}
             required
             fullWidth
             margin="normal"
@@ -234,8 +238,8 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
         <div>
           <TextField
-            label="Description"
-            helperText="What is the purpose of this appointment type?"
+            label={t("these_moving_fox_create")}
+            helperText={t("north_least_gopher_burn")}
             multiline
             fullWidth
             margin="normal"
@@ -247,9 +251,9 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
         <div>
           <TextField
-            label="Location"
-            placeholder="Zoom Meeting"
-            helperText="Where does the meeting take place?"
+            label={t("honest_weak_iguana_rest")}
+            placeholder={t("tired_whole_bumblebee_type")}
+            helperText={t("tiny_factual_platypus_pave")}
             defaultValue="Online via Zoom"
             margin="normal"
             variant="filled"
@@ -260,11 +264,11 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
         <div>
           <TextField
-            label="Event Slug"
+            label={t("quiet_male_yak_slurp")}
             margin="normal"
             variant="filled"
-            placeholder="awesome-meeting"
-            helperText="Customizable part of the URL"
+            placeholder={t("dizzy_quiet_walrus_hush")}
+            helperText={t("less_equal_octopus_dine")}
             onChange={handleOnChange("url")}
             value={formData.url}
           />
@@ -273,13 +277,13 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
       <Box pt="1em">
         <Typography component="h2" variant="h5">
-          Duration
+          {t("jumpy_tasty_rook_trust")}
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <FormControl margin="normal" variant="filled">
-              <InputLabel id="duration-label">Duration</InputLabel>
+              <InputLabel id="duration-label">{t("ideal_this_coyote_inspire")}</InputLabel>
               <Select
                 labelId="duration-label"
                 id="duration"
@@ -291,16 +295,16 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 <MenuItem value={45}>45 min</MenuItem>
                 <MenuItem value={60}>60 min</MenuItem>
               </Select>
-              <FormHelperText>How long is this event?</FormHelperText>
+              <FormHelperText>{t("elegant_early_boar_accept")}</FormHelperText>
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={4}>
             <FormControl component="span" margin="normal" variant="filled">
-              <InputLabel id="buffer-before-label">Buffer before</InputLabel>
+              <InputLabel id="buffer-before-label">{t("mealy_happy_ray_flop")}</InputLabel>
               <Select
                 labelId="buffer-before-label"
-                id="buffer-before"
+                id={t("left_aloof_stork_leap")}
                 value={formData.bufferbefore}
                 onChange={handleSelect("bufferbefore")}
               >
@@ -310,13 +314,13 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 <MenuItem value={30}>30 min</MenuItem>
                 <MenuItem value={60}>60 min</MenuItem>
               </Select>
-              <FormHelperText>Buffer berfore this event</FormHelperText>
+              <FormHelperText>{t("real_big_crow_push")}</FormHelperText>
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sm={4}>
             <FormControl component="span" margin="normal" variant="filled">
-              <InputLabel id="buffer-after-label">Buffer after</InputLabel>
+              <InputLabel id="buffer-after-label">{t("close_actual_deer_boil")}</InputLabel>
               <Select
                 labelId="buffer-after-label"
                 id="buffer-after"
@@ -329,7 +333,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 <MenuItem value={30}>30 min</MenuItem>
                 <MenuItem value={60}>60 min</MenuItem>
               </Select>
-              <FormHelperText>Buffer after this event</FormHelperText>
+              <FormHelperText>{t("keen_zippy_bulldog_gaze")}</FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
@@ -337,14 +341,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
       <Box pt="1em">
         <Typography component="h2" variant="h5" gutterBottom>
-          Availability
+          {t("seemly_fine_octopus_slurp")}
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4}>
             <TextField
               id="maxFuture"
-              label="Maximum days in advance"
+              label={t("Maximum days in advance")}
               value={formData.maxFuture / 86400}
               type="number"
               variant="filled"
@@ -354,13 +358,13 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                   <InputAdornment position="end">Days</InputAdornment>
                 ),
               }}
-              helperText="How many days in advance is this event available?"
+              helperText={t("How many days in advance is this event available?")}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
               id="rangedays"
-              label="Minimum days in advance"
+              label={t("quaint_known_wasp_view")}
               value={formData.minFuture / 86400}
               type="number"
               variant="filled"
@@ -370,18 +374,18 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                   <InputAdornment position="end">Days</InputAdornment>
                 ),
               }}
-              helperText="Events cannot be scheduled less than this time in advance"
+              helperText={t("pretty_grand_cuckoo_arrive")}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
               id="maxPerDay"
-              label="Maximum per day"
+              label={t("grand_wacky_ox_flow")}
               value={formData.maxPerDay}
               type="number"
               variant="filled"
               onChange={handleOnChange("maxPerDay")}
-              helperText="Maximum number of events of this type per day"
+              helperText={t("slow_maroon_spider_praise")}
             />
           </Grid>
         </Grid>
@@ -389,7 +393,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
       <Box pt="1em">
         <Typography component="h2" variant="h5">
-          Daily availability
+          {t("Daily availability")}
         </Typography>
 
         <Stack
@@ -400,6 +404,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         >
           {[0, 1, 2, 3, 4, 5, 6].map((day) => (
             <EditSlot
+              key={day}
               day={day}
               slots={formData.available[day as Day]}
               onChange={onChangeSlot(day)}

@@ -8,7 +8,8 @@ import { getEventByID, updateEvent } from "../helpers/services/event_services";
 import { useNavigate, useParams } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { EventForm } from "../components/EventForm";
-import type { EMPTY_EVENT, Event } from "common";
+import { EMPTY_EVENT, Event } from "common";
+import { useTranslation } from "react-i18next";
 
 export type EventFormProps = {
   event: Event;
@@ -22,6 +23,7 @@ const EditEvent = (): JSX.Element => {
   const token = JSON.parse(localStorage.getItem("access_token"));
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(EMPTY_EVENT);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getEventByID(token, eventID).then((res) => {
@@ -59,7 +61,7 @@ const EditEvent = (): JSX.Element => {
 
       <Container maxWidth="md">
         <Typography component="h1" variant="h3" gutterBottom>
-          Edit Event Type
+          {t("each_awake_tadpole_jest")}
         </Typography>
         <EventForm
           event={formData ? formData : EMPTY_EVENT}
