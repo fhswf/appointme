@@ -1,3 +1,10 @@
+## client [1.5.1](https://github.com/fhswf/book_me/compare/client@1.5.0...client@1.5.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* **i18n:** translations added ([d146bd0](https://github.com/fhswf/book_me/commit/d146bd0f9d606eec2012975101d2ebf26cc2d533))
+
 # client [1.5.0](https://github.com/fhswf/book_me/compare/client@1.4.2...client@1.5.0) (2024-09-25)
 
 
