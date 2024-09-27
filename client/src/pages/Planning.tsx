@@ -14,27 +14,13 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import HourglassFullIcon from "@mui/icons-material/HourglassFull";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import RoomIcon from "@mui/icons-material/Room";
 
 import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
 import { EventDocument } from "../helpers/EventDocument";
+import { useTranslation } from "react-i18next";
+import { EventType } from "../components/EventType";
 
-/*
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "grid",
-    gridTemplateColumns: "1.5em 1fr",
-    gridGap: theme.spacing(1),
-    alignItems: "center",
-    verticalAlign: "center",
-    paddingBottom: "16px",
-  },
-  item: {},
-}));
-*/
 
 const Planning = (props: any) => {
   const navigate = useNavigate();
@@ -46,6 +32,7 @@ const Planning = (props: any) => {
     welcome: "",
     picture_url: "",
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     getUserByUrl(user_url)
@@ -85,7 +72,7 @@ const Planning = (props: any) => {
 
   const renderEventlist = () => {
     if (!events || events.length === 0) {
-      return <h4 className="noevents">No events to book</h4>;
+      return <h4 className="noevents">{t("extra_patient_warbler_praise")}</h4>;
     } else {
       return (
         <Grid
@@ -95,50 +82,12 @@ const Planning = (props: any) => {
           justifyContent="space-evenly"
           alignItems="stretch"
         >
-          {events.map((event) => (
-            <Grid item sm={4} xs={6}>
-              <Card>
-                <CardHeader
-                  avatar={<Avatar alt={user.name} src={user.picture_url} />}
-                  title={event.name}
-                />
-                <CardContent>
-                  <Container
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "1.5em 1fr",
-                      alignItems: "center",
-                      verticalAlign: "center",
-                      paddingBottom: "16px"
-                    }}>
-                    <div>
-                      <HourglassFullIcon />
-                    </div>
-                    <div>
-                      {event.duration + " minutes"}
-                    </div>
-
-                    <div>
-                      <RoomIcon />
-                    </div>
-                    <div>{event.location}</div>
-                  </Container>
-                  {event.description}
-                </CardContent>
-                <CardActions>
-                  <Button
-                    color="primary"
-                    aria-label="schedule"
-                    onClick={(evt) => {
-                      evt.preventDefault();
-                      handleOnClick(event);
-                    }}
-                    startIcon={<ScheduleIcon />}
-                  >
-                    Schedule event
-                  </Button>
-                </CardActions>
-              </Card>
+          {events.map((event, index) => (
+            <Grid item sm={4} xs={6} key={index}>
+              <EventType
+                event={event}
+                user={user}
+                handleOnClick={handleOnClick} />
             </Grid>
           ))}
         </Grid>
@@ -149,10 +98,9 @@ const Planning = (props: any) => {
   return (
     <Container>
       <Typography variant="h3" gutterBottom>
-        Schedule an appointment with {user.name}
+        {t("broad_close_butterfly_drop", { name: user.name })}
       </Typography>
-      Please select the type of appointment you need and click on the schedule
-      button to book it. You will get a list of available slots in my schedule.
+      {t("weary_known_gazelle_file")}
       <Box p="1em">{renderEventlist()}</Box>
     </Container>
   );

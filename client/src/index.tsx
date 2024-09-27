@@ -1,9 +1,6 @@
 import React, { Suspense, StrictMode } from "react";
 import { createRoot } from 'react-dom/client';
 
-//import "bootstrap/dist/css/bootstrap.min.css";
-import "react-toastify/dist/ReactToastify.css";
-
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import App from "./pages/App";
@@ -27,10 +24,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { de } from 'date-fns/locale/de';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/de';
 
-
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
@@ -95,74 +92,76 @@ root.render(
   <StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}>
-          <ThemeProvider theme={theme}>
-            <BrowserRouter basename={BASE_PATH}>
-              <Routes>
-                <Route path="/" element={isAuthenticated() ? (
-                  <Navigate to="/app" />
-                ) : (
-                  <Navigate to="/landing" />
-                )} />
 
-                <Route path="/app" element={
-                  <PrivateRoute>
-                    <App />
-                  </PrivateRoute>
-                } />
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}>
+            <ThemeProvider theme={theme}>
+              <BrowserRouter basename={BASE_PATH}>
+                <Routes>
+                  <Route path="/" element={isAuthenticated() ? (
+                    <Navigate to="/app" />
+                  ) : (
+                    <Navigate to="/landing" />
+                  )} />
 
-                <Route path="/addevent" element={
-                  <PrivateRoute>
-                    <AddEvent />
-                  </PrivateRoute>
-                } />
-
-                <Route path="/editevent/:id" element={
-                  <PrivateRoute>
-                    <EditEvent />
-                  </PrivateRoute>
-                } />
-
-                <Route
-                  path="/integration/*"
-                  element={
+                  <Route path="/app" element={
                     <PrivateRoute>
-                      <Calendarintegration />
+                      <App />
                     </PrivateRoute>
-                  }
-                />
+                  } />
 
-                <Route
-                  path="/booked"
-                  element={<Finished />}
-                />
+                  <Route path="/addevent" element={
+                    <PrivateRoute>
+                      <AddEvent />
+                    </PrivateRoute>
+                  } />
 
-                <Route
-                  path="/login"
-                  element={<Login />}
-                />
-                <Route
-                  path="/landing"
-                  element={<Landing />}
-                />
-                <Route
-                  path="/schedule/:user_url/:url"
-                  element={<Schedule />}
-                />
-                <Route
-                  path="/users/:user_url"
-                  element={<Planning />}
-                />
-                <Route
-                  path="/users/:user_url/:url"
-                  element={<Booking />}
-                />
-                <Route path="*" element={<NotFound />} />
-                <Route path="/notfound" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </ThemeProvider>
-        </LocalizationProvider>
+                  <Route path="/editevent/:id" element={
+                    <PrivateRoute>
+                      <EditEvent />
+                    </PrivateRoute>
+                  } />
+
+                  <Route
+                    path="/integration/*"
+                    element={
+                      <PrivateRoute>
+                        <Calendarintegration />
+                      </PrivateRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/booked"
+                    element={<Finished />}
+                  />
+
+                  <Route
+                    path="/login"
+                    element={<Login />}
+                  />
+                  <Route
+                    path="/landing"
+                    element={<Landing />}
+                  />
+                  <Route
+                    path="/schedule/:user_url/:url"
+                    element={<Schedule />}
+                  />
+                  <Route
+                    path="/users/:user_url"
+                    element={<Planning />}
+                  />
+                  <Route
+                    path="/users/:user_url/:url"
+                    element={<Booking />}
+                  />
+                  <Route path="*" element={<NotFound />} />
+                  <Route path="/notfound" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </ThemeProvider>
+          </LocalizationProvider>
+
       </GoogleOAuthProvider>
     </Suspense>
   </StrictMode>

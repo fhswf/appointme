@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
 import { signout } from "../helpers/helpers";
 
 import { Container } from "@mui/material";
@@ -49,13 +48,13 @@ const AddEvent = (props: AddEventProps) => {
             signout();
             navigate("/landing");
           } else {
-            toast.success(res.data.msg);
+            //toast.success(res.data.msg);
             navigate("/app");
           }
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Failed to save event type");
+          //toast.error("Failed to save event type");
         });
     }
   };

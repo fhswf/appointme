@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import AppNavbar from "../components/AppNavbar";
 
 import { Container, Typography } from "@mui/material";
-
-import { toast } from "react-toastify";
 import { getEventByID, updateEvent } from "../helpers/services/event_services";
 import { useNavigate, useParams } from "react-router-dom";
 import { signout } from "../helpers/helpers";
@@ -44,13 +42,13 @@ const EditEvent = (): JSX.Element => {
           signout();
           navigate("/landing");
         } else {
-          toast.success(res.data.msg);
+          //toast.success(res.data.msg);
           navigate("/app");
         }
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Failed to save event type");
+        //toast.error("Failed to save event type");
       });
   };
 

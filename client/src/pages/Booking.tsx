@@ -40,6 +40,8 @@ import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
+import { EventCard } from "../components/EventCard";
+import { EventType } from "../components/EventType";
 
 const theme = createTheme({
   components: {
@@ -132,7 +134,7 @@ type Error = {
 };
 
 const Booking = (props: any) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
 
@@ -142,7 +144,7 @@ const Booking = (props: any) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
-  const [selectedDate, setDate] = useState<Date>(new Date());
+  const [selectedDate, setDate] = useState<Date>();
   const [beginDate, setBeginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setTime] = useState<Date>();
@@ -333,19 +335,21 @@ const Booking = (props: any) => {
     };
 
   const renderSlots = () => {
-    console.log("renderSlots: %o", slots);
+    console.log("renderSlots: %o %o %s", slots, selectedDate, i18n.language);
     const times = getTimes(selectedDate);
     return (
       <>
+        <Typography variant="subtitle1" component="h2" gutterBottom sx={{ marginTop: "16px", marginBottom: "12px", fontWeight: 500 }}>
+          {selectedDate !== undefined ? i18n.t('clear_close_racoon_pat', { value: selectedDate }) : ""}
+        </Typography>
         <Grid
-
-          spacing={2}
+          spacing={1}
           container
           direction="row"
           alignItems="flex-start"
         >
           {times.map((time, index) => (
-            <Grid item key={index}>
+            <Grid key={index}>
               <Button variant="text" onClick={handleTime(time)}>
                 {format(time, "HH:mm")}
               </Button>
@@ -388,25 +392,7 @@ const Booking = (props: any) => {
         {t("Schedule an appointment")}
       </Typography>
 
-      <div >
-        <div >
-          <Avatar
-            sx={{ width: 24, height: 24 }}
-            alt={user ? user.name : ""}
-            src={user ? user.picture_url : ""}
-          />
-        </div>
-        <div >{event.name}</div>
-        <div >
-          <HourglassFull />
-        </div>
-        <div>{event.duration + " minutes"}</div>
-
-        <div>
-          <Room />
-        </div>
-        <div>{event.location}</div>
-      </div>
+      <EventType event={event} user={user} time={selectedTime}></EventType>
 
       <Paper>
         <form onSubmit={handleSubmit}>
@@ -426,6 +412,7 @@ const Booking = (props: any) => {
                 return (
                   <Step key={label} {...stepProps}>
                     <StepLabel {...labelProps}>{label}</StepLabel>
+
                   </Step>
                 );
               })}
@@ -433,7 +420,7 @@ const Booking = (props: any) => {
 
             <React.Fragment>
               <Typography>
-                Step {activeStep + 1}
+                {t("cuddly_spare_felix_stir", { val: activeStep + 1 })}
               </Typography>
               <div>
                 <Button
@@ -442,7 +429,7 @@ const Booking = (props: any) => {
                   onClick={handleBack}
 
                 >
-                  Back
+                  {t("heroic_kind_llama_zip")}
                 </Button>
                 <div />
                 {isStepOptional(activeStep) && (
@@ -451,13 +438,13 @@ const Booking = (props: any) => {
                     onClick={handleSkip}
 
                   >
-                    Skip
+                    {t("awake_jolly_gazelle_lock")}
                   </Button>
                 )}
 
                 {activeStep === steps.length - 1 ? (
                   <Button variant="contained" type="submit">
-                    Book appointment
+                    {t("whole_acidic_parrot_promise")}
                   </Button>
                 ) : (
                   ""
@@ -466,23 +453,22 @@ const Booking = (props: any) => {
             </React.Fragment>
 
             <Grid container spacing={2}>
-              <Grid item hidden={activeStep !== 0}>
+              <Grid size={8} hidden={activeStep > 1}>
                 <StaticDatePicker
                   displayStaticWrapperAs="desktop"
-                  value={selectedDate}
+                  value={selectedDate || new Date()}
                   onChange={handleDateChange}
                   onMonthChange={handleMonthChange}
                   slots={{ day: renderPickerDay }}
-
                 />
               </Grid>
 
-              <Grid item hidden={activeStep !== 1}>
+              <Grid size={4} hidden={selectedDate == null || activeStep > 1}>
                 {renderSlots()}
               </Grid>
 
               {activeStep > 1 ? (
-                <Grid item>
+                <Grid>
                   {user ? (
                     <BookDetails
                       userid={user._id}
@@ -497,9 +483,8 @@ const Booking = (props: any) => {
                     ""
                   )}
                 </Grid>
-              ) : (
-                ""
-              )}
+              ) : null}
+
             </Grid>
           </Box>
         </form>

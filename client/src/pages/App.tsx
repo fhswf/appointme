@@ -3,15 +3,19 @@ import { Link as RouterLink } from "react-router-dom";
 import EventList from "../components/EventList";
 import AppNavbar from "../components/AppNavbar";
 
-import { Box, Container, Fab, Grid, Link, Typography } from "@mui/material";
+import { Box, Container, Fab, Link, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 import AddIcon from "@mui/icons-material/Add";
 
 import { UserContext } from "../components/PrivateRoute";
+import { useTranslation } from "react-i18next";
 
 const App = () => {
   const user = useContext(UserContext).user;
   const [connected, setConnected] = useState(false);
+  const { t } = useTranslation();
+
 
   useEffect(() => {
     if (!user || !user.google_tokens || !user.google_tokens.access_token) {
@@ -32,14 +36,14 @@ const App = () => {
             href="addevent"
           >
             <AddIcon sx={{ mr: 1 }} />
-            Add event type
+            {t("early_sweet_mantis_peek")}
           </Fab>
         </>
       );
     } else {
       return (
         <Link component={RouterLink} className="calcon" to="integration">
-          You need to connect your Calendar first, before you can add Events!
+          {t("pink_trite_ocelot_enrich")}
         </Link>
       );
     }
@@ -58,22 +62,22 @@ const App = () => {
       <Container>
         <Box p="1em">
           <Typography variant="h3" gutterBottom>
-            My Event Types
+            {t("low_clean_haddock_bubble")}
           </Typography>
           <Grid container justifyContent="space-between" alignItems="center">
             {user ? (
               <>
-                <Grid item>
+                <Grid>
                   {user.name}
                   <br />
                   <Link component={RouterLink} to={"/users/" + user.user_url}>
                     {user.user_url}
                   </Link>
                 </Grid>
-                <Grid item>{addEventButton()}</Grid>
+                <Grid>{addEventButton()}</Grid>
               </>
             ) : (
-              <span>Loading</span>
+              <span>{t("deft_suave_bear_pause")}</span>
             )}
           </Grid>
         </Box>

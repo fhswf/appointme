@@ -27,5 +27,20 @@
   "keen_zippy_bulldog_gaze": "Buffer after this event",
   "seemly_fine_octopus_slurp": "Availability",
   "ideal_best_parrot_aim": "Edit Event Type",
-  "each_awake_tadpole_jest": "Edit Event Type"
+  "each_awake_tadpole_jest": "Edit Event Type",
+  "extra_patient_warbler_praise": "No events to book",
+  "petty_swift_piranha_rise": "Schedule event",
+  "broad_close_butterfly_drop": "Schedule an appointment with {{name}}",
+  "weary_known_gazelle_file": "Please select the type of appointment you need and click on the schedule\n      button to book it. You will get a list of available slots in my schedule.",
+  "low_clean_haddock_bubble": "My Event Types",
+  "pink_trite_ocelot_enrich": "You need to connect your Calendar first, before you can add Events!",
+  "early_sweet_mantis_peek": "Add event type",
+  "deft_suave_bear_pause": "Loading",
+  "equal_jolly_thrush_empower": " minutes",
+  "Schedule an appointment": "Schedule an appointment",
+  "heroic_kind_llama_zip": "Back",
+  "awake_jolly_gazelle_lock": "Skip",
+  "whole_acidic_parrot_promise": "Book appointment",
+  "clear_close_racoon_pat": "{{value, dateTime}}",
+  "cuddly_spare_felix_stir": "Step {{val}}"
 }

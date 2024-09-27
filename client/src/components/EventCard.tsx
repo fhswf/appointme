@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 */
 
 type EventCardProps = {
-  event: EventDocument;
+  event: EventDocument | Event;
   token: string;
   url: string;
   setActive: (active: boolean) => void;

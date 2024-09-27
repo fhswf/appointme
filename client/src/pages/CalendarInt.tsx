@@ -19,7 +19,7 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
-  FormGroup,  
+  FormGroup,
   Grid,
   InputLabel,
   MenuItem,
@@ -40,7 +40,6 @@ import {
 
 import EditIcon from "@mui/icons-material/Edit";
 
-import { toast } from "react-toastify";
 import { UserContext } from "../components/PrivateRoute";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
@@ -178,10 +177,10 @@ const PushCalendar = ({ user, calendarList }) => {
 const PullCalendars = ({ user, calendarList }) => {
   const pullCals = calendarList
     ? calendarList.items
-        .filter((item) => user.pull_calendars.includes(item.id))
-        .map((cal) => (
-          <li>{cal.summaryOverride ? cal.summaryOverride : cal.summary}</li>
-        ))
+      .filter((item) => user.pull_calendars.includes(item.id))
+      .map((cal) => (
+        <li>{cal.summaryOverride ? cal.summaryOverride : cal.summary}</li>
+      ))
     : undefined;
 
   const [open, setOpen] = useState(false);
@@ -307,7 +306,7 @@ const Calendarintegration = () => {
           updateUser(token, user)
             .then((user) => {
               console.log("updated user: %o", user);
-              toast.info("using primary calendars by default");
+              //toast.info("using primary calendars by default");
             })
             .catch((err) => {
               console.error("user update failed: %o", err);

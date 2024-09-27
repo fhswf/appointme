@@ -117,12 +117,12 @@ const EditSlot = (props: EditSlotProps) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={9}>
+        <Grid xs={9}>
           <Grid container>
             {slots.map((slot, index) => (
 
               <FormGroup row key={index} style={{ "alignItems": "baseline" }}>
-                <Grid item xs={4} textAlign="end">
+                <Grid xs={4} textAlign="end">
                   <Input
                     type="time"
                     placeholder="Starttime"
@@ -281,7 +281,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <FormControl margin="normal" variant="filled">
               <InputLabel id="duration-label">{t("ideal_this_coyote_inspire")}</InputLabel>
               <Select
@@ -299,7 +299,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <FormControl component="span" margin="normal" variant="filled">
               <InputLabel id="buffer-before-label">{t("mealy_happy_ray_flop")}</InputLabel>
               <Select
@@ -318,7 +318,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <FormControl component="span" margin="normal" variant="filled">
               <InputLabel id="buffer-after-label">{t("close_actual_deer_boil")}</InputLabel>
               <Select
@@ -345,7 +345,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid xs={12} sm={4}>
             <TextField
               id="maxFuture"
               label={t("Maximum days in advance")}
