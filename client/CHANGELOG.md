@@ -1,3 +1,10 @@
+# client [1.6.0](https://github.com/fhswf/book_me/compare/client@1.5.4...client@1.6.0) (2024-09-27)
+
+
+### Features
+
+* **ui:** ui improvements ([c08e636](https://github.com/fhswf/book_me/commit/c08e636eb90c60b4f5099176c0b2d3d57e207297))
+
 ## client [1.5.4](https://github.com/fhswf/book_me/compare/client@1.5.3...client@1.5.4) (2024-09-26)
 
 
