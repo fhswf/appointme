@@ -1,3 +1,10 @@
+## client [1.5.4](https://github.com/fhswf/book_me/compare/client@1.5.3...client@1.5.4) (2024-09-26)
+
+
+### Bug Fixes
+
+* translation loading ([3ee174c](https://github.com/fhswf/book_me/commit/3ee174c058911b9c2e99cc1b993ca924b6d1d248))
+
 ## client [1.5.3](https://github.com/fhswf/book_me/compare/client@1.5.2...client@1.5.3) (2024-09-26)
 
 
