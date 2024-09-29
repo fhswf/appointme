@@ -1,3 +1,10 @@
+## backend [1.7.10](https://github.com/fhswf/book_me/compare/backend@1.7.9...backend@1.7.10) (2024-09-29)
+
+
+### Bug Fixes
+
+* deployment on appoint.gawron.cloud ([ecf8498](https://github.com/fhswf/book_me/commit/ecf849879389344b76d398913dc205203fd83668))
+
 ## backend [1.7.9](https://github.com/fhswf/book_me/compare/backend@1.7.8...backend@1.7.9) (2024-09-24)
 
 
