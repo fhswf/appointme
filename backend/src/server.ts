@@ -64,7 +64,7 @@ router.use("/users/", userRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
-app.use("/meeting/api/v1", router);
+app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
