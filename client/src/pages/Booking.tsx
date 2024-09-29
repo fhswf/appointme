@@ -152,7 +152,24 @@ const Booking = (props: any) => {
   const [error, setError] = useState<Error | null>(null);
   const [isPending, startTransition] = useTransition()
 
-
+  const updateSlots = (startDate: Date) => {
+    getAvailableTimes(
+      startDate,
+      addDays(addMonths(startDate, 6), 1),
+      event.url,
+      user._id
+    )
+      .then((slots) => {
+        console.log("slots %o", slots);
+        setSlots(slots);
+      })
+      .catch((err) => {
+        setError({
+          message: "could not get available time slots",
+          details: err,
+        });
+      });
+  }
 
   useEffect(() => {
 
@@ -184,27 +201,9 @@ const Booking = (props: any) => {
   }, [data.url, data.user_url, navigate, selectedDate]);
 
   useEffect(() => {
-    const updateSlots = () => {
-      getAvailableTimes(
-        beginDate,
-        addDays(addMonths(beginDate, 1), 1),
-        event.url,
-        user._id
-      )
-        .then((slots) => {
-          console.log("slots %o", slots);
-          setSlots(slots);
-        })
-        .catch((err) => {
-          setError({
-            message: "could not get available time slots",
-            details: err,
-          });
-        });
-    }
 
     if (user && event && event.url) {
-      startTransition(() => updateSlots());
+      startTransition(() => updateSlots(beginDate));
     }
 
   }, [beginDate, user, event]);
@@ -254,7 +253,9 @@ const Booking = (props: any) => {
   };
 
   const handleMonthChange = (date: Date) => {
-    setBeginDate(date);
+    //setBeginDate(date);
+    console.log("handleMonthChange: %o", date);
+    //updateSlots(date);
   };
 
   const handleDateChange = (newValue: Date) => {
@@ -455,6 +456,7 @@ const Booking = (props: any) => {
             <Grid container spacing={2}>
               <Grid size={8} hidden={activeStep > 1}>
                 <StaticDatePicker
+                  minDate={beginDate}
                   displayStaticWrapperAs="desktop"
                   value={selectedDate || new Date()}
                   onChange={handleDateChange}

@@ -8,11 +8,11 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Grid,
   IconButton,
   Snackbar,
   Switch,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 import { Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 */
 
 type EventCardProps = {
-  event: EventDocument | Event;
+  event: EventDocument;
   token: string;
   url: string;
   setActive: (active: boolean) => void;
@@ -77,7 +77,8 @@ export const EventCard = (props: EventCardProps) => {
 
   return (
     <>
-      <Grid item xs={12} sm={6}>
+      <Grid size={4}>
+
         <Card>
           <CardHeader
             action={
