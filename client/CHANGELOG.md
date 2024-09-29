@@ -1,3 +1,10 @@
+## client [1.6.1](https://github.com/fhswf/book_me/compare/client@1.6.0...client@1.6.1) (2024-09-29)
+
+
+### Bug Fixes
+
+* ui glitches ([281c2a4](https://github.com/fhswf/book_me/commit/281c2a4ad068bcd8a6108d490ccb6dfe4c90ae26))
+
 # client [1.6.0](https://github.com/fhswf/book_me/compare/client@1.5.4...client@1.6.0) (2024-09-27)
 
 
