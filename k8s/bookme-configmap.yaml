@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
-  API_URL: https://hopper.fh-swf.de/meeting/api/v1
-  CLIENT_URL: https://hopper.fh-swf.de/meeting
+  API_URL: https://appoint.gawron.cloud/api/v1
+  CLIENT_URL: https://appoint.gawron.cloud
   MONGO_URI: mongodb://mongo-bookme:27017
   TZ: Europe/Berlin
 kind: ConfigMap
