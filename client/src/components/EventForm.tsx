@@ -56,7 +56,7 @@ const EditSlot = (props: EditSlotProps) => {
     setSlots(
       props.slots.filter(
         (slot) =>
-          true || (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
+          (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
       )
     );
   }, [props.slots]);
@@ -121,7 +121,7 @@ const EditSlot = (props: EditSlotProps) => {
           <Grid container>
             {slots.map((slot, index) => (
 
-              <FormGroup row key={index} style={{ "alignItems": "baseline" }}>
+              <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
                 <Grid xs={4} textAlign="end">
                   <Input
                     type="time"

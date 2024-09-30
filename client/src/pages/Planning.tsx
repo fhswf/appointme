@@ -77,8 +77,8 @@ const Planning = (props: any) => {
           justifyContent="space-evenly"
           alignItems="stretch"
         >
-          {events.map((event, index) => (
-            <Grid sm={4} xs={6} key={index}>
+          {events.map((event) => (
+            <Grid sm={4} xs={6} key={event._id}>
               <EventType
                 event={event}
                 user={user}
