@@ -10,7 +10,7 @@ import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { UserModel, User } from "../models/User.js";
+import { UserModel, User, isValidObjectId } from "../models/User.js";
 import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
@@ -331,6 +331,10 @@ function deleteTokens(userid: string) {
  * @param {object} token  - The Token Object retrieved from Google
  */
 function saveTokens(user: string, token) {
+  if (!isValidObjectId(user)) {
+    console.error('Invalid user ID');
+    return;
+  }
   const _KEYS = ["access_token", "refresh_token", "scope", "expiry_date"];
   const google_tokens = {};
   _KEYS.forEach(key => {
