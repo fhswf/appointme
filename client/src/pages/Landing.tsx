@@ -5,37 +5,37 @@ import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
 import { Paper, Container, Typography, List, ListItem, ListItemText } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const Landing = (props: any) => {
+  const { t, i18n } = useTranslation();
   return (
     <div className="landing">
       {isAuthenticated() ? <Navigate to="/app" /> : null}
       <AppNavbar />
       <Paper>
         <Container>
-          <h2>How Bookme works</h2>
+
+          <Typography variant="h3">{t("orange_grand_racoon_fall")}</Typography>
           <Typography variant="body1">
-            Bookme is a simple, easy to use, appointment booking system. It
-            allows you to create events, share your link and let users book
-            appointments with you.
+            {t("male_patient_hedgehog_ask")}
           </Typography>
           <List>
             <ListItem>
               <ListItemText primary="Step 1: Configure your calendars"
-                secondary="Specify where BookMe adds your appointments and where it checks whether you are busy." />
+                secondary={t("factual_moving_hawk_belong")} />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Step 2: Create events"
-                secondary="Add your available times and you're
-                good to go!"/>
+              <ListItemText primary={t("pink_polite_racoon_earn")}
+                secondary={t("happy_wise_mantis_laugh")} />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Step 3: Share your link"
-                secondary="Users can use this link to book appointments." />
+              <ListItemText primary={t("careful_misty_bullock_splash")}
+                secondary={t("extra_misty_panda_grip")} />
             </ListItem>
             <ListItem>
-              <ListItemText primary="Done! Congrats!"
-                secondary="Once a user books an appointment, the event is added to your calendar." />
+              <ListItemText primary={t("game_frail_vole_treasure")}
+                secondary={t("still_helpful_koala_trust")} />
             </ListItem>
           </List>
         </Container>

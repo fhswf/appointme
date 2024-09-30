@@ -68,7 +68,9 @@ const App = () => {
             {user ? (
               <>
                 <Grid>
-                  {user.name}
+                  <Typography variant="h5">
+                    {user.name}
+                  </Typography>
                   <br />
                   <Link component={RouterLink} to={"/users/" + user.user_url}>
                     {user.user_url}
@@ -82,7 +84,7 @@ const App = () => {
           </Grid>
         </Box>
 
-        <Box p="1em">{renderList()}</Box>
+        {renderList()}
       </Container>
     </>
   );

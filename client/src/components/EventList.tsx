@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
-import { Grid } from "@mui/material";
-
+import Grid from "@mui/material/Grid2";
 
 import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
+import { useTranslation } from "react-i18next";
 
 
 type EventListProps = {
@@ -19,6 +19,7 @@ type EventListProps = {
 const EventList = (props: EventListProps) => {
   const token = JSON.parse(localStorage.getItem("access_token") as string);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
@@ -40,7 +41,7 @@ const EventList = (props: EventListProps) => {
 
   const list =
     events.length === 0 ? (
-      <div>No events yet, create one</div>
+      <div>{t("sunny_great_halibut_empower")}</div>
     ) : (
       events.map((event, index) => (
         <EventCard
@@ -62,7 +63,7 @@ const EventList = (props: EventListProps) => {
   return (
     <>
       <Grid
-        container
+        size={12}
         spacing={3}
         justifyItems="space-around"
         alignItems="stretch"

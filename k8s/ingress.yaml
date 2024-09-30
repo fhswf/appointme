@@ -26,20 +26,3 @@ spec:
               number: 5000
         path: /api
         pathType: Prefix
-  - host: hopper.fh-swf.de
-    http:
-      paths:
-      - backend:
-          service:
-            name: client
-            port:
-              number: 80
-        path: /meeting
-        pathType: Prefix
-      - backend:
-          service:
-            name: bookme
-            port:
-              number: 5000
-        path: /meeting/api
-        pathType: Prefix
