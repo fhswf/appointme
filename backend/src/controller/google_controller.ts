@@ -67,7 +67,7 @@ export const googleCallback = (req: Request, res: Response): void => {
   const code = <string>req.query.code;
   const user = <string>req.query.state;
   if (code) {
-    void oAuth2Client.getToken(code)
+    oAuth2Client.getToken(code)
       .then(token => {
         saveTokens(user, token);
         res.redirect(`${process.env.CLIENT_URL}${process.env.BASE_PATH}/integration/select`);
@@ -149,7 +149,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
         .process(req.body.event.description as string)
       */
 
-      void UserModel.findOne({ _id: req.params.user_id })
+      UserModel.findOne({ _id: req.params.user_id })
         .then(user => {
 
           const event: Schema$Event = {
@@ -196,7 +196,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
 
           oAuth2Client.setCredentials(user.google_tokens);
           console.log('insert: event=%j', event)
-          void google.calendar({ version: "v3" }).events
+          google.calendar({ version: "v3" }).events
             .insert({
               auth: oAuth2Client,
               calendarId: user.push_calendar,
@@ -230,7 +230,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   let tokens = null;
   const query = UserModel.findOne({ _id: userid });
-  void query.exec()
+  query.exec()
     .then((user: User) => {
       tokens = user.google_tokens;
       if (tokens.expiry_date <= Date.now()) {
@@ -316,7 +316,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
 }
 
 function deleteTokens(userid: string) {
-  void UserModel.findOneAndUpdate(
+  UserModel.findOneAndUpdate(
     { _id: userid },
     { $unset: { google_tokens: "" } }
   ).then(res => {
@@ -338,7 +338,7 @@ function saveTokens(user: string, token) {
       google_tokens[key] = <string>token.tokens[key];
     }
   });
-  void UserModel.findOneAndUpdate({ _id: user }, { google_tokens }, { new: true })
+  UserModel.findOneAndUpdate({ _id: user }, { google_tokens }, { new: true })
     .then(user => {
       console.log('saveTokens: %o', user)
     })
