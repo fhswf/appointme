@@ -1,3 +1,10 @@
+## client [1.6.2](https://github.com/fhswf/book_me/compare/client@1.6.1...client@1.6.2) (2024-09-30)
+
+
+### Bug Fixes
+
+* **i18n:** landing page ([1868975](https://github.com/fhswf/book_me/commit/18689756cb61146b6662e9f73bf202ca28d4414c))
+
 ## client [1.6.1](https://github.com/fhswf/book_me/compare/client@1.6.0...client@1.6.1) (2024-09-29)
 
 
