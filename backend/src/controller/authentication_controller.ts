@@ -6,8 +6,7 @@
 import { UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
 import { createTransport } from "nodemailer";
-import { google } from "googleapis";
-import { OAuth2Client, Credentials } from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 
 // Dotenv Config
@@ -17,10 +16,7 @@ const env = dotenv.config({
 });
 
 import { compare } from 'bcrypt';
-
-import pkg from 'jsonwebtoken';
-const { sign, verify } = pkg;
-import { JwtPayload } from 'jsonwebtoken';
+import { sign, verify, JwtPayload } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
@@ -172,7 +168,7 @@ export const loginController = (req, res): void => {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ errors: newError });
   } else {
-    void UserModel.findOne({ email })
+    UserModel.findOne({ email })
       .exec()
       .then(user => {
         if (!user) {

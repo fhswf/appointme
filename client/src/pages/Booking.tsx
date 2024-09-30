@@ -7,12 +7,10 @@ import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-picke
 
 import {
   createTheme,
-  ThemeProvider,
   styled
 } from "@mui/material/styles";
 
 import {
-  Avatar,
   Box,
   Button,
   Container,
@@ -20,15 +18,11 @@ import {
   Stepper,
   Step,
   StepLabel,
-  TextField,
   Typography,
 } from "@mui/material";
 
 import Grid from '@mui/material/Grid2';
 
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
-import { HourglassFull, Room } from "@mui/icons-material";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser } from "../helpers/services/event_services";
@@ -40,7 +34,6 @@ import { insertIntoGoogle } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
-import { EventCard } from "../components/EventCard";
 import { EventType } from "../components/EventType";
 
 const theme = createTheme({
@@ -293,7 +286,7 @@ const Booking = (props: any) => {
 
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
-    const { day, selectedDate } = props;
+    const { day } = props;
     //console.log("rendering day: %o %o", day, props);
     return (
       <StyledPickersDay
@@ -349,8 +342,8 @@ const Booking = (props: any) => {
           direction="row"
           alignItems="flex-start"
         >
-          {times.map((time, index) => (
-            <Grid key={index}>
+          {times.map((time) => (
+            <Grid key={time}>
               <Button variant="text" onClick={handleTime(time)}>
                 {format(time, "HH:mm")}
               </Button>
