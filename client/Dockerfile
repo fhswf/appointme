@@ -1,8 +1,8 @@
 FROM node:18-bullseye AS build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
 ARG BASE_PATH=/
-ARG APP_URL=https://hopper.fh-swf.de/meeting
-ARG API_URL=https://hopper.fh-swf.de/meeting/api/v1
+ARG APP_URL=https://appoint.gawron.cloud
+ARG API_URL=https://appoint.gawron.cloud/api/v1
 
 ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
