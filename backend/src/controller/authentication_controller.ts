@@ -5,6 +5,7 @@
  */
 import { UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
+import validator from "validator";
 import { createTransport } from "nodemailer";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
@@ -161,14 +162,15 @@ export const activationController = (req, res): void => {
  * @param {response} res
  */
 export const loginController = (req, res): void => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+  email = validator.isEmail(email) ? validator.normalizeEmail(email) : "";
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ errors: newError });
   } else {
-    UserModel.findOne({ email })
+    UserModel.findOne({ email: { $eq: email } })
       .exec()
       .then(user => {
         if (!user) {
