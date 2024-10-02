@@ -41,12 +41,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Analyze with SonarQube
 
+      # Install package dependencies
+      - name: Install
+        run: yarn install --immutable
+
+      # Build
+      - name: Build
+        run: yarn workspace common build
+
+      # Run tests
+      - name: Test
+        run: yarn workspaces foreach --all run ci
+
+      - name: Test Summary
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            **/TEST-*.xml
+      - name: Analyze with SonarQube
         # You can pin the exact commit or the version.
         # uses: SonarSource/sonarqube-scan-action@v1.1.0
         uses: sonarsource/sonarqube-scan-action@master
