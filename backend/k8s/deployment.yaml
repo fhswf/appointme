@@ -78,4 +78,8 @@ spec:
             - containerPort: 5000
           resources: {}
       restartPolicy: Always
+      automountServiceAccountToken: false
+      resources:
+        limits:
+          memory: 100Mi
 status: {}
