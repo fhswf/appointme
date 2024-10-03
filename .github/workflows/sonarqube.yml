@@ -65,7 +65,7 @@ jobs:
         if: always()
 
       - name: Post PR Comment
-        run: npx github-actions-ctrf ctrf-report.json --pr-comment
+        run: npx github-actions-ctrf **/ctrf/ctrf-report.json --pr-comment
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
