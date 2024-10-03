@@ -6945,6 +6945,7 @@ __metadata:
     "@semantic-release/npm": "npm:^12.0.1"
     "@semantic-release/release-notes-generator": "npm:^14.0.1"
     dotenv-vault: "npm:^1.26.2"
+    jest-ctrf-json-reporter: "npm:^0.0.9"
     semantic-release: "npm:^24.1.1"
   languageName: unknown
   linkType: soft
@@ -8022,7 +8023,7 @@ __metadata:
     date-fns-tz: "npm:^3.1.3"
     eslint: "npm:^7.19.0"
     jest: "npm:^29.7.0"
-    jest-junit: "npm:^16.0.0"
+    jest-ctrf-json-reporter: "npm:^0.0.9"
     jsdoc: "npm:^3.6.7"
     jshint: "npm:^2.12.0"
     mocha: "npm:^8.4.0"
@@ -13344,6 +13345,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-ctrf-json-reporter@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "jest-ctrf-json-reporter@npm:0.0.9"
+  checksum: 10/67bbd5939a1d24f7516d74557d881ead447f2a035752ecf788b8e9d82836a49764d363e4b3200555fdcaf84e3334f1dc803300d56154c07ced0380296cdd20a2
+  languageName: node
+  linkType: hard
+
 "jest-diff@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest-diff@npm:29.7.0"
@@ -13419,18 +13427,6 @@ __metadata:
     fsevents:
       optional: true
   checksum: 10/8531b42003581cb18a69a2774e68c456fb5a5c3280b1b9b77475af9e346b6a457250f9d756bfeeae2fe6cbc9ef28434c205edab9390ee970a919baddfa08bb85
-  languageName: node
-  linkType: hard
-
-"jest-junit@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "jest-junit@npm:16.0.0"
-  dependencies:
-    mkdirp: "npm:^1.0.4"
-    strip-ansi: "npm:^6.0.1"
-    uuid: "npm:^8.3.2"
-    xml: "npm:^1.0.1"
-  checksum: 10/2c33ee8bfd0c83b9aa1f8ba5905084890d5f519d294ccc2829d778ac860d5adffffec75d930f44f1d498aa8370c783e0aa6a632d947fb7e81205f0e7b926669d
   languageName: node
   linkType: hard
 
@@ -22230,13 +22226,6 @@ __metadata:
     imurmurhash: "npm:^0.1.4"
     signal-exit: "npm:^4.0.1"
   checksum: 10/648efddba54d478d0e4330ab6f239976df3b9752b123db5dc9405d9b5af768fa9d70ce60c52fdbe61d1200d24350bc4fbcbaf09288496c2be050de126bd95b7e
-  languageName: node
-  linkType: hard
-
-"xml@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "xml@npm:1.0.1"
-  checksum: 10/6c4c31a1308e45732e5ac6b50edbca0e8f7abe5cb5de10215d8e3c688819fe7c7706e056f6fb59b1a23fdf1000c2d7a8bba0a89e94aa1796cd2376d9a5ba401e
   languageName: node
   linkType: hard
 
