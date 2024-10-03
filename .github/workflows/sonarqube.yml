@@ -58,14 +58,14 @@ jobs:
 
       # Run tests
       - name: Test
-        run: yarn workspaces foreach --all run ci
+        run: yarn run ci
 
       - name: Test Summary
-        run: npx github-actions-ctrf common/ctrf/ctrf-report.json
+        run: npx github-actions-ctrf ctrf/ctrf-report.json
         if: always()
 
       - name: Post PR Comment
-        run: npx github-actions-ctrf common/ctrf/ctrf-report.json --pr-comment
+        run: npx github-actions-ctrf ctrf/ctrf-report.json --pr-comment
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

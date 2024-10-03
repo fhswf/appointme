@@ -4,7 +4,7 @@ const config: Config = {
   verbose: true,
   reporters: [
     'default',
-    ['jest-ctrf-json-reporter', {}],
+    ['jest-ctrf-json-reporter', { outputFile: 'common-ctrf.json', outputDir: '../crtf' }],
   ],
   testEnvironment: "node",
   transform: {

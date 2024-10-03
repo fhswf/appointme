@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run src/**/*.spec.ts --coverage",
-    "ci": "vitest run src/**/*.spec.ts --coverage; yarn dlx junit-to-ctrf TEST-backend.xml",
+    "ci": "vitest run src/**/*.spec.ts --coverage; yarn dlx junit-to-ctrf -o ../crtf/backend-ctrf.json TEST-backend.xml",
     "start": "node build/server.js",
     "server": "nodemon src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
