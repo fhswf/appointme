@@ -61,11 +61,8 @@ jobs:
         run: yarn workspaces foreach --all run ci
 
       - name: Test Summary
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        run: npx github-actions-ctrf **/ctrf/ctrf-report.json
         if: always()
-        with:
-          files: |
-            **/TEST-*.xml
 
       - name: Analyze with SonarQube
         if: always()
