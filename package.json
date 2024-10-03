@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
-    "ci": "yarn workspaces foreach --all run ci; yarn dlx merge-ctrf crtf",
+    "ci": "yarn workspaces foreach --all run ci; yarn dlx merge-ctrf -k ctrf",
     "backend": "yarn workspace backend start",
     "client": "yarn workspace client start",
     "build:common": "yarn workspace common build",
