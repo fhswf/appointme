@@ -7788,6 +7788,7 @@ __metadata:
     cypress: "npm:^13.15.0"
     cypress-ctrf-json-reporter: "npm:^0.0.11"
     date-fns: "npm:^4.0.0"
+    date-fns-tz: "npm:^3.2.0"
     dayjs: "npm:^1.11.13"
     dotenv-cli: "npm:^7.4.2"
     eslint: "npm:^9.11.1"
@@ -7801,6 +7802,7 @@ __metadata:
     jsonwebtoken: "npm:^9.0.2"
     moment: "npm:^2.30.1"
     node-sass: "npm:^9.0.0"
+    notistack: "npm:^3.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-i18next: "npm:^15.0.2"
@@ -7863,6 +7865,13 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: 10/d9c79efba655f0bf601ab299c57eb54cbaa9860fb011aee9d89ed5ac0d12df1660ab7642fddaabb9a26b7eff0e117d4520512cb70798319ff5d30a111b5310c2
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^1.1.0":
+  version: 1.2.1
+  resolution: "clsx@npm:1.2.1"
+  checksum: 10/5ded6f61f15f1fa0350e691ccec43a28b12fb8e64c8e94715f2a937bc3722d4c3ed41d6e945c971fc4dcc2a7213a43323beaf2e1c28654af63ba70c9968a8643
   languageName: node
   linkType: hard
 
@@ -8551,6 +8560,15 @@ __metadata:
   peerDependencies:
     date-fns: ^3.0.0
   checksum: 10/eb5cb3b2cd152340004efda9f7905e571cf5140b8e85267b1eaa36c2f1eaa54a0f2e3b26e19794f2aca4d3b15aa3d52a5b2dadb540fcec74b239049c7792a981
+  languageName: node
+  linkType: hard
+
+"date-fns-tz@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "date-fns-tz@npm:3.2.0"
+  peerDependencies:
+    date-fns: ^3.0.0 || ^4.0.0
+  checksum: 10/8ab4745f00b40381220f0a7a2ec16e217cb629d4018a19047264d289dd260322baa23e19b3ed63c7e553f9ad34bea9dea105391132930a3e141e9a0a53e54af2
   languageName: node
   linkType: hard
 
@@ -11510,6 +11528,15 @@ __metadata:
     lodash: "npm:^4.17.21"
     minimatch: "npm:~3.0.2"
   checksum: 10/04ac30656f9fc34e7e30a700ef39bfc357629a9214e2e228ee714bc0f1be60c5e4e2a78facafa5588889b02d25f02012d9e8c057704040e19e86b920effe54d5
+  languageName: node
+  linkType: hard
+
+"goober@npm:^2.0.33":
+  version: 2.1.14
+  resolution: "goober@npm:2.1.14"
+  peerDependencies:
+    csstype: ^3.0.10
+  checksum: 10/372f18333ef64c403d29be7c1175cc9cd74cb947ec52cd42fbb1cf3f9870ac1dfec9c7671192cbf47ebc0ec17d8b05b6ef9a2b92952397d5b555a692381d5eaa
   languageName: node
   linkType: hard
 
@@ -16698,6 +16725,19 @@ __metadata:
   version: 8.0.0
   resolution: "normalize-url@npm:8.0.0"
   checksum: 10/4347d6ee39d9e1e7138c9e7c0b459c1e07304d9cd7c62d92c1ca01ed1f0c5397b292079fe7cfa953f469722ae150eec82e14b97e2175af39ede0b58f99ef8cac
+  languageName: node
+  linkType: hard
+
+"notistack@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "notistack@npm:3.0.1"
+  dependencies:
+    clsx: "npm:^1.1.0"
+    goober: "npm:^2.0.33"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 10/be6ca9e1c2f06118fe0545eaaf91f2f260efe5b1ff3b3f6575a346d5c9f88666e7f13ef4369a56037a2c89c030c191f034f6e6b5a28be704540a23442e2d19a9
   languageName: node
   linkType: hard
 

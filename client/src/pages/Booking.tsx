@@ -35,6 +35,7 @@ import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
+import { useSnackbar } from "notistack";
 
 const theme = createTheme({
   components: {
@@ -130,6 +131,7 @@ const Booking = (props: any) => {
   const { t, i18n } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   type Details = { name: string; email: string; description: string };
 
@@ -189,6 +191,8 @@ const Booking = (props: any) => {
         }
       })
       .catch((err) => {
+        console.log("error getting user: %o", err);
+        enqueueSnackbar("Error getting user", { variant: "error", autoHideDuration: 15000, className: "error" });
         return err;
       });
   }, [data.url, data.user_url, navigate, selectedDate]);

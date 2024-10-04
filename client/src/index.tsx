@@ -18,6 +18,7 @@ import Finished from "./pages/Finished";
 
 import { isAuthenticated } from "./helpers/helpers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { SnackbarProvider } from 'notistack';
 
 import "./i18n";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -88,7 +89,8 @@ console.log("localeText: %o", deDE.components.MuiLocalizationProvider.defaultPro
 root.render(
   <StrictMode>
     <Suspense fallback="loading">
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <SnackbarProvider maxSnack={3}>
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
 
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}>
             <ThemeProvider theme={theme}>
@@ -159,7 +161,8 @@ root.render(
             </ThemeProvider>
           </LocalizationProvider>
 
-      </GoogleOAuthProvider>
+        </GoogleOAuthProvider>
+      </SnackbarProvider>
     </Suspense>
   </StrictMode>
 );
