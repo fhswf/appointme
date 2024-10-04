@@ -57,7 +57,7 @@
     "start": "vite",
     "build": "vite build",
     "test": "npx cypress run --spec cypress/integration/**/*.spec.js --record",
-    "cy:ci": "cypress run --headless  --e2e",
+    "cy:ci": "TZ=Europe/Berlin cypress run --headless  --e2e",
     "ci": "start-server-and-test start http://localhost:5173/meeting cy:ci"
   },
   "eslintConfig": {
