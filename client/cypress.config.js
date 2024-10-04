@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 5173;
 
 export default defineConfig({
   e2e: {
+    env: {
+      REACT_APP_API_URL: '/api/v1'
+    },
     baseUrl: `http://localhost:${PORT}`,
     video: true,
     projectId: "pjkkoc",
