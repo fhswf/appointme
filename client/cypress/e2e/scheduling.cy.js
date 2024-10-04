@@ -17,7 +17,7 @@ context('Error handling', () => {
 context('Scheduling page', () => {
   beforeEach(() => {
     //const now = new Date(2021, 4, 25).getTime()
-    cy.clock(Date.UTC(2021, 4, 25), ['Date'])
+    cy.clock(Date.UTC(2024, 9, 4), ['Date'])
     cy.intercept('/api/v1/users/findUserByUrl?url=christian-gawron', { fixture: 'userByURL' }).as('getUser')
     cy.intercept('/api/v1/events/getEventBy?user=109150731150582581691&url=sprechstunde', { fixture: 'event' }).as('getEvent')
     cy.intercept('/api/v1/events/getAvailable?*', { fixture: 'available' }).as('getAvailable')
@@ -31,8 +31,9 @@ context('Scheduling page', () => {
 
     it('Check simple schedule flow', () => {
       cy.wait(['@getUser', '@getEvent', '@getAvailable'], { timeout: 10000 })
-      cy.get('.MuiPickersDay-today').should('contain', '25').click()
-      cy.contains('07:00').click()
+      cy.get('.MuiDateCalendar-root').should('contain', '8')
+      cy.get('.MuiPickersDay-root').contains('8').click()
+      cy.contains('11:00').click()
       cy.get('[name=name]').type('Max Mustermann')
       cy.get('[name=email]').type('mustermann.max@fh-swf.de')
       cy.get('form').submit()
@@ -51,8 +52,9 @@ context('Scheduling page', () => {
 
     it('should show an error message', () => {
       cy.wait(['@getUser', '@getEvent', '@getAvailable'], { timeout: 10000 })
-      cy.get('.MuiPickersDay-today').should('contain', '25').click()
-      cy.contains('07:00').click()
+      cy.get('.MuiDateCalendar-root').should('contain', '8')
+      cy.get('.MuiPickersDay-root').contains('8').click()
+      cy.contains('11:00').click()
       cy.get('[name=name]').type('Max Mustermann')
       cy.get('[name=email]').type('mustermann.max@fh-swf.de')
       cy.get('form').submit()

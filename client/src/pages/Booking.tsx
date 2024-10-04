@@ -374,12 +374,16 @@ const Booking = (props: any) => {
         details.name,
         details.email,
         details.description
-      ).then(() => {
-        //toast.success("Event successfully booked!");
-        navigate(`/booked`, {
-          state: { user, event, time: selectedTime },
+      )
+        .then(() => {
+          enqueueSnackbar("Event successfully booked!", { variant: "success" });
+          navigate(`/booked`, {
+            state: { user, event, time: selectedTime },
+          });
+        })
+        .catch((err) => {
+          enqueueSnackbar("Could not book event", { variant: "error", autoHideDuration: 15000, className: "error" });
         });
-      });
     }
   };
 
