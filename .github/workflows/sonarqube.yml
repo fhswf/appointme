@@ -60,10 +60,6 @@ jobs:
       - name: Test
         run: yarn run ci
 
-      - name: Test Summary
-        run: npx github-actions-ctrf ctrf/ctrf-report.json
-        if: always()
-
       - name: Post PR Comment
         run: npx github-actions-ctrf ctrf/ctrf-report.json --pr-comment
         if: always()
