@@ -24,7 +24,7 @@
 # Feel free to take a look at our documentation (https://docs.sonarqube.org/latest/analysis/github-integration/)
 # or reach out to our community forum if you need some help (https://community.sonarsource.com/c/sq/10)
 
-name: SonarQube analysis
+name: Test & SonarQube analysis
 
 on:
   push:
@@ -65,6 +65,12 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Upload Cypress screenshots
+          path: client/cypress/screenshots
+          overwrite: true
 
       - name: Analyze with SonarQube
         if: always()
