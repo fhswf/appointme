@@ -33,6 +33,9 @@ ARG TZ=Europe/Berlin
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+ENV APP_URL=${APP_URL}
+ENV APP_API_URL=${APP_API_URL}
+
 WORKDIR /usr/src/app 
 COPY --from=build /base/package.json .
 COPY --from=build /base/yarn.lock .
