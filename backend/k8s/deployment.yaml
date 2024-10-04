@@ -76,10 +76,10 @@ spec:
           name: bookme
           ports:
             - containerPort: 5000
-          resources: {}
+          resources: 
+            limits:
+              memory: 100Mi
       restartPolicy: Always
       automountServiceAccountToken: false
-      resources:
-        limits:
-          memory: 100Mi
+
 status: {}
