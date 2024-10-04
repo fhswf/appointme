@@ -59,6 +59,9 @@ jobs:
       # Run tests
       - name: Test
         run: yarn run ci
+        env:
+          CI: true
+          REACT_APP_API_URL: /api/v1
 
       - name: Post PR Comment
         run: npx github-actions-ctrf ctrf/ctrf-report.json --pr-comment

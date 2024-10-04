@@ -89,7 +89,6 @@ export interface GoogleTokens extends Document {
 export interface User {
   email: string;
   name: string;
-  password: string;
   user_url: string;
   picture_url: string;
   google_tokens: GoogleTokens;
