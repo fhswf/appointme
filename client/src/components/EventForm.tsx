@@ -21,7 +21,7 @@ import {
 
 import Grid from '@mui/material/Grid2';
 
-import { Add, Delete, VerticalAlignCenter } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "common";
 import { t } from "i18next";
@@ -56,7 +56,7 @@ const EditSlot = (props: EditSlotProps) => {
     setSlots(
       props.slots.filter(
         (slot) =>
-          true || (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
+          (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
       )
     );
   }, [props.slots]);
@@ -121,7 +121,7 @@ const EditSlot = (props: EditSlotProps) => {
           <Grid container>
             {slots.map((slot, index) => (
 
-              <FormGroup row key={index} style={{ "alignItems": "baseline" }}>
+              <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
                 <Grid xs={4} textAlign="end">
                   <Input
                     type="time"
@@ -130,10 +130,10 @@ const EditSlot = (props: EditSlotProps) => {
                     value={slot.start}
                   />
                 </Grid>
-                <Grid item xs={2} textAlign="center">
+                <Grid xs={2} textAlign="center">
                   –
                 </Grid>
-                <Grid item xs={4} textAlign="start">
+                <Grid xs={4} textAlign="start">
                   <Input
                     type="time"
                     placeholder="Endtime"
@@ -141,7 +141,7 @@ const EditSlot = (props: EditSlotProps) => {
                     value={slot.end}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                   <Button onClick={deleteSlot(index)}>
                     <Delete />
                   </Button>

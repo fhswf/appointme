@@ -19,7 +19,7 @@ type EventListProps = {
 const EventList = (props: EventListProps) => {
   const token = JSON.parse(localStorage.getItem("access_token") as string);
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
@@ -45,7 +45,7 @@ const EventList = (props: EventListProps) => {
     ) : (
       events.map((event, index) => (
         <EventCard
-          key={index}
+          key={event._id}
           event={event}
           url={props.url}
           setActive={(active) => {

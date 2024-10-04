@@ -1,11 +1,20 @@
 import { defineConfig } from 'cypress'
+import { GenerateCtrfReport } from 'cypress-ctrf-json-reporter'
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5173;
 
 export default defineConfig({
-    e2e: {
-        baseUrl: `http://localhost:${PORT}/meeting`,
-        video: true,
-        projectId: "pjkkoc"
+  e2e: {
+    baseUrl: `http://localhost:${PORT}`,
+    video: true,
+    projectId: "pjkkoc",
+    setupNodeEvents(on, config) {
+      // Implement node event listeners here
+      new GenerateCtrfReport({
+        on,
+        outputFile: 'client-report.json',
+        outputDir: '../ctrf',
+      })
     },
+  },
 })
