@@ -1,5 +1,7 @@
 import { defineConfig } from 'cypress'
 import { GenerateCtrfReport } from 'cypress-ctrf-json-reporter'
+import coverageTask from "@cypress/code-coverage/task";
+
 
 const PORT = process.env.PORT || 5173;
 
@@ -13,11 +15,14 @@ export default defineConfig({
     projectId: "pjkkoc",
     setupNodeEvents(on, config) {
       // Implement node event listeners here
+
       new GenerateCtrfReport({
         on,
         outputFile: 'client-report.json',
         outputDir: '../ctrf',
       })
+      coverageTask(on, config)
+      return config
     },
   },
 })
