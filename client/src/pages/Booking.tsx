@@ -31,7 +31,7 @@ import clsx from "clsx";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
+import { EMPTY_EVENT, Event, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
@@ -66,61 +66,6 @@ const theme = createTheme({
   },
 });
 
-/*
-const useStyles = makeStyles((theme) => ({
-  picker: {
-    "& button": {
-      borderRadius: "50%",
-      "&.highlight": {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        "&:hover, &:focus": {
-          backgroundColor: theme.palette.primary.light,
-        },
-      },
-    },
-  },
-
-  date: {
-    borderRadius: "50%",
-  },
-  header: {
-    "&.MuiTypography-root": {
-      marginTop: "16px",
-      marginBottom: "8px",
-    },
-  },
-  root: {
-    width: "100%",
-  },
-  buttonWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "16px 0 0",
-  },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  spacer: {
-    flex: "1 1 auto",
-  },
-  instructions: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-  },
-  container: {
-    display: "grid",
-    gridTemplateColumns: "1.5em 1fr",
-    gridGap: theme.spacing(1),
-    alignItems: "center",
-    paddingBottom: "16px",
-  },
-  item: {},
-  slots: {
-    maxHeight: "300px",
-  },
-}));
-*/
 
 type Error = {
   message: string;
@@ -131,7 +76,7 @@ const Booking = (props: any) => {
   const { t, i18n } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   type Details = { name: string; email: string; description: string };
 
@@ -144,7 +89,6 @@ const Booking = (props: any) => {
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
-  const [error, setError] = useState<Error | null>(null);
   const [isPending, startTransition] = useTransition()
 
   const updateSlots = (startDate: Date) => {
@@ -159,10 +103,7 @@ const Booking = (props: any) => {
         setSlots(slots);
       })
       .catch((err) => {
-        setError({
-          message: "could not get available time slots",
-          details: err,
-        });
+        enqueueSnackbar("Could not get available time slots", { variant: "error", autoHideDuration: 15000, className: "error" });
       });
   }
 
@@ -213,17 +154,6 @@ const Booking = (props: any) => {
 
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
-  };
-
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
   };
 
   const handleBack = () => {

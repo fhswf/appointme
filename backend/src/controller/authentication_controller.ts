@@ -16,7 +16,6 @@ const env = dotenv.config({
   path: "./src/config/config.env",
 });
 
-import { compare } from 'bcrypt';
 import { sign, verify, JwtPayload } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
@@ -43,6 +42,9 @@ const transporter = createTransport({
   auth: {
     user: process.env.EMAIL_FROM,
     pass: process.env.EMAIL_PASSWORD,
+  },
+  tls: {
+    rejectUnauthorized: true,
   },
 });
 

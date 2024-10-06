@@ -13,6 +13,7 @@ import { EMPTY_EVENT, Event } from "common";
 import { EventForm } from "../components/EventForm";
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
+import { useSnackbar } from "notistack";
 
 /*
 export const useStyles = makeStyles((theme) => ({
@@ -39,6 +40,7 @@ const AddEvent = (props: AddEventProps) => {
   const [formData, setFormData] = useState(EMPTY_EVENT);
   const user = useContext(UserContext).user;
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const saveEvent = (formData: Event) => {
     if (user) {
@@ -48,13 +50,13 @@ const AddEvent = (props: AddEventProps) => {
             signout();
             navigate("/landing");
           } else {
-            //toast.success(res.data.msg);
+            enqueueSnackbar(t("best_due_parakeet_zip"), { variant: "success" });
             navigate("/app");
           }
         })
         .catch((err) => {
           console.log(err);
-          //toast.error("Failed to save event type");
+          enqueueSnackbar(t("steep_fine_lobster_inspire"), { variant: "error", autoHideDuration: 15000, className: "error" });
         });
     }
   };

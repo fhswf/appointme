@@ -26,23 +26,6 @@ import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "common";
 import { t } from "i18next";
 
-/*
-export const useStyles = makeStyles((theme) => ({
-  row: {
-    alignItems: "center",
-    width: "100%",
-  },
-  label: {
-    fontSize: "0.7rem",
-    display: "block",
-    //marginBottom: "-1ex",
-  },
-  sep: {
-    padding: "0.8ex",
-  },
-}));
-*/
-
 type EditSlotProps = {
   day: Day;
   slots: Slot[];
@@ -217,7 +200,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   };
 
   return (
-    <form onSubmit={handleOnSubmit}>
+    (<form onSubmit={handleOnSubmit}>
       <Box>
         <Typography component="h2" variant="h5">
           {t("these_zesty_duck_nudge")}
@@ -274,7 +257,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           />
         </div>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5">
           {t("jumpy_tasty_rook_trust")}
@@ -338,7 +320,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5" gutterBottom>
           {t("seemly_fine_octopus_slurp")}
@@ -353,12 +334,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               type="number"
               variant="filled"
               onChange={handleOnChange("maxFuture", 86400)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">Days</InputAdornment>
-                ),
-              }}
               helperText={t("How many days in advance is this event available?")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Days</InputAdornment>
+                  ),
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -369,12 +352,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               type="number"
               variant="filled"
               onChange={handleOnChange("minFuture", 86400)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">Days</InputAdornment>
-                ),
-              }}
               helperText={t("pretty_grand_cuckoo_arrive")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Days</InputAdornment>
+                  ),
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -390,7 +375,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5">
           {t("Daily availability")}
@@ -412,7 +396,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           ))}
         </Stack>
       </Box>
-
       <Button
         variant="contained"
         type="submit"
@@ -421,6 +404,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
       >
         Save
       </Button>
-    </form>
+    </form>)
   );
 };
