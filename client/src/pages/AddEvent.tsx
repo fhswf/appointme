@@ -70,7 +70,7 @@ const AddEvent = (props: AddEventProps) => {
       <AppNavbar></AppNavbar>
       <Container maxWidth="md">
         <h2>{t("Add Event Type")}</h2>
-        <EventForm event={formData} handleOnSubmit={saveEvent} />
+        <EventForm event={formData} handleOnSubmit={saveEvent} data-testid="event-form" />
       </Container>
     </>
   );

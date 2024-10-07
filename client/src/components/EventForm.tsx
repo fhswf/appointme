@@ -88,60 +88,59 @@ const EditSlot = (props: EditSlotProps) => {
 
   console.log("EditSlot: %o", slots);
   return (
-    <>
-      <Grid container xs={12}>
-        <Grid xs={2}>
-          <FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox checked={slots.length > 0} onChange={handleCheck} />
-              }
-              label={DayNames[props.day]}
-            />
-          </FormControl>
-        </Grid>
-        <Grid xs={9}>
-          <Grid container>
-            {slots.map((slot, index) => (
 
-              <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
-                <Grid xs={4} textAlign="end">
-                  <Input
-                    type="time"
-                    placeholder="Starttime"
-                    onChange={changeTime("start", index)}
-                    value={slot.start}
-                  />
-                </Grid>
-                <Grid xs={2} textAlign="center">
-                  –
-                </Grid>
-                <Grid xs={4} textAlign="start">
-                  <Input
-                    type="time"
-                    placeholder="Endtime"
-                    onChange={changeTime("end", index)}
-                    value={slot.end}
-                  />
-                </Grid>
-                <Grid xs={2}>
-                  <Button onClick={deleteSlot(index)}>
-                    <Delete />
-                  </Button>
-                </Grid>
-              </FormGroup >
+    <Grid container xs={12}>
+      <Grid xs={2}>
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox checked={slots.length > 0} onChange={handleCheck} />
+            }
+            label={DayNames[props.day]}
+          />
+        </FormControl>
+      </Grid>
+      <Grid xs={9}>
+        <Grid container>
+          {slots.map((slot, index) => (
 
-            ))}
-          </Grid>
+            <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
+              <Grid xs={4} textAlign="end">
+                <Input
+                  type="time"
+                  placeholder="Starttime"
+                  onChange={changeTime("start", index)}
+                  value={slot.start}
+                />
+              </Grid>
+              <Grid xs={2} textAlign="center">
+                –
+              </Grid>
+              <Grid xs={4} textAlign="start">
+                <Input
+                  type="time"
+                  placeholder="Endtime"
+                  onChange={changeTime("end", index)}
+                  value={slot.end}
+                />
+              </Grid>
+              <Grid xs={2}>
+                <Button onClick={deleteSlot(index)}>
+                  <Delete />
+                </Button>
+              </Grid>
+            </FormGroup >
+
+          ))}
         </Grid>
-        <Grid xs={1}>
-          {slots.length > 0 ?
-            <Button onClick={addSlot} hidden={slots.length <= 0}>
-              <Add />
-            </Button> : null}
-        </Grid>
-      </Grid >
-    </>
+      </Grid>
+      <Grid xs={1}>
+        {slots.length > 0 ?
+          <Button onClick={addSlot} hidden={slots.length <= 0}>
+            <Add />
+          </Button> : null}
+      </Grid>
+    </Grid >
   );
 };
 
@@ -208,6 +207,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         <div>
           <TextField
             id="event-title"
+            data-testid="event-form-title"
             type="text"
             label={t("lazy_just_duck_spin")}
             required

@@ -28,17 +28,16 @@ const App = () => {
   const addEventButton = () => {
     if (connected) {
       return (
-        <>
           <Fab
             variant="extended"
             color="primary"
             aria-label="add"
             href="addevent"
+            data-testid="add-event-button"
           >
             <AddIcon sx={{ mr: 1 }} />
             {t("early_sweet_mantis_peek")}
           </Fab>
-        </>
       );
     } else {
       return (
