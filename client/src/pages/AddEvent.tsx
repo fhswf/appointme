@@ -15,22 +15,6 @@ import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "notistack";
 
-/*
-export const useStyles = makeStyles((theme) => ({
-  row: {
-    alignItems: "baseline",
-  },
-  label: {
-    fontSize: "0.7rem",
-    display: "block",
-    paddingTop: "2ex",
-    marginBottom: "-1ex",
-  },
-  sep: {
-    padding: "0.8ex",
-  },
-}));
-*/
 
 type AddEventProps = {};
 
@@ -61,9 +45,6 @@ const AddEvent = (props: AddEventProps) => {
     }
   };
 
-  const theme = {
-    spacing: (value: number) => value * 2,
-  };
 
   return (
     <>

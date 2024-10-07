@@ -95,7 +95,7 @@ const AppNavbar = () => {
       <ListItemText>Profile</ListItemText>
     </MenuItem>,
     <MenuItem key="account" onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
-    <MenuItem key="calendar" component={Link} to="/integration" disabled={!user}>
+    <MenuItem key="calendar" component={Link} to="/integration" disabled={!user} data-testid="calendar-button">
       <ListItemIcon>
         <CalendarTodayIcon fontSize="small" />
       </ListItemIcon>
