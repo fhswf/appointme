@@ -84,7 +84,7 @@ const Booking = (props: any) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
-  const [selectedDate, setDate] = useState<Date>();
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setSelectedTime] = useState<Date>();
@@ -185,7 +185,7 @@ const Booking = (props: any) => {
 
   const handleDateChange = (newValue: Date) => {
     console.log("change date: %o", startOfDay(newValue));
-    setDate(newValue);
+    setSelectedDate(newValue);
     setActiveStep(1);
   };
 

@@ -306,7 +306,6 @@ const Calendarintegration = () => {
           updateUser(token, user)
             .then((user) => {
               console.log("updated user: %o", user);
-              //toast.info("using primary calendars by default");
             })
             .catch((err) => {
               console.error("user update failed: %o", err);
