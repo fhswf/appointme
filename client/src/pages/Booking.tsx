@@ -82,7 +82,6 @@ const Booking = (props: any) => {
 
   const [user, setUser] = useState<UserDocument>();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [beginDate] = useState<Date>(new Date());
@@ -152,28 +151,12 @@ const Booking = (props: any) => {
     return false;
   };
 
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
+
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
 
   const handleReset = () => {
     setActiveStep(0);
@@ -334,9 +317,6 @@ const Booking = (props: any) => {
                     <Typography variant="caption">Optional</Typography>
                   );
                 }
-                if (isStepSkipped(index)) {
-                  stepProps.completed = false;
-                }
                 return (
                   <Step key={label} {...stepProps}>
                     <StepLabel {...labelProps}>{label}</StepLabel>
@@ -360,15 +340,6 @@ const Booking = (props: any) => {
                   {t("heroic_kind_llama_zip")}
                 </Button>
                 <div />
-                {isStepOptional(activeStep) && (
-                  <Button
-                    color="inherit"
-                    onClick={handleSkip}
-
-                  >
-                    {t("awake_jolly_gazelle_lock")}
-                  </Button>
-                )}
 
                 {activeStep === steps.length - 1 ? (
                   <Button variant="contained" type="submit">
