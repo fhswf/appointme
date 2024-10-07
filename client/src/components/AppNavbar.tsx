@@ -72,7 +72,7 @@ const AppNavbar = () => {
   };
 
   const loginOut = user && isAuthenticated() ? (
-    <MenuItem onClick={handleLogout}>
+    <MenuItem onClick={handleLogout} data-testid="logout-button">
       <ListItemIcon>
         <LogoutIcon fontSize="small" />
       </ListItemIcon>
@@ -144,6 +144,7 @@ const AppNavbar = () => {
           </Typography>
           <div>
             <IconButton
+              data-testid="profile-menu"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
