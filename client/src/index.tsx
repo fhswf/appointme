@@ -8,7 +8,6 @@ import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import AddEvent from "./pages/AddEvent";
 import Planning from "./pages/Planning";
-import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
 import Booking from "./pages/Booking";
 import EditEvent from "./pages/EditEvent";
@@ -141,10 +140,6 @@ root.render(
                   <Route
                     path="/landing"
                     element={<Landing />}
-                  />
-                  <Route
-                    path="/schedule/:user_url/:url"
-                    element={<Schedule />}
                   />
                   <Route
                     path="/users/:user_url"

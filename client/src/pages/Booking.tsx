@@ -85,11 +85,11 @@ const Booking = (props: any) => {
   const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setDate] = useState<Date>();
-  const [beginDate, setBeginDate] = useState<Date>(new Date());
+  const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
-  const [selectedTime, setTime] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(
@@ -180,9 +180,7 @@ const Booking = (props: any) => {
   };
 
   const handleMonthChange = (date: Date) => {
-    //setBeginDate(date);
     console.log("handleMonthChange: %o", date);
-    //updateSlots(date);
   };
 
   const handleDateChange = (newValue: Date) => {
@@ -194,7 +192,6 @@ const Booking = (props: any) => {
   const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
 
   const checkDay = (date: Date) => {
-    //console.log("checkDay: %o %o", slots, event.available);
     if (!event.available) {
       return false;
     } else {
@@ -221,7 +218,6 @@ const Booking = (props: any) => {
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
     const { day } = props;
-    //console.log("rendering day: %o %o", day, props);
     return (
       <StyledPickersDay
         {...props}
@@ -259,7 +255,7 @@ const Booking = (props: any) => {
     (time: Date) => (event: React.MouseEvent<HTMLButtonElement>) => {
       console.log("time: %o", time);
       setActiveStep(2);
-      setTime(time);
+      setSelectedTime(time);
     };
 
   const renderSlots = () => {

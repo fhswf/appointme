@@ -48,6 +48,8 @@
   "careful_misty_bullock_splash": "Schritt 3: Teilen Sie Ihren Link",
   "game_frail_vole_treasure": "Erledigt! Glückwunsch!",
   "still_helpful_koala_trust": "Sobald ein Benutzer einen Termin bucht, wird das Ereignis Ihrem Kalender hinzugefügt.",
+  "steep_fine_lobster_inspire": "Terminart konnte nicht gespeichert werden",
+  "best_due_parakeet_zip": "Terminart angelegt",
   "Name": "Name",
   "Please provide your name": "Bitte geben Sie Ihren Namen an",
   "Email": "E-Mail-Adresse",
@@ -66,6 +68,6 @@
   "Choose date": "Datum wählen",
   "Choose time": "Uhrzeit wählen",
   "Provide details": "Details angeben",
-  "steep_fine_lobster_inspire": "Terminart konnte nicht gespeichert werden",
-  "best_due_parakeet_zip": "Terminart angelegt"
+  "happy_caring_fox_spur": "Terminart gespeichert",
+  "tasty_witty_stingray_hope": "Fehler beim Speichern der Terminart"
 }

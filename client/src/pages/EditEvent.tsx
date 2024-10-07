@@ -8,6 +8,7 @@ import { signout } from "../helpers/helpers";
 import { EventForm } from "../components/EventForm";
 import { EMPTY_EVENT, Event } from "common";
 import { useTranslation } from "react-i18next";
+import { useSnackbar } from "notistack";
 
 export type EventFormProps = {
   event: Event;
@@ -22,6 +23,7 @@ const EditEvent = (): JSX.Element => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(EMPTY_EVENT);
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getEventByID(token, eventID).then((res) => {
@@ -42,13 +44,13 @@ const EditEvent = (): JSX.Element => {
           signout();
           navigate("/landing");
         } else {
-          //toast.success(res.data.msg);
+          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success" });
           navigate("/app");
         }
       })
       .catch((err) => {
         console.log(err);
-        //toast.error("Failed to save event type");
+        enqueueSnackbar(t("tasty_witty_stingray_hope"), { variant: "error" });
       });
   };
 
