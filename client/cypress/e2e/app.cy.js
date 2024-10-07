@@ -75,7 +75,7 @@ context('Main page', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
-      cy.intercept('/api/v1/events/getEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
+      cy.intercept('/api/v1/google/calendarList', { fixture: 'calendarList' }).as('calendarList')
     })
 
     it('Check log out', () => {
@@ -85,6 +85,7 @@ context('Main page', () => {
       cy.get('[data-testid="profile-menu"]').click()
       cy.get('[data-testid="calendar-button"]').click()
       cy.location('pathname').should('eq', '/integration')
+      cy.wait(['@calendarList'], { timeout: 10000 })
     })
   })
 
