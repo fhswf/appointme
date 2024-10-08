@@ -3,6 +3,14 @@
 
 ### Bug Fixes
 
+* module import ([40234c5](https://github.com/fhswf/book_me/commit/40234c5bd91cbc50a8c8fe2db999aa334a4eff80))
+* module import ([22e6605](https://github.com/fhswf/book_me/commit/22e6605fdf3e6a4022976a3fd0d098bbd49d1107))
+
+## backend [1.7.12](https://github.com/fhswf/book_me/compare/backend@1.7.11...backend@1.7.12) (2024-10-08)
+
+
+### Bug Fixes
+
 * module import ([22e6605](https://github.com/fhswf/book_me/commit/22e6605fdf3e6a4022976a3fd0d098bbd49d1107))
 
 ## backend [1.7.11](https://github.com/fhswf/book_me/compare/backend@1.7.10...backend@1.7.11) (2024-10-08)
