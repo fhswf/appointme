@@ -3,6 +3,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { deleteEvent } from "../helpers/services/event_services";
 import {
+  Alert,
   Button,
   Card,
   CardActions,
@@ -14,19 +15,12 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-import { Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ShareIcon from "@mui/icons-material/Share";
 import { EventDocument } from "../helpers/EventDocument";
 
-/*
-const useStyles = makeStyles({
-  delete: {
-    marginLeft: "auto",
-  },
-});
-*/
+
 
 type EventCardProps = {
   event: EventDocument;
@@ -77,14 +71,15 @@ export const EventCard = (props: EventCardProps) => {
 
   return (
     <>
-      <Grid size={4}>
+      <Grid size="auto">
 
-        <Card>
+        <Card style={{ maxWidth: "25rem" }}>
           <CardHeader
             action={
               <IconButton
                 aria-label="settings"
                 component={RouterLink}
+                data-testid="edit-event-button"
                 to={`/editevent/${props.event._id}`}
               >
                 <EditIcon />
@@ -118,7 +113,7 @@ export const EventCard = (props: EventCardProps) => {
             </IconButton>
           </CardActions>
         </Card>
-      </Grid>
+      </Grid >
       <Snackbar
         open={success}
         autoHideDuration={2000}

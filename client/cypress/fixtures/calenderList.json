@@ -1,0 +1,486 @@
+{
+  "config": {
+    "url": "https://www.googleapis.com/calendar/v3/users/me/calendarList",
+    "method": "GET",
+    "userAgentDirectives": [
+      {
+        "product": "google-api-nodejs-client",
+        "version": "7.0.1",
+        "comment": "gzip"
+      }
+    ],
+    "headers": {
+      "x-goog-api-client": "gdcl/7.0.1 gl-node/18.20.4",
+      "Accept-Encoding": "gzip",
+      "User-Agent": "google-api-nodejs-client/7.0.1 (gzip)",
+      "Authorization": "Bearer ya29.a0AcM612xf6HxDLrtzihWDcobYv77tDABBNZNwcu5XLwk5BzBXHZu-Ye4S0YxrCSt83JWC8FccCnXK_1iTBWGoIH3UKdto0T-gYMFl0fp5_JzAd5kLMuiAARQSe0a0-y7Jyt8CPMmPVTxxwaI5oFoVATPVTt6puxwXQsc7g-e9TwaCgYKAcwSARMSFQHGX2Mis5a6O2i8pMPSovpLdBf3Pw0177"
+    },
+    "params": {},
+    "retry": true,
+    "responseType": "unknown"
+  },
+  "data": {
+    "kind": "calendar#calendarList",
+    "etag": "\"p33499t5dr7u8g0o\"",
+    "nextSyncToken": "CMiU9K3Z_IgDEhpjaHJpc3RpYW4uZ2F3cm9uQGdtYWlsLmNvbQ==",
+    "items": [
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1547123107339000\"",
+        "id": "p#weather@group.v.calendar.google.com",
+        "summary": "Wetter",
+        "description": "Tägliche Wettervorhersage für Ihre Region",
+        "timeZone": "Europe/Berlin",
+        "colorId": "18",
+        "backgroundColor": "#b99aff",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1547123107339000\"",
+        "id": "p#weeknum@group.v.calendar.google.com",
+        "summary": "Kalenderwochen",
+        "description": "Kalenderwochen wöchentlich anzeigen",
+        "timeZone": "Europe/Berlin",
+        "colorId": "22",
+        "backgroundColor": "#f691b2",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1612124320698000\"",
+        "id": "4rov7nddd8dgj263jp7m2kisb8@group.calendar.google.com",
+        "summary": "Activities",
+        "timeZone": "Europe/Berlin",
+        "colorId": "11",
+        "backgroundColor": "#fbe983",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1612124324928000\"",
+        "id": "iol2baobho2ksdrgsrqlt2jlks@group.calendar.google.com",
+        "summary": "Familie Reimpell-Gawron",
+        "description": "Unsere Familientermine",
+        "timeZone": "Europe/Berlin",
+        "colorId": "14",
+        "backgroundColor": "#9fe1e7",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [],
+        "notificationSettings": {
+          "notifications": [
+            {
+              "type": "eventCreation",
+              "method": "email"
+            },
+            {
+              "type": "eventChange",
+              "method": "email"
+            }
+          ]
+        },
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1623003527154000\"",
+        "id": "t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com",
+        "summary": "Sprechstunde",
+        "description": "Kalender für Sprechstundenbuchungen",
+        "timeZone": "Europe/Berlin",
+        "colorId": "13",
+        "backgroundColor": "#92e1c0",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [
+          {
+            "method": "popup",
+            "minutes": 1440
+          }
+        ],
+        "notificationSettings": {
+          "notifications": [
+            {
+              "type": "eventCreation",
+              "method": "email"
+            },
+            {
+              "type": "eventChange",
+              "method": "email"
+            },
+            {
+              "type": "eventCancellation",
+              "method": "email"
+            },
+            {
+              "type": "eventResponse",
+              "method": "email"
+            }
+          ]
+        },
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1623073508125000\"",
+        "id": "o934pekguhe45d44o9voc4jc4jrd9tsv@import.calendar.google.com",
+        "summary": "Christian Gawron (TripIt)",
+        "description": "TripIt Calendar",
+        "timeZone": "UTC",
+        "summaryOverride": "TripIt",
+        "colorId": "3",
+        "backgroundColor": "#f83a22",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1644702641043000\"",
+        "id": "addressbook#contacts@group.v.calendar.google.com",
+        "summary": "Geburtstage",
+        "description": "Geburtstage, Jahrestage und andere wichtige Termine aus Google Kontakte anzeigen lassen.",
+        "timeZone": "Europe/Berlin",
+        "colorId": "17",
+        "backgroundColor": "#9a9cff",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1650134224394000\"",
+        "id": "ht3jlfaac5lfd6263ulfh4tql8@group.calendar.google.com",
+        "summary": "Mondphasen",
+        "description": "Zeigt die primären Mondphasen an",
+        "timeZone": "Europe/Berlin",
+        "colorId": "12",
+        "backgroundColor": "#fad165",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1662570683052000\"",
+        "id": "c49djh6c85324q45fge6u33cm5mt0skk@import.calendar.google.com",
+        "summary": "https://connect.garmin.com/modern/calendar/export/44519feb80f3486ba763c73ed668d795",
+        "timeZone": "UTC",
+        "summaryOverride": "Training Garmin",
+        "colorId": "5",
+        "backgroundColor": "#ff7537",
+        "foregroundColor": "#000000",
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1663157506464000\"",
+        "id": "christian.gawron@gmail.com",
+        "summary": "christian.gawron@gmail.com",
+        "timeZone": "Europe/Berlin",
+        "colorId": "18",
+        "backgroundColor": "#b99aff",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [
+          {
+            "method": "popup",
+            "minutes": 10
+          },
+          {
+            "method": "email",
+            "minutes": 1440
+          }
+        ],
+        "notificationSettings": {
+          "notifications": [
+            {
+              "type": "eventCreation",
+              "method": "email"
+            },
+            {
+              "type": "eventChange",
+              "method": "email"
+            },
+            {
+              "type": "eventCancellation",
+              "method": "email"
+            },
+            {
+              "type": "eventResponse",
+              "method": "email"
+            },
+            {
+              "type": "agenda",
+              "method": "email"
+            }
+          ]
+        },
+        "primary": true,
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1663690841398000\"",
+        "id": "eqhutaqf2qu3oh2uvie5khr0jc@group.calendar.google.com",
+        "summary": "Todoist",
+        "timeZone": "Europe/Berlin",
+        "colorId": "23",
+        "backgroundColor": "#cd74e6",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1672855991695000\"",
+        "id": "family10045043731026254769@group.calendar.google.com",
+        "summary": "Familie",
+        "timeZone": "UTC",
+        "summaryOverride": "Familie",
+        "colorId": "19",
+        "backgroundColor": "#c2c2c2",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "writer",
+        "defaultReminders": [
+          {
+            "method": "popup",
+            "minutes": 10
+          },
+          {
+            "method": "email",
+            "minutes": 1440
+          }
+        ],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1680327708781000\"",
+        "id": "gmi8bdj2obeo5ef0aac7a5v6om3otob0@import.calendar.google.com",
+        "summary": "https://vpis.fh-swf.de/SS2023/team.php3/Plan/SS2023_Gawron%2C+C..ics?Dozent=Gawron%2C+C.&Template=ICS&CalendarName=/SS2023_Gawron%2C+C..ics",
+        "timeZone": "UTC",
+        "summaryOverride": "Sommersemester 2023",
+        "colorId": "21",
+        "backgroundColor": "#cca6ac",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1693827429042000\"",
+        "id": "cpovspgmee4rqqo4o7nc2ormjlvalsa4@import.calendar.google.com",
+        "summary": "https://vpis.fh-swf.de/WS2023/team.php3/Plan/WS2023_Gawron%2C+C..ics?Dozent=Gawron%2C+C.&Template=ICS&CalendarName=/WS2023_Gawron%2C+C..ics",
+        "timeZone": "UTC",
+        "summaryOverride": "Wintersemester 2023/24",
+        "colorId": "21",
+        "backgroundColor": "#cca6ac",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1709743144240000\"",
+        "id": "f4i97mrqu2kt51nket0h8fil79upvdpr@import.calendar.google.com",
+        "summary": "https://vpis.fh-swf.de/SS2024/team.php3/Plan/SS2024_Gawron%2C+C..ics?Dozent=Gawron%2C+C.&Template=ICS&CalendarName=/SS2024_Gawron%2C+C..ics",
+        "timeZone": "UTC",
+        "summaryOverride": "Sommerstemester 2024",
+        "colorId": "22",
+        "backgroundColor": "#f691b2",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1721753098185000\"",
+        "id": "gawron.christian@fh-swf.de",
+        "summary": "gawron.christian@fh-swf.de",
+        "timeZone": "UTC",
+        "colorId": "4",
+        "backgroundColor": "#fa573c",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "owner",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1725638003431000\"",
+        "id": "fj2g7ii3on2elc092n3tbd1nmv48mb3n@import.calendar.google.com",
+        "summary": "https://vpis.fh-swf.de/WS2024/team.php3/Plan/WS2024_Gawron%2C+C..ics?Dozent=Gawron%2C+C.&Template=ICS&CalendarName=/WS2024_Gawron%2C+C..ics",
+        "timeZone": "UTC",
+        "summaryOverride": "Wintersemester 2024/25",
+        "colorId": "21",
+        "backgroundColor": "#cca6ac",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1727122103403000\"",
+        "id": "de.german.official#holiday@group.v.calendar.google.com",
+        "summary": "Feiertage in Deutschland",
+        "description": "Feiertage in Deutschland",
+        "timeZone": "Europe/Berlin",
+        "colorId": "15",
+        "backgroundColor": "#9fc6e7",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      },
+      {
+        "kind": "calendar#calendarListEntry",
+        "etag": "\"1728318826941000\"",
+        "id": "13l229t7or798tk7a0mh846j52conmv4@import.calendar.google.com",
+        "summary": "https://elearning.fh-swf.de/calendar/export_execute.php?userid=13371&authtoken=b84b26964e80303900b57cf852296189247935c3&preset_what=all&preset_time=custom",
+        "timeZone": "UTC",
+        "summaryOverride": "Moodle",
+        "colorId": "24",
+        "backgroundColor": "#a47ae2",
+        "foregroundColor": "#000000",
+        "selected": true,
+        "accessRole": "reader",
+        "defaultReminders": [],
+        "conferenceProperties": {
+          "allowedConferenceSolutionTypes": [
+            "hangoutsMeet"
+          ]
+        }
+      }
+    ]
+  },
+  "headers": {
+    "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+    "cache-control": "private, max-age=0, must-revalidate, no-transform",
+    "connection": "close",
+    "content-encoding": "gzip",
+    "content-type": "application/json; charset=UTF-8",
+    "date": "Mon, 07 Oct 2024 16:38:57 GMT",
+    "expires": "Mon, 07 Oct 2024 16:38:57 GMT",
+    "server": "ESF",
+    "transfer-encoding": "chunked",
+    "vary": "Origin, X-Origin, Referer",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "SAMEORIGIN",
+    "x-xss-protection": "0"
+  },
+  "status": 200,
+  "statusText": "OK",
+  "request": {
+    "responseURL": "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+  }
+}

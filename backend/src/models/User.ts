@@ -1,6 +1,8 @@
 
 import { Document, Schema, model } from 'mongoose';
 import { genSalt, hash } from "bcryptjs";
+import { User } from "common/src/types";
+
 
 export interface GoogleTokens extends Document {
   access_token?: string;
@@ -9,21 +11,10 @@ export interface GoogleTokens extends Document {
   expiry_date?: number;
 }
 
-export interface User {
-  email: string;
-  name: string;
-  password: string;
-  user_url: string;
-  picture_url: string;
-  google_tokens: GoogleTokens;
-  push_calendar?: string;
-  pull_calendars?: string[];
-}
-
 interface GoogleTokensDocument extends GoogleTokens, Document {
 }
 
-interface UserDocument extends User, Document {
+export interface UserDocument extends Document, User {
 }
 
 // User schema for the Database
@@ -65,10 +56,6 @@ const userSchema = new Schema<UserDocument>(
     name: {
       type: String,
       trim: true,
-      required: true,
-    },
-    password: {
-      type: String,
       required: true,
     },
     user_url: {

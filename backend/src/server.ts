@@ -33,7 +33,7 @@ dataBaseConn();
 app.use(bodyParser.json());
 
 // Dev Loggin Middleware
-if (true || process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
   const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud", "http://localhost:5173", "http://localhost:5174"];
   console.log("enabling CORS for %j", ORIGINS);
   app.use(

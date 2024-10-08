@@ -31,10 +31,11 @@ import clsx from "clsx";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
-import { EMPTY_EVENT, Event, Slot, IntervalSet } from "common";
+import { EMPTY_EVENT, Event, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
+import { useSnackbar } from "notistack";
 
 const theme = createTheme({
   components: {
@@ -65,61 +66,6 @@ const theme = createTheme({
   },
 });
 
-/*
-const useStyles = makeStyles((theme) => ({
-  picker: {
-    "& button": {
-      borderRadius: "50%",
-      "&.highlight": {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        "&:hover, &:focus": {
-          backgroundColor: theme.palette.primary.light,
-        },
-      },
-    },
-  },
-
-  date: {
-    borderRadius: "50%",
-  },
-  header: {
-    "&.MuiTypography-root": {
-      marginTop: "16px",
-      marginBottom: "8px",
-    },
-  },
-  root: {
-    width: "100%",
-  },
-  buttonWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "16px 0 0",
-  },
-  button: {
-    marginRight: theme.spacing(1),
-  },
-  spacer: {
-    flex: "1 1 auto",
-  },
-  instructions: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-  },
-  container: {
-    display: "grid",
-    gridTemplateColumns: "1.5em 1fr",
-    gridGap: theme.spacing(1),
-    alignItems: "center",
-    paddingBottom: "16px",
-  },
-  item: {},
-  slots: {
-    maxHeight: "300px",
-  },
-}));
-*/
 
 type Error = {
   message: string;
@@ -130,20 +76,19 @@ const Booking = (props: any) => {
   const { t, i18n } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   type Details = { name: string; email: string; description: string };
 
   const [user, setUser] = useState<UserDocument>();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
-  const [selectedDate, setDate] = useState<Date>();
-  const [beginDate, setBeginDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
-  const [selectedTime, setTime] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
-  const [error, setError] = useState<Error | null>(null);
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(
@@ -157,10 +102,7 @@ const Booking = (props: any) => {
         setSlots(slots);
       })
       .catch((err) => {
-        setError({
-          message: "could not get available time slots",
-          details: err,
-        });
+        enqueueSnackbar("Could not get available time slots", { variant: "error", autoHideDuration: 15000, className: "error" });
       });
   }
 
@@ -189,6 +131,8 @@ const Booking = (props: any) => {
         }
       })
       .catch((err) => {
+        console.log("error getting user: %o", err);
+        enqueueSnackbar("Error getting user", { variant: "error", autoHideDuration: 15000, className: "error" });
         return err;
       });
   }, [data.url, data.user_url, navigate, selectedDate]);
@@ -207,60 +151,30 @@ const Booking = (props: any) => {
     return false;
   };
 
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
 
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
 
   const handleReset = () => {
     setActiveStep(0);
   };
 
   const handleMonthChange = (date: Date) => {
-    //setBeginDate(date);
     console.log("handleMonthChange: %o", date);
-    //updateSlots(date);
   };
 
   const handleDateChange = (newValue: Date) => {
     console.log("change date: %o", startOfDay(newValue));
-    setDate(newValue);
+    setSelectedDate(newValue);
     setActiveStep(1);
   };
 
   const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
 
   const checkDay = (date: Date) => {
-    //console.log("checkDay: %o %o", slots, event.available);
     if (!event.available) {
       return false;
     } else {
@@ -287,7 +201,6 @@ const Booking = (props: any) => {
   const renderPickerDay = (
     props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
     const { day } = props;
-    //console.log("rendering day: %o %o", day, props);
     return (
       <StyledPickersDay
         {...props}
@@ -325,7 +238,7 @@ const Booking = (props: any) => {
     (time: Date) => (event: React.MouseEvent<HTMLButtonElement>) => {
       console.log("time: %o", time);
       setActiveStep(2);
-      setTime(time);
+      setSelectedTime(time);
     };
 
   const renderSlots = () => {
@@ -370,12 +283,16 @@ const Booking = (props: any) => {
         details.name,
         details.email,
         details.description
-      ).then(() => {
-        //toast.success("Event successfully booked!");
-        navigate(`/booked`, {
-          state: { user, event, time: selectedTime },
+      )
+        .then(() => {
+          enqueueSnackbar("Event successfully booked!", { variant: "success" });
+          navigate(`/booked`, {
+            state: { user, event, time: selectedTime },
+          });
+        })
+        .catch((err) => {
+          enqueueSnackbar("Could not book event", { variant: "error", autoHideDuration: 15000, className: "error" });
         });
-      });
     }
   };
 
@@ -400,9 +317,6 @@ const Booking = (props: any) => {
                     <Typography variant="caption">Optional</Typography>
                   );
                 }
-                if (isStepSkipped(index)) {
-                  stepProps.completed = false;
-                }
                 return (
                   <Step key={label} {...stepProps}>
                     <StepLabel {...labelProps}>{label}</StepLabel>
@@ -426,15 +340,6 @@ const Booking = (props: any) => {
                   {t("heroic_kind_llama_zip")}
                 </Button>
                 <div />
-                {isStepOptional(activeStep) && (
-                  <Button
-                    color="inherit"
-                    onClick={handleSkip}
-
-                  >
-                    {t("awake_jolly_gazelle_lock")}
-                  </Button>
-                )}
 
                 {activeStep === steps.length - 1 ? (
                   <Button variant="contained" type="submit">

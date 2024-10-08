@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FormGroup, FormLabel, Grid, TextField } from "@mui/material";
+import { FormGroup, FormLabel, TextField } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 export const TimesForDay = (props) => {
   const [start, setStart] = useState(props.start);
@@ -23,27 +24,26 @@ export const TimesForDay = (props) => {
 
   // TODO: Add Stepper
   return (
-    <>
-      <Grid item xs={6}>
-        <FormLabel>{props.day}</FormLabel>
-        <FormGroup row>
-          <TextField
-            type="time"
-            margin="normal"
-            placeholder="Starttime"
-            onChange={cbStartTime}
-            value={start}
-          />
-          <span>&nbsp;–&nbsp;</span>
-          <TextField
-            type="time"
-            margin="normal"
-            placeholder="Endtime"
-            onChange={cbEndTime}
-            value={end}
-          />
-        </FormGroup>
-      </Grid>
-    </>
+    <Grid xs={6}>
+      <FormLabel>{props.day}</FormLabel>
+      <FormGroup row>
+        <TextField
+          type="time"
+          margin="normal"
+          placeholder="Starttime"
+          onChange={cbStartTime}
+          value={start}
+        />
+        <span>&nbsp;–&nbsp;</span>
+        <TextField
+          type="time"
+          margin="normal"
+          placeholder="Endtime"
+          onChange={cbEndTime}
+          value={end}
+        />
+      </FormGroup>
+    </Grid>
+
   );
 };
