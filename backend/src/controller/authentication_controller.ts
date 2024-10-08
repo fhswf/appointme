@@ -47,6 +47,8 @@ const transporter = createTransport({
   tls: {
     rejectUnauthorized: true,
   },
+  secure: true,
+  requireTLS: true,
 });
 
 /**
