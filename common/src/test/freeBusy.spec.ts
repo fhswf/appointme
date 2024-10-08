@@ -1,4 +1,4 @@
-import { Day, IntervalSet, Slots } from "../types"
+import { Day, IntervalSet, Slot, Slots, TimeRange } from "../types"
 import { expect, jest, test } from '@jest/globals';
 
 
@@ -59,6 +59,23 @@ describe('TimeIntervals', () => {
         }).toThrow();
     });
 
+    test('constructor with 2 dates and 1 slots', () => {
+        let slots = {
+            0: [{ start: "08:00", end: "12:00" }],
+            1: [{ start: "08:00", end: "12:00" }],
+            2: [{ start: "08:00", end: "12:00" }],
+            3: [{ start: "08:00", end: "12:00" }],
+            4: [{ start: "08:00", end: "12:00" }],
+            5: [{ start: "08:00", end: "12:00" }],
+            6: [{ start: "08:00", end: "12:00" }]
+        }
+        let result = new IntervalSet(date1, date2, slots);
+        expect(result.length).toEqual(1);
+        expect(result[0].start.getHours()).toEqual(8);
+        expect(result[0].start.getMinutes()).toEqual(0);
+        expect(result[0].end.getHours()).toEqual(12);
+        expect(result[0].end.getMinutes()).toEqual(0);
+    });
 
     test('index', () => {
         let result = new IntervalSet(date1, date2);
@@ -238,5 +255,20 @@ describe('TimeIntervals', () => {
         expect(res.length).toEqual(1);
         expect(res[0].start).toEqual(date3);
         expect(res[0].end).toEqual(date4);
+    });
+});
+
+describe('TimeRange', () => {
+
+    test('constructor should create slots with length 1', () => {
+        let range = new TimeRange(new Date("2020-10-21"), new Date("2020-10-30"));
+        expect(range.start instanceof Date).toBe(true);
+        expect(range.end instanceof Date).toBe(true);
+    });
+
+    test('constructor should create slots with length 0', () => {
+        expect(() => {
+            return new TimeRange(new Date("2020-10-21"), new Date("2020-10-20"));
+        }).toThrow();
     });
 });

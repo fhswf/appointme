@@ -128,7 +128,7 @@ export class IntervalSet extends Array<TimeRange> {
   constructor(other: any[]);
   constructor(timeMin: Date, timeMax: Date, slots: Slots);
   constructor(timeMin: Date, timeMax: Date, slots: Slots, timeZone: string);
-  constructor(...args: any) {
+  constructor(...args: any[]) {
     if (args.length == 0) {
       super()
     }
@@ -179,6 +179,7 @@ export class IntervalSet extends Array<TimeRange> {
       super(args[0])
     }
     else {
+      // should not be reachable
       throw new Error('Illegal arguments');
     }
   }
