@@ -9,6 +9,7 @@ import validator from "validator";
 import { createTransport } from "nodemailer";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
+import pkg from 'jsonwebtoken';
 
 // Dotenv Config
 import dotenv from "dotenv";
@@ -16,7 +17,7 @@ const env = dotenv.config({
   path: "./src/config/config.env",
 });
 
-import { sign, verify, JwtPayload } from 'jsonwebtoken';
+const { sign, verify } = pkg;
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
