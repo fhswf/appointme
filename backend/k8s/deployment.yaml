@@ -72,10 +72,13 @@ spec:
                 configMapKeyRef:
                   key: TZ
                   name: bookme
-          image: ghcr.io/fhswf/book_me/backend:1.7.10
+          image: ghcr.io/fhswf/book_me/backend:1.7.11
           name: bookme
           ports:
             - containerPort: 5000
-          resources: {}
+          resources:
+            limits:
+              memory: 2Gi
       restartPolicy: Always
+      automountServiceAccountToken: false
 status: {}

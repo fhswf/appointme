@@ -20,14 +20,13 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
-  Grid,
   InputLabel,
   MenuItem,
   Select,
   Typography,
   IconButton,
 } from "@mui/material";
-
+import Grid from "@mui/material/Grid2";
 
 
 //import { Button, Modal } from "react-bootstrap";
@@ -50,7 +49,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
     console.log("selected: %o", selected);
     const items = calendarList.items.map((item) => {
       return (
-        <MenuItem value={item.id}>
+        <MenuItem key={item.id} value={item.id}>
           {item.summaryOverride ? item.summaryOverride : item.summary}
         </MenuItem>
       );
@@ -77,6 +76,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
   } else {
     const items = calendarList.items.map((item) => (
       <FormControlLabel
+        key={item.id}
         control={
           <Checkbox
             checked={state[item.id] ? true : false}
@@ -179,7 +179,7 @@ const PullCalendars = ({ user, calendarList }) => {
     ? calendarList.items
       .filter((item) => user.pull_calendars.includes(item.id))
       .map((cal) => (
-        <li>{cal.summaryOverride ? cal.summaryOverride : cal.summary}</li>
+        <li key={cal.id}>{cal.summaryOverride ? cal.summaryOverride : cal.summary}</li>
       ))
     : undefined;
 
@@ -261,7 +261,7 @@ const PullCalendars = ({ user, calendarList }) => {
 };
 
 const Calendarintegration = () => {
-  const token = JSON.parse(localStorage.getItem("access_token") as string);
+  const token = JSON.parse(localStorage.getItem("access_token"));
   const navigate = useNavigate();
   const [connected, setConnected] = useState(false);
   const [url, setUrl] = useState("");
@@ -280,7 +280,7 @@ const Calendarintegration = () => {
   };
 
   useEffect(() => {
-    if (!user || !user.google_tokens || !user.google_tokens.access_token) {
+    if (!user?.google_tokens?.access_token) {
       setConnected(false);
       console.log("no user or no access token: %o", user);
     } else {
@@ -306,7 +306,6 @@ const Calendarintegration = () => {
           updateUser(token, user)
             .then((user) => {
               console.log("updated user: %o", user);
-              //toast.info("using primary calendars by default");
             })
             .catch((err) => {
               console.error("user update failed: %o", err);
@@ -351,7 +350,7 @@ const Calendarintegration = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Grid item>
+            <Grid>
               <img
                 className="icon"
                 alt="Google Calendar"
@@ -360,7 +359,7 @@ const Calendarintegration = () => {
               />{" "}
               Google Calendar
             </Grid>
-            <Grid item>{renderConnectButton()}</Grid>
+            <Grid>{renderConnectButton()}</Grid>
           </Grid>
         </Box>
 

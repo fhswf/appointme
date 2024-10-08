@@ -1,7 +1,7 @@
 FROM node:18-bullseye as build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
-ARG APP_URL=/meeting
-ARG APP_API_URL=https://hopper.fh-swf.de/meeting/api/v1
+ARG APP_URL=/
+ARG APP_API_URL=https://argocd.gawron.cloud/api/v1
 
 ENV CLIENT_ID=${CLIENT_ID}
 # Not set via ARG to prevent it from being stored in the image!
@@ -32,6 +32,9 @@ FROM node:18-bullseye as backend
 ARG TZ=Europe/Berlin
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENV APP_URL=${APP_URL}
+ENV APP_API_URL=${APP_API_URL}
 
 WORKDIR /usr/src/app 
 COPY --from=build /base/package.json .

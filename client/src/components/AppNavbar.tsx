@@ -72,7 +72,7 @@ const AppNavbar = () => {
   };
 
   const loginOut = user && isAuthenticated() ? (
-    <MenuItem onClick={handleLogout}>
+    <MenuItem onClick={handleLogout} data-testid="logout-button">
       <ListItemIcon>
         <LogoutIcon fontSize="small" />
       </ListItemIcon>
@@ -95,7 +95,7 @@ const AppNavbar = () => {
       <ListItemText>Profile</ListItemText>
     </MenuItem>,
     <MenuItem key="account" onClick={handleMenuClose} disabled={!user}>My account</MenuItem>,
-    <MenuItem key="calendar" component={Link} to="/integration" disabled={!user}>
+    <MenuItem key="calendar" component={Link} to="/integration" disabled={!user} data-testid="calendar-button">
       <ListItemIcon>
         <CalendarTodayIcon fontSize="small" />
       </ListItemIcon>
@@ -144,6 +144,7 @@ const AppNavbar = () => {
           </Typography>
           <div>
             <IconButton
+              data-testid="profile-menu"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"

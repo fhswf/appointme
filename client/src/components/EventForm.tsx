@@ -21,27 +21,10 @@ import {
 
 import Grid from '@mui/material/Grid2';
 
-import { Add, Delete, VerticalAlignCenter } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, DayNames, Event, Slot } from "common";
 import { t } from "i18next";
-
-/*
-export const useStyles = makeStyles((theme) => ({
-  row: {
-    alignItems: "center",
-    width: "100%",
-  },
-  label: {
-    fontSize: "0.7rem",
-    display: "block",
-    //marginBottom: "-1ex",
-  },
-  sep: {
-    padding: "0.8ex",
-  },
-}));
-*/
 
 type EditSlotProps = {
   day: Day;
@@ -56,7 +39,7 @@ const EditSlot = (props: EditSlotProps) => {
     setSlots(
       props.slots.filter(
         (slot) =>
-          true || (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
+          (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
       )
     );
   }, [props.slots]);
@@ -105,60 +88,59 @@ const EditSlot = (props: EditSlotProps) => {
 
   console.log("EditSlot: %o", slots);
   return (
-    <>
-      <Grid container xs={12}>
-        <Grid xs={2}>
-          <FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox checked={slots.length > 0} onChange={handleCheck} />
-              }
-              label={DayNames[props.day]}
-            />
-          </FormControl>
-        </Grid>
-        <Grid xs={9}>
-          <Grid container>
-            {slots.map((slot, index) => (
 
-              <FormGroup row key={index} style={{ "alignItems": "baseline" }}>
-                <Grid xs={4} textAlign="end">
-                  <Input
-                    type="time"
-                    placeholder="Starttime"
-                    onChange={changeTime("start", index)}
-                    value={slot.start}
-                  />
-                </Grid>
-                <Grid item xs={2} textAlign="center">
-                  –
-                </Grid>
-                <Grid item xs={4} textAlign="start">
-                  <Input
-                    type="time"
-                    placeholder="Endtime"
-                    onChange={changeTime("end", index)}
-                    value={slot.end}
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  <Button onClick={deleteSlot(index)}>
-                    <Delete />
-                  </Button>
-                </Grid>
-              </FormGroup >
+    <Grid container xs={12}>
+      <Grid xs={2}>
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox checked={slots.length > 0} onChange={handleCheck} />
+            }
+            label={DayNames[props.day]}
+          />
+        </FormControl>
+      </Grid>
+      <Grid xs={9}>
+        <Grid container>
+          {slots.map((slot, index) => (
 
-            ))}
-          </Grid>
+            <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
+              <Grid xs={4} textAlign="end">
+                <Input
+                  type="time"
+                  placeholder="Starttime"
+                  onChange={changeTime("start", index)}
+                  value={slot.start}
+                />
+              </Grid>
+              <Grid xs={2} textAlign="center">
+                –
+              </Grid>
+              <Grid xs={4} textAlign="start">
+                <Input
+                  type="time"
+                  placeholder="Endtime"
+                  onChange={changeTime("end", index)}
+                  value={slot.end}
+                />
+              </Grid>
+              <Grid xs={2}>
+                <Button onClick={deleteSlot(index)}>
+                  <Delete />
+                </Button>
+              </Grid>
+            </FormGroup >
+
+          ))}
         </Grid>
-        <Grid xs={1}>
-          {slots.length > 0 ?
-            <Button onClick={addSlot} hidden={slots.length <= 0}>
-              <Add />
-            </Button> : null}
-        </Grid>
-      </Grid >
-    </>
+      </Grid>
+      <Grid xs={1}>
+        {slots.length > 0 ?
+          <Button onClick={addSlot} hidden={slots.length <= 0}>
+            <Add />
+          </Button> : null}
+      </Grid>
+    </Grid >
   );
 };
 
@@ -217,7 +199,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   };
 
   return (
-    <form onSubmit={handleOnSubmit}>
+    (<form onSubmit={handleOnSubmit}>
       <Box>
         <Typography component="h2" variant="h5">
           {t("these_zesty_duck_nudge")}
@@ -225,6 +207,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         <div>
           <TextField
             id="event-title"
+            data-testid="event-form-title"
             type="text"
             label={t("lazy_just_duck_spin")}
             required
@@ -274,7 +257,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           />
         </div>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5">
           {t("jumpy_tasty_rook_trust")}
@@ -338,7 +320,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5" gutterBottom>
           {t("seemly_fine_octopus_slurp")}
@@ -353,12 +334,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               type="number"
               variant="filled"
               onChange={handleOnChange("maxFuture", 86400)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">Days</InputAdornment>
-                ),
-              }}
               helperText={t("How many days in advance is this event available?")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Days</InputAdornment>
+                  ),
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -369,12 +352,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               type="number"
               variant="filled"
               onChange={handleOnChange("minFuture", 86400)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">Days</InputAdornment>
-                ),
-              }}
               helperText={t("pretty_grand_cuckoo_arrive")}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">Days</InputAdornment>
+                  ),
+                }
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -390,7 +375,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-
       <Box pt="1em">
         <Typography component="h2" variant="h5">
           {t("Daily availability")}
@@ -412,7 +396,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           ))}
         </Stack>
       </Box>
-
       <Button
         variant="contained"
         type="submit"
@@ -421,6 +404,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
       >
         Save
       </Button>
-    </form>
+    </form>)
   );
 };

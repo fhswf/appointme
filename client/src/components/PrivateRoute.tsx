@@ -50,7 +50,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   if (authenticated === undefined) {
     console.log("PrivateRoute: authenticated is undefined");
     return null;
-  } else if (authenticated == false) {
+  } else if (!authenticated) {
     console.log("PrivateRoute: not authenticated, redirecting to /landing");
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }

@@ -1,3 +1,10 @@
+## client [1.6.3](https://github.com/fhswf/book_me/compare/client@1.6.2...client@1.6.3) (2024-09-30)
+
+
+### Bug Fixes
+
+* deployment on appoint.gawron.cloud ([55ff4b8](https://github.com/fhswf/book_me/commit/55ff4b8c7b2096f3a9ad6367245912e775e3850f))
+
 ## client [1.6.2](https://github.com/fhswf/book_me/compare/client@1.6.1...client@1.6.2) (2024-09-30)
 
 

@@ -3,11 +3,11 @@
 /**
  * @module authentication_controller
  */
-import { UserModel } from "../models/User.js";
+import { UserDocument, UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
+import validator from "validator";
 import { createTransport } from "nodemailer";
-import { google } from "googleapis";
-import { OAuth2Client, Credentials } from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 
 // Dotenv Config
@@ -16,11 +16,7 @@ const env = dotenv.config({
   path: "./src/config/config.env",
 });
 
-import { compare } from 'bcrypt';
-
-import pkg from 'jsonwebtoken';
-const { sign, verify } = pkg;
-import { JwtPayload } from 'jsonwebtoken';
+import { sign, verify, JwtPayload } from 'jsonwebtoken';
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
 console.log("redirectUri: %s", REDIRECT_URI);
@@ -47,6 +43,9 @@ const transporter = createTransport({
     user: process.env.EMAIL_FROM,
     pass: process.env.EMAIL_PASSWORD,
   },
+  tls: {
+    rejectUnauthorized: true,
+  },
 });
 
 /**
@@ -58,7 +57,6 @@ const transporter = createTransport({
 export const registerController = (req: Request, res: Response): void => {
   const name = <string>req.body.name;
   const email = <string>req.body.email;
-  const password = <string>req.body.password;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -72,7 +70,7 @@ export const registerController = (req: Request, res: Response): void => {
           res.status(400).json({ errors: "Email already exists!" });
         } else {
           const token = sign(
-            { name, email, password },
+            { name, email },
             process.env.ACCOUNT_ACTIVATION,
             { expiresIn: "10m" }
           );
@@ -126,7 +124,6 @@ export const activationController = (req, res): void => {
       //Decode the jwt for User information
       let name = "";
       let email = "";
-      let password = "";
 
       if ('name' in decoded) {
         name = decoded['name']
@@ -134,12 +131,10 @@ export const activationController = (req, res): void => {
       if ('email' in decoded) {
         email = decoded['email']
       }
-      if ('password' in decoded) {
-        password = decoded['password']
-      }
+
       const user_url = validateUrl(email);
       //Create a new User
-      const userToSave = new UserModel({ name, email, password, user_url });
+      const userToSave = new UserModel({ name, email, user_url });
       //Save the new created User to the DB
       userToSave.save()
         .then(() => {
@@ -165,44 +160,36 @@ export const activationController = (req, res): void => {
  * @param {response} res
  */
 export const loginController = (req, res): void => {
-  const { email, password } = req.body;
+  let { email } = req.body;
+  email = validator.isEmail(email) ? validator.normalizeEmail(email) : "";
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ errors: newError });
   } else {
-    void UserModel.findOne({ email })
+    UserModel
+      .findOne({ email: { $eq: email } })
       .exec()
-      .then(user => {
+      .then((user: UserDocument) => {
         if (!user) {
           res.status(400).json({ errors: "User does not exist!" });
         }
-        compare(password, user.password)
-          .then(result => {
-            if (result) {
-              const { _id, name, email } = user;
-              const access_token = sign(
-                { _id, name, email },
-                process.env.JWT_SECRET,
-                {
-                  expiresIn: "1d",
-                }
-              );
-              res.status(200).json({
-                access_token,
-                user: {
-                  name,
-                },
-              });
-            } else {
-              console.log("error");
-              res.status(400).json({ errors: "Wrong password or email!" });
-            }
-          })
-          .catch(err => {
-            res.status(400).json({ errors: "Coudlnt find user" });
-          });
+        const { _id, name, email } = user;
+        const access_token = sign(
+          { _id, name, email },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "1d",
+          }
+        );
+        res.status(200).json({
+          access_token,
+          user: {
+            name,
+          },
+        });
+
       })
       .catch(err => {
         res.status(400).json({ errors: "User does not exist!" });
@@ -220,14 +207,12 @@ export const googleLoginController = (req: Request, res: Response): void => {
       const { email_verified, name, email, picture, sub } = response.getAttributes().payload;
       console.log('picture: %s', picture);
       if (email_verified) {
-        const randompw = makePassword(15);
-        const password = randompw + process.env.JWT_SECRET;
         const user_url = validateUrl(email);
 
-        const user = new UserModel({ name, email, password, picture_url: picture, user_url });
+        const user = new UserModel({ name, email, picture_url: picture, user_url });
         user._id = sub;
         console.log('user: %o', user);
-        UserModel.findOneAndUpdate({ _id: sub }, { name, email, password, picture_url: picture, user_url }, { upsert: true })
+        UserModel.findOneAndUpdate({ _id: sub }, { name, email, picture_url: picture, user_url }, { upsert: true })
           .exec()
           .then(user => {
 
@@ -263,21 +248,6 @@ export const googleLoginController = (req: Request, res: Response): void => {
     });
 }
 
-/**
- * Helper function to generate a random password
- * @function
- * @param {number} length - length of the password to generate
- */
-function makePassword(length) {
-  let result = "";
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"§$%&/()=?-._,';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 /**
  * Generates a URL based on the given email

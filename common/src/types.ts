@@ -1,5 +1,4 @@
-import { toZonedTime, fromZonedTime } from "date-fns-tz"
-import { th } from "date-fns/locale";
+import { fromZonedTime } from "date-fns-tz"
 
 /** Enum type representing a day of week.
  *  The ordering is compatible with the native `Date.prototype.getDay()`, which uses 0 for Sunday.
@@ -89,7 +88,6 @@ export interface GoogleTokens extends Document {
 export interface User {
   email: string;
   name: string;
-  password: string;
   user_url: string;
   picture_url: string;
   google_tokens: GoogleTokens;

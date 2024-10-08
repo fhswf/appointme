@@ -8,7 +8,6 @@ import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import AddEvent from "./pages/AddEvent";
 import Planning from "./pages/Planning";
-import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
 import Booking from "./pages/Booking";
 import EditEvent from "./pages/EditEvent";
@@ -18,6 +17,7 @@ import Finished from "./pages/Finished";
 
 import { isAuthenticated } from "./helpers/helpers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { SnackbarProvider } from 'notistack';
 
 import "./i18n";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -25,9 +25,6 @@ import { deDE } from '@mui/x-date-pickers/locales';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { de } from 'date-fns/locale/de';
 import 'dayjs/locale/de';
-
-import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
@@ -91,7 +88,8 @@ console.log("localeText: %o", deDE.components.MuiLocalizationProvider.defaultPro
 root.render(
   <StrictMode>
     <Suspense fallback="loading">
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <SnackbarProvider maxSnack={3}>
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
 
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de} localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}>
             <ThemeProvider theme={theme}>
@@ -144,10 +142,6 @@ root.render(
                     element={<Landing />}
                   />
                   <Route
-                    path="/schedule/:user_url/:url"
-                    element={<Schedule />}
-                  />
-                  <Route
                     path="/users/:user_url"
                     element={<Planning />}
                   />
@@ -162,7 +156,8 @@ root.render(
             </ThemeProvider>
           </LocalizationProvider>
 
-      </GoogleOAuthProvider>
+        </GoogleOAuthProvider>
+      </SnackbarProvider>
     </Suspense>
   </StrictMode>
 );

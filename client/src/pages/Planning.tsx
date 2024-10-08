@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
 import {
-  Avatar,
   Box,
-  Card,
-  CardHeader,
-  CardContent,
   Container,
-  Grid,
   Typography,
-  CardActions,
-  Button,
 } from "@mui/material";
+
+import Grid from "@mui/material/Grid2";
 
 import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
@@ -82,8 +77,8 @@ const Planning = (props: any) => {
           justifyContent="space-evenly"
           alignItems="stretch"
         >
-          {events.map((event, index) => (
-            <Grid item sm={4} xs={6} key={index}>
+          {events.map((event) => (
+            <Grid sm={4} xs={6} key={event._id}>
               <EventType
                 event={event}
                 user={user}

@@ -8,7 +8,7 @@ import { Paper, Container, Typography, List, ListItem, ListItemText } from "@mui
 import { useTranslation } from "react-i18next";
 
 const Landing = (props: any) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   return (
     <div className="landing">
       {isAuthenticated() ? <Navigate to="/app" /> : null}

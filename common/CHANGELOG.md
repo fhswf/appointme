@@ -1,3 +1,23 @@
+## common [1.1.7](https://github.com/fhswf/book_me/compare/common@1.1.6...common@1.1.7) (2024-10-08)
+
+
+### Bug Fixes
+
+* **security:** remove password attribute ([79c4584](https://github.com/fhswf/book_me/commit/79c4584e57c0f462c82ec3640fbd6b13faaeb311))
+* sonarqube issues ([3ebe2a5](https://github.com/fhswf/book_me/commit/3ebe2a509d16e3da9c7d23c006d5ea81b14c918f))
+
+## common [1.1.6](https://github.com/fhswf/book_me/compare/common@1.1.5...common@1.1.6) (2024-10-04)
+
+
+### Bug Fixes
+
+* **test:** test before sonarqube analysis ([d91fa5d](https://github.com/fhswf/book_me/commit/d91fa5d79ac2494b9f4e2f5ad76105897b4a6dab))
+* **test:** test before sonarqube analysis ([c12d1e5](https://github.com/fhswf/book_me/commit/c12d1e58fcac663bd28f7c3476cf8df289c65b7c))
+* **test:** test before sonarqube analysis ([a7ce602](https://github.com/fhswf/book_me/commit/a7ce602f1a7b81d51f181f40d874a50a364154a1))
+* **test:** test before sonarqube analysis ([eb7b3bc](https://github.com/fhswf/book_me/commit/eb7b3bc9c313d5378324f728c8a0b088a34e8469))
+* **test:** unit tests ([8514158](https://github.com/fhswf/book_me/commit/8514158888043487357416af98201300b33b9341))
+* **test:** version & config updates ([0dbd7fd](https://github.com/fhswf/book_me/commit/0dbd7fdc9e79db5269f849912ccb91a16bebb618))
+
 ## common [1.1.5](https://github.com/fhswf/book_me/compare/common@1.1.4...common@1.1.5) (2024-09-24)
 
 

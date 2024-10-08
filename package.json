@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
+    "ci": "yarn workspaces foreach --all run ci; yarn dlx merge-ctrf -k ctrf",
     "backend": "yarn workspace backend start",
     "client": "yarn workspace client start",
     "build:common": "yarn workspace common build",
@@ -57,6 +58,7 @@
     "@semantic-release/npm": "^12.0.1",
     "@semantic-release/release-notes-generator": "^14.0.1",
     "dotenv-vault": "^1.26.2",
+    "jest-ctrf-json-reporter": "^0.0.9",
     "semantic-release": "^24.1.1"
   },
   "release": {

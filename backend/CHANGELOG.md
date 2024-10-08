@@ -1,3 +1,67 @@
+## backend [1.7.11](https://github.com/fhswf/book_me/compare/backend@1.7.10...backend@1.7.11) (2024-10-08)
+
+
+### Bug Fixes
+
+* **auth:** default for API_URL ([0698329](https://github.com/fhswf/book_me/commit/0698329f4b7b208293bcf2ae63e7cb4cd9f037ad))
+* **auth:** default for API_URL ([23b8df9](https://github.com/fhswf/book_me/commit/23b8df9cd31dc512491299e3021bf6109cd909f2))
+* **deployment:** resource limits ([b9fc3d2](https://github.com/fhswf/book_me/commit/b9fc3d2f38b4c0490542f7d874307fd528627743))
+* **k8s:** security settings ([311c449](https://github.com/fhswf/book_me/commit/311c44912ca9dd82533ef1855cb1b3b5b0b99cd2))
+* resource limits ([4f26ed7](https://github.com/fhswf/book_me/commit/4f26ed7a5cc35d19f8a8c740c91e4907a274b442))
+* **security:** remove password attribute ([79c4584](https://github.com/fhswf/book_me/commit/79c4584e57c0f462c82ec3640fbd6b13faaeb311))
+* sonarqube issues ([6c8e66d](https://github.com/fhswf/book_me/commit/6c8e66d181f1f902583db3445bc99574164db68b))
+* sonarqube issues ([3f05807](https://github.com/fhswf/book_me/commit/3f05807085837e747e90ced0e4aeaafe0e9cc5d4))
+* sonarqube issues ([3e28fd5](https://github.com/fhswf/book_me/commit/3e28fd51cd5fe5e89144c5df70a8c1394d31a021))
+* **test:** coverage for cypress tests ([353638e](https://github.com/fhswf/book_me/commit/353638ecc49079b9fae69cda835c80fb66acba3e))
+* **test:** coverage for cypress tests ([542cf93](https://github.com/fhswf/book_me/commit/542cf93830992589da7b68ca4d48d8a47f15bf80))
+* **test:** test before sonarqube analysis ([d91fa5d](https://github.com/fhswf/book_me/commit/d91fa5d79ac2494b9f4e2f5ad76105897b4a6dab))
+* **test:** test before sonarqube analysis ([c12d1e5](https://github.com/fhswf/book_me/commit/c12d1e58fcac663bd28f7c3476cf8df289c65b7c))
+* **test:** test before sonarqube analysis ([a7ce602](https://github.com/fhswf/book_me/commit/a7ce602f1a7b81d51f181f40d874a50a364154a1))
+* **test:** test before sonarqube analysis ([eb7b3bc](https://github.com/fhswf/book_me/commit/eb7b3bc9c313d5378324f728c8a0b088a34e8469))
+* **test:** version & config updates ([0dbd7fd](https://github.com/fhswf/book_me/commit/0dbd7fdc9e79db5269f849912ccb91a16bebb618))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.7
+
+## backend [1.7.11](https://github.com/fhswf/book_me/compare/backend@1.7.10...backend@1.7.11) (2024-10-04)
+
+
+### Bug Fixes
+
+* **auth:** default for API_URL ([0698329](https://github.com/fhswf/book_me/commit/0698329f4b7b208293bcf2ae63e7cb4cd9f037ad))
+* **auth:** default for API_URL ([23b8df9](https://github.com/fhswf/book_me/commit/23b8df9cd31dc512491299e3021bf6109cd909f2))
+* **deployment:** resource limits ([b9fc3d2](https://github.com/fhswf/book_me/commit/b9fc3d2f38b4c0490542f7d874307fd528627743))
+* **k8s:** security settings ([311c449](https://github.com/fhswf/book_me/commit/311c44912ca9dd82533ef1855cb1b3b5b0b99cd2))
+* sonarqube issues ([3f05807](https://github.com/fhswf/book_me/commit/3f05807085837e747e90ced0e4aeaafe0e9cc5d4))
+* sonarqube issues ([3e28fd5](https://github.com/fhswf/book_me/commit/3e28fd51cd5fe5e89144c5df70a8c1394d31a021))
+* **test:** test before sonarqube analysis ([d91fa5d](https://github.com/fhswf/book_me/commit/d91fa5d79ac2494b9f4e2f5ad76105897b4a6dab))
+* **test:** test before sonarqube analysis ([c12d1e5](https://github.com/fhswf/book_me/commit/c12d1e58fcac663bd28f7c3476cf8df289c65b7c))
+* **test:** test before sonarqube analysis ([a7ce602](https://github.com/fhswf/book_me/commit/a7ce602f1a7b81d51f181f40d874a50a364154a1))
+* **test:** test before sonarqube analysis ([eb7b3bc](https://github.com/fhswf/book_me/commit/eb7b3bc9c313d5378324f728c8a0b088a34e8469))
+* **test:** version & config updates ([0dbd7fd](https://github.com/fhswf/book_me/commit/0dbd7fdc9e79db5269f849912ccb91a16bebb618))
+
+## backend [1.7.11](https://github.com/fhswf/book_me/compare/backend@1.7.10...backend@1.7.11) (2024-10-04)
+
+
+### Bug Fixes
+
+* **auth:** default for API_URL ([0698329](https://github.com/fhswf/book_me/commit/0698329f4b7b208293bcf2ae63e7cb4cd9f037ad))
+* **auth:** default for API_URL ([23b8df9](https://github.com/fhswf/book_me/commit/23b8df9cd31dc512491299e3021bf6109cd909f2))
+* **deployment:** resource limits ([b9fc3d2](https://github.com/fhswf/book_me/commit/b9fc3d2f38b4c0490542f7d874307fd528627743))
+* **k8s:** security settings ([311c449](https://github.com/fhswf/book_me/commit/311c44912ca9dd82533ef1855cb1b3b5b0b99cd2))
+* sonarqube issues ([3f05807](https://github.com/fhswf/book_me/commit/3f05807085837e747e90ced0e4aeaafe0e9cc5d4))
+* sonarqube issues ([3e28fd5](https://github.com/fhswf/book_me/commit/3e28fd51cd5fe5e89144c5df70a8c1394d31a021))
+* **test:** test before sonarqube analysis ([d91fa5d](https://github.com/fhswf/book_me/commit/d91fa5d79ac2494b9f4e2f5ad76105897b4a6dab))
+* **test:** test before sonarqube analysis ([c12d1e5](https://github.com/fhswf/book_me/commit/c12d1e58fcac663bd28f7c3476cf8df289c65b7c))
+* **test:** test before sonarqube analysis ([a7ce602](https://github.com/fhswf/book_me/commit/a7ce602f1a7b81d51f181f40d874a50a364154a1))
+* **test:** test before sonarqube analysis ([eb7b3bc](https://github.com/fhswf/book_me/commit/eb7b3bc9c313d5378324f728c8a0b088a34e8469))
+* **test:** version & config updates ([0dbd7fd](https://github.com/fhswf/book_me/commit/0dbd7fdc9e79db5269f849912ccb91a16bebb618))
+
 ## backend [1.7.10](https://github.com/fhswf/book_me/compare/backend@1.7.9...backend@1.7.10) (2024-09-29)
 
 
