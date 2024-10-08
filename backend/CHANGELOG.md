@@ -1,3 +1,10 @@
+## backend [1.7.13](https://github.com/fhswf/book_me/compare/backend@1.7.12...backend@1.7.13) (2024-10-08)
+
+
+### Bug Fixes
+
+* **security:** enforce TLS with nodemailer ([0777972](https://github.com/fhswf/book_me/commit/07779728b5a807ed3b755887ddbf4b866bcd5852))
+
 ## backend [1.7.12](https://github.com/fhswf/book_me/compare/backend@1.7.11...backend@1.7.12) (2024-10-08)
 
 
