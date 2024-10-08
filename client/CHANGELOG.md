@@ -1,3 +1,30 @@
+## client [1.6.4](https://github.com/fhswf/book_me/compare/client@1.6.3...client@1.6.4) (2024-10-08)
+
+
+### Bug Fixes
+
+* **deps:** remove insecure deps ([9ea17aa](https://github.com/fhswf/book_me/commit/9ea17aa34c942a3299fc48121ab4d794a2029985))
+* resource limits ([4f26ed7](https://github.com/fhswf/book_me/commit/4f26ed7a5cc35d19f8a8c740c91e4907a274b442))
+* sonarqube issues ([fb5a54e](https://github.com/fhswf/book_me/commit/fb5a54e8389c3863c1ee0711dba2ed03c120324b))
+* sonarqube issues ([f468722](https://github.com/fhswf/book_me/commit/f468722c90502e936576a2e40d5fc8bd6a75cefb))
+* sonarqube issues ([fb6f00c](https://github.com/fhswf/book_me/commit/fb6f00c383725f81f452b21dccbd6e2e61887a2e))
+* sonarqube issues ([137215e](https://github.com/fhswf/book_me/commit/137215e1c7fb185a42b845fa761c19c7e81007bf))
+* sonarqube issues ([896c87c](https://github.com/fhswf/book_me/commit/896c87cce3010f31683ed3ea470fd6e469eb150d))
+* sonarqube issues ([acc745e](https://github.com/fhswf/book_me/commit/acc745e2966c7c05dc5b056f5fb008da4af1fbef))
+* sonarqube issues ([3ebe2a5](https://github.com/fhswf/book_me/commit/3ebe2a509d16e3da9c7d23c006d5ea81b14c918f))
+* sonarqube issues ([ee50d47](https://github.com/fhswf/book_me/commit/ee50d47bcfc73d66a524c1963dc25eea1ddecf0b))
+* sonarqube issues ([6c8e66d](https://github.com/fhswf/book_me/commit/6c8e66d181f1f902583db3445bc99574164db68b))
+* sonarqube issues ([8ef89e6](https://github.com/fhswf/book_me/commit/8ef89e66a8c082d427780576f544f37b5115330a))
+* sonarqube issues ([3f05807](https://github.com/fhswf/book_me/commit/3f05807085837e747e90ced0e4aeaafe0e9cc5d4))
+* sonarqube issues ([3e28fd5](https://github.com/fhswf/book_me/commit/3e28fd51cd5fe5e89144c5df70a8c1394d31a021))
+* **test:** coverage for cypress tests ([353638e](https://github.com/fhswf/book_me/commit/353638ecc49079b9fae69cda835c80fb66acba3e))
+* **test:** coverage for cypress tests ([542cf93](https://github.com/fhswf/book_me/commit/542cf93830992589da7b68ca4d48d8a47f15bf80))
+* **test:** cypress tests ([5d29107](https://github.com/fhswf/book_me/commit/5d291070abe49a8e841ca60b7fd4c4527eaf187d))
+* **test:** cypress tests ([51e05ce](https://github.com/fhswf/book_me/commit/51e05ce52e22f678016370422b473068a8a892f7))
+* **test:** set time zone for cypress ([f4f63f6](https://github.com/fhswf/book_me/commit/f4f63f66dd7dd22ece560fd2647057691d6ea233))
+* **test:** test before sonarqube analysis ([d4f94f7](https://github.com/fhswf/book_me/commit/d4f94f71e07c5d00fc590714906c063dc5e4e5bc))
+* **test:** test before sonarqube analysis ([eb7b3bc](https://github.com/fhswf/book_me/commit/eb7b3bc9c313d5378324f728c8a0b088a34e8469))
+
 ## client [1.6.3](https://github.com/fhswf/book_me/compare/client@1.6.2...client@1.6.3) (2024-09-30)
 
 
