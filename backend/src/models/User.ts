@@ -1,6 +1,5 @@
 
 import { Document, Schema, model } from 'mongoose';
-import { genSalt, hash } from "bcryptjs";
 import { User } from "common/src/types";
 
 

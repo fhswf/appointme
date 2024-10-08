@@ -10,7 +10,8 @@ import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { UserModel, User, isValidObjectId } from "../models/User.js";
+import { User } from "common/src/types";
+import { UserModel } from "../models/User.js";
 import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
@@ -21,6 +22,7 @@ import { Event, IntervalSet } from 'common';
 
 // Dotenv Config
 import dotenv from "dotenv";
+import { isValidObjectId } from 'mongoose';
 
 const env = dotenv.config({
   path: "./src/config/config.env",
