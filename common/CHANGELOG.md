@@ -1,3 +1,11 @@
+## common [1.1.7](https://github.com/fhswf/book_me/compare/common@1.1.6...common@1.1.7) (2024-10-08)
+
+
+### Bug Fixes
+
+* **security:** remove password attribute ([79c4584](https://github.com/fhswf/book_me/commit/79c4584e57c0f462c82ec3640fbd6b13faaeb311))
+* sonarqube issues ([3ebe2a5](https://github.com/fhswf/book_me/commit/3ebe2a509d16e3da9c7d23c006d5ea81b14c918f))
+
 ## common [1.1.6](https://github.com/fhswf/book_me/compare/common@1.1.5...common@1.1.6) (2024-10-04)
 
 
