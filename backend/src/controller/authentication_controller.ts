@@ -9,7 +9,7 @@ import validator from "validator";
 import { createTransport } from "nodemailer";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
-import pkg from 'jsonwebtoken';
+import pkg, { JwtPayload } from 'jsonwebtoken';
 
 // Dotenv Config
 import dotenv from "dotenv";
