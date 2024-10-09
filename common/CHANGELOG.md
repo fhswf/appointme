@@ -1,3 +1,10 @@
+## common [1.1.11](https://github.com/fhswf/book_me/compare/common@1.1.10...common@1.1.11) (2024-10-09)
+
+
+### Bug Fixes
+
+* **test:** timezone for tests ([184bcd2](https://github.com/fhswf/book_me/commit/184bcd26fb3d854628f7bce42666e9adef26eb48))
+
 ## common [1.1.10](https://github.com/fhswf/book_me/compare/common@1.1.9...common@1.1.10) (2024-10-09)
 
 
