@@ -255,49 +255,32 @@ export class IntervalSet extends Array<TimeRange> {
   /**
    * Calculate the intersection with another `IntervalSet`
    * @param other `IntervalSet`
-   * @returns `Intervalset`
+   * @returns `IntervalSet`
    */
   intersect(other: IntervalSet): IntervalSet {
     let result = new IntervalSet();
-
     let i = 0;
     let j = 0;
+
     while (i < this.length && j < other.length) {
-      let x = this[i]
-      let y = other[j]
-      let start: Date = null
-      let end: Date = null
-      // we have the first restriction if
-      // - our first start time is later
-      // - if starts are equal, our first end time is earlier
-      if (x.start > y.start || (x.start.getTime() == y.start.getTime() && x.end < y.end)) {
-        if (x.end > y.start) {
-          // intersection
-          start = x.start
-          end = x.end < y.end ? x.end : y.end
-          if (start < end) {
-            result.push({ start, end })
-          }
-        }
+      let x = this[i];
+      let y = other[j];
+
+      let start = x.start > y.start ? x.start : y.start;
+      let end = x.end < y.end ? x.end : y.end;
+
+      if (start < end) {
+        result.push({ start, end });
       }
-      else {
-        if (y.end > x.start) {
-          // intersection
-          start = y.start
-          end = x.end < y.end ? x.end : y.end
-          if (start < end) {
-            result.push({ start, end })
-          }
-        }
-      }
+
       if (x.end < y.end) {
-        i++
+        i++;
       } else {
-        j++
+        j++;
       }
     }
 
-    return result
+    return result;
   }
 
   /**
