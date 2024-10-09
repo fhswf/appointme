@@ -1,3 +1,10 @@
+## client [1.6.5](https://github.com/fhswf/book_me/compare/client@1.6.4...client@1.6.5) (2024-10-09)
+
+
+### Bug Fixes
+
+* **client:** add error handling on planning page ([a5c9da5](https://github.com/fhswf/book_me/commit/a5c9da569a3e7896abb05453fd097c3d1d46d78b))
+
 ## client [1.6.4](https://github.com/fhswf/book_me/compare/client@1.6.3...client@1.6.4) (2024-10-08)
 
 
