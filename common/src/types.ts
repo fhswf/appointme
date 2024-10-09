@@ -181,7 +181,7 @@ export class IntervalSet extends Array<TimeRange> {
   }
 
   private initializeWithArray(arr: any[]) {
-    arr = arr.map((x) => {
+    arr.forEach((x) => {
       x.start = this.convertToDate(x.start);
       x.end = this.convertToDate(x.end);
       this.push(x);
