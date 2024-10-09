@@ -117,7 +117,7 @@ export class TimeRange {
 /**
  * This class represents a set of non-overlapping time intervals.
  * It can be used to represent the free/busy slots in an agenda and supports basic 
- * operations like adding, substracting, and intersecting interval sets. 
+ * operations like adding, subtracting, and intersecting interval sets. 
  */
 export class IntervalSet extends Array<TimeRange> {
 
@@ -129,60 +129,70 @@ export class IntervalSet extends Array<TimeRange> {
   constructor(timeMin: Date, timeMax: Date, slots: Slots);
   constructor(timeMin: Date, timeMax: Date, slots: Slots, timeZone: string);
   constructor(...args: any[]) {
-    if (args.length == 0) {
-      super()
-    }
-    else if (args.length >= 3 && args[0] instanceof Date && args[1] instanceof Date) {
-      super()
-      let slots: Slots = args[2]
-      // Intersect with slots
-      let t = args[0]
-      let timezone = args.length >= 4 ? args[3] : 'Europe/Berlin'
-      while (t < args[1]) {
-        let day = t.getDay()
-        let s: Slot[] = slots[day];
-        s.forEach((slot) => {
-          const start_h = Number.parseInt(slot.start.substring(0, 2))
-          const start_m = Number.parseInt(slot.start.substring(3, 5))
-          const end_h = Number.parseInt(slot.end.substring(0, 2))
-          const end_m = Number.parseInt(slot.end.substring(3, 5))
-          let start = new Date(t)//utcToZonedTime(t, timezone)
-          let end = new Date(t)//utcToZonedTime(t, timezone)
-          start.setHours(start_h, start_m, 0, 0)
-          end.setHours(end_h, end_m, 0, 0)
-          start = fromZonedTime(start, timezone)
-          end = fromZonedTime(end, timezone)
-          this.push({ start, end })
-        })
-        t = new Date(t.getTime() + 1000 * 86400)
-      }
-    }
-    else if (args.length == 2 && args[0]) {
-      super();
-      args = args.map((x) => (typeof x == 'string' || x instanceof String) ? new Date(x as string) : x)
-      if (args[0] > args[1]) {
-        throw new RangeError('Illegal time interval, start > end');
-      }
-      if (args[0] < args[1]) {
-        this.push({ start: args[0], end: args[1] });
-      }
-    }
-    else if (args.length == 1 && args[0] instanceof Array) {
-      let arr: TimeRange[] = args[0].map((x) => {
-        if (typeof x.start == 'string' || x.start instanceof String) x.start = new Date(x.start);
-        if (typeof x.end == 'string' || x.end instanceof String) x.end = new Date(x.end);
-        return x
-      })
-      super(...arr)
-    }
-    else if (args.length == 1) {
-      super(args[0])
-    }
-    else {
-      // should not be reachable
+
+    super();
+    if (args.length === 0) return;
+
+    if (args.length >= 3 && args[0] instanceof Date && args[1] instanceof Date) {
+      this.initializeWithSlots(args[0], args[1], args[2], args[3]);
+    } else if (args.length === 2) {
+      this.initializeWithDates(args[0], args[1]);
+    } else if (args.length === 1 && Array.isArray(args[0])) {
+      // console.log('IntervalSet.ctor1(): %o', args)
+      this.initializeWithArray(args[0]);
+    } else if (args.length === 1) {
+      // console.log('IntervalSet.ctor2(): %o %s', args, typeof args[0])
+      this.push(args[0]);
+    } else {
       throw new Error('Illegal arguments');
     }
   }
+
+  private initializeWithSlots(timeMin: Date, timeMax: Date, slots: Slots, timeZone: string = 'Europe/Berlin') {
+    let t = timeMin;
+    while (t < timeMax) {
+      let day = t.getDay();
+      let s: Slot[] = slots[day];
+      s.forEach((slot) => {
+        const start = this.createDateFromSlot(t, slot.start, timeZone);
+        const end = this.createDateFromSlot(t, slot.end, timeZone);
+        this.push({ start, end });
+      });
+      t = new Date(t.getTime() + 1000 * 86400);
+    }
+  }
+
+  private createDateFromSlot(baseDate: Date, time: string, timeZone: string): Date {
+    const [hours, minutes] = time.split(':').map(Number);
+    let date = new Date(baseDate);
+    date.setHours(hours, minutes, 0, 0);
+    return fromZonedTime(date, timeZone);
+  }
+
+  private initializeWithDates(start: any, end: any) {
+    start = this.convertToDate(start);
+    end = this.convertToDate(end);
+    if (start > end) {
+      throw new RangeError('Illegal time interval, start > end');
+    }
+    if (start < end) {
+      this.push({ start, end });
+    }
+  }
+
+  private initializeWithArray(arr: any[]) {
+    arr = arr.map((x) => {
+      x.start = this.convertToDate(x.start);
+      x.end = this.convertToDate(x.end);
+      this.push(x);
+      return x;
+    });
+  }
+
+  private convertToDate(value: any): Date {
+    return (typeof value === 'string' || value instanceof String) ? new Date(value.toString()) : value;
+  }
+
 
   static equals(r1: TimeRange, r2: TimeRange): boolean {
     //console.log('equals: %o, %o, %o', r1, r2, (r1.start.getTime() == r2.start.getTime()) && (r1.end.getTime() == r2.end.getTime()))
@@ -193,10 +203,14 @@ export class IntervalSet extends Array<TimeRange> {
     return !(r1.end < r2.start || r2.end < r1.start)
   }
 
-  overlapping(other: TimeRange) {
-    return this
-      .map((range, index) => IntervalSet.overlap(range, other) ? index : null)
-      .filter((x) => x != null)
+  overlapping(other: TimeRange): number[] {
+    let l = []
+    this.forEach((range, index) => {
+      if (IntervalSet.overlap(range, other)) {
+        l.push(index)
+      }
+    })
+    return l.filter((x) => x !== null)
   }
 
   /**
@@ -234,7 +248,9 @@ export class IntervalSet extends Array<TimeRange> {
       })
 
       // filter out empty segments
+      // console.log('addRange: before filter: %o', this)
       let filtered = this.filter(x => x.start < x.end)
+      // console.log('addRange: after filter: %o', filtered)
       this.splice(0, this.length, ...filtered);
     }
   }
@@ -246,9 +262,11 @@ export class IntervalSet extends Array<TimeRange> {
    * @todo Replace with linear time algorithm.
    */
   add(other: IntervalSet) {
+
     other.forEach((interval) => {
       this.addRange(interval);
     })
+
     return this
   }
 

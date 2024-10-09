@@ -28,7 +28,7 @@ describe('Test for issue with freeBusy', () => {
     })
 })
 
-describe('TimeIntervals', () => {
+describe('IntervalsSets', () => {
     let date1 = new Date("2020-10-21")
     let date2 = new Date("2020-10-22")
     let date3 = new Date("2020-10-23")
@@ -42,6 +42,9 @@ describe('TimeIntervals', () => {
         let result = new IntervalSet(new Date("2020-10-21"), new Date("2020-10-30"));
         expect(result.length).toEqual(1);
         expect(result[0].start instanceof Date).toBe(true);
+        expect(result[0].end instanceof Date).toBe(true);
+        expect(result[0].start).toEqual(new Date("2020-10-21"));
+        expect(result[0].end).toEqual(new Date("2020-10-30"));
     });
     test('constructor should create slots with length 0', () => {
         let result = new IntervalSet(new Date("2020-10-21"), new Date("2020-10-21"));
@@ -76,6 +79,14 @@ describe('TimeIntervals', () => {
         expect(result[0].end.getHours()).toEqual(12);
         expect(result[0].end.getMinutes()).toEqual(0);
     });
+
+    test('equals', () => {
+        let r1 = new IntervalSet(new Date("2021-05-25T12:43:00.000Z"), new Date("2021-05-27T12:43:00.000Z"))
+        let r2 = new TimeRange(new Date("2021-05-25T12:43:00.000Z"), new Date("2021-05-27T12:43:00.000Z"))
+
+
+        expect(IntervalSet.equals(r1[0], r2)).toBe(true)
+    })
 
     test('index', () => {
         let result = new IntervalSet(date1, date2);
