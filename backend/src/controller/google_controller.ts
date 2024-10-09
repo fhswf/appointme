@@ -175,12 +175,10 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
               {
                 displayName: req.body.name as string,
                 email: req.body.email as string,
-              },
-              {
-                displayName: user.name,
-                email: user.email
               }
             ],
+            guestsCanModify: true,
+            guestsCanInviteOthers: true,
             conferenceData: {
               conferenceId: "privateZoom",
               conferenceSolution: {
