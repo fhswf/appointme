@@ -15,6 +15,7 @@ import { getUserByUrl } from "../helpers/services/user_services";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
+import { useSnackbar } from "notistack";
 
 
 const Planning = (props: any) => {
@@ -28,6 +29,7 @@ const Planning = (props: any) => {
     picture_url: "",
   });
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getUserByUrl(user_url)
@@ -50,11 +52,13 @@ const Planning = (props: any) => {
               }
             })
             .catch((err) => {
+              enqueueSnackbar("Could not get event information", { variant: "error", autoHideDuration: 15000, className: "error" });
               console.log(err);
             });
         }
       })
       .catch((err) => {
+        enqueueSnackbar("Could not get user information", { variant: "error", autoHideDuration: 15000, className: "error" });
         console.log(err);
       });
   }, [user_url, navigate, user.name]);
