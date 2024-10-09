@@ -1,3 +1,13 @@
+## client [1.6.6](https://github.com/fhswf/book_me/compare/client@1.6.5...client@1.6.6) (2024-10-09)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.8
+
 ## client [1.6.5](https://github.com/fhswf/book_me/compare/client@1.6.4...client@1.6.5) (2024-10-09)
 
 
