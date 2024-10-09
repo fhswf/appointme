@@ -1,3 +1,10 @@
+# backend [1.9.0](https://github.com/fhswf/book_me/compare/backend@1.8.0...backend@1.9.0) (2024-10-09)
+
+
+### Features
+
+* **calendar:** allow guests to modify an event ([dbba656](https://github.com/fhswf/book_me/commit/dbba6566db19783759f980ede8463b81246d4f2f))
+
 # backend [1.8.0](https://github.com/fhswf/book_me/compare/backend@1.7.17...backend@1.8.0) (2024-10-09)
 
 
