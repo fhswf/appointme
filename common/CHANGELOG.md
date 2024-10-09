@@ -1,3 +1,10 @@
+## common [1.1.9](https://github.com/fhswf/book_me/compare/common@1.1.8...common@1.1.9) (2024-10-09)
+
+
+### Bug Fixes
+
+* improve readability ([ec10d8a](https://github.com/fhswf/book_me/commit/ec10d8a76af71fb70988c6509a8bfa416a3a81d4))
+
 ## common [1.1.8](https://github.com/fhswf/book_me/compare/common@1.1.7...common@1.1.8) (2024-10-09)
 
 
