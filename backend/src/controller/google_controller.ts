@@ -167,6 +167,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
               timeZone: "Europe/Berlin",
             },
             organizer: {
+              displayName: user.name,
               email: user.email,
               id: user._id as string
             },
@@ -175,6 +176,10 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
                 displayName: req.body.name as string,
                 email: req.body.email as string,
               },
+              {
+                displayName: user.name,
+                email: user.email
+              }
             ],
             conferenceData: {
               conferenceId: "privateZoom",
