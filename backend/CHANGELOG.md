@@ -1,3 +1,10 @@
+# backend [1.8.0](https://github.com/fhswf/book_me/compare/backend@1.7.17...backend@1.8.0) (2024-10-09)
+
+
+### Features
+
+* **backend:** calender events ([beaa138](https://github.com/fhswf/book_me/commit/beaa138df7112321dbe30a9e809d43c3d56b992a))
+
 ## backend [1.7.17](https://github.com/fhswf/book_me/compare/backend@1.7.16...backend@1.7.17) (2024-10-09)
 
 
