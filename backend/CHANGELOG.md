@@ -1,3 +1,13 @@
+## backend [1.7.15](https://github.com/fhswf/book_me/compare/backend@1.7.14...backend@1.7.15) (2024-10-09)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.1.9
+
 ## backend [1.7.14](https://github.com/fhswf/book_me/compare/backend@1.7.13...backend@1.7.14) (2024-10-09)
 
 
