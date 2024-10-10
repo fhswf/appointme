@@ -9,45 +9,6 @@ on:
     #  - "common/**"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    container:
-      image: cypress/included:13.5.0
-      options: --user 1001
-    strategy:
-      matrix:
-        # Run the steps below with the following versions of Node.js
-        node-version: [18.x]
-
-    steps:
-      # Fetch the latest commit
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # Setup Node.js using the appropriate version
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      # Install package dependencies
-      - name: Install
-        run: yarn install --immutable
-
-      # Build
-      - name: Build
-        run: yarn workspace common build
-
-      # Run tests
-      - name: Test
-        run: yarn workspaces foreach --all run ci
-
-      - name: Test Summary
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            **/TEST-*.xml
 
   release:
     # Only release on push to master

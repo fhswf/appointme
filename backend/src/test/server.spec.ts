@@ -18,4 +18,10 @@ describe("Server", () => {
     const res = await request(app).get("/api/v1/ping");
     expect(res.status).toEqual(200);
   });
+
+  it("should return the user", async () => {
+    const res = await request(app).get("/api/v1/users/user");
+    expect(res.status).toEqual(401);
+    console.log(res.body);
+  })
 });
