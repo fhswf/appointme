@@ -15,12 +15,16 @@ const { decode, sign, verify } = jwt_pkg;
  */
 export const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
   const header = req.headers.authorization;
-  if (!header) {
+  const cookie = req.cookies["access_token"];
+  if (!header && !cookie) {
     console.log("No authorization header");
-    res.json({
-      success: false,
-      message: "Unauthorized! Sign in again!",
-    });
+    res
+      .status(401)
+      .set("WWW-Authenticate", 'Bearer')
+      .json({
+        success: false,
+        message: "Unauthorized! Sign in again!",
+      });
     return
   }
   const token = header.split(" ")[1];

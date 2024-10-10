@@ -177,26 +177,12 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
                 email: req.body.email as string,
               }
             ],
+            source: {
+              title: "Appointment",
+              url: "https://appoint.gawron.cloud",
+            },
             guestsCanModify: true,
             guestsCanInviteOthers: true,
-            conferenceData: {
-              conferenceId: "privateZoom",
-              conferenceSolution: {
-                iconUri: "https://jupiter.fh-swf.de/icons/zoom.svg",
-                key: {
-                  type: "addOn"
-                },
-                name: "Zoom"
-              },
-              entryPoints: [
-                {
-                  entryPointType: "video",
-                  label: "fh-swf.zoom.us/my/cgawron",
-                  uri: "https://fh-swf.zoom.us/my/cgawron",
-                  passcode: "none"
-                }
-              ]
-            }
           };
 
           oAuth2Client.setCredentials(user.google_tokens);

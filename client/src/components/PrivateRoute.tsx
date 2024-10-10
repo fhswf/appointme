@@ -24,11 +24,11 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     getUserByToken(token)
       .then((res) => {
-        if (res.data.success === false) {
+        if (res.data.success === false || res.status === 401) {
           signout();
           navigate("/landing");
         } else {
-          console.log("getUserById: %o", res);
+          console.log("getUserByToken: %o", res);
           setUser(res.data);
           console.log("user set to %o", res.data);
         }
