@@ -27,21 +27,27 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction): vo
       });
     return
   }
-  const token = header.split(" ")[1];
+  const token = cookie || header.split(" ")[1];
   if (!token) {
     console.log("No authorization token");
-    res.json({
-      success: false,
-      message: "Unauthorized! Sign in again!",
-    });
+    res
+      .status(401)
+      .set("WWW-Authenticate", 'Bearer')
+      .json({
+        success: false,
+        message: "Unauthorized! Sign in again!",
+      });
   } else {
     verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.log("Invalid token: ", err);
-        return res.json({
-          success: false,
-          message: "Unauthorized! Sign in again!",
-        });
+        return res
+          .status(401)
+          .set("WWW-Authenticate", 'Bearer')
+          .json({
+            success: false,
+            message: "Unauthorized! Sign in again!",
+          });
       } else {
         req['user_id'] = decoded["_id"] as string;
         next();
