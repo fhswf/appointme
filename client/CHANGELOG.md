@@ -1,3 +1,10 @@
+# client [1.7.0](https://github.com/fhswf/book_me/compare/client@1.6.9...client@1.7.0) (2024-10-10)
+
+
+### Features
+
+* store access token in cookie ([fbd2706](https://github.com/fhswf/book_me/commit/fbd27066b4e3d016c4053197b551d46555df68c1))
+
 ## client [1.6.9](https://github.com/fhswf/book_me/compare/client@1.6.8...client@1.6.9) (2024-10-09)
 
 
