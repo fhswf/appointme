@@ -7,7 +7,7 @@ export const googleRouter = Router();
 
 import { generateAuthUrl, googleCallback, revokeScopes, insertEventToGoogleCal, getCalendarList } from "../controller/google_controller.js";
 
-import { requireAuth } from "../handlers/middleware.js";
+import { middleware } from "../handlers/middleware.js";
 
 /**
  * Route to delete an access token from a given user
@@ -17,7 +17,7 @@ import { requireAuth } from "../handlers/middleware.js";
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-googleRouter.delete("/revoke", requireAuth, revokeScopes);
+googleRouter.delete("/revoke", middleware.requireAuth, revokeScopes);
 
 /**
  * Route to generate an URL to connect the google cal api
@@ -27,9 +27,9 @@ googleRouter.delete("/revoke", requireAuth, revokeScopes);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-googleRouter.get("/generateUrl", requireAuth, generateAuthUrl);
+googleRouter.get("/generateUrl", middleware.requireAuth, generateAuthUrl);
 
-googleRouter.get("/calendarList", requireAuth, getCalendarList);
+googleRouter.get("/calendarList", middleware.requireAuth, getCalendarList);
 
 /**
  * Callback function - Set in google developer console

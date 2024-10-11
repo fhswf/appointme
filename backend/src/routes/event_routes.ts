@@ -15,7 +15,7 @@ import {
   getAvailableTimes,
 } from "../controller/event_controller.js";
 
-import { requireAuth } from "../handlers/middleware.js";
+import { middleware } from "../handlers/middleware.js";
 
 export const eventRouter = Router();
 /**
@@ -26,7 +26,7 @@ export const eventRouter = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.post("/addEvent", requireAuth, addEventController);
+eventRouter.post("/addEvent", middleware.requireAuth, addEventController);
 
 /**
  * Route to delete an event
@@ -36,7 +36,7 @@ eventRouter.post("/addEvent", requireAuth, addEventController);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.delete("/deleteEvent/:id", requireAuth, deleteEventController);
+eventRouter.delete("/deleteEvent/:id", middleware.requireAuth, deleteEventController);
 
 /**
  * Route to update an Event.
@@ -46,7 +46,7 @@ eventRouter.delete("/deleteEvent/:id", requireAuth, deleteEventController);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.put("/updateEvent/:id", requireAuth, updateEventController);
+eventRouter.put("/updateEvent/:id", middleware.requireAuth, updateEventController);
 
 /**
  * Route to fetch all events of the logged in user
@@ -56,7 +56,7 @@ eventRouter.put("/updateEvent/:id", requireAuth, updateEventController);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getEvents", requireAuth, getEventListController);
+eventRouter.get("/getEvents", middleware.requireAuth, getEventListController);
 
 /**
  * Route to fetch an event of an given eventid
@@ -66,7 +66,7 @@ eventRouter.get("/getEvents", requireAuth, getEventListController);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getEvent/:id", requireAuth, getEventByIdController);
+eventRouter.get("/getEvent/:id", middleware.requireAuth, getEventByIdController);
 
 /**
  * Route to fetch all active events of an given user

@@ -9,7 +9,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "vitest run src/**/*.spec.ts --coverage",
+    "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
     "ci": "vitest run src/**/*.spec.ts --coverage; yarn dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml",
     "start": "node build/server.js",
     "server": "nodemon src/server.ts",
