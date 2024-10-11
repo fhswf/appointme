@@ -1,3 +1,10 @@
+## backend [1.11.1](https://github.com/fhswf/book_me/compare/backend@1.11.0...backend@1.11.1) (2024-10-11)
+
+
+### Bug Fixes
+
+* testing ([7e1022c](https://github.com/fhswf/book_me/commit/7e1022c848a7f7cf7033e2610326b8d38197321b))
+
 # backend [1.11.0](https://github.com/fhswf/book_me/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
 
 
