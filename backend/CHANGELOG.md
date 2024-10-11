@@ -1,3 +1,31 @@
+# backend [1.11.0](https://github.com/fhswf/book_me/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
+
+
+### Bug Fixes
+
+* **backend:** import in test spec ([88c78d8](https://github.com/fhswf/book_me/commit/88c78d828c3023a257ef37941799c93911a42add))
+
+
+### Features
+
+* **backend:** store access token in cookie ([3b58072](https://github.com/fhswf/book_me/commit/3b58072ded26205ba01edaaf951aebc2012125fd))
+* store access token in cookie ([27990d7](https://github.com/fhswf/book_me/commit/27990d7e86de82d3f6d5e9ba97e4f785e9e26ea2))
+
+# backend [1.11.0](https://github.com/fhswf/book_me/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
+
+
+### Features
+
+* **backend:** store access token in cookie ([3b58072](https://github.com/fhswf/book_me/commit/3b58072ded26205ba01edaaf951aebc2012125fd))
+* store access token in cookie ([27990d7](https://github.com/fhswf/book_me/commit/27990d7e86de82d3f6d5e9ba97e4f785e9e26ea2))
+
+# backend [1.10.0](https://github.com/fhswf/book_me/compare/backend@1.9.0...backend@1.10.0) (2024-10-10)
+
+
+### Features
+
+* store access token in cookie ([fbd2706](https://github.com/fhswf/book_me/commit/fbd27066b4e3d016c4053197b551d46555df68c1))
+
 # backend [1.9.0](https://github.com/fhswf/book_me/compare/backend@1.8.0...backend@1.9.0) (2024-10-09)
 
 
