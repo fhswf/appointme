@@ -231,7 +231,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
             // TODO: Remove sameSite: none in production
             res
               .cookie('access_token',
-                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite: 'none' })
+                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite: 'none', domain: 'gawron.cloud' })
               .status(200)
               .json({
                 access_token,
