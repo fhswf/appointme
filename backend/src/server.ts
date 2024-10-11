@@ -68,6 +68,18 @@ app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
-export const server = app.listen(PORT, () => {
-  console.log(`Server running on Port ${PORT}`);
-});
+export const init = () => {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on Port ${PORT}`);
+  });
+  return server;
+}
+
+import * as url from 'node:url';
+
+if (import.meta.url.startsWith('file:')) { // (A)
+  const modulePath = url.fileURLToPath(import.meta.url);
+  if (process.argv[1] === modulePath) { // (B)
+    init()
+  }
+}

@@ -263,8 +263,8 @@ export const googleLoginController = (req: Request, res: Response): void => {
  */
 function validateUrl(userEmail: string): string {
   const newEmail = userEmail.split("@");
-  const reg = new RegExp(/[~\/]/g);
-  let newUrl = newEmail[0].toLowerCase().replace(/[\. ,:]+/g, "-");
+  const reg = new RegExp(/[~/]/g);
+  let newUrl = newEmail[0].toLowerCase().replace(/[. ,:]+/g, "-");
   newUrl = newUrl.replace(reg, "-");
   return newUrl;
 }
