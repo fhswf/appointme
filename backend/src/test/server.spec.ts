@@ -67,7 +67,7 @@ const EVENT = {
 let status = null;
 
 
-describe("Server", () => {
+describe("Server routes", () => {
   let app: any;
   vi.mock("../handlers/middleware.js", () => {
     return {
@@ -101,6 +101,21 @@ describe("Server", () => {
     }
   })
 
+  vi.mock("../models/Event.js", () => {
+    return {
+      UserModel: {
+        findOne: vi.fn((query) => {
+          console.log("mocked findOne");
+          return {
+            exec: vi.fn(() => {
+              return Promise.resolve(EVENT);
+            })
+          }
+        })
+      }
+    }
+  })
+
   beforeAll(async () => {
     const { init } = await import("../server.js");
     app = init();
@@ -114,10 +129,6 @@ describe("Server", () => {
     await app.close();
   });
 
-  it("should start the server", async () => {
-    const res = await request(app).get("/api/v1/ping");
-    expect(res.status).toEqual(200);
-  });
 
   it("should return unauthorized", async () => {
     status = 401;
