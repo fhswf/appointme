@@ -1,3 +1,10 @@
+## backend [1.11.2](https://github.com/fhswf/book_me/compare/backend@1.11.1...backend@1.11.2) (2024-10-11)
+
+
+### Bug Fixes
+
+* enable cookies for CORS requests ([0188059](https://github.com/fhswf/book_me/commit/0188059edf52d5eeb8c0cab06ffa2caeb8bebc65))
+
 ## backend [1.11.1](https://github.com/fhswf/book_me/compare/backend@1.11.0...backend@1.11.1) (2024-10-11)
 
 
