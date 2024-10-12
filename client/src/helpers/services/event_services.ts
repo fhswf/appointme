@@ -10,9 +10,7 @@ export async function saveUserEvent(
     `${import.meta.env.REACT_APP_API_URL}/events/addEvent`,
     { ...event, user: userid },
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
   return response;
@@ -22,9 +20,7 @@ export async function deleteEvent(token: string, id: string) {
   const response = await axios.delete(
     `${import.meta.env.REACT_APP_API_URL}/events/deleteEvent/${id}`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
 
@@ -35,9 +31,7 @@ export async function getEventByID(token: string, id: string) {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/events/getEvent/${id}`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
 
@@ -56,9 +50,7 @@ export async function updateEvent(
       data: event
     },
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
   return response;
@@ -93,9 +85,7 @@ export async function getUsersEvents(token: string) {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/events/getEvents`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
   return response;
