@@ -57,6 +57,11 @@ spec:
                 configMapKeyRef:
                   key: API_URL
                   name: bookme
+            - name: BASE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: BASE_PATH
+                  name: bookme
             - name: CLIENT_URL
               valueFrom:
                 configMapKeyRef:
