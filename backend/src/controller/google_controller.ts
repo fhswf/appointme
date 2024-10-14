@@ -72,7 +72,7 @@ export const googleCallback = (req: Request, res: Response): void => {
     oAuth2Client.getToken(code)
       .then(token => {
         saveTokens(user, token);
-        res.redirect(`${process.env.CLIENT_URL}${process.env.BASE_PATH}/integration/select`);
+        res.redirect(`${process.env.CLIENT_URL}/integration/select`);
       })
       .catch(error => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -322,10 +322,6 @@ function deleteTokens(userid: string) {
  * @param {object} token  - The Token Object retrieved from Google
  */
 function saveTokens(user: string, token) {
-  if (!isValidObjectId(user)) {
-    console.error('Invalid user ID');
-    return;
-  }
   const _KEYS = ["access_token", "refresh_token", "scope", "expiry_date"];
   const google_tokens = {};
   _KEYS.forEach(key => {
