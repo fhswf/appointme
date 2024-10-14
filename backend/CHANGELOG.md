@@ -1,3 +1,10 @@
+## backend [1.11.4](https://github.com/fhswf/book_me/compare/backend@1.11.3...backend@1.11.4) (2024-10-14)
+
+
+### Bug Fixes
+
+* redirect to calendar integration ([5e9563d](https://github.com/fhswf/book_me/commit/5e9563d483e10b4cd048e8949d3cb9f12fbb9b7f))
+
 ## backend [1.11.3](https://github.com/fhswf/book_me/compare/backend@1.11.2...backend@1.11.3) (2024-10-11)
 
 
