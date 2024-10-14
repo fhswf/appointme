@@ -3,7 +3,7 @@ data:
   API_URL: https://appoint.gawron.cloud/api/v1
   CLIENT_URL: https://appoint.gawron.cloud
   MONGO_URI: mongodb://mongo-bookme:27017
-  BASE_PATH: 
+  BASE_PATH: ""
   TZ: Europe/Berlin
 kind: ConfigMap
 metadata:
