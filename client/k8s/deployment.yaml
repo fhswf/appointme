@@ -52,7 +52,7 @@ spec:
                 configMapKeyRef:
                   key: TZ
                   name: bookme
-          image: ghcr.io/fhswf/book_me/frontend:1.7.1
+          image: ghcr.io/fhswf/book_me/frontend:1.7.2
           imagePullPolicy: Always
           name: client
           ports:

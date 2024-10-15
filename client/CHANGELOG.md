@@ -1,3 +1,10 @@
+## client [1.7.2](https://github.com/fhswf/book_me/compare/client@1.7.1...client@1.7.2) (2024-10-15)
+
+
+### Bug Fixes
+
+* **authentication:** remove client-accessible token ([65171ef](https://github.com/fhswf/book_me/commit/65171ef3dcea85e637eebbb7901d10c4a3769e53))
+
 ## client [1.7.1](https://github.com/fhswf/book_me/compare/client@1.7.0...client@1.7.1) (2024-10-15)
 
 
