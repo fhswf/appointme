@@ -38,7 +38,7 @@ context('Main page', () => {
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/events/addEvent', { fixture: 'addEvent' }).as('addEvent')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'eventsAfter' }).as('getEventsAfter')
-      cy.intercept('/api/v1/events/deleteEvent/670eca0bc1eebcf903b17528', {
+      cy.intercept('DELETE', '/api/v1/events/deleteEvent/670eca0bc1eebcf903b17528', {
         statusCode: 200, body: { "msg": "Successfully deleted the Event" }
       }).as('deleteEvent')
     })
@@ -99,6 +99,7 @@ context('Main page', () => {
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/google/calendarList', { fixture: 'calendarList' }).as('calendarList')
       cy.intercept('/api/v1/google/generateUrl', { fixture: 'generateUrl' }).as('generateUrl')
+      cy.intercept('PUT', '/api/v1/users/user').as('putUser')
     })
 
     it('Open calendar integration', () => {
@@ -110,6 +111,12 @@ context('Main page', () => {
       cy.location('pathname').should('eq', '/integration')
       cy.wait(['@calendarList'], { timeout: 10000 })
       cy.wait(['@generateUrl'], { timeout: 10000 })
+
+      cy.get('[data-testid="edit-push-calendar"]').click()
+      cy.get('[data-testid="calendar-select"]').children('input').parent().click()
+        .get('ul > li[data-value="christian.gawron@gmail.com"]').click()
+      cy.get('[data-testid="button-save"]').click()
+      cy.wait(['@putUser'], { timeout: 10000 })
     })
   })
 

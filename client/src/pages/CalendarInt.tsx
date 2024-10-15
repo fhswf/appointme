@@ -59,10 +59,12 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
       <FormControl>
         <InputLabel id="calendar-select-label">Calendar</InputLabel>
         <Select
+          data-testid="calendar-select"
           labelId="calendar-select-label"
           id="calendar-select"
           value={selected}
           displayEmpty
+          label="Calendar"
           onChange={(event) => {
             state = { [event.target.value]: true };
             console.log("select: %o %o", event, state);
@@ -131,10 +133,10 @@ const PushCalendar = ({ user, calendarList }) => {
   console.log("pushCalendar: %o %o", pushCal, calendarList);
 
   return (
-    <>
+    <Card>
       <CardHeader
         action={
-          <IconButton onClick={handleShow}>
+          <IconButton onClick={handleShow} data-testid="edit-push-calendar">
             <EditIcon />
           </IconButton>
         }
@@ -165,12 +167,12 @@ const PushCalendar = ({ user, calendarList }) => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={save} color="primary">
+          <Button onClick={save} color="primary" data-testid="button-save">
             Save Changes
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Card>
   );
 };
 
@@ -218,7 +220,7 @@ const PullCalendars = ({ user, calendarList }) => {
       <>
         <CardHeader
           action={
-            <IconButton onClick={handleShow}>
+            <IconButton onClick={handleShow} data-testid="edit-pull-calendar">
               <EditIcon />
             </IconButton>
           }
