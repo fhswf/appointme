@@ -43,7 +43,7 @@ const EditEvent = (): JSX.Element => {
           signout();
           navigate("/landing");
         } else {
-          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success" });
+          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success", autoHideDuration: 1500, className: "success" });
           navigate("/app");
         }
       })

@@ -37,16 +37,25 @@ context('Main page', () => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/events/addEvent', { fixture: 'addEvent' }).as('addEvent')
+      cy.intercept('/api/v1/events/getEvents', { fixture: 'eventsAfter' }).as('getEventsAfter')
+      cy.intercept('/api/v1/events/deleteEvent/670eca0bc1eebcf903b17528', {
+        statusCode: 200, body: { "msg": "Successfully deleted the Event" }
+      }).as('deleteEvent')
     })
 
     it('Check add event type', () => {
       cy.visit('/app')
       cy.wait(['@getUser'], { timeout: 10000 })
-      cy.wait(['@getEvents'], { timeout: 10000 })
       cy.get('[data-testid="add-event-button"]').click()
       cy.get('[data-testid="event-form-title"]').type('Test event')
       cy.get('[data-testid="event-form-submit"]').click()
-      cy.wait(['@addEvent'], { timeout: 10000 })
+      cy.wait(['@addEvent', '@getEventsAfter'], { timeout: 10000 })
+      cy.get('[data-testid="copy-link-button"]').last().click({ force: true })
+
+      cy.get('[data-testid="delete-event-button"]').last().click({ force: true })
+      cy.wait(['@deleteEvent'], { timeout: 10000 })
+      cy.get('[data-testid="event-card"]').should('have.length', 1)
+      cy.get('[data-testid="event-card"]').contains('Test event').should('not.exist')
     })
   })
 

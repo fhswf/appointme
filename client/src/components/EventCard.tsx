@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ShareIcon from "@mui/icons-material/Share";
 import { EventDocument } from "../helpers/EventDocument";
+import { useTranslation } from "react-i18next";
 
 
 
@@ -34,6 +35,7 @@ export const EventCard = (props: EventCardProps) => {
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
     setActive(evt.target.checked);
@@ -71,7 +73,8 @@ export const EventCard = (props: EventCardProps) => {
     <>
       <Grid size="auto">
 
-        <Card style={{ maxWidth: "25rem" }}>
+        <Card style={{ maxWidth: "25rem" }}
+          data-testid="event-card">
           <CardHeader
             action={
               <IconButton
@@ -89,6 +92,7 @@ export const EventCard = (props: EventCardProps) => {
           <CardContent>{props.event.description}</CardContent>
           <CardActions disableSpacing>
             <Switch
+              data-testid="active-switch"
               checked={active}
               onChange={toggleActive}
               size="small"
@@ -97,13 +101,15 @@ export const EventCard = (props: EventCardProps) => {
               inputProps={{ "aria-label": "active" }}
             />
             <Button
-              aria-label="copy link"
+              data-testid="copy-link-button"
+              aria-label={t("large_suave_gull_hush")}
               startIcon={<ShareIcon />}
               onClick={handleCopy}
             >
-              Copy link
+              {t("misty_proud_mallard_assure")}
             </Button>
             <IconButton
+              data-testid="delete-event-button"
               aria-label="delete"
               onClick={handleDelete}
             >
