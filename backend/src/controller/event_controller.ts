@@ -34,11 +34,12 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   let timeMax = new Date(<string>req.query.timeMax);
   const url = <string>req.query.url;
   const userid = <string>req.query.userid;
-  EventModel.findOne({ url: url, user: userid }).select(
-    `available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id`
-  )
+  console.log('getAvailableTimes: %s %s %s %s', timeMin, timeMax, url, userid);
+  EventModel
+    .findOne({ url: url, user: userid })
+    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id")
+    .exec()
     .then(event => {
-
       // Calculate intersection of requested and 'feasible' tome interval
       timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture))
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture))
@@ -138,7 +139,8 @@ export const addEventController = (req: Request, res: Response): void => {
   } else {
     const eventToSave = new EventModel(event);
 
-    void eventToSave.save()
+    eventToSave
+      .save()
       .then((doc: EventDocument) => {
         res.status(201).json({
           success: true,
@@ -160,7 +162,9 @@ export const addEventController = (req: Request, res: Response): void => {
  */
 export const deleteEventController = (req: Request, res: Response): void => {
   const eventid = req.params.id;
-  void EventModel.findByIdAndDelete(eventid)
+  EventModel
+    .findByIdAndDelete(eventid)
+    .exec()
     .then(() => {
       res.status(200).json({ msg: "Successfully deleted the Event" });
     })
@@ -177,7 +181,9 @@ export const deleteEventController = (req: Request, res: Response): void => {
  */
 export const getEventListController = (req: Request, res: Response): void => {
   const userid = req["user_id"];
-  EventModel.find({ user: userid })
+  EventModel
+    .find({ user: userid })
+    .exec()
     .then(event => {
       res.status(200).json(event);
     })
@@ -194,9 +200,9 @@ export const getEventListController = (req: Request, res: Response): void => {
  */
 export const getActiveEventsController = (req: Request, res: Response): void => {
   const userid = <string>req.query.user;
-  const query = EventModel.find({ user: userid, isActive: true });
-
-  query.exec()
+  EventModel
+    .find({ user: userid, isActive: true })
+    .exec()
     .then(event => {
       res.status(200).json(event);
     })
@@ -213,7 +219,9 @@ export const getActiveEventsController = (req: Request, res: Response): void => 
  */
 export const getEventByIdController = (req: Request, res: Response): void => {
   const event_id = req.params.id;
-  EventModel.findById({ _id: event_id })
+  EventModel
+    .findById({ _id: event_id })
+    .exec()
     .then(event => {
       console.log("getEvent: %s %o", event_id, event);
       res.status(200).json(event);
@@ -233,10 +241,13 @@ export const getEventByUrl = (req: Request, res: Response): void => {
   const userid = <string>req.query.user;
   const url = <string>req.query.url;
 
-  EventModel.findOne({ url: url, user: userid })
+  EventModel
+    .findOne({ url: url, user: userid })
+    .exec()
     .then(event => {
       res.status(200).json(event);
     })
+
     .catch(err => { res.status(400).json({ error: err }); });
 }
 
@@ -249,7 +260,16 @@ export const getEventByUrl = (req: Request, res: Response): void => {
 export const updateEventController = (req: Request, res: Response): void => {
   const event = req.body.data;
   const event_id = req.params.id;
-  void EventModel.findByIdAndUpdate(event_id, event)
+  
+  // Validate the event object
+  if (typeof event !== 'object' || event === null) {
+    res.status(400).json({ error: 'Invalid event data' });
+    return;
+  }
+  
+  void EventModel
+    .findByIdAndUpdate(event_id, { $set: event })
+    .exec()
     .then((doc: EventDocument) => {
       res.status(200).json({ msg: "Update successful", event: doc })
     })

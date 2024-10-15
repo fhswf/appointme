@@ -18,9 +18,7 @@ export async function postToActivate(token) {
     `${import.meta.env.REACT_APP_API_URL}/auth/activate`,
     {},
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
 

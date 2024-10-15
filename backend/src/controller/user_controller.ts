@@ -13,7 +13,6 @@ import { Request, Response } from 'express';
  */
 export const getUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
-  console.log('getUser: %s', userid);
   void UserModel.findOne({ _id: userid },
     {
       "_id": 1,
@@ -47,7 +46,6 @@ const filterUser = (user) => Object.keys(user)
 export const putUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   const user = filterUser(req.body.data as User);
-  console.log('putUser: %o', user);
   void UserModel.findByIdAndUpdate(userid, user,
     {
       new: true,
@@ -81,7 +79,7 @@ export const putUser = (req: Request, res: Response): void => {
  */
 export const getUserByUrl = (req: Request, res: Response): void => {
   const user_url = req.query.url;
-  const query = UserModel.findOne({ user_url: <string>user_url }/*,
+  UserModel.findOne({ user_url: <string>user_url }/*,
     {
       "_id": 1,
       "email": 1,

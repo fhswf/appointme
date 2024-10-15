@@ -22,7 +22,6 @@ import { Event, IntervalSet } from 'common';
 
 // Dotenv Config
 import dotenv from "dotenv";
-import { isValidObjectId } from 'mongoose';
 
 const env = dotenv.config({
   path: "./src/config/config.env",
@@ -84,7 +83,9 @@ export const googleCallback = (req: Request, res: Response): void => {
 };
 
 export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel
+    .findOne({ _id: user_id })
+    .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
       oAuth2Client.setCredentials(google_tokens);
@@ -282,7 +283,9 @@ export function getCalendarList(req: Request, res: Response): void {
 
 
 export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel
+    .findOne({ _id: user_id })
+    .exec()
     .then((user: User) => {
       return getAuth(user_id)
         .then(auth => {

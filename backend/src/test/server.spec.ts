@@ -3,69 +3,22 @@ import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest
 import { middleware } from "../handlers/middleware.js";
 
 import request from "supertest";
-import { V } from 'vitest/dist/chunks/reporters.DAfKSDh5.js';
 import { Request, Response, NextFunction } from 'express';
+import { USER } from './USER.js';
+import { EVENT } from './EVENT.js';
+import dotenv from 'dotenv';
 
-const USER = {
-  "_id": "109150731150582581691",
-  "email": "christian.gawron@gmail.com",
-  "name": "Christian Gawron",
-  "picture_url": "https://lh3.googleusercontent.com/a/ACg8ocL0Ob8tDn2tEvCfdg4OfH8g_hMqcf_IGBRulp0PuBXVNf8PdJ6OyA=s96-c",
-  "pull_calendars": [
-    "christian.gawron@gmail.com",
-    "fj2g7ii3on2elc092n3tbd1nmv48mb3n@import.calendar.google.com",
-    "family10045043731026254769@group.calendar.google.com",
-    "de.german.official#holiday@group.v.calendar.google.com",
-    "t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com",
-    "gawron.christian@fh-swf.de"
-  ],
-  "updatedAt": "2024-10-10T12:04:24.769Z",
-  "user_url": "christian-gawron",
-  "push_calendar": "t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com",
-  "google_tokens": {
-    "access_token": "ya29.a0AcM612xTO2HcmaSxOzyMlf3hje-CL8WGmBrfUtM_mrOTWOfj6gbFgFtr6jSRI4GGmwK9fCS4paZroX9Wq3JPt-Q0oC0Hbx2WUSpufG2gU98Y2ZkK0TcVNhi72vFkr60vU7ROpi55csAHmgQM8onpGfy51x8iGdZDdH1KSBg1aCgYKAZcSARMSFQHGX2Mi0IhuHlo5kYzESZHe0G5l-w0175"
+dotenv.config({ path: '.env' });
+
+Object.keys(process.env).forEach(element => {
+  if (element.startsWith("REACT_APP")) {
+    const key = element.replace("REACT_APP_", "");
+    process.env[key] = process.env[element];
   }
-}
 
-const EVENT = {
-
-  "available": {
-    "0": [],
-    "1": [
-      {
-        "start": "09:00",
-        "end": "17:00"
-      }
-    ],
-    "2": [
-      {
-        "start": "09:00",
-        "end": "17:00"
-      }
-    ],
-    "3": [],
-    "4": [],
-    "5": [],
-    "6": []
-  },
-  "_id": "66e41e641f4f81ece1828ab5",
-  "user": "109150731150582581691",
-  "name": "Sprechstunde",
-  "location": "https://fh-swf.zoom.us/my/cgawron",
-  "description": "30 Minuten online",
-  "duration": 30,
-  "url": "sprechstunde",
-  "isActive": true,
-  "bufferbefore": 5,
-  "bufferafter": 15,
-  "minFuture": 172800,
-  "maxFuture": 5184000,
-  "maxPerDay": 2,
-  "__v": 0
-}
+});
 
 let status = null;
-
 
 describe("Server routes", () => {
   let app: any;
@@ -90,10 +43,17 @@ describe("Server routes", () => {
     return {
       UserModel: {
         findOne: vi.fn((query) => {
-          console.log("mocked findOne");
+          console.log("UserModel: mocked findOne");
           return {
             exec: vi.fn(() => {
               return Promise.resolve(USER);
+            }),
+            select: vi.fn(() => {
+              return {
+                exec: vi.fn(() => {
+                  return Promise.resolve(USER);
+                })
+              }
             })
           }
         })
@@ -102,13 +62,22 @@ describe("Server routes", () => {
   })
 
   vi.mock("../models/Event.js", () => {
+    const exec = vi.fn(() => {
+      console.log("mocked findOne exec");
+      return Promise.resolve(EVENT);
+    });
+
     return {
-      UserModel: {
+      EventModel: {
         findOne: vi.fn((query) => {
-          console.log("mocked findOne");
+          console.log("EventModel: mocked findOne");
           return {
-            exec: vi.fn(() => {
-              return Promise.resolve(EVENT);
+            exec,
+            select: vi.fn(() => {
+              console.log("mocked findOne select");
+              return {
+                exec
+              }
             })
           }
         })
@@ -142,6 +111,26 @@ describe("Server routes", () => {
     const res = await request(app).get("/api/v1/users/user");
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
+    console.log(res.body);
+  })
+
+  it("should get the user by url", async () => {
+    const res = await request(app).get("/api/v1/users/findUserByUrl?url=christian-gawron");
+    expect(res.status).toEqual(200);
+    expect(middleware.requireAuth).toHaveBeenCalled();
+    expect(res.body).toEqual(USER);
+    console.log(res.body);
+  })
+
+  it("should get available slots for 'sprechstunde'", async () => {
+    const res = await request(app).get("/api/v1/events/getAvailable?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z&url=sprechstunde&userid=109150731150582581691");
+    expect(res.status).toEqual(200);
+    console.log(res.body);
+  })
+
+  it("should get the event by url", async () => {
+    const res = await request(app).get("/api/v1/events/getEventBy?url=sprechstunde&user=109150731150582581691");
+    expect(res.status).toEqual(200);
     console.log(res.body);
   })
 });

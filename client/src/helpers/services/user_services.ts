@@ -4,9 +4,7 @@ export async function getUserByToken(token: string) {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/users/user`,
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
   return response;
@@ -17,9 +15,7 @@ export async function updateUser(token: string, user: any) {
     `${import.meta.env.REACT_APP_API_URL}/users/user`,
     { data: user },
     {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      withCredentials: true,
     }
   );
   return response;

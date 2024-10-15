@@ -62,6 +62,9 @@ jobs:
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
+          GOOGLE_TOKENS: ${{ secrets.GOOGLE_TOKENS }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
       - name: Post PR Comment
         run: npx github-actions-ctrf ctrf/ctrf-report.json --pr-comment
