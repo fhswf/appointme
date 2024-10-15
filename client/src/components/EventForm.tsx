@@ -397,6 +397,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Stack>
       </Box>
       <Button
+        data-testid="event-form-submit"
         variant="contained"
         type="submit"
         className="save"

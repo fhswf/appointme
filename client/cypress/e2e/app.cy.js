@@ -2,11 +2,14 @@
 
 context('User not logged in', () => {
   describe('Error getting user', () => {
-    before(() => {
+    beforeEach(() => {
       cy.intercept('/api/v1/users/user', {
         statusCode: 200, body: { "success": false, "message": "Unauthorized! Sign in again!" }
       }).as('getUser')
-      window.localStorage.setItem('access_token', '"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMDkxNTA3MzExNTA1ODI1ODE2OTEiLCJuYW1lIjoiQ2hyaXN0aWFuIEdhd3JvbiIsImVtYWlsIjoiY2hyaXN0aWFuLmdhd3JvbkBnbWFpbC5jb20iLCJpYXQiOjE3MjgxNDA5NDAsImV4cCI6MTcyODIyNzM0MH0.uTbfQLwteBjXrHfeTelCmLAYxByheMI2Cr2O41D9EsU"')
+      cy.intercept('https://accounts.google.com/gsi/button', {
+        statusCode: 200, body: {}
+      }).as('googleButton')
+
       cy.visit('/app')
     })
 
@@ -14,18 +17,26 @@ context('User not logged in', () => {
       cy.wait(['@getUser'], { timeout: 10000 })
       cy.location('pathname').should('eq', '/landing')
     })
+
+    it('should show login button', () => {
+      cy.wait(['@getUser'], { timeout: 10000 })
+      cy.location('pathname').should('eq', '/landing')
+      cy.get('[data-testid="profile-menu"]').click()
+      cy.get('[data-testid="login-button"]').click()
+      cy.get('iframe').should('exist')
+    })
   })
 })
 
 context('Main page', () => {
   beforeEach(() => {
-    window.localStorage.setItem('access_token', '"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMDkxNTA3MzExNTA1ODI1ODE2OTEiLCJuYW1lIjoiQ2hyaXN0aWFuIEdhd3JvbiIsImVtYWlsIjoiY2hyaXN0aWFuLmdhd3JvbkBnbWFpbC5jb20iLCJpYXQiOjE3MjgxNDA5NDAsImV4cCI6MTcyODIyNzM0MH0.uTbfQLwteBjXrHfeTelCmLAYxByheMI2Cr2O41D9EsU"')
   })
 
   describe('Visit app main page & add event type', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
+      cy.intercept('/api/v1/events/addEvent', { fixture: 'addEvent' }).as('addEvent')
     })
 
     it('Check add event type', () => {
@@ -34,6 +45,8 @@ context('Main page', () => {
       cy.wait(['@getEvents'], { timeout: 10000 })
       cy.get('[data-testid="add-event-button"]').click()
       cy.get('[data-testid="event-form-title"]').type('Test event')
+      cy.get('[data-testid="event-form-submit"]').click()
+      cy.wait(['@addEvent'], { timeout: 10000 })
     })
   })
 

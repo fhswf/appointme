@@ -79,7 +79,7 @@ const AppNavbar = () => {
       <ListItemText>Log out</ListItemText>
     </MenuItem>
   ) : (
-    <MenuItem onClick={handleLogin}>
+    <MenuItem onClick={handleLogin} data-testid="login-button">
       <ListItemIcon>
         <LoginIcon fontSize="small" />
       </ListItemIcon>
