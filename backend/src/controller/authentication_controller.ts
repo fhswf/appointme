@@ -228,7 +228,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
               }
             );
 
-            const sameSite = process.env.NODE_ENV === 'development' ? 'lax' : 'strict';
+            const sameSite = process.env.NODE_ENV === 'development' ? 'none' : 'strict';
             res
               .cookie('access_token',
                 access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite })
