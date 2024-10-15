@@ -260,8 +260,15 @@ export const getEventByUrl = (req: Request, res: Response): void => {
 export const updateEventController = (req: Request, res: Response): void => {
   const event = req.body.data;
   const event_id = req.params.id;
+  
+  // Validate the event object
+  if (typeof event !== 'object' || event === null) {
+    res.status(400).json({ error: 'Invalid event data' });
+    return;
+  }
+  
   void EventModel
-    .findByIdAndUpdate(event_id, event)
+    .findByIdAndUpdate(event_id, { $set: event })
     .exec()
     .then((doc: EventDocument) => {
       res.status(200).json({ msg: "Update successful", event: doc })
