@@ -19,14 +19,13 @@ export type EventFormProps = {
 
 const EditEvent = (): JSX.Element => {
   const eventID = useParams<{ id: string }>().id;
-  const token = JSON.parse(localStorage.getItem("access_token"));
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(EMPTY_EVENT);
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    getEventByID(token, eventID).then((res) => {
+    getEventByID(eventID).then((res) => {
       if (res.data.success === false) {
         signout();
         navigate("/landing");
@@ -35,10 +34,10 @@ const EditEvent = (): JSX.Element => {
         setFormData(res.data as Event);
       }
     });
-  }, [eventID, token, navigate]);
+  }, [eventID, navigate]);
 
   const saveEvent = (formData: Event) => {
-    updateEvent(token, eventID, formData)
+    updateEvent(eventID, formData)
       .then((res) => {
         if (res.data.success === false) {
           signout();

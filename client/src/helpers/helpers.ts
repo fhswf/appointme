@@ -1,3 +1,8 @@
+import { use } from "i18next";
+import { UserContext } from "../components/PrivateRoute";
+import { useContext, useEffect, useState } from "react";
+import { getUser } from "./services/user_services";
+import { set } from "date-fns";
 
 export const setLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, JSON.stringify(value));
@@ -7,20 +12,15 @@ export const removeLocalStorage = (key: string) => {
   localStorage.removeItem(key);
 };
 
-export const authenticate = (response: { data: { access_token: string } }, next: () => void) => {
-  console.log('authenticate: %s', response.data.access_token);
-  setLocalStorage("access_token", response.data.access_token);
-  next();
-};
 
 export const signout = () => {
   console.log('signout');
   removeLocalStorage("access_token");
 };
 
-export const isAuthenticated = () => {
-  console.log('isAuthenticated: %s', localStorage.getItem("access_token") || 'false');
-  if (localStorage.getItem("access_token")) {
-    return JSON.parse(localStorage.getItem("access_token") as string);
-  }
+
+export function useAuthenticated() {
+  const userContext = useContext(UserContext);
+
+  return userContext.user !== null
 };

@@ -15,7 +15,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
 
-import { isAuthenticated } from "./helpers/helpers";
+import { useAuthenticated } from "./helpers/helpers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from 'notistack';
 
@@ -77,16 +77,18 @@ const theme = createTheme({
   },
 }, deDE);
 
-const container = document.getElementById("root");
-const root = createRoot(container);
 
 const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/";
 
 console.log("base url: %s %s", BASE_PATH, import.meta.env.REACT_APP_API_URL, CLIENT_ID);
 console.log("localeText: %o", deDE.components.MuiLocalizationProvider.defaultProps.localeText);
-root.render(
-  <StrictMode>
+
+
+
+const Main = () => {
+  const isAuthenticated = useAuthenticated();
+  return (<StrictMode>
     <Suspense fallback="loading">
       <SnackbarProvider maxSnack={3}>
         <GoogleOAuthProvider clientId={CLIENT_ID}>
@@ -95,7 +97,7 @@ root.render(
             <ThemeProvider theme={theme}>
               <BrowserRouter basename={BASE_PATH}>
                 <Routes>
-                  <Route path="/" element={isAuthenticated() ? (
+                  <Route path="/" element={isAuthenticated ? (
                     <Navigate to="/app" />
                   ) : (
                     <Navigate to="/landing" />
@@ -160,4 +162,9 @@ root.render(
       </SnackbarProvider>
     </Suspense>
   </StrictMode>
-);
+  );
+}
+
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(<Main />);

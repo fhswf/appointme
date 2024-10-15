@@ -233,7 +233,6 @@ export const googleLoginController = (req: Request, res: Response): void => {
                 access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite: 'strict' })
               .status(200)
               .json({
-                access_token,
                 user: { _id, email, name, picture_url: picture },
               });
           })

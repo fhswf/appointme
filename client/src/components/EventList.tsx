@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signout } from "../helpers/helpers";
+import { signout, useAuthenticated } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
 import Grid from "@mui/material/Grid2";
@@ -9,6 +9,7 @@ import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
+import { use } from "i18next";
 
 
 type EventListProps = {
@@ -17,14 +18,14 @@ type EventListProps = {
 };
 
 const EventList = (props: EventListProps) => {
-  const token = JSON.parse(localStorage.getItem("access_token") as string);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const isAuthenticated = useAuthenticated();
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
   useEffect(() => {
-    getUsersEvents(token).then((res) => {
+    getUsersEvents().then((res) => {
       if (res.data.success === false) {
         signout();
         navigate("/landing");
@@ -33,7 +34,7 @@ const EventList = (props: EventListProps) => {
         setEvents(res.data);
       }
     });
-  }, [token, navigate]);
+  }, [navigate]);
 
   const onDelete = (event: EventDocument) => {
     setEvents(events.filter((ev) => ev._id !== event._id));
@@ -52,9 +53,8 @@ const EventList = (props: EventListProps) => {
             const event = events[index];
             event.isActive = active;
             console.log("setActive: %o %o", event, active);
-            updateEvent(token, event._id, event);
+            updateEvent(event._id, event);
           }}
-          token={token}
           onDelete={onDelete}
         />
       ))
