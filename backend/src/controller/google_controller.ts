@@ -22,7 +22,6 @@ import { Event, IntervalSet } from 'common';
 
 // Dotenv Config
 import dotenv from "dotenv";
-import { isValidObjectId } from 'mongoose';
 
 const env = dotenv.config({
   path: "./src/config/config.env",
