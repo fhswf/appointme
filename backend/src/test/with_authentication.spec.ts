@@ -81,6 +81,28 @@ describe("Server Start", () => {
         expect(res.status).toEqual(200);
     });
 
+    it("should return unauthorized", async () => {
+        status = 401;
+        const res = await request(app).get("/api/v1/users/user");
+        expect(res.status).toEqual(401);
+    })
+
+    it("should return unauthorized", async () => {
+        status = 401;
+        const res = await request(app)
+            .get("/api/v1/users/user")
+            .set({ "Authorization": "Bearer" })
+        expect(res.status).toEqual(401);
+    })
+
+    it("should return unauthorized", async () => {
+        status = 401;
+        const res = await request(app)
+            .get("/api/v1/users/user")
+            .set({ "Authorization": "Bearer invalid" })
+        expect(res.status).toEqual(401);
+    })
+
     it("should return the user", async () => {
         const res = await request(app)
             .get("/api/v1/users/user")
