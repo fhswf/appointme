@@ -18,7 +18,7 @@ const App = () => {
 
 
   useEffect(() => {
-    if (!user || !user.google_tokens || !user.google_tokens.access_token) {
+    if (!user) {
       setConnected(false);
     } else {
       setConnected(true);

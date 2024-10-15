@@ -1,6 +1,6 @@
 import React from "react";
 
-import { isAuthenticated } from "../helpers/helpers";
+import { useAuthenticated } from "../helpers/helpers";
 import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
@@ -10,8 +10,8 @@ import { useTranslation } from "react-i18next";
 const Landing = (props: any) => {
   const { t } = useTranslation();
   return (
-    <div className="landing">
-      {isAuthenticated() ? <Navigate to="/app" /> : null}
+    <>
+      {useAuthenticated() ? <Navigate to="/app" /> : null}
       <AppNavbar />
       <Paper>
         <Container>
@@ -41,7 +41,7 @@ const Landing = (props: any) => {
         </Container>
 
       </Paper>
-    </div>
+    </>
   );
 };
 

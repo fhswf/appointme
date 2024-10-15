@@ -11,7 +11,7 @@ export async function deleteAccess(token) {
   return response;
 }
 
-export async function getAuthUrl(token) {
+export async function getAuthUrl() {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/google/generateUrl`,
     {
@@ -21,7 +21,7 @@ export async function getAuthUrl(token) {
   return response;
 }
 
-export async function getCalendarList(token) {
+export async function getCalendarList() {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/google/calendarList`,
     {

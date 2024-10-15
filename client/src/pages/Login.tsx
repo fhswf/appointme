@@ -1,4 +1,4 @@
-import { isAuthenticated, authenticate } from "../helpers/helpers";
+import { useAuthenticated, authenticate } from "../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import { postGoogleLogin } from "../helpers/services/auth_services";
@@ -12,11 +12,7 @@ const Login = (props: any) => {
     postGoogleLogin(credential)
       .then((res) => {
         console.log("postGoogleLogin: %o", res);
-        authenticate(res, () => {
-          if (isAuthenticated()) {
-            navigate("/app");
-          }
-        });
+        navigate("/app");
       })
       .catch((error) => {
         console.log("GOOGLE SIGNIN ERROR", error.response);

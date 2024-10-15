@@ -24,7 +24,6 @@ import { EventDocument } from "../helpers/EventDocument";
 
 type EventCardProps = {
   event: EventDocument;
-  token: string;
   url: string;
   setActive: (active: boolean) => void;
   onDelete: (event: EventDocument) => void;
@@ -34,7 +33,6 @@ export const EventCard = (props: EventCardProps) => {
   const [active, setActive] = useState(props.event.isActive);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
-  const token = props.token;
   const navigate = useNavigate();
 
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +56,7 @@ export const EventCard = (props: EventCardProps) => {
   };
 
   const handleDelete = () => {
-    deleteEvent(token, props.event._id).then((res) => {
+    deleteEvent(props.event._id).then((res) => {
       if (res.data.success === false) {
         signout();
         navigate("/landing");

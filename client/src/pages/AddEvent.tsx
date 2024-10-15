@@ -20,7 +20,6 @@ type AddEventProps = {};
 
 const AddEvent = (props: AddEventProps) => {
   const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem("access_token") as string);
   const [formData, setFormData] = useState(EMPTY_EVENT);
   const user = useContext(UserContext).user;
   const { t } = useTranslation();
@@ -28,7 +27,7 @@ const AddEvent = (props: AddEventProps) => {
 
   const saveEvent = (formData: Event) => {
     if (user) {
-      saveUserEvent(token, formData, user._id)
+      saveUserEvent(formData, user._id)
         .then((res) => {
           if (res.data.success === false) {
             signout();

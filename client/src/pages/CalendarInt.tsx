@@ -40,6 +40,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 
 import { UserContext } from "../components/PrivateRoute";
+import { use } from "i18next";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);
@@ -107,14 +108,13 @@ const PushCalendar = ({ user, calendarList }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pushCal);
 
-  const token = JSON.parse(localStorage.getItem("access_token"));
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
   const save = () => {
     console.log("save: selected: %o", selected);
     user.push_calendar = Object.keys(selected).find((item) => selected[item]);
 
-    updateUser(token, user)
+    updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
       })
@@ -186,7 +186,6 @@ const PullCalendars = ({ user, calendarList }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pullCals);
 
-  const token = JSON.parse(localStorage.getItem("access_token"));
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
   const save = () => {
@@ -199,7 +198,7 @@ const PullCalendars = ({ user, calendarList }) => {
         user.pull_calendars.push(item);
       }
     });
-    updateUser(token, user)
+    updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
       })
@@ -261,7 +260,6 @@ const PullCalendars = ({ user, calendarList }) => {
 };
 
 const Calendarintegration = () => {
-  const token = JSON.parse(localStorage.getItem("access_token"));
   const navigate = useNavigate();
   const [connected, setConnected] = useState(false);
   const [url, setUrl] = useState("");
@@ -270,24 +268,17 @@ const Calendarintegration = () => {
 
   const revokeScopes = (event) => {
     event.preventDefault();
-    deleteAccess(token).then((res) => {
-      if (res.data.success === false) {
-        signout();
-        navigate("/landing");
-      }
-      setConnected(false);
-    });
-  };
+    signout();
+    navigate("/landing");
+  }
+
+
+  console.log("user: %o", user);
 
   useEffect(() => {
-    if (!user?.google_tokens?.access_token) {
-      setConnected(false);
-      console.log("no user or no access token: %o", user);
-    } else {
-      setConnected(true);
-      console.log("user: %o", user);
-
-      getCalendarList(token).then((res) => {
+    getCalendarList()
+      .then((res) => {
+        setConnected(true);
         setCalendarList(res.data.data);
         const calendars = res.data.data;
         const primary = calendars.items.filter((item) => item.primary);
@@ -303,7 +294,7 @@ const Calendarintegration = () => {
         }
 
         if (update) {
-          updateUser(token, user)
+          updateUser(user)
             .then((user) => {
               console.log("updated user: %o", user);
             })
@@ -311,9 +302,13 @@ const Calendarintegration = () => {
               console.error("user update failed: %o", err);
             });
         }
+      })
+      .catch((err) => {
+        console.error("getCalendarList failed: %o", err);
+        setConnected(false);
       });
-    }
-    getAuthUrl(token).then((res) => {
+
+    getAuthUrl().then((res) => {
       if (res.data.success === false) {
         signout();
         navigate("/landing");
@@ -322,7 +317,7 @@ const Calendarintegration = () => {
         setUrl(res.data.url as string);
       }
     });
-  }, [navigate, token, user]);
+  }, [user]);
 
   const renderConnectButton = () =>
     connected ? (

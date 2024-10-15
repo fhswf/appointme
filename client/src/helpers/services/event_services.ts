@@ -2,7 +2,6 @@ import axios from "axios";
 import { Event, IntervalSet } from "common";
 
 export async function saveUserEvent(
-  token: string,
   event: Event,
   userid: string
 ) {
@@ -16,7 +15,7 @@ export async function saveUserEvent(
   return response;
 }
 
-export async function deleteEvent(token: string, id: string) {
+export async function deleteEvent(id: string) {
   const response = await axios.delete(
     `${import.meta.env.REACT_APP_API_URL}/events/deleteEvent/${id}`,
     {
@@ -27,7 +26,7 @@ export async function deleteEvent(token: string, id: string) {
   return response;
 }
 
-export async function getEventByID(token: string, id: string) {
+export async function getEventByID(id: string) {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/events/getEvent/${id}`,
     {
@@ -39,7 +38,6 @@ export async function getEventByID(token: string, id: string) {
 }
 
 export async function updateEvent(
-  token: string,
   id: string,
   event: Event
 ) {
@@ -81,7 +79,7 @@ export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, use
     .then((response) => new IntervalSet(response.data))
 }
 
-export async function getUsersEvents(token: string) {
+export async function getUsersEvents() {
   const response = await axios.get(
     `${import.meta.env.REACT_APP_API_URL}/events/getEvents`,
     {

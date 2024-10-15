@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, RouteProps, useLocation } from "react-router-dom";
-import { isAuthenticated, signout } from "../helpers/helpers";
-import { getUserByToken } from "../helpers/services/user_services";
+import { useAuthenticated, signout } from "../helpers/helpers";
+import { getUser } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";
 
 /**
@@ -15,20 +15,22 @@ export type PrivateRouteProps<P> = RouteProps & {
   component: React.FunctionComponent<P>;
 };
 
+
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<UserDocument>();
   const [authenticated, setAuthenticated] = useState(undefined);
-  const token = JSON.parse(localStorage.getItem("access_token") as string);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserByToken(token)
+    getUser()
       .then((res) => {
         if (res.data.success === false || res.status === 401) {
+          setAuthenticated(false);
           signout();
           navigate("/landing");
         } else {
-          console.log("getUserByToken: %o", res);
+          console.log("getUser: %o", res);
+          setAuthenticated(true);
           setUser(res.data);
           console.log("user set to %o", res.data);
         }
@@ -38,14 +40,10 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
         // TODO: Add SnackBar
         //toast.error(err);
       });
-  }, [token]);
+  }, []);
 
-  useEffect(() => {
-    console.log("Checking if authenticated");
-    setAuthenticated(isAuthenticated());
-  }, [user]);
-
-  let location = useLocation();
+  const location = useLocation();
+  const userContextValue = React.useMemo(() => ({ user }), [user]);
 
   if (authenticated === undefined) {
     console.log("PrivateRoute: authenticated is undefined");
@@ -54,8 +52,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     console.log("PrivateRoute: not authenticated, redirecting to /landing");
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }
-  console.log("PrivateRoute: authenticated, rendering children");
-  return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={userContextValue}>{children}</UserContext.Provider>;
 };
 
 export default PrivateRoute;

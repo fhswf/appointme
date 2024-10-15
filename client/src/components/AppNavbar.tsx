@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { isAuthenticated, signout } from "../helpers/helpers";
+import { useAuthenticated, signout } from "../helpers/helpers";
 
 import {
   AppBar,
@@ -71,7 +71,7 @@ const AppNavbar = () => {
     setSnack(null);
   };
 
-  const loginOut = user && isAuthenticated() ? (
+  const loginOut = user && useAuthenticated() ? (
     <MenuItem onClick={handleLogout} data-testid="logout-button">
       <ListItemIcon>
         <LogoutIcon fontSize="small" />
