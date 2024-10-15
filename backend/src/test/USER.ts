@@ -12,7 +12,6 @@ export const USER = {
     __v: 0,
     email: 'christian.gawron@gmail.com',
     name: 'Christian Gawron',
-    password: '&/HxgO,fpyOOV%(FHT0pS3cr3t',
     picture_url: 'https://lh3.googleusercontent.com/a/ACg8ocL0Ob8tDn2tEvCfdg4OfH8g_hMqcf_IGBRulp0PuBXVNf8PdJ6OyA=s96-c',
     pull_calendars: [
         'christian.gawron@gmail.com',
