@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signout, useAuthenticated } from "../helpers/helpers";
+import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
 import Grid from "@mui/material/Grid2";
