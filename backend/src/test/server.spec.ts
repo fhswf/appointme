@@ -3,7 +3,6 @@ import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest
 import { middleware } from "../handlers/middleware.js";
 
 import request from "supertest";
-import { V } from 'vitest/dist/chunks/reporters.DAfKSDh5.js';
 import { Request, Response, NextFunction } from 'express';
 import { USER } from './USER.js';
 import { EVENT } from './EVENT.js';
