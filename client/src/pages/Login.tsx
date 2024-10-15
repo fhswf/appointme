@@ -1,4 +1,3 @@
-import { useAuthenticated, authenticate } from "../helpers/helpers";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import { postGoogleLogin } from "../helpers/services/auth_services";

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, RouteProps, useLocation } from "react-router-dom";
-import { useAuthenticated, signout } from "../helpers/helpers";
 import { getUser } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";
 

@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthenticated, signout } from "../helpers/helpers";
 
@@ -24,6 +26,15 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 
+interface ImportMetaEnv {
+  REACT_APP_URL: string;
+}
+
+declare global {
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
 
 const AppNavbar = () => {
   const navigate = useNavigate();
@@ -71,7 +82,7 @@ const AppNavbar = () => {
     setSnack(null);
   };
 
-  const loginOut = user && useAuthenticated() ? (
+  const loginOut = useAuthenticated() ? (
     <MenuItem onClick={handleLogout} data-testid="logout-button">
       <ListItemIcon>
         <LogoutIcon fontSize="small" />

@@ -9,7 +9,6 @@ import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
-import { use } from "i18next";
 
 
 type EventListProps = {
@@ -20,7 +19,7 @@ type EventListProps = {
 const EventList = (props: EventListProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const isAuthenticated = useAuthenticated();
+
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
@@ -61,16 +60,14 @@ const EventList = (props: EventListProps) => {
     );
 
   return (
-    <>
-      <Grid
-        size={12}
-        spacing={3}
-        justifyItems="space-around"
-        alignItems="stretch"
-      >
-        {list}
-      </Grid>
-    </>
+    <Grid
+      size={12}
+      spacing={3}
+      justifyItems="space-around"
+      alignItems="stretch"
+    >
+      {list}
+    </Grid>
   );
 };
 

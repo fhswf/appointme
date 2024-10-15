@@ -1,8 +1,6 @@
-import { use } from "i18next";
+
 import { UserContext } from "../components/PrivateRoute";
-import { useContext, useEffect, useState } from "react";
-import { getUser } from "./services/user_services";
-import { set } from "date-fns";
+import { useContext } from "react";
 
 export const setLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, JSON.stringify(value));
