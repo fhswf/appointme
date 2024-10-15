@@ -238,7 +238,7 @@ const PullCalendars = ({ user, calendarList }) => {
           <DialogTitle id="form-dialog-title">Calendar</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Choose calendars to check for busy times.
+              {t("big_known_loris_revive")}
             </DialogContentText>
             {renderCalendarList(
               calendarList,
@@ -266,6 +266,7 @@ const Calendarintegration = () => {
   const [url, setUrl] = useState("");
   const [calendarList, setCalendarList] = useState(null);
   const user = useContext(UserContext).user;
+  const { t } = useTranslation();
 
   const revokeScopes = (event) => {
     event.preventDefault();
@@ -350,7 +351,7 @@ const Calendarintegration = () => {
               <img
                 className="icon"
                 alt="Google Calendar"
-                src="/meeting/icons/google_calendar_icon.svg"
+                src="/icons/google_calendar_icon.svg"
                 width="32"
               />{" "}
               {t("upper_even_florian_peek")}

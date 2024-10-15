@@ -89,9 +89,10 @@ context('Main page', () => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/google/calendarList', { fixture: 'calendarList' }).as('calendarList')
+      cy.intercept('/api/v1/google/generateUrl', { fixture: 'generateUrl' }).as('generateUrl')
     })
 
-    it('Check log out', () => {
+    it('Open calendar integration', () => {
       cy.visit('/app')
       cy.wait(['@getUser'], { timeout: 10000 })
       cy.wait(['@getEvents'], { timeout: 10000 })
@@ -99,6 +100,7 @@ context('Main page', () => {
       cy.get('[data-testid="calendar-button"]').click()
       cy.location('pathname').should('eq', '/integration')
       cy.wait(['@calendarList'], { timeout: 10000 })
+      cy.wait(['@generateUrl'], { timeout: 10000 })
     })
   })
 

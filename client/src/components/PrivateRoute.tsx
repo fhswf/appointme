@@ -24,8 +24,8 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     getUser()
       .then((res) => {
         if (res.data.success === false || res.status === 401) {
+          console.log("getUser: not authenticated");
           setAuthenticated(false);
-          signout();
           navigate("/landing");
         } else {
           console.log("getUser: %o", res);
@@ -36,6 +36,8 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
       })
       .catch(() => {
         console.log("getUserById: error");
+        setAuthenticated(false);
+        navigate("/landing");
         // TODO: Add SnackBar
         //toast.error(err);
       });
