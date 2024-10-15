@@ -1,3 +1,10 @@
+## backend [1.11.6](https://github.com/fhswf/book_me/compare/backend@1.11.5...backend@1.11.6) (2024-10-15)
+
+
+### Bug Fixes
+
+* **authentication:** remove client-accessible token ([65171ef](https://github.com/fhswf/book_me/commit/65171ef3dcea85e637eebbb7901d10c4a3769e53))
+
 ## backend [1.11.5](https://github.com/fhswf/book_me/compare/backend@1.11.4...backend@1.11.5) (2024-10-14)
 
 
