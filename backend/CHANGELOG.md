@@ -1,3 +1,10 @@
+## backend [1.11.7](https://github.com/fhswf/book_me/compare/backend@1.11.6...backend@1.11.7) (2024-10-15)
+
+
+### Bug Fixes
+
+* set sameSite: lax in development ([b7229b0](https://github.com/fhswf/book_me/commit/b7229b072f5bd06ebd3a514ce843496ae044167b))
+
 ## backend [1.11.6](https://github.com/fhswf/book_me/compare/backend@1.11.5...backend@1.11.6) (2024-10-15)
 
 
