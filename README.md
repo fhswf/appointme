@@ -2,7 +2,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/fhswf/book_me)
 ![GitHub pull request check state](https://img.shields.io/github/status/s/pulls/fhswf/book_me/10)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/fhswf/book_me/release-backend)
-[![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/fhswf/book_me)](https://libraries.io/github/fhswf/book_me)
+[![Quality Gate Status](https://hopper.fh-swf.de/sonarqube/api/project_badges/measure?project=book_me&metric=alert_status&token=sqb_0a9511ceb28d567c414fc247f93e3a5ea06710a5)](https://hopper.fh-swf.de/sonarqube/dashboard?id=book_me)
 
 # APPointment
 
