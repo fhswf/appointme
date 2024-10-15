@@ -1,3 +1,10 @@
+## client [1.7.1](https://github.com/fhswf/book_me/compare/client@1.7.0...client@1.7.1) (2024-10-15)
+
+
+### Bug Fixes
+
+* do not send token as bearer token ([b671e3e](https://github.com/fhswf/book_me/commit/b671e3efaa21e64a1426d4138c5bbaa2f522b7f9))
+
 # client [1.7.0](https://github.com/fhswf/book_me/compare/client@1.6.9...client@1.7.0) (2024-10-10)
 
 
