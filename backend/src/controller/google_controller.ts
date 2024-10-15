@@ -84,7 +84,9 @@ export const googleCallback = (req: Request, res: Response): void => {
 };
 
 export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel
+    .findOne({ _id: user_id })
+    .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
       oAuth2Client.setCredentials(google_tokens);
@@ -282,7 +284,9 @@ export function getCalendarList(req: Request, res: Response): void {
 
 
 export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel
+    .findOne({ _id: user_id })
+    .exec()
     .then((user: User) => {
       return getAuth(user_id)
         .then(auth => {
@@ -322,10 +326,6 @@ function deleteTokens(userid: string) {
  * @param {object} token  - The Token Object retrieved from Google
  */
 function saveTokens(user: string, token) {
-  if (!isValidObjectId(user)) {
-    console.error('Invalid user ID');
-    return;
-  }
   const _KEYS = ["access_token", "refresh_token", "scope", "expiry_date"];
   const google_tokens = {};
   _KEYS.forEach(key => {

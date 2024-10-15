@@ -65,6 +65,7 @@
     "@types/node": "^22.6.0",
     "@types/nodemailer": "^6.4.0",
     "@vitest/coverage-v8": "^2.1.2",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^7.0.1",

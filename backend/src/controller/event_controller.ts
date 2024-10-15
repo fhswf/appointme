@@ -34,11 +34,12 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   let timeMax = new Date(<string>req.query.timeMax);
   const url = <string>req.query.url;
   const userid = <string>req.query.userid;
-  EventModel.findOne({ url: url, user: userid }).select(
-    `available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id`
-  )
+  console.log('getAvailableTimes: %s %s %s %s', timeMin, timeMax, url, userid);
+  EventModel
+    .findOne({ url: url, user: userid })
+    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id")
+    .exec()
     .then(event => {
-
       // Calculate intersection of requested and 'feasible' tome interval
       timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture))
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture))

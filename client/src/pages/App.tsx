@@ -28,20 +28,20 @@ const App = () => {
   const addEventButton = () => {
     if (connected) {
       return (
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="add"
-            href="addevent"
-            data-testid="add-event-button"
-          >
-            <AddIcon sx={{ mr: 1 }} />
-            {t("early_sweet_mantis_peek")}
-          </Fab>
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          href="addevent"
+          data-testid="add-event-button"
+        >
+          <AddIcon sx={{ mr: 1 }} />
+          {t("early_sweet_mantis_peek")}
+        </Fab>
       );
     } else {
       return (
-        <Link component={RouterLink} className="calcon" to="integration">
+        <Link component={RouterLink} className="calcon" to="/integration">
           {t("pink_trite_ocelot_enrich")}
         </Link>
       );

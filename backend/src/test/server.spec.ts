@@ -7,9 +7,19 @@ import { V } from 'vitest/dist/chunks/reporters.DAfKSDh5.js';
 import { Request, Response, NextFunction } from 'express';
 import { USER } from './USER.js';
 import { EVENT } from './EVENT.js';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env' });
+
+Object.keys(process.env).forEach(element => {
+  if (element.startsWith("REACT_APP")) {
+    const key = element.replace("REACT_APP_", "");
+    process.env[key] = process.env[element];
+  }
+
+});
 
 let status = null;
-
 
 describe("Server routes", () => {
   let app: any;
@@ -34,7 +44,7 @@ describe("Server routes", () => {
     return {
       UserModel: {
         findOne: vi.fn((query) => {
-          console.log("mocked findOne");
+          console.log("UserModel: mocked findOne");
           return {
             exec: vi.fn(() => {
               return Promise.resolve(USER);
@@ -53,13 +63,22 @@ describe("Server routes", () => {
   })
 
   vi.mock("../models/Event.js", () => {
+    const exec = vi.fn(() => {
+      console.log("mocked findOne exec");
+      return Promise.resolve(EVENT);
+    });
+
     return {
-      UserModel: {
+      EventModel: {
         findOne: vi.fn((query) => {
-          console.log("mocked findOne");
+          console.log("EventModel: mocked findOne");
           return {
-            exec: vi.fn(() => {
-              return Promise.resolve(EVENT);
+            exec,
+            select: vi.fn(() => {
+              console.log("mocked findOne select");
+              return {
+                exec
+              }
             })
           }
         })
@@ -101,6 +120,12 @@ describe("Server routes", () => {
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
     expect(res.body).toEqual(USER);
+    console.log(res.body);
+  })
+
+  it("should get available slots for 'sprechstunde'", async () => {
+    const res = await request(app).get("/api/v1/events/getAvailable?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z&url=sprechstunde&userid=109150731150582581691");
+    expect(res.status).toEqual(200);
     console.log(res.body);
   })
 });
