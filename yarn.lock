@@ -6919,6 +6919,7 @@ __metadata:
     eslint-config-react-app: "npm:^7.0.1"
     express: "npm:^4.18.2"
     express-jwt: "npm:^8.4.1"
+    express-rate-limit: "npm:^7.4.1"
     express-validator: "npm:^7.0.1"
     google-auth-library: "npm:9.0.0"
     googleapis: "npm:^126.0.1"
@@ -10685,6 +10686,15 @@ __metadata:
     express-unless: "npm:^2.1.3"
     jsonwebtoken: "npm:^9.0.0"
   checksum: 10/931ad8e98ef86ce73fb4fa37c4fec4dd6d806657d622ae9e5d296182edbb049f578b7a00b746ef762ea016987cba6a5600d191f55a553507e4c1c4543d7783d5
+  languageName: node
+  linkType: hard
+
+"express-rate-limit@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "express-rate-limit@npm:7.4.1"
+  peerDependencies:
+    express: 4 || 5 || ^5.0.0-beta.1
+  checksum: 10/230cebc90d9a6baf0b471fa9039b5bf3d82f0a29dc7b304adee38eaa4803493266584108ca3d79d21993bdd45f9497c0b4eac9db8037cd3f10b19c529a9bdf66
   languageName: node
   linkType: hard
 
