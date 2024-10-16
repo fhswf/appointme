@@ -27,6 +27,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 
 interface ImportMetaEnv {
+  REACT_APP_API_URL: any;
   REACT_APP_URL: string;
 }
 

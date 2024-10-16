@@ -79,20 +79,7 @@ export const putUser = (req: Request, res: Response): void => {
  */
 export const getUserByUrl = (req: Request, res: Response): void => {
   const user_url = req.query.url;
-  UserModel.findOne({ user_url: <string>user_url }/*,
-    {
-      "_id": 1,
-      "email": 1,
-      "name": 1,
-      "picture_url": 1,
-      "pull_calendars": 1,
-      "push_calendar": 1,
-      "user_url": 1,
-      "welcome": 1,
-      "updatedAt": 1,
-      "password": 0,
-      "google_tokens": 0
-    }*/)
+  UserModel.findOne({ user_url: <string>user_url })
     .select("_id email name picture_url user_url welcome")
     .exec()
     .then(user => {
