@@ -188,7 +188,7 @@ const Booking = (props: any) => {
         let end = new Date(slot.end);
         console.log("start: %s, end: %s", start, end);
         let s = start;
-        while (s < end) {
+        while (s < addMinutes(end, -event.duration)) {
           times.push(s);
           s = addMinutes(s, event.duration);
         }
