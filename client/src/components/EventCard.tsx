@@ -39,8 +39,8 @@ export const EventCard = (props: EventCardProps) => {
   const event = props.event;
 
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
-    props.setActive(event, evt.target.checked);
     setActive(evt.target.checked);
+    props.setActive(event, evt.target.checked);
   };
 
   const handleCopy = () => {

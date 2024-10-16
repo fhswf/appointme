@@ -41,8 +41,8 @@ const EventList = (props: EventListProps) => {
 
   const updateEventStatus = (event: EventDocument, active: boolean): void => {
     console.log("setActive: %o %o", event, active);
-    updateEvent(event._id, event);
     event.isActive = active;
+    updateEvent(event._id, event);
   };
 
   const list =
