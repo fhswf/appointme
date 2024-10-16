@@ -165,10 +165,10 @@ const PushCalendar = ({ user, calendarList }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            {t("teal_lofty_hawk_peek")}
           </Button>
           <Button onClick={save} color="primary" data-testid="button-save">
-            Save Changes
+            {t("mild_raw_elk_delight")}
           </Button>
         </DialogActions>
       </Dialog>
