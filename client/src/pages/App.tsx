@@ -2,12 +2,9 @@ import { useState, useContext, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import EventList from "../components/EventList";
 import AppNavbar from "../components/AppNavbar";
-
 import { Box, Container, Fab, Link, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
 import AddIcon from "@mui/icons-material/Add";
-
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 
@@ -50,7 +47,7 @@ const App = () => {
 
   const renderList = () => {
     if (user && connected) {
-      return <EventList url={user.user_url} userid={user._id} />;
+      return <EventList url={user.user_url} />;
     }
   };
 
