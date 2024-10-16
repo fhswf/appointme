@@ -1,3 +1,10 @@
+## client [1.7.4](https://github.com/fhswf/book_me/compare/client@1.7.3...client@1.7.4) (2024-10-16)
+
+
+### Bug Fixes
+
+* make sure appointsments end inside available slot ([1d33c8b](https://github.com/fhswf/book_me/commit/1d33c8b39f1892f4f1b51dc24b10b955fad5a306))
+
 ## client [1.7.3](https://github.com/fhswf/book_me/compare/client@1.7.2...client@1.7.3) (2024-10-16)
 
 
