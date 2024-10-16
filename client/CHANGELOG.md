@@ -1,3 +1,10 @@
+# client [1.8.0](https://github.com/fhswf/book_me/compare/client@1.7.7...client@1.8.0) (2024-10-16)
+
+
+### Features
+
+* new rest api ([1c43477](https://github.com/fhswf/book_me/commit/1c434771f553a8f0a006ea78fce5611b197a4e2b))
+
 ## client [1.7.7](https://github.com/fhswf/book_me/compare/client@1.7.6...client@1.7.7) (2024-10-16)
 
 
