@@ -47,31 +47,30 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
 
       // Request currently booked events. We need them for the maxPerDay restriction
       return events(userid, timeMin.toISOString(), timeMax.toISOString())
-        .then(events => {
-          const { days, blocked } = calculateBlockedDays(events, event, timeMin, timeMax);
-          console.log("blocked: %o", blocked);
-          console.log("free: %o", blocked.inverse());
-
-          // Now query freeBusy service
-          return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
-            .then(res => {
-              let freeSlots = calculateFreeSlots(res, event, timeMin, timeMax, blocked);
-              console.log('freeSlots before filtering: %j', freeSlots);
-              freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
-              console.log('freeSlots after filtering: %j', freeSlots);
-              return freeSlots;
-            });
-        });
+        .then(events => ({ events, event }));
     })
-    .then(slots => {
-      res.status(200).json(slots);
+    .then(({ events, event }) => {
+      const blocked = calculateBlocked(events, event, timeMin, timeMax);
+      console.log("blocked: %o", blocked);
+      console.log("free: %o", blocked.inverse());
+
+      // Now query freeBusy service
+      return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
+        .then(freeBusyResponse => ({ freeBusyResponse, event, blocked }));
+    })
+    .then(({ freeBusyResponse, event, blocked }) => {
+      let freeSlots = calculateFreeSlots(freeBusyResponse, event, timeMin, timeMax, blocked);
+      console.log('freeSlots before filtering: %j', freeSlots);
+      freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
+      console.log('freeSlots after filtering: %j', freeSlots);
+      res.status(200).json(freeSlots);
     })
     .catch(err => {
       console.error('getAvailableTime: event not found or freeBusy failed: %o', err);
       res.status(400).json({ error: err });
     });
 
-  function calculateBlockedDays(events, event, timeMin, timeMax) {
+  function calculateBlocked(events, event, timeMin, timeMax) {
     const days = {};
     const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
     events.forEach(evt => {
@@ -91,16 +90,16 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
         blocked.addRange({ start: new Date(day), end: addDays(new Date(day), 1) });
       }
     }
-    return { days, blocked };
+    return blocked;
   }
 
-  function calculateFreeSlots(res, event, timeMin, timeMax, blocked) {
+  function calculateFreeSlots(response, event, timeMin, timeMax, blocked) {
     let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
     freeSlots = freeSlots.intersect(blocked.inverse());
-    for (const key in res.data.calendars) {
+    for (const key in response.data.calendars) {
       const calIntervals = new IntervalSet();
       let current = timeMin;
-      for (const busy of res.data.calendars[key].busy) {
+      for (const busy of response.data.calendars[key].busy) {
         console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
         const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
         const _end = addMinutes(new Date(busy.end), event.bufferafter);
