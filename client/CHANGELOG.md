@@ -1,3 +1,15 @@
+## client [1.7.3](https://github.com/fhswf/book_me/compare/client@1.7.2...client@1.7.3) (2024-10-16)
+
+
+### Bug Fixes
+
+* improve quality ([f22c507](https://github.com/fhswf/book_me/commit/f22c507b8afa1939c1735b4b62a7ebea42dc2e36))
+* improve quality ([bd3cde5](https://github.com/fhswf/book_me/commit/bd3cde540414955a65c24458f033011a21a63442))
+* improve quality ([0525039](https://github.com/fhswf/book_me/commit/05250393893cc737202cfdb3c1510e13470bf424))
+* improve quality ([bd641ff](https://github.com/fhswf/book_me/commit/bd641ff5a0c075bb7c8a8b1e116e5a47f522333c))
+* improve quality ([0659aac](https://github.com/fhswf/book_me/commit/0659aac5ab49436ef43a415c89d9526e57adf612))
+* updating event status ([b70ff1a](https://github.com/fhswf/book_me/commit/b70ff1ae6270c7cde1e24206a01e401c51f8e391))
+
 ## client [1.7.2](https://github.com/fhswf/book_me/compare/client@1.7.1...client@1.7.2) (2024-10-15)
 
 
