@@ -1,3 +1,10 @@
+## client [1.7.6](https://github.com/fhswf/book_me/compare/client@1.7.5...client@1.7.6) (2024-10-16)
+
+
+### Bug Fixes
+
+* improve quality ([1754272](https://github.com/fhswf/book_me/commit/1754272305756cfa24a2b6587f0fafef17fa86d2))
+
 ## client [1.7.5](https://github.com/fhswf/book_me/compare/client@1.7.4...client@1.7.5) (2024-10-16)
 
 
