@@ -15,8 +15,6 @@ export type EventFormProps = {
   handleOnSubmit: (evt: Event) => void;
 };
 
-// export type EditEventProps = RouteComponentProps<{ id: string }> & {};
-
 const EditEvent = (): JSX.Element => {
   const eventID = useParams<{ id: string }>().id;
   const navigate = useNavigate();

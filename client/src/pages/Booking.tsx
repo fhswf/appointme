@@ -6,7 +6,6 @@ import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-picke
 
 
 import {
-  createTheme,
   styled
 } from "@mui/material/styles";
 
@@ -36,35 +35,6 @@ import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
 import { useSnackbar } from "notistack";
-
-const theme = createTheme({
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          width: "100%",
-        },
-      },
-    },
-    MuiTypography: {
-      defaultProps: {
-        variantMapping: {
-          h1: "h3",
-          h2: "h4",
-          h3: "h5",
-          h4: "h5",
-          h5: "h6",
-          h6: "h6",
-        },
-      },
-    },
-  },
-  typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
-    //fontSize: 12,
-  },
-});
 
 
 type Error = {
@@ -139,7 +109,7 @@ const Booking = (props: any) => {
 
   useEffect(() => {
 
-    if (user && event && event.url) {
+    if (user && event?.url) {
       startTransition(() => updateSlots(beginDate));
     }
 
@@ -155,11 +125,6 @@ const Booking = (props: any) => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   const handleMonthChange = (date: Date) => {

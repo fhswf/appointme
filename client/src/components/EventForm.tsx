@@ -52,12 +52,9 @@ const EditSlot = (props: EditSlotProps) => {
         setSlots(_slots);
         props.onChange(_slots);
       }
-    } else {
-      // ensure no entry
-      if (slots.length > 0) {
-        setSlots([]);
-        props.onChange([]);
-      }
+    } else if (slots.length > 0) {
+      setSlots([]);
+      props.onChange([]);
     }
   };
 

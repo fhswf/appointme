@@ -5,7 +5,6 @@
 
 
 import { addMinutes } from 'date-fns';
-//const { body } = require("express-validator");
 import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
@@ -16,8 +15,6 @@ import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
 
-//import { remark } from 'remark';
-//import html from 'remark-html';
 
 
 // Dotenv Config
@@ -111,7 +108,6 @@ async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: D
         const calIntervals = new IntervalSet();
         let current = timeMin;
         for (const busy of res.data.calendars[key].busy) {
-          //console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
           const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
           const _end = addMinutes(new Date(busy.end), event.bufferafter);
           if (current < _start)

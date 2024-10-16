@@ -28,8 +28,6 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-
-//import { Button, Modal } from "react-bootstrap";
 import { updateUser } from "../helpers/services/user_services";
 import {
   getAuthUrl,
