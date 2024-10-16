@@ -61,7 +61,7 @@ const EditEvent = (): JSX.Element => {
           {t("each_awake_tadpole_jest")}
         </Typography>
         <EventForm
-          event={formData ? formData : EMPTY_EVENT}
+          event={formData || EMPTY_EVENT}
           handleOnSubmit={saveEvent}
         />
       </Container>

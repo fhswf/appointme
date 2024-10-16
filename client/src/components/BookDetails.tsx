@@ -1,10 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { Event } from "common";
 import { useTranslation } from "react-i18next";
-import React from "react";
 
 export type BookingFormData = {
   name: string;
@@ -13,11 +12,6 @@ export type BookingFormData = {
 };
 
 export type BookDetailsProps = {
-  start: Date;
-  end: Date;
-  userid: string;
-  username: string;
-  event: Event;
   errors: any;
   onChange: (form: BookingFormData) => void;
 };

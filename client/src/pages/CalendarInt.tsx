@@ -79,7 +79,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
         key={item.id}
         control={
           <Checkbox
-            checked={state[item.id] ? true : false}
+            checked={state[item.id]}
             onChange={(event) => {
               console.log(
                 "onChange: %s %o\n%o",
@@ -156,7 +156,7 @@ const PushCalendar = ({ user, calendarList }) => {
           </DialogContentText>
           {renderCalendarList(
             calendarList,
-            selected ? selected : { [user.push_calendar]: true },
+            selected || { [user.push_calendar]: true },
             setSelected,
             true
           )}
@@ -242,7 +242,7 @@ const PullCalendars = ({ user, calendarList }) => {
             </DialogContentText>
             {renderCalendarList(
               calendarList,
-              selected ? selected : _selected,
+              selected || _selected,
               setSelected
             )}
           </DialogContent>

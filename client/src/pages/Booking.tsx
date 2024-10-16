@@ -24,8 +24,7 @@ import Grid from '@mui/material/Grid2';
 
 
 import { getUserByUrl } from "../helpers/services/user_services";
-import { getEventByUrlAndUser } from "../helpers/services/event_services";
-import { getAvailableTimes } from "../helpers/services/event_services";
+import { getEventByUrlAndUser, getAvailableTimes } from "../helpers/services/event_services";
 import clsx from "clsx";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
@@ -336,11 +335,6 @@ const Booking = (props: any) => {
                 <Grid>
                   {user ? (
                     <BookDetails
-                      userid={user._id}
-                      username={user.name}
-                      event={event}
-                      start={selectedTime}
-                      end={addMinutes(selectedTime, event.duration)}
                       errors={{}}
                       onChange={handleDetailChange}
                     />
