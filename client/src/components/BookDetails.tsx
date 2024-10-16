@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { TextField } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { Event } from "common";
 import { useTranslation } from "react-i18next";
 
 export type BookingFormData = {
