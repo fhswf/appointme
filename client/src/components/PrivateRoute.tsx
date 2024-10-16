@@ -34,8 +34,8 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
           console.log("user set to %o", res.data);
         }
       })
-      .catch(() => {
-        console.log("getUserById: error");
+      .catch((res) => {
+        console.log("getUser: error: %d", res.status);
         setAuthenticated(false);
         navigate("/landing");
         // TODO: Add SnackBar

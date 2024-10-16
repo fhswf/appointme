@@ -61,10 +61,11 @@ const EventList = (props: EventListProps) => {
 
   return (
     <Grid
+      container
+      data-testid="event-list"
+      direction="row"
       size={12}
       spacing={3}
-      justifyItems="space-around"
-      alignItems="stretch"
     >
       {list}
     </Grid>

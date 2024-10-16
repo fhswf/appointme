@@ -13,7 +13,6 @@ import {
   Snackbar,
   Switch,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,6 +20,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
 
+import "./EventCard.css";
 
 
 type EventCardProps = {
@@ -58,12 +58,16 @@ export const EventCard = (props: EventCardProps) => {
   };
 
   const handleDelete = () => {
-    deleteEvent(props.event._id).then((res) => {
-      if (res.data.success === false) {
-        signout();
+    deleteEvent(props.event._id)
+      .then((res) => {
+        if (res.data.success === false) {
+          navigate("/landing");
+        }
+      })
+      .catch((res) => {
+        console.error("deleteEvent failed: %o", res);
         navigate("/landing");
-      }
-    });
+      });
     if (props.onDelete) {
       props.onDelete(props.event);
     }
@@ -71,53 +75,53 @@ export const EventCard = (props: EventCardProps) => {
 
   return (
     <>
-      <Grid size="auto">
 
-        <Card style={{ maxWidth: "25rem" }}
-          data-testid="event-card">
-          <CardHeader
-            action={
-              <IconButton
-                aria-label="settings"
-                component={RouterLink}
-                data-testid="edit-event-button"
-                to={`/editevent/${props.event._id}`}
-              >
-                <EditIcon />
-              </IconButton>
-            }
-            title={props.event.name}
-            subheader={<span>{props.event.duration} min</span>}
-          />
-          <CardContent>{props.event.description}</CardContent>
-          <CardActions disableSpacing>
-            <Switch
-              data-testid="active-switch"
-              checked={active}
-              onChange={toggleActive}
-              size="small"
-              name="active"
-              color="primary"
-              inputProps={{ "aria-label": "active" }}
-            />
-            <Button
-              data-testid="copy-link-button"
-              aria-label={t("large_suave_gull_hush")}
-              startIcon={<ShareIcon />}
-              onClick={handleCopy}
-            >
-              {t("misty_proud_mallard_assure")}
-            </Button>
+
+      <Card style={{ maxWidth: "25rem" }}
+        data-testid="event-card" className={active ? "active" : "inactive"}>
+        <CardHeader
+          action={
             <IconButton
-              data-testid="delete-event-button"
-              aria-label="delete"
-              onClick={handleDelete}
+              aria-label="settings"
+              component={RouterLink}
+              data-testid="edit-event-button"
+              to={`/editevent/${props.event._id}`}
             >
-              <DeleteIcon />
+              <EditIcon />
             </IconButton>
-          </CardActions>
-        </Card>
-      </Grid >
+          }
+          title={props.event.name}
+          subheader={<span>{props.event.duration} min</span>}
+        />
+        <CardContent>{props.event.description}</CardContent>
+        <CardActions>
+          <Switch
+            data-testid="active-switch"
+            checked={active}
+            onChange={toggleActive}
+            size="small"
+            name="active"
+            color="primary"
+            inputProps={{ "aria-label": "active" }}
+          />
+          <Button
+            data-testid="copy-link-button"
+            aria-label={t("large_suave_gull_hush")}
+            startIcon={<ShareIcon />}
+            onClick={handleCopy}
+          >
+            {t("misty_proud_mallard_assure")}
+          </Button>
+          <IconButton
+            data-testid="delete-event-button"
+            aria-label="delete"
+            onClick={handleDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
+
       <Snackbar
         open={success}
         autoHideDuration={2000}
