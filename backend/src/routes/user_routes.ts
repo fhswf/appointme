@@ -27,6 +27,7 @@ userRouter.get("/user", middleware.requireAuth, getUser);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
+userRouter.get("/user/:url", getUserByUrl);
 userRouter.get("/findUserByUrl", getUserByUrl);
 
 /**
