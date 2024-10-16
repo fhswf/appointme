@@ -1,3 +1,12 @@
+## backend [1.11.9](https://github.com/fhswf/book_me/compare/backend@1.11.8...backend@1.11.9) (2024-10-16)
+
+
+### Bug Fixes
+
+* improve quality ([f22c507](https://github.com/fhswf/book_me/commit/f22c507b8afa1939c1735b4b62a7ebea42dc2e36))
+* refactor event controller ([085d544](https://github.com/fhswf/book_me/commit/085d5446af0d8f07e7ca06762acf2c83932b89f8))
+* refactor event controller ([acac350](https://github.com/fhswf/book_me/commit/acac350b725d770f73f501e593852de375276893))
+
 ## backend [1.11.8](https://github.com/fhswf/book_me/compare/backend@1.11.7...backend@1.11.8) (2024-10-15)
 
 
