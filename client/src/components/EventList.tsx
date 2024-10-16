@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signout, useAuthenticated } from "../helpers/helpers";
+import { signout } from "../helpers/helpers";
 import { updateEvent } from "../helpers/services/event_services";
 
 import Grid from "@mui/material/Grid2";
@@ -9,7 +9,6 @@ import { getUsersEvents } from "../helpers/services/event_services";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
-import { use } from "i18next";
 
 
 type EventListProps = {
@@ -20,7 +19,7 @@ type EventListProps = {
 const EventList = (props: EventListProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const isAuthenticated = useAuthenticated();
+
 
   const [events, setEvents] = useState<EventDocument[]>([]);
 
@@ -40,37 +39,37 @@ const EventList = (props: EventListProps) => {
     setEvents(events.filter((ev) => ev._id !== event._id));
   };
 
+  const updateEventStatus = (event: EventDocument, active: boolean): void => {
+    console.log("setActive: %o %o", event, active);
+    event.isActive = active;
+    updateEvent(event._id, event);
+  };
+
   const list =
     events.length === 0 ? (
       <div>{t("sunny_great_halibut_empower")}</div>
     ) : (
-      events.map((event, index) => (
+      events.map((event) => (
         <EventCard
           key={event._id}
           event={event}
           url={props.url}
-          setActive={(active) => {
-            const event = events[index];
-            event.isActive = active;
-            console.log("setActive: %o %o", event, active);
-            updateEvent(event._id, event);
-          }}
+          setActive={updateEventStatus}
           onDelete={onDelete}
         />
       ))
     );
 
   return (
-    <>
-      <Grid
-        size={12}
-        spacing={3}
-        justifyItems="space-around"
-        alignItems="stretch"
-      >
-        {list}
-      </Grid>
-    </>
+    <Grid
+      container
+      data-testid="event-list"
+      direction="row"
+      size={12}
+      spacing={3}
+    >
+      {list}
+    </Grid>
   );
 };
 

@@ -28,11 +28,8 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-
-//import { Button, Modal } from "react-bootstrap";
 import { updateUser } from "../helpers/services/user_services";
 import {
-  deleteAccess,
   getAuthUrl,
   getCalendarList,
 } from "../helpers/services/google_services";
@@ -40,7 +37,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 
 import { UserContext } from "../components/PrivateRoute";
-import { use } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);
@@ -60,10 +57,12 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
       <FormControl>
         <InputLabel id="calendar-select-label">Calendar</InputLabel>
         <Select
+          data-testid="calendar-select"
           labelId="calendar-select-label"
           id="calendar-select"
           value={selected}
           displayEmpty
+          label="Calendar"
           onChange={(event) => {
             state = { [event.target.value]: true };
             console.log("select: %o %o", event, state);
@@ -107,6 +106,7 @@ const PushCalendar = ({ user, calendarList }) => {
     : undefined;
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pushCal);
+  const { t } = useTranslation();
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
@@ -131,14 +131,14 @@ const PushCalendar = ({ user, calendarList }) => {
   console.log("pushCalendar: %o %o", pushCal, calendarList);
 
   return (
-    <>
+    <Card>
       <CardHeader
         action={
-          <IconButton onClick={handleShow}>
+          <IconButton onClick={handleShow} data-testid="edit-push-calendar">
             <EditIcon />
           </IconButton>
         }
-        title="Add appointments to calendar"
+        title={t("trite_warm_gorilla_pet")}
       />
       <CardContent>
         {pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary}
@@ -163,14 +163,14 @@ const PushCalendar = ({ user, calendarList }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            {t("teal_lofty_hawk_peek")}
           </Button>
-          <Button onClick={save} color="primary">
-            Save Changes
+          <Button onClick={save} color="primary" data-testid="button-save">
+            {t("mild_raw_elk_delight")}
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Card>
   );
 };
 
@@ -185,6 +185,7 @@ const PullCalendars = ({ user, calendarList }) => {
 
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pullCals);
+  const { t } = useTranslation();
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
@@ -217,11 +218,11 @@ const PullCalendars = ({ user, calendarList }) => {
       <>
         <CardHeader
           action={
-            <IconButton onClick={handleShow}>
+            <IconButton onClick={handleShow} data-testid="edit-pull-calendar">
               <EditIcon />
             </IconButton>
           }
-          title="Check free time in calendars"
+          title={t("aware_alert_mare_glow")}
         />
         <CardContent>
           <FormGroup>
@@ -237,7 +238,7 @@ const PullCalendars = ({ user, calendarList }) => {
           <DialogTitle id="form-dialog-title">Calendar</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Choose calendars to check for busy times.
+              {t("big_known_loris_revive")}
             </DialogContentText>
             {renderCalendarList(
               calendarList,
@@ -247,10 +248,10 @@ const PullCalendars = ({ user, calendarList }) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
-              Cancel
+              {t("tiny_teary_clownfish_vent")}
             </Button>
             <Button onClick={save} color="primary">
-              Save Changes
+              {t("factual_nimble_snail_clap")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -265,6 +266,7 @@ const Calendarintegration = () => {
   const [url, setUrl] = useState("");
   const [calendarList, setCalendarList] = useState(null);
   const user = useContext(UserContext).user;
+  const { t } = useTranslation();
 
   const revokeScopes = (event) => {
     event.preventDefault();
@@ -322,11 +324,11 @@ const Calendarintegration = () => {
   const renderConnectButton = () =>
     connected ? (
       <Button variant="contained" onClick={revokeScopes}>
-        Disconnect from Google
+        {t("lower_born_finch_dash")}
       </Button>
     ) : (
       <Button variant="contained" href={url}>
-        Connect Google Calendar
+        {t("whole_formal_liger_rise")}
       </Button>
     );
 
@@ -335,7 +337,7 @@ const Calendarintegration = () => {
       <AppNavbar />
       <Container>
         <Typography variant="h3" gutterBottom>
-          My Calendar
+          {t("pink_loose_cougar_grin")}
         </Typography>
         <Box p="1em">
           <Grid
@@ -349,17 +351,17 @@ const Calendarintegration = () => {
               <img
                 className="icon"
                 alt="Google Calendar"
-                src="/meeting/icons/google_calendar_icon.svg"
+                src="/icons/google_calendar_icon.svg"
                 width="32"
               />{" "}
-              Google Calendar
+              {t("upper_even_florian_peek")}
             </Grid>
             <Grid>{renderConnectButton()}</Grid>
           </Grid>
         </Box>
 
         <Typography variant="h4" gutterBottom>
-          Configuration
+          {t("merry_north_meerkat_cuddle")}
         </Typography>
         <Box p="1em">
           <Grid

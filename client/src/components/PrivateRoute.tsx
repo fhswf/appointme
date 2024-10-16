@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, RouteProps, useLocation } from "react-router-dom";
-import { useAuthenticated, signout } from "../helpers/helpers";
 import { getUser } from "../helpers/services/user_services";
 import { UserDocument } from "../helpers/UserDocument";
 
@@ -25,8 +24,8 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     getUser()
       .then((res) => {
         if (res.data.success === false || res.status === 401) {
+          console.log("getUser: not authenticated");
           setAuthenticated(false);
-          signout();
           navigate("/landing");
         } else {
           console.log("getUser: %o", res);
@@ -35,8 +34,10 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
           console.log("user set to %o", res.data);
         }
       })
-      .catch(() => {
-        console.log("getUserById: error");
+      .catch((res) => {
+        console.log("getUser: error: %d", res.status);
+        setAuthenticated(false);
+        navigate("/landing");
         // TODO: Add SnackBar
         //toast.error(err);
       });

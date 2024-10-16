@@ -20,7 +20,7 @@ type AddEventProps = {};
 
 const AddEvent = (props: AddEventProps) => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState(EMPTY_EVENT);
+  const [formData] = useState(EMPTY_EVENT);
   const user = useContext(UserContext).user;
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();

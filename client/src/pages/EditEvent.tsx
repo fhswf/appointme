@@ -15,8 +15,6 @@ export type EventFormProps = {
   handleOnSubmit: (evt: Event) => void;
 };
 
-// export type EditEventProps = RouteComponentProps<{ id: string }> & {};
-
 const EditEvent = (): JSX.Element => {
   const eventID = useParams<{ id: string }>().id;
   const navigate = useNavigate();
@@ -43,7 +41,7 @@ const EditEvent = (): JSX.Element => {
           signout();
           navigate("/landing");
         } else {
-          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success" });
+          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success", autoHideDuration: 1500, className: "success" });
           navigate("/app");
         }
       })

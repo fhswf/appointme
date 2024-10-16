@@ -52,12 +52,9 @@ const EditSlot = (props: EditSlotProps) => {
         setSlots(_slots);
         props.onChange(_slots);
       }
-    } else {
-      // ensure no entry
-      if (slots.length > 0) {
-        setSlots([]);
-        props.onChange([]);
-      }
+    } else if (slots.length > 0) {
+      setSlots([]);
+      props.onChange([]);
     }
   };
 
@@ -397,6 +394,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Stack>
       </Box>
       <Button
+        data-testid="event-form-submit"
         variant="contained"
         type="submit"
         className="save"

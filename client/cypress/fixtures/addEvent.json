@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": {
+    "user": "109150731150582581691",
+    "name": "Sprechstunde1",
+    "location": "",
+    "description": "",
+    "duration": 0,
+    "url": "sprechstunde1",
+    "isActive": false,
+    "bufferbefore": 0,
+    "bufferafter": 0,
+    "available": {
+      "0": [
+        {
+          "start": "09:00",
+          "end": "17:00"
+        }
+      ],
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": []
+    },
+    "minFuture": 172800,
+    "maxFuture": 5184000,
+    "maxPerDay": 2,
+    "_id": "670e90f112ea5293b6be50c7",
+    "__v": 0
+  },
+  "msg": "Successfully saved event!"
+}
