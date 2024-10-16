@@ -79,7 +79,7 @@ spec:
                   name: bookme
             - name: NODE_ENV
               value: development
-          image: ghcr.io/fhswf/book_me/backend:1.11.9
+          image: ghcr.io/fhswf/book_me/backend:1.12.0
           name: bookme
           ports:
             - containerPort: 5000
