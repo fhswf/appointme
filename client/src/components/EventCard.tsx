@@ -1,6 +1,5 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { signout } from "../helpers/helpers";
 import { deleteEvent } from "../helpers/services/event_services";
 import {
   Alert,
