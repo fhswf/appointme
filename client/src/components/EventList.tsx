@@ -39,21 +39,22 @@ const EventList = (props: EventListProps) => {
     setEvents(events.filter((ev) => ev._id !== event._id));
   };
 
+  const updateEventStatus = (event: EventDocument, active: boolean): void => {
+    console.log("setActive: %o %o", event, active);
+    updateEvent(event._id, event);
+    event.isActive = active;
+  };
+
   const list =
     events.length === 0 ? (
       <div>{t("sunny_great_halibut_empower")}</div>
     ) : (
-      events.map((event, index) => (
+      events.map((event) => (
         <EventCard
           key={event._id}
           event={event}
           url={props.url}
-          setActive={(active) => {
-            const event = events[index];
-            event.isActive = active;
-            console.log("setActive: %o %o", event, active);
-            updateEvent(event._id, event);
-          }}
+          setActive={updateEventStatus}
           onDelete={onDelete}
         />
       ))

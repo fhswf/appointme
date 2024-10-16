@@ -9,16 +9,34 @@ context('User not logged in', () => {
       cy.intercept('https://accounts.google.com/gsi/button', {
         statusCode: 200, body: {}
       }).as('googleButton')
-
-      cy.visit('/app')
     })
 
     it('Should redirect to landing', () => {
+      cy.visit('/app')
       cy.wait(['@getUser'], { timeout: 10000 })
       cy.location('pathname').should('eq', '/landing')
     })
 
+    it('Should redirect to landing', () => {
+      cy.intercept('/api/v1/users/user', {
+        statusCode: 401, body: { "success": false, "message": "Unauthorized! Sign in again!" }
+      }).as('getUser1')
+      cy.visit('/app')
+      cy.wait(['@getUser1'], { timeout: 10000 })
+      cy.location('pathname').should('eq', '/landing')
+    })
+
+    it('Should redirect to landing', () => {
+      cy.intercept('/api/v1/users/user', {
+        statusCode: 500
+      }).as('getUser2')
+      cy.visit('/app')
+      cy.wait(['@getUser2'], { timeout: 10000 })
+      cy.location('pathname').should('eq', '/landing')
+    })
+
     it('should show login button', () => {
+      cy.visit('/app')
       cy.wait(['@getUser'], { timeout: 10000 })
       cy.location('pathname').should('eq', '/landing')
       cy.get('[data-testid="profile-menu"]').click()
@@ -33,22 +51,23 @@ context('Main page', () => {
   })
 
   describe('Visit app main page & add event type', () => {
-    before(() => {
+    beforeEach(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
       cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/events/addEvent', { fixture: 'addEvent' }).as('addEvent')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'eventsAfter' }).as('getEventsAfter')
       cy.intercept('DELETE', '/api/v1/events/deleteEvent/670eca0bc1eebcf903b17528', {
         statusCode: 200, body: { "msg": "Successfully deleted the Event" }
       }).as('deleteEvent')
     })
 
-    it('Check add event type', () => {
+    it('Check add/delete event type', () => {
       cy.visit('/app')
-      cy.wait(['@getUser'], { timeout: 10000 })
+      cy.wait(['@getUser', '@getEvents'], { timeout: 10000 })
+      cy.intercept('/api/v1/events/getEvents', { fixture: 'eventsAfter' }).as('getEventsAfter')
       cy.get('[data-testid="add-event-button"]').click()
       cy.get('[data-testid="event-form-title"]').type('Test event')
       cy.get('[data-testid="event-form-submit"]').click()
+
       cy.wait(['@addEvent', '@getEventsAfter'], { timeout: 10000 })
       cy.get('[data-testid="copy-link-button"]').last().click({ force: true })
 
@@ -56,6 +75,43 @@ context('Main page', () => {
       cy.wait(['@deleteEvent'], { timeout: 10000 })
       cy.get('[data-testid="event-card"]').should('have.length', 1)
       cy.get('[data-testid="event-card"]').contains('Test event').should('not.exist')
+    })
+
+    it('Check delete error handling', () => {
+      cy.intercept('DELETE', '/api/v1/events/deleteEvent/66e41e641f4f81ece1828ab5', {
+        statusCode: 400, body: { "msg": "Successfully deleted the Event" }
+      }).as('deleteEvent')
+      cy.visit('/app')
+      cy.wait(['@getUser'], { timeout: 10000 })
+      cy.wait(['@getEvents'], { timeout: 10000 })
+
+      cy.get('[data-testid="delete-event-button"]').click()
+      cy.wait(['@deleteEvent'], { timeout: 10000 })
+    })
+  })
+
+  describe('Visit app main page & disable event', () => {
+    before(() => {
+      cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
+      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
+      cy.intercept('GET', '/api/v1/events/getEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
+      cy.intercept('PUT', '/api/v1/events/updateEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('putEvent')
+    })
+
+    it('Check event actions', () => {
+      cy.visit('/app')
+      cy.wait(['@getUser'], { timeout: 10000 })
+      cy.wait(['@getEvents'], { timeout: 10000 })
+      cy.get('[data-testid="active-switch"]').click()
+      cy.wait(['@putEvent'], { timeout: 10000 })
+      cy.get('[data-testid="event-card"]').should('have.class', 'inactive')
+      cy.get('[data-testid="active-switch"]').click()
+      cy.wait(['@putEvent'], { timeout: 10000 })
+      cy.get('[data-testid="event-card"]').should('have.class', 'active')
+      cy.get('[data-testid="copy-link-button"]').click()
+      cy.window().its('navigator.clipboard')
+        .then((clip) => clip.readText())
+        .should((s) => s.endsWith('users/christian-gawron/sprechstunde'))
     })
   })
 

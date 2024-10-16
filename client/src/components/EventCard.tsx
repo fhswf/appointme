@@ -26,7 +26,7 @@ import "./EventCard.css";
 type EventCardProps = {
   event: EventDocument;
   url: string;
-  setActive: (active: boolean) => void;
+  setActive: (event: EventDocument, active: boolean) => void;
   onDelete: (event: EventDocument) => void;
 };
 
@@ -37,9 +37,11 @@ export const EventCard = (props: EventCardProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const event = props.event;
+
   const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
+    props.setActive(event, evt.target.checked);
     setActive(evt.target.checked);
-    props.setActive(evt.target.checked);
   };
 
   const handleCopy = () => {
