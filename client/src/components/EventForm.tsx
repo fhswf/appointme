@@ -86,8 +86,8 @@ const EditSlot = (props: EditSlotProps) => {
   console.log("EditSlot: %o", slots);
   return (
 
-    <Grid container xs={12}>
-      <Grid xs={2}>
+    <Grid container size={{ xs: 12 }}>
+      <Grid size={{ xs: 2 }}>
         <FormControl>
           <FormControlLabel
             control={
@@ -97,12 +97,12 @@ const EditSlot = (props: EditSlotProps) => {
           />
         </FormControl>
       </Grid>
-      <Grid xs={9}>
+      <Grid size={{ xs: 9 }}>
         <Grid container>
           {slots.map((slot, index) => (
 
             <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
-              <Grid xs={4} textAlign="end">
+              <Grid size={{ xs: 4 }} textAlign="end">
                 <Input
                   type="time"
                   placeholder="Starttime"
@@ -110,10 +110,10 @@ const EditSlot = (props: EditSlotProps) => {
                   value={slot.start}
                 />
               </Grid>
-              <Grid xs={2} textAlign="center">
+              <Grid size={{ xs: 2 }} textAlign="center">
                 –
               </Grid>
-              <Grid xs={4} textAlign="start">
+              <Grid size={{ xs: 4 }} textAlign="start">
                 <Input
                   type="time"
                   placeholder="Endtime"
@@ -121,7 +121,7 @@ const EditSlot = (props: EditSlotProps) => {
                   value={slot.end}
                 />
               </Grid>
-              <Grid xs={2}>
+              <Grid size={{ xs: 2 }}>
                 <Button onClick={deleteSlot(index)}>
                   <Delete />
                 </Button>
@@ -131,7 +131,7 @@ const EditSlot = (props: EditSlotProps) => {
           ))}
         </Grid>
       </Grid>
-      <Grid xs={1}>
+      <Grid size={{ xs: 1 }}>
         {slots.length > 0 ?
           <Button onClick={addSlot} hidden={slots.length <= 0}>
             <Add />
@@ -260,7 +260,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl margin="normal" variant="filled">
               <InputLabel id="duration-label">{t("ideal_this_coyote_inspire")}</InputLabel>
               <Select
@@ -278,7 +278,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             </FormControl>
           </Grid>
 
-          <Grid xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl component="span" margin="normal" variant="filled">
               <InputLabel id="buffer-before-label">{t("mealy_happy_ray_flop")}</InputLabel>
               <Select
@@ -297,7 +297,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             </FormControl>
           </Grid>
 
-          <Grid xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl component="span" margin="normal" variant="filled">
               <InputLabel id="buffer-after-label">{t("close_actual_deer_boil")}</InputLabel>
               <Select
@@ -323,7 +323,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               id="maxFuture"
               label={t("Maximum days in advance")}
@@ -341,7 +341,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               id="rangedays"
               label={t("quaint_known_wasp_view")}
@@ -359,7 +359,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               id="maxPerDay"
               label={t("grand_wacky_ox_flow")}
