@@ -1,3 +1,10 @@
+# backend [1.13.0](https://github.com/fhswf/book_me/compare/backend@1.12.0...backend@1.13.0) (2024-10-17)
+
+
+### Features
+
+* new rest api ([93ec39b](https://github.com/fhswf/book_me/commit/93ec39bedfe704cf6c26ba72078b108c7498248a))
+
 # backend [1.12.0](https://github.com/fhswf/book_me/compare/backend@1.11.9...backend@1.12.0) (2024-10-16)
 
 
