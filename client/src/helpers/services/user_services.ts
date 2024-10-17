@@ -23,7 +23,7 @@ export async function updateUser(user: any) {
 
 export async function getUserByUrl(url: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/users/findUserByUrl`,
+    `${import.meta.env.REACT_APP_API_URL}/users/user/${url}`,
     {
       params: { url: url },
     }

@@ -53,22 +53,24 @@ context('Main page', () => {
   describe('Visit app main page & add event type', () => {
     beforeEach(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
-      cy.intercept('/api/v1/events/addEvent', { fixture: 'addEvent' }).as('addEvent')
-      cy.intercept('DELETE', '/api/v1/events/deleteEvent/670eca0bc1eebcf903b17528', {
+      cy.intercept('GET', '/api/v1/events/event', { fixture: 'events' }).as('getEvents')
+      cy.intercept('POST', '/api/v1/events/event', { fixture: 'addEvent' }).as('addEvent')
+      cy.intercept('DELETE', '/api/v1/events/event/670eca0bc1eebcf903b17528', {
         statusCode: 200, body: { "msg": "Successfully deleted the Event" }
       }).as('deleteEvent')
     })
 
     it('Check add/delete event type', () => {
       cy.visit('/app')
-      cy.wait(['@getUser', '@getEvents'], { timeout: 10000 })
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'eventsAfter' }).as('getEventsAfter')
+      cy.wait(['@getUser'], { timeout: 10000 })
+      cy.wait(['@getEvents'], { timeout: 10000 })
+      cy.intercept('GET', '/api/v1/events/event', { fixture: 'eventsAfter' }).as('getEventsAfter')
       cy.get('[data-testid="add-event-button"]').click()
       cy.get('[data-testid="event-form-title"]').type('Test event')
       cy.get('[data-testid="event-form-submit"]').click()
 
-      cy.wait(['@addEvent', '@getEventsAfter'], { timeout: 10000 })
+      cy.wait(['@addEvent'], { timeout: 10000 })
+      cy.wait(['@getEventsAfter'], { timeout: 10000 })
       cy.get('[data-testid="copy-link-button"]').last().click({ force: true })
 
       cy.get('[data-testid="delete-event-button"]').last().click({ force: true })
@@ -78,7 +80,7 @@ context('Main page', () => {
     })
 
     it('Check delete error handling', () => {
-      cy.intercept('DELETE', '/api/v1/events/deleteEvent/66e41e641f4f81ece1828ab5', {
+      cy.intercept('DELETE', '/api/v1/events/event/66e41e641f4f81ece1828ab5', {
         statusCode: 400, body: { "msg": "Successfully deleted the Event" }
       }).as('deleteEvent')
       cy.visit('/app')
@@ -93,9 +95,9 @@ context('Main page', () => {
   describe('Visit app main page & disable event', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
-      cy.intercept('GET', '/api/v1/events/getEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
-      cy.intercept('PUT', '/api/v1/events/updateEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('putEvent')
+      cy.intercept('/api/v1/events/event', { fixture: 'events' }).as('getEvents')
+      cy.intercept('GET', '/api/v1/events/event/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
+      cy.intercept('PUT', '/api/v1/events/event/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('putEvent')
     })
 
     it('Check event actions', () => {
@@ -118,8 +120,8 @@ context('Main page', () => {
   describe('Visit app main page & edit event type', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
-      cy.intercept('/api/v1/events/getEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
+      cy.intercept('/api/v1/events/event', { fixture: 'events' }).as('getEvents')
+      cy.intercept('/api/v1/events/event/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
     })
 
     it('Check edit event type', () => {
@@ -135,8 +137,8 @@ context('Main page', () => {
   describe('Visit app main page & log out', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
-      cy.intercept('/api/v1/events/getEvent/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
+      cy.intercept('/api/v1/events/event', { fixture: 'events' }).as('getEvents')
+      cy.intercept('/api/v1/events/event/66e41e641f4f81ece1828ab5', { fixture: 'sprechstunde' }).as('getEvent')
     })
 
     it('Check log out', () => {
@@ -152,7 +154,7 @@ context('Main page', () => {
   describe('Visit app main page & open calendar integration', () => {
     before(() => {
       cy.intercept('/api/v1/users/user', { fixture: 'user' }).as('getUser')
-      cy.intercept('/api/v1/events/getEvents', { fixture: 'events' }).as('getEvents')
+      cy.intercept('/api/v1/events/event', { fixture: 'events' }).as('getEvents')
       cy.intercept('/api/v1/google/calendarList', { fixture: 'calendarList' }).as('calendarList')
       cy.intercept('/api/v1/google/generateUrl', { fixture: 'generateUrl' }).as('generateUrl')
       cy.intercept('PUT', '/api/v1/users/user').as('putUser')

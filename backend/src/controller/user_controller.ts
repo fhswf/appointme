@@ -78,7 +78,7 @@ export const putUser = (req: Request, res: Response): void => {
  * @param {response} res
  */
 export const getUserByUrl = (req: Request, res: Response): void => {
-  const user_url = req.query.url;
+  const user_url = req.params.url || req.query.url;
   UserModel.findOne({ user_url: <string>user_url })
     .select("_id email name picture_url user_url welcome")
     .exec()
