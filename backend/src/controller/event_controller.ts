@@ -71,7 +71,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     });
 
   function calculateBlocked(events, event, timeMin, timeMax) {
-    const days = {};
+    const eventsPerDay = {};
     const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
     events.forEach(evt => {
       console.log('event: %o', evt);
@@ -79,14 +79,14 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
         return;
       }
       const day = startOfDay(new Date(evt.start.dateTime)).toISOString();
-      if (day in days) {
-        days[day] += 1;
+      if (day in eventsPerDay) {
+        eventsPerDay[day] += 1;
       } else {
-        days[day] = 1;
+        eventsPerDay[day] = 1;
       }
     });
-    for (const day in days) {
-      if (days[day] >= event.maxPerDay) {
+    for (const day in eventsPerDay) {
+      if (eventsPerDay[day] >= event.maxPerDay) {
         blocked.addRange({ start: new Date(day), end: addDays(new Date(day), 1) });
       }
     }

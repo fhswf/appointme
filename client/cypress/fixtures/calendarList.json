@@ -9,12 +9,6 @@
         "comment": "gzip"
       }
     ],
-    "headers": {
-      "x-goog-api-client": "gdcl/7.0.1 gl-node/18.20.4",
-      "Accept-Encoding": "gzip",
-      "User-Agent": "google-api-nodejs-client/7.0.1 (gzip)",
-      "Authorization": "Bearer ya29.a0AcM612xf6HxDLrtzihWDcobYv77tDABBNZNwcu5XLwk5BzBXHZu-Ye4S0YxrCSt83JWC8FccCnXK_1iTBWGoIH3UKdto0T-gYMFl0fp5_JzAd5kLMuiAARQSe0a0-y7Jyt8CPMmPVTxxwaI5oFoVATPVTt6puxwXQsc7g-e9TwaCgYKAcwSARMSFQHGX2Mis5a6O2i8pMPSovpLdBf3Pw0177"
-    },
     "params": {},
     "retry": true,
     "responseType": "unknown"

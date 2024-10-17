@@ -6,7 +6,7 @@ export async function saveUserEvent(
   userid: string
 ) {
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/events/addEvent`,
+    `${import.meta.env.REACT_APP_API_URL}/events/event`,
     { ...event, user: userid },
     {
       withCredentials: true,
@@ -17,7 +17,7 @@ export async function saveUserEvent(
 
 export async function deleteEvent(id: string) {
   const response = await axios.delete(
-    `${import.meta.env.REACT_APP_API_URL}/events/deleteEvent/${id}`,
+    `${import.meta.env.REACT_APP_API_URL}/events/event/${id}`,
     {
       withCredentials: true,
     }
@@ -28,7 +28,7 @@ export async function deleteEvent(id: string) {
 
 export async function getEventByID(id: string) {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/events/getEvent/${id}`,
+    `${import.meta.env.REACT_APP_API_URL}/events/event/${id}`,
     {
       withCredentials: true,
     }
@@ -43,7 +43,7 @@ export async function updateEvent(
 ) {
   console.log('available: %o', event.available);
   const response = await axios.put(
-    `${import.meta.env.REACT_APP_API_URL}/events/updateEvent/${id}`,
+    `${import.meta.env.REACT_APP_API_URL}/events/event/${id}`,
     {
       data: event
     },
@@ -81,7 +81,7 @@ export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, use
 
 export async function getUsersEvents() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/events/getEvents`,
+    `${import.meta.env.REACT_APP_API_URL}/events/event`,
     {
       withCredentials: true,
     }
