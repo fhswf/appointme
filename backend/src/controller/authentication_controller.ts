@@ -229,9 +229,10 @@ export const googleLoginController = (req: Request, res: Response): void => {
             );
 
             const sameSite = process.env.NODE_ENV === 'development' ? 'none' : 'strict';
+            const domain = process.env.DOMAIN || "appoint.gawron.cloud";
             res
               .cookie('access_token',
-                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite })
+                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite, domain })
               .status(200)
               .json({
                 user: { _id, email, name, picture_url: picture },
