@@ -129,7 +129,7 @@ describe("Server routes", () => {
   })
 
   it("should get the event by url", async () => {
-    const res = await request(app).get("/api/v1/events/event?url=sprechstunde&user=109150731150582581691");
+    const res = await request(app).get("/api/v1/events/getEventBy?url=sprechstunde&user=109150731150582581691");
     expect(res.status).toEqual(200);
     console.log(res.body);
   })
