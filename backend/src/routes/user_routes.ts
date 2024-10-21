@@ -35,7 +35,6 @@ userRouter.get("/user", middleware.requireAuth, getUser);
  * @param {callback} middleware - Express middleware.
  */
 userRouter.get("/user/:url", userRateLimiter, getUserByUrl);
-userRouter.get("/findUserByUrl", userRateLimiter, getUserByUrl);
 
 /**
  * Update the currently logged in user
