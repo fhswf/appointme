@@ -10,7 +10,7 @@ export default defineConfig({
     env: {
       REACT_APP_API_URL: '/api/v1'
     },
-    baseUrl: `http://localhost:${PORT}`,
+    //baseUrl: `http://localhost:${PORT}`,
     video: true,
     projectId: "pjkkoc",
     setupNodeEvents(on, config) {
