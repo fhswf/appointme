@@ -1,3 +1,18 @@
+# backend [1.14.0](https://github.com/fhswf/book_me/compare/backend@1.13.0...backend@1.14.0) (2024-11-04)
+
+
+### Bug Fixes
+
+* remove unused routes ([87eb614](https://github.com/fhswf/book_me/commit/87eb6142a119fc359b1753278f1ca253e1790288))
+* set domain for cookie ([ff919ee](https://github.com/fhswf/book_me/commit/ff919eeba9069edf1a0fa2590b965b7358c1e8a1))
+* **test:** mock google calendar ([272fdcb](https://github.com/fhswf/book_me/commit/272fdcbc44783090785b6f4940bb9b92fd9fec1d))
+
+
+### Features
+
+* **logging:** use winston for logging ([7b865d3](https://github.com/fhswf/book_me/commit/7b865d38b61382cca0f9bcab6c3a44636436e581))
+* **logging:** use winston for logging ([b1c8ac0](https://github.com/fhswf/book_me/commit/b1c8ac041e6891ef8c3b45e4847f6d225753d41a))
+
 # backend [1.13.0](https://github.com/fhswf/book_me/compare/backend@1.12.0...backend@1.13.0) (2024-10-17)
 
 
