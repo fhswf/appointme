@@ -58,7 +58,7 @@
     "start-test": "VITE_COVERAGE=true vite --mode test",
     "build": "vite build",
     "test": "npx cypress run --spec cypress/e2e/integration/*.cy.js --headless",
-    "cy:ci": "TZ=Europe/Berlin cypress run --headless  --e2e",
+    "cy:ci": "TZ=Europe/Berlin cypress run -C cypress_ci.config.ts --headless  --e2e",
     "ci": "start-server-and-test start-test http://localhost:5173/meeting cy:ci"
   },
   "eslintConfig": {
