@@ -1,3 +1,11 @@
+## client [1.9.1](https://github.com/fhswf/book_me/compare/client@1.9.0...client@1.9.1) (2024-11-04)
+
+
+### Bug Fixes
+
+* product name ([b22fce6](https://github.com/fhswf/book_me/commit/b22fce6478fff88a9af28bb9ae064a216a413325))
+* **test:** fix ci tests ([a3a4dca](https://github.com/fhswf/book_me/commit/a3a4dcaaf888f1e704f05f9340664ed48a79b658))
+
 # client [1.9.0](https://github.com/fhswf/book_me/compare/client@1.8.0...client@1.9.0) (2024-10-17)
 
 
