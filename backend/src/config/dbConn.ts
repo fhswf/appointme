@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+import { logger } from "../logging.js";
 const mongo_url = process.env.MONGO_URI || "mongodb://localhost:27017/bookme"
 
 /**
@@ -13,11 +14,11 @@ export const dataBaseConn = (): Promise<mongoose.Connection> => {
   };
   return mongoose.connect(mongo_url, connectOptions)
     .then(connection => {
-      console.log(`MongoDB Connected: ${connection.connection.host}`);
+      logger.info(`MongoDB Connected: ${connection.connection.host}`);
       return connection.connection;
     })
     .catch(err => {
-      console.log(`Error: ${err.message}`);
+      logger.error(`Error: ${err.message}`);
       process.exit(1);
     })
 };

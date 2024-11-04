@@ -15,7 +15,7 @@ import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
 
-
+import { logger } from '../logging.js';
 
 // Dotenv Config
 import dotenv from "dotenv";
@@ -30,7 +30,7 @@ const config = {
   redirectUri: `${process.env.API_URL}/google/oauthcallback`,
 }
 
-console.log("google_controller: ", config);
+logger.debug("google_controller: ", config);
 
 const oAuth2Client = new OAuth2Client(config);
 const SCOPES = [
@@ -133,7 +133,7 @@ async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: D
 export function insertEventToGoogleCal(req: Request, res: Response) {
   const starttime = new Date(Number.parseInt(req.body.starttime));
   const endtime = addMinutes(starttime, req.body.event.duration);
-  console.log("insertEvent: %s %o", req.body.starttime, starttime);
+  logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
 
   checkFree(req.body.event, req.params.user_id, starttime, endtime)
     .then(free => {
@@ -183,7 +183,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
           };
 
           oAuth2Client.setCredentials(user.google_tokens);
-          console.log('insert: event=%j', event)
+          logger.debug('insert: event=%j', event)
           google.calendar({ version: "v3" }).events
             .insert({
               auth: oAuth2Client,
@@ -192,7 +192,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
               requestBody: event,
             })
             .then((evt: GaxiosResponse<Schema$Event>) => {
-              console.log('insert returned %j', evt)
+              logger.debug('insert returned %j', evt)
               res.json({ success: true, message: "Event wurde gebucht", event: evt });
             })
             .catch(error => {
@@ -230,7 +230,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
             deleteTokens(userid);
           })
           .catch(err => {
-            console.log(err);
+            logger.error(err);
           });
       }
       res.json({ msg: "ok" });
@@ -265,7 +265,7 @@ export function getCalendarList(req: Request, res: Response): void {
       google.calendar({ version: "v3", auth })
         .calendarList.list()
         .then(list => {
-          console.log("calendarList: %j", list);
+          logger.debug("calendarList: %j", list);
           res.json(list);
         })
         .catch(error => {
@@ -299,7 +299,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
           return response.data.items
         })
         .catch(err => {
-          console.log('error in calendar.events.list: %o', err)
+          logger.debug('error in calendar.events.list: %o', err)
           return []
         })
     })
@@ -310,7 +310,7 @@ function deleteTokens(userid: string) {
     { _id: userid },
     { $unset: { google_tokens: "" } }
   ).then(res => {
-    console.log(res);
+    logger.debug(res);
   });
 }
 
@@ -330,9 +330,9 @@ function saveTokens(user: string, token) {
   });
   UserModel.findOneAndUpdate({ _id: user }, { google_tokens }, { new: true })
     .then(user => {
-      console.log('saveTokens: %o', user)
+      logger.debug('saveTokens: %o', user)
     })
     .catch(err => {
-      console.error('saveTokens: %o', err)
+      logger.error('saveTokens: %o', err)
     });
 }

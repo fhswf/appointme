@@ -4,6 +4,8 @@
 
 import { NextFunction, Request, Response } from "express";
 import jwt_pkg from 'jsonwebtoken';
+import { logger } from "../logging.js";
+
 const { decode, sign, verify } = jwt_pkg;
 
 export const middleware = {
@@ -18,7 +20,7 @@ export const middleware = {
     const header = req.headers.authorization;
     const cookie = req.cookies["access_token"];
     if (!header && !cookie) {
-      console.log("No authorization header");
+      logger.debug("No authorization header");
       res
         .status(401)
         .set("WWW-Authenticate", 'Bearer')
@@ -30,7 +32,7 @@ export const middleware = {
     }
     const token = cookie || header.split(" ")[1];
     if (!token) {
-      console.log("No authorization token");
+      logger.debug("No authorization token");
       res
         .status(401)
         .set("WWW-Authenticate", 'Bearer')
@@ -41,7 +43,7 @@ export const middleware = {
     } else {
       verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-          console.log("Invalid token: ", err);
+          logger.error("Invalid token: ", err);
           return res
             .status(401)
             .set("WWW-Authenticate", 'Bearer')

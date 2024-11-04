@@ -44,7 +44,6 @@ eventRouter.post("/addEvent", limiter, middleware.requireAuth, addEventControlle
  * @param {callback} middleware - Express middleware.
  */
 eventRouter.delete("/event/:id", limiter, middleware.requireAuth, deleteEventController);
-eventRouter.delete("/deleteEvent/:id", limiter, middleware.requireAuth, deleteEventController);
 
 /**
  * Route to update an Event.
@@ -55,7 +54,6 @@ eventRouter.delete("/deleteEvent/:id", limiter, middleware.requireAuth, deleteEv
  * @param {callback} middleware - Express middleware.
  */
 eventRouter.put("/event/:id", limiter, middleware.requireAuth, updateEventController);
-eventRouter.put("/updateEvent/:id", limiter, middleware.requireAuth, updateEventController);
 
 /**
  * Route to fetch all events of the logged in user
@@ -66,7 +64,6 @@ eventRouter.put("/updateEvent/:id", limiter, middleware.requireAuth, updateEvent
  * @param {callback} middleware - Express middleware.
  */
 eventRouter.get("/event", limiter, middleware.requireAuth, getEventListController);
-eventRouter.get("/getEvents", limiter, middleware.requireAuth, getEventListController);
 
 /**
  * Route to fetch an event of an given eventid
@@ -77,7 +74,6 @@ eventRouter.get("/getEvents", limiter, middleware.requireAuth, getEventListContr
  * @param {callback} middleware - Express middleware.
  */
 eventRouter.get("/event/:id", limiter, middleware.requireAuth, getEventByIdController);
-eventRouter.get("/getEvent/:id", limiter, middleware.requireAuth, getEventByIdController);
 
 /**
  * Route to fetch all active events of an given user

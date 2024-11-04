@@ -11,15 +11,17 @@ import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
 
+import { logger } from "../logging.js";
+
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
 
 function max<T>(a: T, b: T): T {
-  console.log('max: %o %o', a, b)
+  logger.debug('max: %o %o', a, b)
   return a < b ? b : a;
 }
 
 function min<T>(a: T, b: T): T {
-  console.log('min: %o %o', a, b)
+  logger.debug('min: %o %o', a, b)
   return a < b ? a : b;
 }
 
@@ -34,7 +36,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   let timeMax = new Date(<string>req.query.timeMax);
   const url = <string>req.query.url;
   const userid = <string>req.query.userid;
-  console.log('getAvailableTimes: %s %s %s %s', timeMin, timeMax, url, userid);
+  logger.debug('getAvailableTimes: %s %s %s %s', timeMin, timeMax, url, userid);
   EventModel
     .findOne({ url: url, user: userid })
     .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay -_id")
@@ -43,7 +45,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       // Calculate intersection of requested and 'feasible' time interval
       timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture));
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture));
-      console.log("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
+      logger.debug("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
 
       // Request currently booked events. We need them for the maxPerDay restriction
       return events(userid, timeMin.toISOString(), timeMax.toISOString())
@@ -51,8 +53,8 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     })
     .then(({ events, event }) => {
       const blocked = calculateBlocked(events, event, timeMin, timeMax);
-      console.log("blocked: %o", blocked);
-      console.log("free: %o", blocked.inverse());
+      logger.debug("blocked: %o", blocked);
+      logger.debug("free: %o", blocked.inverse());
 
       // Now query freeBusy service
       return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
@@ -60,13 +62,13 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     })
     .then(({ freeBusyResponse, event, blocked }) => {
       let freeSlots = calculateFreeSlots(freeBusyResponse, event, timeMin, timeMax, blocked);
-      console.log('freeSlots before filtering: %j', freeSlots);
+      logger.debug('freeSlots before filtering: %j', freeSlots);
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
-      console.log('freeSlots after filtering: %j', freeSlots);
+      logger.debug('freeSlots after filtering: %j', freeSlots);
       res.status(200).json(freeSlots);
     })
     .catch(err => {
-      console.error('getAvailableTime: event not found or freeBusy failed: %o', err);
+      logger.error('getAvailableTime: event not found or freeBusy failed: %o', err);
       res.status(400).json({ error: err });
     });
 
@@ -74,7 +76,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     const eventsPerDay = {};
     const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
     events.forEach(evt => {
-      console.log('event: %o', evt);
+      logger.debug('event: %o', evt);
       if (!evt.start.dateTime) {
         return;
       }
@@ -100,7 +102,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       const calIntervals = new IntervalSet();
       let current = timeMin;
       for (const busy of response.data.calendars[key].busy) {
-        console.log('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
+        logger.debug('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
         const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
         const _end = addMinutes(new Date(busy.end), event.bufferafter);
         if (current < _start)
@@ -126,10 +128,10 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
  */
 export const addEventController = (req: Request, res: Response): void => {
   const errors = validationResult(req);
-  console.log('errors: %j', errors);
+  logger.debug('errors: %j', errors);
 
   const event: Event = req.body;
-  console.log('event: %j', event)
+  logger.debug('event: %j', event)
 
   if (!errors.isEmpty()) {
     const newError = errors.array().map<unknown>((error: ValidationError) => error.msg)[0];
@@ -221,7 +223,7 @@ export const getEventByIdController = (req: Request, res: Response): void => {
     .findById({ _id: event_id })
     .exec()
     .then(event => {
-      console.log("getEvent: %s %o", event_id, event);
+      logger.debug("getEvent: %s %o", event_id, event);
       res.status(200).json(event);
     })
     .catch(err => {

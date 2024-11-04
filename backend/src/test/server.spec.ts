@@ -7,6 +7,8 @@ import { Request, Response, NextFunction } from 'express';
 import { USER } from './USER.js';
 import { EVENT } from './EVENT.js';
 import dotenv from 'dotenv';
+import { calendar } from 'googleapis/build/src/apis/calendar/index.js';
+import { events, freeBusy } from 'src/controller/google_controller.js';
 
 dotenv.config({ path: '.env' });
 
@@ -85,6 +87,57 @@ describe("Server routes", () => {
     }
   })
 
+  vi.mock("googleapis", () => {
+    return {
+      google: {
+        calendar: vi.fn(() => {
+          console.log("mocked google.calendar");
+          return {
+            freebusy: {
+              query: vi.fn(() => {
+                console.log("mocked query");
+                return Promise.resolve({
+                  data: {
+                  }
+                });
+              })
+            },
+            events: vi.fn(() => {
+              return {
+                list: vi.fn(() => {
+                  return Promise.resolve({
+                    data: {
+                      items: []
+                    }
+                  });
+                })
+              }
+            })
+          }
+        }),
+        auth: {
+          OAuth2: vi.fn(() => {
+            return {
+              verifyIdToken: vi.fn(() => {
+                return Promise.resolve({
+                  getAttributes: vi.fn(() => {
+                    return {
+                      payload: {
+                        email_verified: true,
+                        name: "Christian Gawron",
+                        email: "christian.gawron@gmail.com",
+                      }
+                    }
+                  })
+                })
+              })
+            }
+          })
+        }
+      }
+    }
+  })
+
   beforeAll(async () => {
     const { init } = await import("../server.js");
     app = init();
@@ -115,7 +168,7 @@ describe("Server routes", () => {
   })
 
   it("should get the user by url", async () => {
-    const res = await request(app).get("/api/v1/users/findUserByUrl?url=christian-gawron");
+    const res = await request(app).get("/api/v1/users/user?url=christian-gawron");
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
     expect(res.body).toEqual(USER);

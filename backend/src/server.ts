@@ -10,17 +10,20 @@ import { eventRouter } from "./routes/event_routes.js";
 import { googleRouter } from "./routes/google_routes.js";
 import { userRouter } from "./routes/user_routes.js";
 
+// logger
+import { logger } from "./logging.js";
+
 // Dotenv Config
 import dotenv from "dotenv";
 const env = dotenv.config({
   path: "./src/config/config.env",
 });
 
-console.log("env: ", env);
-console.log("NODE_ENV: ", process.env.NODE_ENV);
-console.log("CLIENT_URL: ", process.env.CLIENT_URL);
-console.log("MONGO_URI: ", process.env.MONGO_URI);
-console.log("CLIENT_ID: ", process.env.CLIENT_ID);
+logger.info("env: %j", env);
+logger.info("NODE_ENV: %s", process.env.NODE_ENV);
+logger.info("CLIENT_URL: %s", process.env.CLIENT_URL);
+logger.info("MONGO_URI: %s", process.env.MONGO_URI);
+logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 
 const app = express();
 
@@ -35,7 +38,7 @@ app.use(bodyParser.json());
 // Dev Loggin Middleware
 if (process.env.NODE_ENV === "development") {
   const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud", "http://localhost:5173", "http://localhost:5174"];
-  console.log("enabling CORS for %j", ORIGINS);
+  logger.info("enabling CORS for %j", ORIGINS);
   app.use(
     cors({
       origin: ORIGINS,
@@ -45,7 +48,7 @@ if (process.env.NODE_ENV === "development") {
 }
 else {
   const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
-  console.log("enabling CORS for %j", ORIGINS);
+  logger.info("enabling CORS for %j", ORIGINS);
   app.use(
     cors({
       origin: ORIGINS,
@@ -70,7 +73,7 @@ const PORT = process.env.PORT || 5000;
 
 export const init = () => {
   const server = app.listen(PORT, () => {
-    console.log(`Server running on Port ${PORT}`);
+    logger.info(`Server running on Port ${PORT}`);
   });
   return server;
 }

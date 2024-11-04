@@ -10,6 +10,7 @@ import { createTransport } from "nodemailer";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 import pkg, { JwtPayload } from 'jsonwebtoken';
+import { logger } from "../logging.js";
 
 // Dotenv Config
 import dotenv from "dotenv";
@@ -20,15 +21,15 @@ const env = dotenv.config({
 const { sign, verify } = pkg;
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
-console.log("redirectUri: %s", REDIRECT_URI);
+logger.debug("redirectUri: %s", REDIRECT_URI);
 if (!process.env.CLIENT_SECRET) {
-  console.error("CLIENT_SECRET not set!")
+  logger.error("CLIENT_SECRET not set!")
 }
 if (!process.env.CLIENT_ID) {
-  console.error("CLIENT_ID not set!")
+  logger.error("CLIENT_ID not set!")
 }
 else {
-  console.log("clientId: %s", process.env.CLIENT_ID);
+  logger.debug("clientId: %s", process.env.CLIENT_ID);
 }
 const oAuth2Client = new OAuth2Client({
   clientId: process.env.CLIENT_ID,
@@ -208,13 +209,13 @@ export const googleLoginController = (req: Request, res: Response): void => {
     .verifyIdToken({ idToken, audience: process.env.CLIENT_ID })
     .then(response => {
       const { email_verified, name, email, picture, sub } = response.getAttributes().payload;
-      console.log('picture: %s', picture);
+      logger.debug('picture: %s', picture);
       if (email_verified) {
         const user_url = validateUrl(email);
 
         const user = new UserModel({ name, email, picture_url: picture, user_url });
         user._id = sub;
-        console.log('user: %o', user);
+        logger.debug('user: %o', user);
         UserModel.findOneAndUpdate({ _id: sub }, { name, email, picture_url: picture, user_url }, { upsert: true })
           .exec()
           .then(user => {
@@ -229,16 +230,17 @@ export const googleLoginController = (req: Request, res: Response): void => {
             );
 
             const sameSite = process.env.NODE_ENV === 'development' ? 'none' : 'strict';
+            const domain = process.env.DOMAIN || "appoint.gawron.cloud";
             res
               .cookie('access_token',
-                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite })
+                access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite, domain })
               .status(200)
               .json({
                 user: { _id, email, name, picture_url: picture },
               });
           })
           .catch(error => {
-            console.error('Error saving user: %o', error);
+            logger.error('Error saving user: %o', error);
             res.status(400).json({ message: "User signup failed with google", error })
           });
       } else {
@@ -248,7 +250,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
       }
     })
     .catch((err) => {
-      console.error('Error retrieving access token', err);
+      logger.error('Error retrieving access token', err);
       res.status(400).json({
         errors: "Google login failed. Try again",
       });
