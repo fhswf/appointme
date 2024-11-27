@@ -1,3 +1,10 @@
+# client [1.10.0](https://github.com/fhswf/book_me/compare/client@1.9.1...client@1.10.0) (2024-11-27)
+
+
+### Features
+
+* change ui text ([9731986](https://github.com/fhswf/book_me/commit/973198664e9d3c2f7ee1c04f56b7425ccedeea8b))
+
 ## client [1.9.1](https://github.com/fhswf/book_me/compare/client@1.9.0...client@1.9.1) (2024-11-04)
 
 
