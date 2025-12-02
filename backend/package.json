@@ -49,10 +49,11 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.1",
     "mongoose": "^7.5.0",
+    "node-ical": "^0.22.1",
     "nodemailer": "^7.0.11",
     "remark": "15.0.1",
     "remark-html": "16.0.1",
-    "tsdav": "^2.1.2",
+    "tsdav": "^2.1.6",
     "validator": "^13.12.0",
     "winston": "^3.16.0"
   },

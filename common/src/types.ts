@@ -85,12 +85,20 @@ export interface GoogleTokens extends Document {
   expiry_date?: number;
 }
 
+export interface CalDavAccount {
+  serverUrl: string;
+  username: string;
+  password?: string;
+  name: string;
+}
+
 export interface User {
   email: string;
   name: string;
   user_url: string;
   picture_url: string;
   google_tokens: GoogleTokens;
+  caldav_accounts?: CalDavAccount[];
   push_calendar: string;
   pull_calendars: string[];
 };

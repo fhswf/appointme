@@ -9,6 +9,7 @@ import { authenticationRouter } from "./routes/authentication_route.js";
 import { eventRouter } from "./routes/event_routes.js";
 import { googleRouter } from "./routes/google_routes.js";
 import { userRouter } from "./routes/user_routes.js";
+import { caldavRouter } from "./routes/caldav_routes.js";
 
 // logger
 import { logger } from "./logging.js";
@@ -91,6 +92,7 @@ router.use("/auth/", authenticationRouter);
 router.use("/events/", eventRouter);
 router.use("/google/", googleRouter);
 router.use("/users/", userRouter);
+router.use("/caldav/", caldavRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })

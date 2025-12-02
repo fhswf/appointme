@@ -16,6 +16,7 @@ import { Request, Response } from 'express';
 import { Event, IntervalSet } from 'common';
 
 import { logger } from '../logging.js';
+import { getBusySlots } from './caldav_controller.js';
 
 // Dotenv Config
 import dotenv from "dotenv";
@@ -114,29 +115,54 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
 }
 
 async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
-  const interval = new IntervalSet(timeMin, timeMax)
-  return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
-    .then(res => {
-      let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+  const interval = new IntervalSet(timeMin, timeMax);
+  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
 
-      for (const key in res.data.calendars) {
-        const calIntervals = new IntervalSet();
-        let current = timeMin;
-        for (const busy of res.data.calendars[key].busy) {
-          const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-          const _end = addMinutes(new Date(busy.end), event.bufferafter);
-          if (current < _start)
-            calIntervals.push({ start: current, end: _start });
-          current = _end;
-        }
-        if (current < timeMax) {
-          calIntervals.push({ start: current, end: timeMax });
-        }
-        freeSlots = freeSlots.intersect(calIntervals)
+  const [googleRes, calDavSlots] = await Promise.all([
+    freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+      logger.error('Google freeBusy error', err);
+      return null;
+    }),
+    getBusySlots(userid, timeMin.toISOString(), timeMax.toISOString())
+  ]);
+
+  if (googleRes && googleRes.data && googleRes.data.calendars) {
+    for (const key in googleRes.data.calendars) {
+      const calIntervals = new IntervalSet();
+      let current = timeMin;
+      for (const busy of googleRes.data.calendars[key].busy) {
+        const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
+        const _end = addMinutes(new Date(busy.end), event.bufferafter);
+        if (current < _start)
+          calIntervals.push({ start: current, end: _start });
+        if (current < _end) current = _end;
       }
-      const intersection = freeSlots.intersect(interval)
-      return intersection.length == 1 && IntervalSet.equals(intersection[0], interval[0]);
-    })
+      if (current < timeMax) {
+        calIntervals.push({ start: current, end: timeMax });
+      }
+      freeSlots = freeSlots.intersect(calIntervals)
+    }
+  }
+
+  if (calDavSlots && calDavSlots.length > 0) {
+    calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const calIntervals = new IntervalSet();
+    let current = timeMin;
+    for (const busy of calDavSlots) {
+      const _start = addMinutes(busy.start, -event.bufferbefore);
+      const _end = addMinutes(busy.end, event.bufferafter);
+      if (current < _start)
+        calIntervals.push({ start: current, end: _start });
+      if (current < _end) current = _end;
+    }
+    if (current < timeMax) {
+      calIntervals.push({ start: current, end: timeMax });
+    }
+    freeSlots = freeSlots.intersect(calIntervals);
+  }
+
+  const intersection = freeSlots.intersect(interval)
+  return intersection.length == 1 && IntervalSet.equals(intersection[0], interval[0]);
 }
 
 /**

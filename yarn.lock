@@ -8527,6 +8527,7 @@ __metadata:
     jsonwebtoken: "npm:^9.0.2"
     moment: "npm:^2.29.1"
     mongoose: "npm:^7.5.0"
+    node-ical: "npm:^0.22.1"
     nodemailer: "npm:^7.0.11"
     nodemon: "npm:^3.0.1"
     remark: "npm:15.0.1"
@@ -8534,7 +8535,7 @@ __metadata:
     supertest: "npm:^7.0.0"
     ts-jest: "npm:^29.2.5"
     ts-node: "npm:^10.9.1"
-    tsdav: "npm:^2.1.2"
+    tsdav: "npm:^2.1.6"
     typescript: "npm:^5.6.2"
     validator: "npm:^13.12.0"
     vitest: "npm:^2.1.3"
@@ -10243,6 +10244,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:4.1.0":
+  version: 4.1.0
+  resolution: "cross-fetch@npm:4.1.0"
+  dependencies:
+    node-fetch: "npm:^2.7.0"
+  checksum: 10/07624940607b64777d27ec9c668ddb6649e8c59ee0a5a10e63a51ce857e2bbb1294a45854a31c10eccb91b65909a5b199fcb0217339b44156f85900a7384f489
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
@@ -10457,15 +10467,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4.3.7, debug@npm:^4.3.6":
-  version: 4.3.7
-  resolution: "debug@npm:4.3.7"
+"debug@npm:4.4.3":
+  version: 4.4.3
+  resolution: "debug@npm:4.4.3"
   dependencies:
     ms: "npm:^2.1.3"
   peerDependenciesMeta:
     supports-color:
       optional: true
-  checksum: 10/71168908b9a78227ab29d5d25fe03c5867750e31ce24bf2c44a86efc5af041758bb56569b0a3d48a9b5344c00a24a777e6f4100ed6dfd9534a42c1dde285125a
+  checksum: 10/9ada3434ea2993800bd9a1e320bd4aa7af69659fb51cca685d390949434bc0a8873c21ed7c9b852af6f2455a55c6d050aa3937d52b3c69f796dab666f762acad
   languageName: node
   linkType: hard
 
@@ -10475,6 +10485,18 @@ __metadata:
   dependencies:
     ms: "npm:^2.1.1"
   checksum: 10/d86fd7be2b85462297ea16f1934dc219335e802f629ca9a69b63ed8ed041dda492389bb2ee039217c02e5b54792b1c51aa96ae954cf28634d363a2360c7a1639
+  languageName: node
+  linkType: hard
+
+"debug@npm:^4.3.6":
+  version: 4.3.7
+  resolution: "debug@npm:4.3.7"
+  dependencies:
+    ms: "npm:^2.1.3"
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 10/71168908b9a78227ab29d5d25fe03c5867750e31ce24bf2c44a86efc5af041758bb56569b0a3d48a9b5344c00a24a777e6f4100ed6dfd9534a42c1dde285125a
   languageName: node
   linkType: hard
 
@@ -18736,7 +18758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9":
+"node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -18808,6 +18830,15 @@ __metadata:
   bin:
     node-gyp: bin/node-gyp.js
   checksum: 10/578cf0c821f258ce4b6ebce4461eca4c991a4df2dee163c0624f2fe09c7d6d37240be4942285a0048d307230248ee0b18382d6623b9a0136ce9533486deddfa8
+  languageName: node
+  linkType: hard
+
+"node-ical@npm:^0.22.1":
+  version: 0.22.1
+  resolution: "node-ical@npm:0.22.1"
+  dependencies:
+    rrule: "npm:2.8.1"
+  checksum: 10/1f415818b36bb20ca4613484b9cbb0f932188006b436577efe17dd74d98e5eac9722beb1cd4b38df3bb5e339cf59d8ff7787dc1b7d1b978f24aa6c677e7fc5ec
   languageName: node
   linkType: hard
 
@@ -21555,6 +21586,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rrule@npm:2.8.1":
+  version: 2.8.1
+  resolution: "rrule@npm:2.8.1"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  checksum: 10/5df8cd2fa08f54ecce704750beb80420a3b15009961c77bd1447c1ccbb3abc1f23929228b13532992c89b813b52430ef0fefb8c9aa0b4ffbc50c51edc514731e
+  languageName: node
+  linkType: hard
+
 "rsvp@npm:^4.8.2":
   version: 4.8.5
   resolution: "rsvp@npm:4.8.5"
@@ -23430,15 +23470,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsdav@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "tsdav@npm:2.1.2"
+"tsdav@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "tsdav@npm:2.1.6"
   dependencies:
     base-64: "npm:1.0.0"
-    cross-fetch: "npm:4.0.0"
-    debug: "npm:4.3.7"
+    cross-fetch: "npm:4.1.0"
+    debug: "npm:4.4.3"
     xml-js: "npm:1.6.11"
-  checksum: 10/133b4a0ae3fea51034a2aa63d01dae1dec317102e4d12b87944e7a8e5a8ea6fe6cc3722949d6a4eff9fe147df4960975e8ee57772a5b6d4bd9530abe99089e96
+  checksum: 10/7eb811df19bf36093b9214c618cb9e9ae6f39e6db9cd6d61882e2248f42117a570b7125596f654663234d9eb58fdf8c90bdfb46933808498a795e5aa37c42a4c
   languageName: node
   linkType: hard
 
