@@ -1,0 +1,110 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - button [ref=e6] [cursor=pointer]:
+          - img
+        - heading "BookMe" [level=1] [ref=e7]
+      - button "Christian Gawron" [ref=e9] [cursor=pointer]:
+        - img "Christian Gawron" [ref=e11]
+  - generic [ref=e12]:
+    - heading "Add Event Type" [level=2] [ref=e13]
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - heading "Basic Information" [level=2] [ref=e16]
+        - generic [ref=e17]:
+          - text: Event title
+          - textbox "Event title" [ref=e18]: Test event
+        - generic [ref=e19]:
+          - text: Description
+          - textbox "Description" [ref=e20]
+          - paragraph [ref=e21]: What is the purpose of this appointment type?
+        - generic [ref=e22]:
+          - text: Location
+          - textbox "Location" [ref=e23]:
+            - /placeholder: Zoom Meeting
+          - paragraph [ref=e24]: Where does the meeting take place?
+        - generic [ref=e25]:
+          - text: Event Slug
+          - textbox "Event Slug" [ref=e26]:
+            - /placeholder: awesome-meeting
+            - text: test_event
+          - paragraph [ref=e27]: Customizable part of the URL
+      - generic [ref=e28]:
+        - heading "Duration" [level=2] [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - text: Duration
+            - combobox "Duration" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+            - combobox [ref=e35]
+            - paragraph [ref=e36]: How long is this event?
+          - generic [ref=e37]:
+            - text: Buffer before
+            - combobox "Buffer before" [ref=e38] [cursor=pointer]:
+              - generic: none
+              - img [ref=e39]
+            - combobox [ref=e41]
+            - paragraph [ref=e42]: Buffer before this event
+          - generic [ref=e43]:
+            - text: Buffer after
+            - combobox "Buffer after" [ref=e44] [cursor=pointer]:
+              - generic: none
+              - img [ref=e45]
+            - combobox [ref=e47]
+            - paragraph [ref=e48]: Buffer after this event
+      - generic [ref=e49]:
+        - heading "Availability" [level=2] [ref=e50]
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - text: Maximum days in advance
+            - generic [ref=e53]:
+              - spinbutton "Maximum days in advance" [ref=e54]: "60"
+              - generic [ref=e55]: Days
+            - paragraph [ref=e56]: How many days in advance is this event available?
+          - generic [ref=e57]:
+            - text: Minimum days in advance
+            - generic [ref=e58]:
+              - spinbutton "Minimum days in advance" [ref=e59]: "2"
+              - generic [ref=e60]: Days
+            - paragraph [ref=e61]: Events cannot be scheduled less than this time in advance
+          - generic [ref=e62]:
+            - text: Maximum per day
+            - spinbutton "Maximum per day" [ref=e63]: "2"
+            - paragraph [ref=e64]: Maximum number of events of this type per day
+      - generic [ref=e65]:
+        - heading "Daily availability" [level=2] [ref=e66]
+        - generic [ref=e67]:
+          - generic [ref=e69]:
+            - checkbox "Sun" [ref=e70] [cursor=pointer]
+            - checkbox
+            - generic [ref=e71]: Sun
+          - generic [ref=e74]:
+            - checkbox "Mon" [ref=e75] [cursor=pointer]
+            - checkbox
+            - generic [ref=e76]: Mon
+          - generic [ref=e79]:
+            - checkbox "Tue" [ref=e80] [cursor=pointer]
+            - checkbox
+            - generic [ref=e81]: Tue
+          - generic [ref=e84]:
+            - checkbox "Wed" [ref=e85] [cursor=pointer]
+            - checkbox
+            - generic [ref=e86]: Wed
+          - generic [ref=e89]:
+            - checkbox "Thu" [ref=e90] [cursor=pointer]
+            - checkbox
+            - generic [ref=e91]: Thu
+          - generic [ref=e94]:
+            - checkbox "Fri" [ref=e95] [cursor=pointer]
+            - checkbox
+            - generic [ref=e96]: Fri
+          - generic [ref=e99]:
+            - checkbox "Sat" [ref=e100] [cursor=pointer]
+            - checkbox
+            - generic [ref=e101]: Sat
+      - button "Save" [active] [ref=e103] [cursor=pointer]
+```

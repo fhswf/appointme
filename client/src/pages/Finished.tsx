@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { Container, Typography } from "@mui/material";
 import { useTranslation, Trans } from "react-i18next";
 
 
@@ -15,11 +14,11 @@ const Finished = (props: FinishedProps) => {
   const user = location.state.user;
 
   return (
-    <Container>
-      <Typography variant="h4" component="h1" gutterBottom>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">
         {t("Confirmation")}
-      </Typography>
-      <Typography variant="body1">
+      </h1>
+      <p className="text-lg">
         <Trans i18nKey="confirmationText">
           You booked an {{ event: event?.name }} with {{ name: user.name }} appointment on{" "}
           {{
@@ -35,8 +34,8 @@ const Finished = (props: FinishedProps) => {
           }}
           .
         </Trans>
-      </Typography>
-    </Container>
+      </p>
+    </div>
   );
 };
 export default Finished;

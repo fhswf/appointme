@@ -1,31 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useTransition, useEffect, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-import { StaticDatePicker, PickersDay, PickersDayProps } from '@mui/x-date-pickers';
-
-
-import {
-  styled
-} from "@mui/material/styles";
-
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  Stepper,
-  Step,
-  StepLabel,
-  Typography,
-} from "@mui/material";
-
-import Grid from '@mui/material/Grid2';
-
+import { defineStepper } from "@stepperize/react";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser, getAvailableTimes } from "../helpers/services/event_services";
-import clsx from "clsx";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
 import { insertIntoGoogle } from "../helpers/services/google_services";
@@ -33,49 +12,52 @@ import { EMPTY_EVENT, Event, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
-import { useSnackbar } from "notistack";
+import { toast } from "sonner";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
+const { useStepper, steps } = defineStepper(
+  { id: "date", title: "Choose date" },
+  { id: "time", title: "Choose time" },
+  { id: "details", title: "Provide details" }
+);
 
-type Error = {
-  message: string;
-  details: any;
-};
+type Details = { name: string; email: string; description: string };
 
-const Booking = (props: any) => {
+const Booking = () => {
   const { t, i18n } = useTranslation();
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-
-  type Details = { name: string; email: string; description: string };
+  const stepper = useStepper();
 
   const [user, setUser] = useState<UserDocument>();
-  const [activeStep, setActiveStep] = React.useState(0);
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
-  const [, startTransition] = useTransition()
+  const [, startTransition] = useTransition();
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(
       startDate,
       addDays(addMonths(startDate, 6), 1),
       event.url,
-      user._id
+      user!._id
     )
       .then((slots) => {
         console.log("slots %o", slots);
         setSlots(slots);
       })
       .catch((err) => {
-        enqueueSnackbar("Could not get available time slots", { variant: "error", autoHideDuration: 15000, className: "error" });
+        toast.error("Could not get available time slots");
       });
-  }
+  };
 
   useEffect(() => {
+    if (!data.user_url || !data.url) return;
 
     getUserByUrl(data.user_url)
       .then((res) => {
@@ -83,7 +65,7 @@ const Booking = (props: any) => {
           navigate("/notfound");
         } else {
           setUser(res.data);
-          getEventByUrlAndUser(res.data._id, data.url)
+          getEventByUrlAndUser(res.data._id, data.url!)
             .then((res) => {
               if (res.data == null) {
                 navigate("/notfound");
@@ -101,80 +83,37 @@ const Booking = (props: any) => {
       })
       .catch((err) => {
         console.log("error getting user: %o", err);
-        enqueueSnackbar("Error getting user", { variant: "error", autoHideDuration: 15000, className: "error" });
+        toast.error("Error getting user");
         return err;
       });
-  }, [data.url, data.user_url, navigate, selectedDate]);
+  }, [data.url, data.user_url, navigate]);
 
   useEffect(() => {
-
     if (user && event?.url) {
       startTransition(() => updateSlots(beginDate));
     }
-
   }, [beginDate, user, event]);
 
-
-
-  const isStepOptional = (step: number) => {
-    return false;
-  };
-
-
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleMonthChange = (date: Date) => {
-    console.log("handleMonthChange: %o", date);
-  };
-
-  const handleDateChange = (newValue: Date) => {
+  const handleDateChange = (newValue: Date | undefined) => {
+    if (!newValue) return;
     console.log("change date: %o", startOfDay(newValue));
     setSelectedDate(newValue);
-    setActiveStep(1);
+    if (stepper.current.id === "date") {
+      stepper.next();
+    }
   };
 
-  const steps = ["Choose date", "Choose time", "Provide details"].map((label) => t(label));
-
   const checkDay = (date: Date) => {
-    if (!event.available) {
-      return false;
-    } else {
+    if (event.available) {
       return (
         date > new Date() &&
         event.available[date.getDay() as Day].length > 0 &&
         event.available[date.getDay() as Day][0].start !== "" &&
         slots?.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
       );
+    } else {
+      return false;
     }
-  };
-
-  const StyledPickersDay = styled(PickersDay)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightLight,
-    "&.highlight": {
-      fontWeight: theme.typography.fontWeightBold,
-      "&:hover, &:focus": {
-        backgroundColor: theme.palette.primary.light,
-        color: theme.palette.primary.contrastText,
-      },
-    },
-  }));
-
-  const renderPickerDay = (
-    props: PickersDayProps<Date> & { selectedDate: Date | null }) => {
-    const { day } = props;
-    return (
-      <StyledPickersDay
-        {...props}
-        disableMargin
-        disabled={!checkDay(day)}
-        className={clsx({
-          highlight: checkDay(day),
-        })}
-      />
-    );
   };
 
   const getTimes = (day: Date) => {
@@ -182,10 +121,8 @@ const Booking = (props: any) => {
       let times = [];
       const target = new IntervalSet(startOfDay(day), endOfDay(day));
       for (let slot of slots.intersect(target)) {
-        console.log("Slot: %o", slot);
         let start = new Date(slot.start);
         let end = new Date(slot.end);
-        console.log("start: %s, end: %s", start, end);
         let s = start;
         while (s < addMinutes(end, -event.duration)) {
           times.push(s);
@@ -198,36 +135,35 @@ const Booking = (props: any) => {
     }
   };
 
-  const handleTime =
-    (time: Date) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      console.log("time: %o", time);
-      setActiveStep(2);
-      setSelectedTime(time);
-    };
+  const handleTime = (time: Date) => () => {
+    console.log("time: %o", time);
+    setSelectedTime(time);
+    if (stepper.current.id === "time") {
+      stepper.next();
+    }
+  };
 
   const renderSlots = () => {
-    console.log("renderSlots: %o %o %s", slots, selectedDate, i18n.language);
+    if (!selectedDate) return null;
     const times = getTimes(selectedDate);
     return (
-      <>
-        <Typography variant="subtitle1" component="h2" gutterBottom sx={{ marginTop: "16px", marginBottom: "12px", fontWeight: 500 }}>
-          {selectedDate !== undefined ? i18n.t('clear_close_racoon_pat', { value: selectedDate }) : ""}
-        </Typography>
-        <Grid
-          spacing={1}
-          container
-          direction="row"
-          alignItems="flex-start"
-        >
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-medium">
+          {i18n.t('clear_close_racoon_pat', { value: selectedDate })}
+        </h2>
+        <div className="grid grid-cols-3 gap-2">
           {times.map((time) => (
-            <Grid key={time}>
-              <Button variant="text" onClick={handleTime(time)}>
-                {format(time, "HH:mm")}
-              </Button>
-            </Grid>
+            <Button
+              key={time.toISOString()}
+              variant={selectedTime && time.getTime() === selectedTime.getTime() ? "default" : "outline"}
+              onClick={handleTime(time)}
+              className="w-full"
+            >
+              {format(time, "HH:mm")}
+            </Button>
           ))}
-        </Grid>
-      </>
+        </div>
+      </div>
     );
   };
 
@@ -237,9 +173,8 @@ const Booking = (props: any) => {
   };
 
   const handleSubmit = (e: FormEvent) => {
-    console.log("onSubmit");
     e.preventDefault();
-    if (user && details) {
+    if (user && details && selectedTime) {
       insertIntoGoogle(
         user._id,
         event,
@@ -249,107 +184,119 @@ const Booking = (props: any) => {
         details.description
       )
         .then(() => {
-          enqueueSnackbar("Event successfully booked!", { variant: "success" });
+          toast.success("Event successfully booked!");
           navigate(`/booked`, {
             state: { user, event, time: selectedTime },
           });
         })
         .catch((err) => {
-          enqueueSnackbar("Could not book event", { variant: "error", autoHideDuration: 15000, className: "error" });
+          toast.error("Could not book event");
         });
     }
   };
 
+  const currentStepIndex = stepper.all.findIndex(s => s.id === stepper.current.id);
+
   return (
-
-    <Container>
-      <Typography variant="h3" component="h1" gutterBottom>
+    <div className="container mx-auto p-4 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-6">
         {t("Schedule an appointment")}
-      </Typography>
+      </h1>
 
-      <EventType event={event} user={user} time={selectedTime}></EventType>
+      <EventType event={event} user={user} time={selectedTime} />
 
-      <Paper>
-        <form onSubmit={handleSubmit}>
-          <Box pt="1em" m="2em">
-            <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => {
-                const stepProps: any = {};
-                const labelProps: any = {};
-                if (isStepOptional(index)) {
-                  labelProps.optional = (
-                    <Typography variant="caption">Optional</Typography>
-                  );
-                }
-                return (
-                  <Step key={label} {...stepProps}>
-                    <StepLabel {...labelProps}>{label}</StepLabel>
+      <div className="mt-8 border rounded-lg p-6 bg-card text-card-foreground shadow-sm">
+        <nav aria-label="Checkout Steps" className="group my-4">
+          <ol className="flex items-center justify-between gap-2">
+            {stepper.all.map((step, index, steps) => (
+              <React.Fragment key={step.id}>
+                <li className="flex items-center gap-4 flex-shrink-0">
+                  <Button
+                    type="button"
+                    role="tab"
+                    variant={index <= currentStepIndex ? "default" : "secondary"}
+                    aria-current={stepper.current.id === step.id ? "step" : undefined}
+                    aria-posinset={index + 1}
+                    aria-setsize={steps.length}
+                    aria-selected={stepper.current.id === step.id}
+                    className="rounded-full w-10 h-10 p-0"
+                    onClick={() => stepper.goTo(step.id)}
+                  >
+                    {index + 1}
+                  </Button>
+                  <span className="text-sm font-medium">{t(step.title)}</span>
+                </li>
+                {index < steps.length - 1 && (
+                  <Separator className="flex-1" orientation="horizontal" />
+                )}
+              </React.Fragment>
+            ))}
+          </ol>
+        </nav>
 
-                  </Step>
-                );
-              })}
-            </Stepper>
-
-            <React.Fragment>
-              <Typography>
-                {t("cuddly_spare_felix_stir", { val: activeStep + 1 })}
-              </Typography>
-              <div>
-                <Button
-                  color="inherit"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-
-                >
-                  {t("heroic_kind_llama_zip")}
-                </Button>
-                <div />
-
-                {activeStep === steps.length - 1 ? (
-                  <Button variant="contained" type="submit">
+        <form onSubmit={handleSubmit} className="mt-8">
+          {stepper.switch({
+            date: () => (
+              <div className="flex justify-center">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateChange}
+                  disabled={(date) => !checkDay(date)}
+                  className="rounded-md border"
+                  modifiers={{
+                    highlight: (date) => checkDay(date),
+                  }}
+                  modifiersClassNames={{
+                    highlight: "font-bold text-primary",
+                  }}
+                />
+              </div>
+            ),
+            time: () => (
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="hidden md:block">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={handleDateChange}
+                    disabled={(date) => !checkDay(date)}
+                    className="rounded-md border"
+                  />
+                </div>
+                <div>{renderSlots()}</div>
+              </div>
+            ),
+            details: () => (
+              <div className="space-y-6">
+                {user && (
+                  <BookDetails
+                    errors={{}}
+                    onChange={handleDetailChange}
+                  />
+                )}
+                <div className="flex justify-end">
+                  <Button type="submit" size="lg">
                     {t("whole_acidic_parrot_promise")}
                   </Button>
-                ) : (
-                  ""
-                )}
+                </div>
               </div>
-            </React.Fragment>
+            ),
+          })}
 
-            <Grid container spacing={2}>
-              <Grid size={8} hidden={activeStep > 1}>
-                <StaticDatePicker
-                  minDate={beginDate}
-                  displayStaticWrapperAs="desktop"
-                  value={selectedDate || new Date()}
-                  onChange={handleDateChange}
-                  onMonthChange={handleMonthChange}
-                  slots={{ day: renderPickerDay }}
-                />
-              </Grid>
-
-              <Grid size={4} hidden={selectedDate == null || activeStep > 1}>
-                {renderSlots()}
-              </Grid>
-
-              {activeStep > 1 ? (
-                <Grid>
-                  {user ? (
-                    <BookDetails
-                      errors={{}}
-                      onChange={handleDetailChange}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-              ) : null}
-
-            </Grid>
-          </Box>
+          <div className="mt-8 flex justify-between">
+            <Button
+              variant="outline"
+              onClick={stepper.prev}
+              disabled={stepper.isFirst}
+              type="button"
+            >
+              {t("heroic_kind_llama_zip")}
+            </Button>
+          </div>
         </form>
-      </Paper>
-    </Container>
-
+      </div>
+    </div>
   );
 };
 

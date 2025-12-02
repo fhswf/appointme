@@ -1,11 +1,17 @@
-
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Card, CardActions, CardContent, CardHeader, Avatar } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardFooter,
+} from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Event, User } from 'common';
-import { HourglassBottomTwoTone, RoomTwoTone } from '@mui/icons-material';
-import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
+import { Hourglass, MapPin, CalendarClock } from 'lucide-react';
 
 export type EventTypeProps = {
     event: Event;
@@ -19,71 +25,51 @@ export const EventType = (props: EventTypeProps) => {
     const { t } = useTranslation();
 
     console.log("EventType: event=%o, user=%o, time=%o", event, user, time);
-    return (<Card>
-        <CardHeader
-            avatar={<Avatar alt={user?.name} src={user?.picture_url} />}
-            title={event.name}
-            titleTypographyProps={{ variant: 'h5' }}
-            subheader={event.description}
-        />
-        <CardContent>
-            <Grid
-                sx={{
-                    display: "grid",
-                    paddingLeft: "0",
-                    paddingRight: "0",
-                    gridTemplateColumns: "32px 1fr",
-                    alignItems: "stretch"
-                }}>
-                <Grid sx={{
-                    //justifySelf: "center"
-                }}>
-                    <HourglassBottomTwoTone />
-                </Grid>
-                <div>
-                    {event.duration + t("equal_jolly_thrush_empower")}
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center gap-4">
+                <Avatar>
+                    <AvatarImage src={user?.picture_url} alt={user?.name} />
+                    <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                    <CardTitle>{event.name}</CardTitle>
+                    <CardDescription>{event.description}</CardDescription>
                 </div>
-                <Grid sx={{
-                    //justifySelf: "center"
-                }}>
-                    <RoomTwoTone />
-                </Grid>
-                <div>
-                    {event.location}
+            </CardHeader>
+            <CardContent className="grid gap-4">
+                <div className="flex items-center gap-4">
+                    <Hourglass className="h-5 w-5 text-muted-foreground" />
+                    <span>{event.duration + t("equal_jolly_thrush_empower")}</span>
                 </div>
-                {
-                    time ?
-                        <>
-                            <Grid sx={{
-                                //justifySelf: "center"
-                            }}>
-                                <ScheduleTwoToneIcon />
-                            </Grid>
-                            <div>
-                                {time.toLocaleDateString()} {time.toLocaleTimeString()}
-                            </div>
-                        </> : null
-                }
-            </Grid>
+                <div className="flex items-center gap-4">
+                    <MapPin className="h-5 w-5 text-muted-foreground" />
+                    <span>{event.location}</span>
+                </div>
+                {time && (
+                    <div className="flex items-center gap-4">
+                        <CalendarClock className="h-5 w-5 text-muted-foreground" />
+                        <span>
+                            {time.toLocaleDateString()} {time.toLocaleTimeString()}
+                        </span>
+                    </div>
+                )}
+            </CardContent>
 
-        </CardContent>
-
-        {
-            handleOnClick ?
-                <CardActions>
+            {handleOnClick && (
+                <CardFooter>
                     <Button
-                        color="primary"
-                        aria-label="schedule"
                         onClick={(evt) => {
                             evt.preventDefault();
                             handleOnClick(event);
                         }}
-                        startIcon={<ScheduleTwoToneIcon />}
+                        className="w-full"
                     >
+                        <CalendarClock className="mr-2 h-4 w-4" />
                         {t("petty_swift_piranha_rise")}
                     </Button>
-                </CardActions> : null
-        }
-    </Card>);
-
-}
+                </CardFooter>
+            )}
+        </Card>
+    );
+};

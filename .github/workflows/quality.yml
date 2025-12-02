@@ -56,9 +56,13 @@ jobs:
       - name: Build
         run: yarn workspace common build
 
-      # Run tests
+      # Install Playwright browsers
+      - name: Install Playwright Browsers
+        run: cd client && npx playwright install --with-deps chromium
+
+      # Run Playwright tests
       - name: Test
-        run: yarn run ci
+        run: cd client && npm run test:ci
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
@@ -73,10 +77,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: Upload Cypress screenshots
-          path: client/cypress/screenshots
-          overwrite: true
+          name: playwright-report
+          path: client/playwright-report/
+          retention-days: 30
 
       - name: Analyze with SonarQube
         if: always()

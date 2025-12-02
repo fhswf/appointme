@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import istanbul from 'vite-plugin-istanbul';
-import cypress from 'cypress';
+
+
+import path from "path";
 
 export default defineConfig(() => {
   return {
@@ -11,6 +13,11 @@ export default defineConfig(() => {
       extension: ['.js', '.ts', '.tsx'],
       requireEnv: true,
     }),],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
     build: {
       outDir: 'build',
       publicDir: 'public',

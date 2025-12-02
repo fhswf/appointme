@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import AppNavbar from "../components/AppNavbar";
 
-import { Container, Typography } from "@mui/material";
 import { getEventByID, updateEvent } from "../helpers/services/event_services";
 import { useNavigate, useParams } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { EventForm } from "../components/EventForm";
 import { EMPTY_EVENT, Event } from "common";
 import { useTranslation } from "react-i18next";
-import { useSnackbar } from "notistack";
+import { toast } from "sonner";
 
 export type EventFormProps = {
   event: Event;
@@ -20,7 +19,6 @@ const EditEvent = (): JSX.Element => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(EMPTY_EVENT);
   const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getEventByID(eventID).then((res) => {
@@ -41,13 +39,13 @@ const EditEvent = (): JSX.Element => {
           signout();
           navigate("/landing");
         } else {
-          enqueueSnackbar(t("happy_caring_fox_spur"), { variant: "success", autoHideDuration: 1500, className: "success" });
+          toast.success(t("happy_caring_fox_spur"));
           navigate("/app");
         }
       })
       .catch((err) => {
         console.log(err);
-        enqueueSnackbar(t("tasty_witty_stingray_hope"), { variant: "error" });
+        toast.error(t("tasty_witty_stingray_hope"));
       });
   };
 
@@ -56,15 +54,15 @@ const EditEvent = (): JSX.Element => {
     <>
       <AppNavbar />
 
-      <Container maxWidth="md">
-        <Typography component="h1" variant="h3" gutterBottom>
+      <div className="container mx-auto p-4 max-w-3xl">
+        <h1 className="text-3xl font-bold mb-6">
           {t("each_awake_tadpole_jest")}
-        </Typography>
+        </h1>
         <EventForm
           event={formData || EMPTY_EVENT}
           handleOnSubmit={saveEvent}
         />
-      </Container>
+      </div>
     </>
   );
 };

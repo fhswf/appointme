@@ -4,7 +4,6 @@ import { useAuthenticated } from "../helpers/helpers";
 import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
-import { Paper, Container, Typography, List, ListItem, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 const Landing = (props: any) => {
@@ -13,34 +12,34 @@ const Landing = (props: any) => {
     <>
       {useAuthenticated() ? <Navigate to="/app" /> : null}
       <AppNavbar />
-      <Paper>
-        <Container>
+      <div className="bg-background min-h-screen">
+        <div className="container mx-auto p-8">
 
-          <Typography variant="h3">{t("orange_grand_racoon_fall")}</Typography>
-          <Typography variant="body1">
+          <h3 className="text-3xl font-bold mb-4">{t("orange_grand_racoon_fall")}</h3>
+          <p className="text-lg mb-6">
             {t("male_patient_hedgehog_ask")}
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemText primary="Step 1: Configure your calendars"
-                secondary={t("factual_moving_hawk_belong")} />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary={t("pink_polite_racoon_earn")}
-                secondary={t("happy_wise_mantis_laugh")} />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary={t("careful_misty_bullock_splash")}
-                secondary={t("extra_misty_panda_grip")} />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary={t("game_frail_vole_treasure")}
-                secondary={t("still_helpful_koala_trust")} />
-            </ListItem>
-          </List>
-        </Container>
+          </p>
+          <ul className="space-y-4">
+            <li className="border-b pb-2">
+              <div className="font-semibold">Step 1: Configure your calendars</div>
+              <div className="text-muted-foreground">{t("factual_moving_hawk_belong")}</div>
+            </li>
+            <li className="border-b pb-2">
+              <div className="font-semibold">{t("pink_polite_racoon_earn")}</div>
+              <div className="text-muted-foreground">{t("happy_wise_mantis_laugh")}</div>
+            </li>
+            <li className="border-b pb-2">
+              <div className="font-semibold">{t("careful_misty_bullock_splash")}</div>
+              <div className="text-muted-foreground">{t("extra_misty_panda_grip")}</div>
+            </li>
+            <li className="border-b pb-2">
+              <div className="font-semibold">{t("game_frail_vole_treasure")}</div>
+              <div className="text-muted-foreground">{t("still_helpful_koala_trust")}</div>
+            </li>
+          </ul>
+        </div>
 
-      </Paper>
+      </div>
     </>
   );
 };

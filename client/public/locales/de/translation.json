@@ -83,5 +83,8 @@
   "Choose time": "Uhrzeit wählen",
   "Provide details": "Details angeben",
   "teal_lofty_hawk_peek": "Abbrechen",
-  "mild_raw_elk_delight": "Änderungen speichern"
+  "mild_raw_elk_delight": "Änderungen speichern",
+  "Days": "Tage",
+  "Maximum days in advance": "Maximaler Vorlauf (Tage)",
+  "event_advance_availability_description": "Wie viele Tage im Voraus ist diese Terminart verfügbar?"
 }

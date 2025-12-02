@@ -1,0 +1,40 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - button [ref=e6] [cursor=pointer]:
+          - img
+        - heading "BookMe" [level=1] [ref=e7]
+      - button "Christian Gawron" [ref=e9] [cursor=pointer]:
+        - img "Christian Gawron" [ref=e11]
+  - generic [ref=e12]:
+    - heading "My Calendar" [level=3] [ref=e13]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - img "Google Calendar" [ref=e17]
+        - text: Google Calendar
+      - button "Disconnect from Google" [ref=e19] [cursor=pointer]
+    - heading "Configuration" [level=4] [ref=e20]
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: Add appointments to calendar
+          - button [ref=e26] [cursor=pointer]:
+            - img
+        - generic [ref=e28]: Sprechstunde
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]: Check free time in calendars
+          - button [ref=e32] [cursor=pointer]:
+            - img
+        - list [ref=e34]:
+          - listitem [ref=e35]: Sprechstunde
+          - listitem [ref=e36]: christian.gawron@gmail.com
+          - listitem [ref=e37]: Familie
+          - listitem [ref=e38]: gawron.christian@fh-swf.de
+          - listitem [ref=e39]: Wintersemester 2024/25
+          - listitem [ref=e40]: Feiertage in Deutschland
+```
