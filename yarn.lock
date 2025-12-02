@@ -6960,7 +6960,7 @@ __metadata:
     supertest: "npm:^7.0.0"
     ts-jest: "npm:^29.2.5"
     ts-node: "npm:^10.9.1"
-    tsdav: "npm:^2.1.2"
+    tsdav: "npm:^2.1.5"
     typescript: "npm:^5.6.2"
     validator: "npm:^13.12.0"
     vitest: "npm:^2.1.3"
@@ -8692,6 +8692,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:4.1.0":
+  version: 4.1.0
+  resolution: "cross-fetch@npm:4.1.0"
+  dependencies:
+    node-fetch: "npm:^2.7.0"
+  checksum: 10/07624940607b64777d27ec9c668ddb6649e8c59ee0a5a10e63a51ce857e2bbb1294a45854a31c10eccb91b65909a5b199fcb0217339b44156f85900a7384f489
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
@@ -8943,6 +8952,18 @@ __metadata:
     supports-color:
       optional: true
   checksum: 10/71168908b9a78227ab29d5d25fe03c5867750e31ce24bf2c44a86efc5af041758bb56569b0a3d48a9b5344c00a24a777e6f4100ed6dfd9534a42c1dde285125a
+  languageName: node
+  linkType: hard
+
+"debug@npm:4.4.1":
+  version: 4.4.1
+  resolution: "debug@npm:4.4.1"
+  dependencies:
+    ms: "npm:^2.1.3"
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 10/8e2709b2144f03c7950f8804d01ccb3786373df01e406a0f66928e47001cf2d336cbed9ee137261d4f90d68d8679468c755e3548ed83ddacdc82b194d2468afe
   languageName: node
   linkType: hard
 
@@ -16787,7 +16808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9":
+"node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -21328,15 +21349,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsdav@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "tsdav@npm:2.1.2"
+"tsdav@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "tsdav@npm:2.1.5"
   dependencies:
     base-64: "npm:1.0.0"
-    cross-fetch: "npm:4.0.0"
-    debug: "npm:4.3.7"
+    cross-fetch: "npm:4.1.0"
+    debug: "npm:4.4.1"
     xml-js: "npm:1.6.11"
-  checksum: 10/133b4a0ae3fea51034a2aa63d01dae1dec317102e4d12b87944e7a8e5a8ea6fe6cc3722949d6a4eff9fe147df4960975e8ee57772a5b6d4bd9530abe99089e96
+  checksum: 10/8fec781a77c17badd4aef60e8814470ad28ffbedf7d7c4afc95b3a65ff7e1ff5ee46478cc27101e6313fcafbf09f163e9a58c892e2dcc2c1504549eb0a3c51d6
   languageName: node
   linkType: hard
 
