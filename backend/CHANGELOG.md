@@ -1,3 +1,20 @@
+# backend [1.15.0](https://github.com/fhswf/book_me/compare/backend@1.14.0...backend@1.15.0) (2025-12-03)
+
+
+### Features
+
+* Implement CSRF protection by adding a new CSRF service and integrating CSRF tokens into client requests and backend server logic. ([ddb896e](https://github.com/fhswf/book_me/commit/ddb896e41b7bac29fb67f24b3ba2f1db728c8a6d))
+* Implement Google Calendar event insertion, improve free/busy time calculation, and add token revocation. ([86ea2b8](https://github.com/fhswf/book_me/commit/86ea2b854fac7168b23d80711cd37e652f3eb0cc))
+* Implement per-user OAuth2Client creation with automatic token refresh and refine token update logic, adding new tests. ([6d6f304](https://github.com/fhswf/book_me/commit/6d6f3041fde4fa001605da8a03c87df5bee5b6ea))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.2.0
+
 # backend [1.14.0](https://github.com/fhswf/book_me/compare/backend@1.13.0...backend@1.14.0) (2024-11-04)
 
 
