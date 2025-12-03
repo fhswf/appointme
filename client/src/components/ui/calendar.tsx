@@ -12,6 +12,10 @@ import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
+import { de, enUS } from "date-fns/locale"
+
+// ... existing imports
+
 function Calendar({
   className,
   classNames,
@@ -26,9 +30,12 @@ function Calendar({
 }) {
   const defaultClassNames = getDefaultClassNames()
   const { i18n } = useTranslation()
+  
+  const locale = i18n.language === 'de' ? de : enUS
 
   return (
     <DayPicker
+      locale={locale}
       showOutsideDays={showOutsideDays}
       className={cn(
         "bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",

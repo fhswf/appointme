@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -13,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash } from "lucide-react";
 import { EventFormProps } from "../pages/EditEvent";
-import { Day, DayNames, Event, Slot } from "common";
+import { Day, Event, Slot } from "common";
 import { t } from "i18next";
 
 type EditSlotProps = {
@@ -23,6 +24,7 @@ type EditSlotProps = {
 };
 
 const EditSlot = (props: EditSlotProps) => {
+  const { i18n } = useTranslation();
   const [slots, setSlots] = useState<Slot[]>([]);
 
   useEffect(() => {
@@ -74,6 +76,13 @@ const EditSlot = (props: EditSlotProps) => {
       };
 
   console.log("EditSlot: %o", slots);
+
+  const getDayName = (day: Day) => {
+    // Jan 5, 2025 is a Sunday. Day enum is 0 for Sunday.
+    const date = new Date(2025, 0, 5 + day);
+    return date.toLocaleString(i18n.language, { weekday: 'short' });
+  };
+
   return (
     <div className="grid grid-cols-12 gap-4 items-start py-2 border-b last:border-0">
       <div className="col-span-2 flex items-center space-x-2 pt-2">
@@ -83,7 +92,7 @@ const EditSlot = (props: EditSlotProps) => {
           onCheckedChange={handleCheck}
         />
         <Label htmlFor={`day-${props.day}`} className="font-medium">
-          {DayNames[props.day]}
+          {getDayName(props.day)}
         </Label>
       </div>
       <div className="col-span-9 space-y-2">
@@ -92,7 +101,7 @@ const EditSlot = (props: EditSlotProps) => {
             <div className="w-1/3">
               <Input
                 type="time"
-                placeholder="Starttime"
+                placeholder={t("Starttime")}
                 onChange={changeTime("start", index)}
                 value={slot.start}
               />
@@ -101,7 +110,7 @@ const EditSlot = (props: EditSlotProps) => {
             <div className="w-1/3">
               <Input
                 type="time"
-                placeholder="Endtime"
+                placeholder={t("Endtime")}
                 onChange={changeTime("end", index)}
                 value={slot.end}
               />
@@ -248,7 +257,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               onValueChange={handleSelect("duration")}
             >
               <SelectTrigger id="duration">
-                <SelectValue placeholder="Select duration" />
+                <SelectValue placeholder={t("Select duration")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="15">15 min</SelectItem>
@@ -267,10 +276,10 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               onValueChange={handleSelect("bufferbefore")}
             >
               <SelectTrigger id="buffer-before">
-                <SelectValue placeholder="Select buffer" />
+                <SelectValue placeholder={t("Select buffer")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">none</SelectItem>
+                <SelectItem value="0">{t("none")}</SelectItem>
                 <SelectItem value="5">5 min</SelectItem>
                 <SelectItem value="15">15 min</SelectItem>
                 <SelectItem value="30">30 min</SelectItem>
@@ -287,10 +296,10 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               onValueChange={handleSelect("bufferafter")}
             >
               <SelectTrigger id="buffer-after">
-                <SelectValue placeholder="Select buffer" />
+                <SelectValue placeholder={t("Select buffer")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">none</SelectItem>
+                <SelectItem value="0">{t("none")}</SelectItem>
                 <SelectItem value="5">5 min</SelectItem>
                 <SelectItem value="15">15 min</SelectItem>
                 <SelectItem value="30">30 min</SelectItem>
@@ -333,7 +342,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 onChange={handleOnChange("minFuture", 86400)}
                 className="pr-12"
               />
-              <span className="absolute right-3 top-2.5 text-sm text-muted-foreground">Days</span>
+              <span className="absolute right-3 top-2.5 text-sm text-muted-foreground">{t("Days")}</span>
             </div>
             <p className="text-sm text-muted-foreground">{t("pretty_grand_cuckoo_arrive")}</p>
           </div>
@@ -374,7 +383,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         className="save"
         disabled={!changed}
       >
-        Save
+        {t("Save")}
       </Button>
     </form>
   );

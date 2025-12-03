@@ -12,7 +12,7 @@
   "quaint_known_wasp_view": "Minimaler Vorlauf (Tage)",
   "pretty_grand_cuckoo_arrive": "Minimaler Vorlauf, mit dem ein Termin gebucht werden kann.",
   "slow_maroon_spider_praise": "Maximale Anzahl an Terminen dieses Typs, die pro Tag gebucht werden können.",
-  "grand_wacky_ox_flow": "Maximale Anzahl pro tag",
+  "grand_wacky_ox_flow": "Maximale Anzahl pro Tag",
   "left_aloof_stork_leap": "Vorlaufpuffer",
   "elegant_early_boar_accept": "Wie lange dauert diese Terminart?",
   "ideal_this_coyote_inspire": "Dauer",
@@ -86,5 +86,14 @@
   "mild_raw_elk_delight": "Änderungen speichern",
   "Days": "Tage",
   "Maximum days in advance": "Maximaler Vorlauf (Tage)",
-  "event_advance_availability_description": "Wie viele Tage im Voraus ist diese Terminart verfügbar?"
+  "event_advance_availability_description": "Wie viele Tage im Voraus ist diese Terminart verfügbar?",
+  "none": "Keiner",
+  "Select buffer": "Puffer wählen",
+  "Save": "Speichern",
+  "Select duration": "Dauer wählen",
+  "Starttime": "Startzeit",
+  "Endtime": "Endzeit",
+  "these_moving_fox_create": "Beschreibung",
+  "honest_weak_iguana_rest": "Ort",
+  "tired_whole_bumblebee_type": "z.B. Online via Zoom"
 }
