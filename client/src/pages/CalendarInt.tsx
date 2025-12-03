@@ -75,7 +75,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
     );
   } else {
     const items = calendarList.items.map((item) => (
-      <div className="flex items-center space-x-2" key={item.id}>
+      <div className="flex items-center gap-2" key={item.id}>
         <Checkbox
           id={item.id}
           checked={state[item.id]}
@@ -132,7 +132,7 @@ const PushCalendar = ({ user, calendarList }) => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium">
           {t("trite_warm_gorilla_pet")}
         </CardTitle>
@@ -219,7 +219,7 @@ const PullCalendars = ({ user, calendarList }) => {
     return (
       <>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               {t("aware_alert_mare_glow")}
             </CardTitle>
