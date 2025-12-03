@@ -49,12 +49,15 @@ test.describe('Scheduling page', () => {
             });
 
             // This must be AFTER the catch-all route so it matches first (routes are evaluated in reverse)
-            await page.route(url => url.pathname.includes('/events/getAvailable'), async route => {
+            await page.route('**/events/getAvailable*', async route => {
+                console.log('Mocking getAvailable');
                 await route.fulfill({ status: 200, path: './tests/fixtures/available.json' });
             });
         });
 
         test('Check simple schedule flow', async ({ page }) => {
+            page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
+            
             await page.goto('/users/christian-gawron/sprechstunde');
             await page.waitForResponse(resp => resp.url().includes('getEventBy'));
 
@@ -64,7 +67,8 @@ test.describe('Scheduling page', () => {
             // The test expects '8' to be clicked.
             // await page.getByRole('gridcell', { name: '8' }).click(); 
             // Wait for availability to be loaded
-            await page.waitForResponse(resp => resp.url().includes('getAvailable'));
+            const response = await page.waitForResponse(resp => resp.url().includes('getAvailable'));
+            console.log('getAvailable status:', response.status());
 
             // Select Oct 8th 2024.
             // In Europe/Berlin (UTC+2), Oct 8th midnight is Oct 7th 22:00 UTC.
