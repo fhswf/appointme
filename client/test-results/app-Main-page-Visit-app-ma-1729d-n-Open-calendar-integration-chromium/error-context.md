@@ -8,33 +8,37 @@
         - button [ref=e6] [cursor=pointer]:
           - img
         - heading "BookMe" [level=1] [ref=e7]
-      - button "Christian Gawron" [ref=e9] [cursor=pointer]:
-        - img "Christian Gawron" [ref=e11]
-  - generic [ref=e12]:
-    - heading "My Calendar" [level=3] [ref=e13]
-    - generic [ref=e15]:
-      - generic [ref=e16]:
-        - img "Google Calendar" [ref=e17]
+      - generic [ref=e8]:
+        - button "Toggle theme" [ref=e9] [cursor=pointer]:
+          - img
+        - button [ref=e10] [cursor=pointer]:
+          - generic [ref=e12]:
+            - img
+  - generic [ref=e13]:
+    - heading "My Calendar" [level=3] [ref=e14]
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - img "Google Calendar" [ref=e18]
         - text: Google Calendar
-      - button "Disconnect from Google" [ref=e19] [cursor=pointer]
-    - heading "Configuration" [level=4] [ref=e20]
-    - generic [ref=e22]:
-      - generic [ref=e23]:
-        - generic [ref=e24]:
-          - generic [ref=e25]: Add appointments to calendar
-          - button [ref=e26] [cursor=pointer]:
+      - button "Disconnect from Google" [ref=e20] [cursor=pointer]
+    - heading "Configuration" [level=4] [ref=e21]
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: Add appointments to calendar
+          - button [ref=e27] [cursor=pointer]:
             - img
-        - generic [ref=e28]: Sprechstunde
-      - generic [ref=e29]:
-        - generic [ref=e30]:
-          - generic [ref=e31]: Check free time in calendars
-          - button [ref=e32] [cursor=pointer]:
+        - generic [ref=e29]: Sprechstunde
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Check free time in calendars
+          - button [ref=e33] [cursor=pointer]:
             - img
-        - list [ref=e34]:
-          - listitem [ref=e35]: Sprechstunde
-          - listitem [ref=e36]: christian.gawron@gmail.com
-          - listitem [ref=e37]: Familie
-          - listitem [ref=e38]: gawron.christian@fh-swf.de
-          - listitem [ref=e39]: Wintersemester 2024/25
-          - listitem [ref=e40]: Feiertage in Deutschland
+        - list [ref=e35]:
+          - listitem [ref=e36]: Sprechstunde
+          - listitem [ref=e37]: christian.gawron@gmail.com
+          - listitem [ref=e38]: Familie
+          - listitem [ref=e39]: gawron.christian@fh-swf.de
+          - listitem [ref=e40]: Wintersemester 2024/25
+          - listitem [ref=e41]: Feiertage in Deutschland
 ```
