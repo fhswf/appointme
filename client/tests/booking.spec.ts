@@ -34,7 +34,7 @@ test.describe('Scheduling page', () => {
             };
         });
 
-        await page.route('**/users/user/christian-gawron?*', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
+        await page.route('**/users/user/christian-gawron*', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
         await page.route('**/events/getEventBy?*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
     });
 
@@ -57,7 +57,7 @@ test.describe('Scheduling page', () => {
 
         test('Check simple schedule flow', async ({ page }) => {
             page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
-            
+
             // Setup wait for getAvailable BEFORE navigation to avoid race condition
             const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('getAvailable'));
 
@@ -69,7 +69,7 @@ test.describe('Scheduling page', () => {
             // The mock date is 2024-10-04 (Oct 4th).
             // The test expects '8' to be clicked.
             // await page.getByRole('gridcell', { name: '8' }).click(); 
-            
+
             // Wait for availability to be loaded
             const response = await getAvailablePromise;
             console.log('getAvailable status:', response.status());
