@@ -92,6 +92,8 @@ test.describe('Main page', () => {
             await page.route('**/events/event', async route => {
                 if (route.request().method() === 'GET') {
                     await route.fulfill({ path: './tests/fixtures/eventsAfter.json' });
+                } else if (route.request().method() === 'POST') {
+                    await route.fulfill({ path: './tests/fixtures/addEvent.json' });
                 } else {
                     await route.continue();
                 }
@@ -102,16 +104,21 @@ test.describe('Main page', () => {
 
             await page.waitForSelector('[data-testid="event-form-title"]', { state: 'visible' });
             await page.getByTestId('event-form-title').fill('Test event');
+
+            const postPromise = page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'POST');
+            const getPromise = page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'GET', { timeout: 10000 });
+
             await page.getByTestId('event-form-submit').click();
 
-            await page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'POST');
+            await postPromise;
             // Wait for re-fetch (happens after navigation to /app)
-            await page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'GET', { timeout: 10000 });
+            await getPromise;
 
             await page.getByTestId('copy-link-button').last().click({ force: true });
 
+            const deletePromise = page.waitForResponse(resp => resp.url().includes('/events/event/670eca0bc1eebcf903b17528') && resp.request().method() === 'DELETE');
             await page.getByTestId('delete-event-button').last().click({ force: true });
-            await page.waitForResponse(resp => resp.url().includes('/events/event/670eca0bc1eebcf903b17528') && resp.request().method() === 'DELETE');
+            await deletePromise;
 
             await expect(page.getByTestId('event-card')).toHaveCount(1);
             await expect(page.getByTestId('event-card').filter({ hasText: 'Test event' })).not.toBeVisible();
@@ -133,8 +140,9 @@ test.describe('Main page', () => {
             await page.waitForResponse(resp => resp.url().includes('/users/user'));
             await page.waitForResponse(resp => resp.url().includes('/events/event'));
 
+            const deleteErrorPromise = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'DELETE');
             await page.getByTestId('delete-event-button').first().click();
-            await page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'DELETE');
+            await deleteErrorPromise;
         });
     });
 
@@ -156,12 +164,14 @@ test.describe('Main page', () => {
             await page.waitForResponse(resp => resp.url().includes('/users/user'));
             await page.waitForResponse(resp => resp.url().includes('/events/event'));
 
+            const putPromise1 = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
             await page.getByTestId('active-switch').click();
-            await page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
+            await putPromise1;
             await expect(page.getByTestId('event-card')).toHaveClass(/inactive/);
 
+            const putPromise2 = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
             await page.getByTestId('active-switch').click();
-            await page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
+            await putPromise2;
             await expect(page.getByTestId('event-card')).toHaveClass(/active/);
 
             await page.getByTestId('copy-link-button').click();
@@ -174,7 +184,9 @@ test.describe('Main page', () => {
         test.beforeEach(async ({ page }) => {
             await page.route('**/users/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
             await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
-            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => await route.fulfill({ path: './tests/fixtures/sprechstunde.json' }));
+            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => {
+                await route.fulfill({ path: './tests/fixtures/sprechstunde.json' });
+            });
         });
 
         test('Check edit event type', async ({ page }) => {
@@ -182,8 +194,9 @@ test.describe('Main page', () => {
             await page.waitForResponse(resp => resp.url().includes('/users/user'));
             await page.waitForResponse(resp => resp.url().includes('/events/event'));
 
+            const editPromise = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5'));
             await page.getByTestId('edit-event-button').click();
-            await page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5'));
+            await editPromise;
             await expect(page.getByTestId('event-form-title')).toHaveValue('Sprechstunde');
         });
     });
@@ -225,10 +238,15 @@ test.describe('Main page', () => {
             await page.waitForResponse(resp => resp.url().includes('/events/event'));
 
             await page.getByTestId('profile-menu').click();
+
+            const calendarListPromise = page.waitForResponse(resp => resp.url().includes('/google/calendarList'));
+            const generateUrlPromise = page.waitForResponse(resp => resp.url().includes('/google/generateUrl'));
+
             await page.getByTestId('calendar-button').click();
             await expect(page).toHaveURL(/\/integration/);
-            await page.waitForResponse(resp => resp.url().includes('/google/calendarList'));
-            await page.waitForResponse(resp => resp.url().includes('/google/generateUrl'));
+
+            await calendarListPromise;
+            await generateUrlPromise;
 
             await page.getByTestId('edit-push-calendar').click();
             // Select interaction might need adjustment for shadcn select
