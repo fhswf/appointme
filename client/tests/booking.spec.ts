@@ -63,6 +63,9 @@ test.describe('Scheduling page', () => {
             // The mock date is 2024-10-04 (Oct 4th).
             // The test expects '8' to be clicked.
             // await page.getByRole('gridcell', { name: '8' }).click(); 
+            // Wait for availability to be loaded
+            await page.waitForResponse(resp => resp.url().includes('getAvailable'));
+
             // Select Oct 8th 2024.
             // In Europe/Berlin (UTC+2), Oct 8th midnight is Oct 7th 22:00 UTC.
             await page.locator('[data-testid="2024-10-07T22:00:00.000Z"]').click();

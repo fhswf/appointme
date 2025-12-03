@@ -71,7 +71,7 @@ jobs:
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
       - name: Post PR Comment
-        run: npx github-actions-ctrf client/trf/ctrf-report.json --pr-comment
+        run: npx github-actions-ctrf client/ctrf/ctrf-report.json --pr-comment
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
