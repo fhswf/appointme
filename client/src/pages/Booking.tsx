@@ -41,7 +41,6 @@ const Booking = () => {
   const [, startTransition] = useTransition();
 
   const updateSlots = (startDate: Date) => {
-    console.log("updateSlots called with", startDate);
     getAvailableTimes(
       startDate,
       addDays(addMonths(startDate, 6), 1),
@@ -49,11 +48,9 @@ const Booking = () => {
       user!._id
     )
       .then((slots) => {
-        console.log("slots %o", slots);
         setSlots(slots);
       })
       .catch((err) => {
-        console.error("updateSlots error", err);
         toast.error("Could not get available time slots");
       });
   };
@@ -75,7 +72,6 @@ const Booking = () => {
               if (res.data.isActive === false) {
                 navigate("/notfound");
               } else {
-                console.log("Setting event", res.data);
                 setEvent(res.data);
               }
             })
@@ -92,7 +88,6 @@ const Booking = () => {
   }, [data.url, data.user_url, navigate]);
 
   useEffect(() => {
-    console.log("Effect triggered: user=%o, event=%o", !!user, !!event?.url);
     if (user && event?.url) {
       startTransition(() => updateSlots(beginDate));
     }
@@ -122,11 +117,11 @@ const Booking = () => {
 
   const getTimes = (day: Date) => {
     if (slots) {
-      let times = [];
+      const times = [];
       const target = new IntervalSet(startOfDay(day), endOfDay(day));
-      for (let slot of slots.intersect(target)) {
-        let start = new Date(slot.start);
-        let end = new Date(slot.end);
+      for (const slot of slots.intersect(target)) {
+        const start = new Date(slot.start);
+        const end = new Date(slot.end);
         let s = start;
         while (s < addMinutes(end, -event.duration)) {
           times.push(s);

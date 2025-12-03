@@ -37,7 +37,7 @@ export const EventCard = (props: EventCardProps) => {
   };
 
   const handleCopy = () => {
-    let loc = globalThis.location;
+    const loc = globalThis.location;
     let url = `/users/${props.url}/${props.event.url}`;
     url = loc.protocol + "//" + loc.host + url;
     console.log("url: %s", url);

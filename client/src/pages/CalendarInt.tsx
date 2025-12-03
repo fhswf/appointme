@@ -214,7 +214,7 @@ const PullCalendars = ({ user, calendarList }) => {
   if (!user || !calendarList) {
     return <div></div>;
   } else {
-    let _selected = {};
+    const _selected = {};
     user.pull_calendars.forEach((item) => (_selected[item] = true));
     return (
       <>

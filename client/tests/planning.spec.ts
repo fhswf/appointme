@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/base';
 
 test.describe('Planning page', () => {
     test.describe('Error getting user', () => {
@@ -20,9 +20,9 @@ test.describe('Planning page success', () => {
     test.beforeEach(async ({ page }) => {
         await page.addInitScript(() => {
             const date = new Date(Date.UTC(2024, 9, 4));
-            // @ts-ignore
+            // @ts-expect-error
             Date = class extends Date {
-                constructor(...args) {
+                constructor(...args: any[]) {
                     if (args.length === 0) {
                         super(date);
                     } else {

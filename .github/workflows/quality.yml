@@ -60,8 +60,16 @@ jobs:
       - name: Install Playwright Browsers
         run: cd client && npx playwright install --with-deps chromium
 
+      # Run Common tests
+      - name: Test Common
+        run: yarn workspace common ci
+
+      # Run Backend tests
+      - name: Test Backend
+        run: yarn workspace backend ci
+
       # Run Playwright tests
-      - name: Test
+      - name: Test Client
         run: cd client && npm run test:ci
         env:
           CI: true
@@ -69,6 +77,10 @@ jobs:
           GOOGLE_TOKENS: ${{ secrets.GOOGLE_TOKENS }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          VITE_COVERAGE: true
+
+      - name: Generate Coverage Report
+        run: cd client && npm run coverage:report
 
       - name: Post PR Comment
         run: npx github-actions-ctrf client/ctrf/ctrf-report.json --pr-comment

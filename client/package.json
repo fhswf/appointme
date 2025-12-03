@@ -77,7 +77,8 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
-    "test:ci": "TZ=Europe/Berlin playwright test"
+    "test:ci": "TZ=Europe/Berlin playwright test",
+    "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -95,17 +96,22 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/eslint": "^9.6.1",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.1",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.11.1",
     "eslint-plugin-i18next": "^6.1.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
     "i18next-parser": "9.0.2",
     "i18next-scanner": "4.5.0",
     "nyc": "^17.1.0",
     "playwright-ctrf-json-reporter": "^0.0.27",
     "start-server-and-test": "^1.13.1",
+    "typescript-eslint": "^8.48.1",
     "vite": "^5.4.7",
     "vite-plugin-istanbul": "^6.0.2",
     "wait-on": "^5.3.0"

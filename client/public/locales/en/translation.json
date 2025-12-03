@@ -70,5 +70,15 @@
   "large_suave_gull_hush": "copy link",
   "misty_proud_mallard_assure": "Copy link",
   "teal_lofty_hawk_peek": "Cancel",
-  "mild_raw_elk_delight": "Save Changes"
+  "mild_raw_elk_delight": "Save Changes",
+  "Choose date": "Choose date",
+  "Choose time": "Choose time",
+  "Provide details": "Provide details",
+  "Confirmation": "Confirmation",
+  "Please share anything that will help me to prepare for our meeting": "Please share anything that will help me to prepare for our meeting",
+  "confirmationText": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
+  "Name": "Name",
+  "Email": "Email",
+  "Information": "Information",
+  "You will receive a confirmation email": "You will receive a confirmation email"
 }

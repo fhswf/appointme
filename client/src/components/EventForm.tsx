@@ -52,7 +52,7 @@ const EditSlot = (props: EditSlotProps) => {
 
   const addSlot = () => {
     console.log("add slot");
-    let _slots = slots.slice();
+    const _slots = slots.slice();
     _slots.push({ start: "", end: "" });
     setSlots(_slots);
     props.onChange(_slots);
@@ -69,7 +69,7 @@ const EditSlot = (props: EditSlotProps) => {
     (key: keyof Slot, index: number) =>
       (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("ChangeTime: %s %d %o", key, index, event.target.value);
-        let _slots = slots.slice();
+        const _slots = slots.slice();
         _slots[index][key] = event.target.value;
         setSlots(_slots);
         props.onChange(_slots);
@@ -152,7 +152,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const generateSlug = (str: string) => {
     if (!str) return "";
-    let slug = str.replace(" ", "_").toLocaleLowerCase();
+    const slug = str.replace(" ", "_").toLocaleLowerCase();
     console.log("generateSlug: %s %s", str, slug);
     return slug;
   };
@@ -186,7 +186,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
   const onChangeSlot = (day: Day) => (slots: Slot[]) => {
     setChanged(true);
     console.log("onChangeSlot: %d %o", day, slots);
-    let event: Event = { ...formData };
+    const event: Event = { ...formData };
     event.available[day] = slots;
     setFormData(event);
   };

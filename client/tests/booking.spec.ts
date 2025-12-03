@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/base';
 
 test.describe('Error handling', () => {
     test.describe('Error getting user', () => {
@@ -22,9 +22,9 @@ test.describe('Scheduling page', () => {
         // But we can try to rely on the app using the date we pass or just mocking the date object
         await page.addInitScript(() => {
             const date = new Date(Date.UTC(2024, 9, 4));
-            // @ts-ignore
+            // @ts-expect-error
             Date = class extends Date {
-                constructor(...args) {
+                constructor(...args: any[]) {
                     if (args.length === 0) {
                         super(date);
                     } else {
