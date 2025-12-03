@@ -35,7 +35,7 @@ test.describe('Scheduling page', () => {
         });
 
         await page.route('**/users/user/christian-gawron*', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
-        await page.route('**/events/getEventBy?*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+        await page.route('**/events/getEventBy*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
     });
 
     test.describe('Visit scheduling page and schedule appointment', () => {
