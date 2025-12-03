@@ -17,6 +17,7 @@ export default defineConfig({
     use: {
         baseURL: 'http://localhost:5173',
         timezoneId: 'Europe/Berlin',
+        trace: 'retain-on-failure',
     },
     projects: [
         {
@@ -27,6 +28,6 @@ export default defineConfig({
     webServer: {
         command: 'npm start -- --port 5173',
         url: 'http://localhost:5173',
-        reuseExistingServer: false,
+        reuseExistingServer: true,
     },
 });
