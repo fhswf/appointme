@@ -1,3 +1,18 @@
+# client [1.12.0](https://github.com/fhswf/book_me/compare/client@1.11.0...client@1.12.0) (2025-12-03)
+
+
+### Features
+
+* Implement CSRF protection by adding a new CSRF service and integrating CSRF tokens into client requests and backend server logic. ([ddb896e](https://github.com/fhswf/book_me/commit/ddb896e41b7bac29fb67f24b3ba2f1db728c8a6d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.2.0
+
 # client [1.11.0](https://github.com/fhswf/book_me/compare/client@1.10.0...client@1.11.0) (2025-12-03)
 
 
