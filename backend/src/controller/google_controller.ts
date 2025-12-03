@@ -92,7 +92,7 @@ export const googleCallback = (req: Request, res: Response): void => {
 
 export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
   return UserModel
-    .findOne({ _id: user_id })
+    .findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
@@ -160,7 +160,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
         .process(req.body.event.description as string)
       */
 
-      UserModel.findOne({ _id: req.params.user_id })
+      UserModel.findOne({ _id: { $eq: req.params.user_id } })
         .then(user => {
 
           const event: Schema$Event = {
@@ -230,7 +230,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
 export const revokeScopes = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   let tokens = null;
-  const query = UserModel.findOne({ _id: userid });
+  const query = UserModel.findOne({ _id: { $eq: userid } });
   query.exec()
     .then((user: User) => {
       tokens = user.google_tokens;
@@ -259,7 +259,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
  * @param user_id 
  */
 export async function getAuth(user_id: string): Promise<OAuth2Client> {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel.findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
@@ -295,7 +295,7 @@ export function getCalendarList(req: Request, res: Response): void {
 
 export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
   return UserModel
-    .findOne({ _id: user_id })
+    .findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
@@ -320,7 +320,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
 
 function deleteTokens(userid: string) {
   UserModel.findOneAndUpdate(
-    { _id: userid },
+    { _id: { $eq: userid } },
     { $unset: { google_tokens: "" } }
   ).then(res => {
     logger.debug(res);
@@ -341,7 +341,7 @@ function saveTokens(user: string, token) {
       update[`google_tokens.${key}`] = <string>token.tokens[key];
     }
   });
-  UserModel.findOneAndUpdate({ _id: user }, { $set: update }, { new: true })
+  UserModel.findOneAndUpdate({ _id: { $eq: user } }, { $set: update }, { new: true })
     .then(user => {
       logger.debug('saveTokens: %o', user)
     })

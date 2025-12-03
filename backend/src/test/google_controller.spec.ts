@@ -75,7 +75,7 @@ describe('google_controller', () => {
         await new Promise(resolve => setTimeout(resolve, 10));
 
         expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
-            { _id: 'user_id' },
+            { _id: { $eq: 'user_id' } },
             {
                 $set: {
                     'google_tokens.access_token': 'new_access_token',
