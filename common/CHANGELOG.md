@@ -1,3 +1,10 @@
+# common [1.2.0](https://github.com/fhswf/book_me/compare/common@1.1.11...common@1.2.0) (2025-12-03)
+
+
+### Features
+
+* Implement Google Calendar event insertion, improve free/busy time calculation, and add token revocation. ([86ea2b8](https://github.com/fhswf/book_me/commit/86ea2b854fac7168b23d80711cd37e652f3eb0cc))
+
 ## common [1.1.11](https://github.com/fhswf/book_me/compare/common@1.1.10...common@1.1.11) (2024-10-09)
 
 
