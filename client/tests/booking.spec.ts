@@ -34,20 +34,21 @@ test.describe('Scheduling page', () => {
             };
         });
 
+        // Catch-all for API requests - defined first so it can be overridden
+        await page.route('**/api/v1/**', async route => {
+            if (route.request().method() === 'POST') {
+                await route.fulfill({ body: JSON.stringify({ error: 'not possible' }) }); // Default mock
+            } else {
+                await route.continue();
+            }
+        });
+
         await page.route('**/users/user/christian-gawron*', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
         await page.route('**/events/getEventBy*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
     });
 
     test.describe('Visit scheduling page and schedule appointment', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/api/v1/**', async route => {
-                if (route.request().method() === 'POST') {
-                    await route.fulfill({ body: JSON.stringify({ error: 'not possible' }) }); // Default mock
-                } else {
-                    await route.continue();
-                }
-            });
-
             // This must be AFTER the catch-all route so it matches first (routes are evaluated in reverse)
             await page.route('**/events/getAvailable*', async route => {
                 console.log('Mocking getAvailable');
