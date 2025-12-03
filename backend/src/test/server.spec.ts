@@ -98,21 +98,29 @@ describe("Server routes", () => {
                 console.log("mocked query");
                 return Promise.resolve({
                   data: {
+                    calendars: {
+                      "primary": {
+                        busy: []
+                      }
+                    }
                   }
                 });
               })
             },
-            events: vi.fn(() => {
-              return {
-                list: vi.fn(() => {
-                  return Promise.resolve({
-                    data: {
-                      items: []
-                    }
-                  });
-                })
-              }
-            })
+            events: {
+              list: vi.fn(() => {
+                return Promise.resolve({
+                  data: {
+                    items: []
+                  }
+                });
+              }),
+              insert: vi.fn(() => {
+                return Promise.resolve({
+                  data: {}
+                });
+              })
+            }
           }
         }),
         auth: {
@@ -137,6 +145,18 @@ describe("Server routes", () => {
       }
     }
   })
+
+  vi.mock('google-auth-library', () => {
+    return {
+      OAuth2Client: vi.fn().mockImplementation(() => ({
+        getToken: vi.fn(),
+        setCredentials: vi.fn(),
+        on: vi.fn(),
+        generateAuthUrl: vi.fn(),
+        revokeToken: vi.fn().mockResolvedValue(true)
+      }))
+    };
+  });
 
   beforeAll(async () => {
     const { init } = await import("../server.js");

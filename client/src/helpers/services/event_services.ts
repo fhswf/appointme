@@ -1,14 +1,19 @@
 import axios from "axios";
 import { Event, IntervalSet } from "common";
+import { getCsrfToken } from "./csrf_service";
 
 export async function saveUserEvent(
   event: Event,
   userid: string
 ) {
+  const csrfToken = await getCsrfToken();
   const response = await axios.post(
     `${import.meta.env.REACT_APP_API_URL}/events/event`,
     { ...event, user: userid },
     {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
       withCredentials: true,
     }
   );
@@ -16,9 +21,13 @@ export async function saveUserEvent(
 }
 
 export async function deleteEvent(id: string) {
+  const csrfToken = await getCsrfToken();
   const response = await axios.delete(
     `${import.meta.env.REACT_APP_API_URL}/events/event/${id}`,
     {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
       withCredentials: true,
     }
   );
@@ -42,12 +51,16 @@ export async function updateEvent(
   event: Event
 ) {
   console.log('available: %o', event.available);
+  const csrfToken = await getCsrfToken();
   const response = await axios.put(
     `${import.meta.env.REACT_APP_API_URL}/events/event/${id}`,
     {
       data: event
     },
     {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
       withCredentials: true,
     }
   );

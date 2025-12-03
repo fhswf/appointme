@@ -32,7 +32,16 @@ const config = {
 
 logger.debug("google_controller: ", config);
 
-const oAuth2Client = new OAuth2Client(config);
+const createOAuthClient = (userId?: string): OAuth2Client => {
+  const client = new OAuth2Client(config);
+  if (userId) {
+    client.on('tokens', (tokens) => {
+      logger.debug('Tokens refreshed for user %s', userId);
+      saveTokens(userId, { tokens });
+    });
+  }
+  return client;
+};
 const SCOPES = [
   "https://www.googleapis.com/auth/calendar",
   "https://www.googleapis.com/auth/calendar.events",
@@ -45,6 +54,7 @@ const SCOPES = [
  */
 export const generateAuthUrl = (req: Request, res: Response): Response => {
   const userid = req['user_id'];
+  const oAuth2Client = createOAuthClient(userid);
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
@@ -65,6 +75,7 @@ export const googleCallback = (req: Request, res: Response): void => {
   const code = <string>req.query.code;
   const user = <string>req.query.state;
   if (code) {
+    const oAuth2Client = createOAuthClient(user);
     oAuth2Client.getToken(code)
       .then(token => {
         saveTokens(user, token);
@@ -81,10 +92,11 @@ export const googleCallback = (req: Request, res: Response): void => {
 
 export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
   return UserModel
-    .findOne({ _id: user_id })
+    .findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
+      const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
       const items = user.pull_calendars.map(id => { return { id } });
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
@@ -95,6 +107,9 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
           items
         }
       })
+        .catch(err => {
+          throw err;
+        })
     })
 }
 
@@ -148,7 +163,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
         .process(req.body.event.description as string)
       */
 
-      UserModel.findOne({ _id: req.params.user_id })
+      UserModel.findOne({ _id: { $eq: req.params.user_id } })
         .then(user => {
 
           const event: Schema$Event = {
@@ -182,6 +197,7 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
             guestsCanInviteOthers: true,
           };
 
+          const oAuth2Client = createOAuthClient(user._id as string);
           oAuth2Client.setCredentials(user.google_tokens);
           logger.debug('insert: event=%j', event)
           google.calendar({ version: "v3" }).events
@@ -217,13 +233,14 @@ export function insertEventToGoogleCal(req: Request, res: Response) {
 export const revokeScopes = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   let tokens = null;
-  const query = UserModel.findOne({ _id: userid });
+  const query = UserModel.findOne({ _id: { $eq: userid } });
   query.exec()
     .then((user: User) => {
       tokens = user.google_tokens;
       if (tokens.expiry_date <= Date.now()) {
         deleteTokens(userid);
       } else {
+        const oAuth2Client = createOAuthClient(userid);
         oAuth2Client.revokeToken(tokens.access_token)
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .then(_value => {
@@ -245,10 +262,11 @@ export const revokeScopes = (req: Request, res: Response): void => {
  * @param user_id 
  */
 export async function getAuth(user_id: string): Promise<OAuth2Client> {
-  return UserModel.findOne({ _id: user_id })
+  return UserModel.findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
       const google_tokens = user.google_tokens;
+      const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
       return oAuth2Client;
     });
@@ -280,21 +298,19 @@ export function getCalendarList(req: Request, res: Response): void {
 
 export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
   return UserModel
-    .findOne({ _id: user_id })
+    .findOne({ _id: { $eq: user_id } })
     .exec()
     .then((user: User) => {
-      return getAuth(user_id)
-        .then(auth => {
-          const google_tokens = user.google_tokens;
-          oAuth2Client.setCredentials(google_tokens);
-          const calendar = google.calendar({ version: "v3", auth });
-          return calendar.events.list({
-            calendarId: user.push_calendar,
-            timeMin,
-            timeMax,
-            singleEvents: true
-          })
-        })
+      const google_tokens = user.google_tokens;
+      const oAuth2Client = createOAuthClient(user_id);
+      oAuth2Client.setCredentials(google_tokens);
+      const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+      return calendar.events.list({
+        calendarId: user.push_calendar,
+        timeMin,
+        timeMax,
+        singleEvents: true
+      })
         .then(response => {
           return response.data.items
         })
@@ -307,7 +323,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
 
 function deleteTokens(userid: string) {
   UserModel.findOneAndUpdate(
-    { _id: userid },
+    { _id: { $eq: userid } },
     { $unset: { google_tokens: "" } }
   ).then(res => {
     logger.debug(res);
@@ -322,13 +338,13 @@ function deleteTokens(userid: string) {
  */
 function saveTokens(user: string, token) {
   const _KEYS = ["access_token", "refresh_token", "scope", "expiry_date"];
-  const google_tokens = {};
+  const update = {};
   _KEYS.forEach(key => {
     if (key in token.tokens && token.tokens[key]) {
-      google_tokens[key] = <string>token.tokens[key];
+      update[`google_tokens.${key}`] = <string>token.tokens[key];
     }
   });
-  UserModel.findOneAndUpdate({ _id: user }, { google_tokens }, { new: true })
+  UserModel.findOneAndUpdate({ _id: { $eq: user } }, { $set: update }, { new: true })
     .then(user => {
       logger.debug('saveTokens: %o', user)
     })

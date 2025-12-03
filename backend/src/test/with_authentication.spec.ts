@@ -113,13 +113,21 @@ describe("Server Start", () => {
     })
 
     it("should update the user", async () => {
+        // Get CSRF token
+        const csrfRes = await request(app)
+            .get("/api/v1/csrf-token")
+            .set({ "Cookie": `access_token=${jwt}` });
+        const csrfToken = csrfRes.body.csrfToken;
+        const csrfCookie = csrfRes.headers["set-cookie"] ? csrfRes.headers["set-cookie"][0] : null;
+
         let newUser = {
             ...USER,
             name: "updated",
         }
         const res = await request(app)
             .put("/api/v1/users/user")
-            .set({ "Cookie": `access_token=${jwt}` })
+            .set({ "Cookie": [`access_token=${jwt}`, csrfCookie] })
+            .set({ "x-csrf-token": csrfToken })
             .send({ data: newUser })
         expect(res.status).toEqual(200);
         expect(res.body.name).toEqual("updated");

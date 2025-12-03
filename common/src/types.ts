@@ -142,6 +142,7 @@ export class IntervalSet extends Array<TimeRange> {
       this.initializeWithArray(args[0]);
     } else if (args.length === 1) {
       // console.log('IntervalSet.ctor2(): %o %s', args, typeof args[0])
+      if (typeof args[0] === 'number') return;
       this.push(args[0]);
     } else {
       throw new Error('Illegal arguments');
