@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
 import { postGoogleLogin } from "../helpers/services/auth_services";
-import { Container } from "@mui/material";
 
 const Login = (props: any) => {
   const navigate = useNavigate();
@@ -19,8 +18,7 @@ const Login = (props: any) => {
   };
 
   return (
-    <Container>
-
+    <div className="container mx-auto p-4 flex justify-center items-center min-h-screen">
       <GoogleLogin
         onSuccess={credentialResponse => {
           console.log(credentialResponse);
@@ -31,8 +29,7 @@ const Login = (props: any) => {
         }}
         useOneTap
       />
-
-    </Container>
+    </div>
   );
 };
 

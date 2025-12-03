@@ -1,26 +1,21 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { deleteEvent } from "../helpers/services/event_services";
 import {
-  Alert,
-  Button,
   Card,
-  CardActions,
   CardContent,
+  CardFooter,
   CardHeader,
-  IconButton,
-  Snackbar,
-  Switch,
-} from "@mui/material";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import ShareIcon from "@mui/icons-material/Share";
+  CardTitle,
+  CardDescription
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Edit, Share, Trash } from "lucide-react";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
-
+import { toast } from "sonner";
 import "./EventCard.css";
-
 
 type EventCardProps = {
   event: EventDocument;
@@ -31,30 +26,28 @@ type EventCardProps = {
 
 export const EventCard = (props: EventCardProps) => {
   const [active, setActive] = useState(props.event.isActive);
-  const [success, setSuccess] = useState(false);
-  const [failure, setFailure] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const event = props.event;
 
-  const toggleActive = (evt: ChangeEvent<HTMLInputElement>) => {
-    setActive(evt.target.checked);
-    props.setActive(event, evt.target.checked);
+  const toggleActive = (checked: boolean) => {
+    setActive(checked);
+    props.setActive(event, checked);
   };
 
   const handleCopy = () => {
-    let loc = window.location;
+    const loc = globalThis.location;
     let url = `/users/${props.url}/${props.event.url}`;
     url = loc.protocol + "//" + loc.host + url;
     console.log("url: %s", url);
 
     navigator.clipboard
       .writeText(url)
-      .then(() => setSuccess(true))
+      .then(() => toast.success("Link copied to clipboard!"))
       .catch((err) => {
         console.log("err: %o", err);
-        setFailure(true);
+        toast.error("Could not copy link to clipboard!");
       });
   };
 
@@ -65,8 +58,8 @@ export const EventCard = (props: EventCardProps) => {
           navigate("/landing");
         }
       })
-      .catch((res) => {
-        console.error("deleteEvent failed: %o", res);
+      .catch((error_) => {
+        console.error("deleteEvent failed: %o", error_);
         navigate("/landing");
       });
     if (props.onDelete) {
@@ -75,66 +68,57 @@ export const EventCard = (props: EventCardProps) => {
   };
 
   return (
-    <>
-
-
-      <Card style={{ maxWidth: "25rem" }}
-        data-testid="event-card" className={active ? "active" : "inactive"}>
-        <CardHeader
-          action={
-            <IconButton
-              aria-label="settings"
-              component={RouterLink}
-              data-testid="edit-event-button"
-              to={`/editevent/${props.event._id}`}
-            >
-              <EditIcon />
-            </IconButton>
-          }
-          title={props.event.name}
-          subheader={<span>{props.event.duration} min</span>}
-        />
-        <CardContent>{props.event.description}</CardContent>
-        <CardActions>
-          <Switch
-            data-testid="active-switch"
-            checked={active}
-            onChange={toggleActive}
-            size="small"
-            name="active"
-            color="primary"
-            inputProps={{ "aria-label": "active" }}
-          />
+    <Card className={`max-w-[25rem] ${active ? "active" : "inactive"}`} data-testid="event-card">
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <CardTitle className="text-xl">{props.event.name}</CardTitle>
+            <CardDescription>{props.event.duration} min</CardDescription>
+          </div>
           <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            data-testid="edit-event-button"
+          >
+            <RouterLink to={`/editevent/${props.event._id}`}>
+              <Edit className="h-4 w-4" />
+            </RouterLink>
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">{props.event.description}</p>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Switch
+          data-testid="active-switch"
+          checked={active}
+          onCheckedChange={toggleActive}
+          aria-label="active"
+        />
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
             data-testid="copy-link-button"
             aria-label={t("large_suave_gull_hush")}
-            startIcon={<ShareIcon />}
             onClick={handleCopy}
           >
+            <Share className="mr-2 h-4 w-4" />
             {t("misty_proud_mallard_assure")}
           </Button>
-          <IconButton
+          <Button
+            variant="ghost"
+            size="icon"
             data-testid="delete-event-button"
             aria-label="delete"
             onClick={handleDelete}
           >
-            <DeleteIcon />
-          </IconButton>
-        </CardActions>
-      </Card>
-
-      <Snackbar
-        open={success}
-        autoHideDuration={2000}
-        onClose={() => {
-          setSuccess(false);
-        }}
-      >
-        <Alert severity="success">Link copied to clipboard!</Alert>
-      </Snackbar>
-      <Snackbar open={failure}>
-        <Alert severity="error">Could not copy link to clipboard!</Alert>
-      </Snackbar>
-    </>
+            <Trash className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardFooter>
+    </Card>
   );
 };

@@ -3,30 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import AppNavbar from "../components/AppNavbar";
 
-// Material UI
+import { Button } from "@/components/ui/button";
 import {
-  Box,
-  Button,
   Card,
   CardHeader,
   CardContent,
-  Checkbox,
-  Container,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  InputLabel,
-  MenuItem,
+} from "@/components/ui/dialog";
+import {
   Select,
-  Typography,
-  IconButton,
-} from "@mui/material";
-import Grid from "@mui/material/Grid2";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 import { updateUser } from "../helpers/services/user_services";
 import {
@@ -34,7 +34,7 @@ import {
   getCalendarList,
 } from "../helpers/services/google_services";
 
-import EditIcon from "@mui/icons-material/Edit";
+import { Edit } from "lucide-react";
 
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
@@ -47,56 +47,56 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
     console.log("selected: %o", selected);
     const items = calendarList.items.map((item) => {
       return (
-        <MenuItem key={item.id} value={item.id}>
+        <SelectItem key={item.id} value={item.id}>
           {item.summaryOverride ? item.summaryOverride : item.summary}
-        </MenuItem>
+        </SelectItem>
       );
     });
 
     return (
-      <FormControl>
-        <InputLabel id="calendar-select-label">Calendar</InputLabel>
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="calendar-select">Calendar</Label>
         <Select
-          data-testid="calendar-select"
-          labelId="calendar-select-label"
-          id="calendar-select"
           value={selected}
-          displayEmpty
-          label="Calendar"
-          onChange={(event) => {
-            state = { [event.target.value]: true };
-            console.log("select: %o %o", event, state);
+          onValueChange={(value) => {
+            state = { [value]: true };
+            console.log("select: %o %o", value, state);
             setState(state);
           }}
         >
-          {items}
+          <SelectTrigger id="calendar-select" data-testid="calendar-select">
+            <SelectValue placeholder="Select a calendar" />
+          </SelectTrigger>
+          <SelectContent>
+            {items}
+          </SelectContent>
         </Select>
-      </FormControl>
+      </div>
     );
   } else {
     const items = calendarList.items.map((item) => (
-      <FormControlLabel
-        key={item.id}
-        control={
-          <Checkbox
-            checked={state[item.id]}
-            onChange={(event) => {
-              console.log(
-                "onChange: %s %o\n%o",
-                event.target.name,
-                event.target.checked,
-                state
-              );
-              setState({ ...state, [event.target.name]: event.target.checked });
-            }}
-            name={item.id}
-          />
-        }
-        label={item.summaryOverride ? item.summaryOverride : item.summary}
-      />
+      <div className="flex items-center gap-2" key={item.id}>
+        <Checkbox
+          id={item.id}
+          checked={state[item.id]}
+          onCheckedChange={(checked) => {
+            console.log(
+              "onChange: %s %o\n%o",
+              item.id,
+              checked,
+              state
+            );
+            setState({ ...state, [item.id]: checked });
+          }}
+          name={item.id}
+        />
+        <Label htmlFor={item.id}>
+          {item.summaryOverride ? item.summaryOverride : item.summary}
+        </Label>
+      </div>
     ));
 
-    return <FormGroup>{items}</FormGroup>;
+    return <div className="flex flex-col gap-2">{items}</div>;
   }
 };
 
@@ -132,43 +132,45 @@ const PushCalendar = ({ user, calendarList }) => {
 
   return (
     <Card>
-      <CardHeader
-        action={
-          <IconButton onClick={handleShow} data-testid="edit-push-calendar">
-            <EditIcon />
-          </IconButton>
-        }
-        title={t("trite_warm_gorilla_pet")}
-      />
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">
+          {t("trite_warm_gorilla_pet")}
+        </CardTitle>
+        <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-push-calendar">
+          <Edit className="h-4 w-4" />
+        </Button>
+      </CardHeader>
       <CardContent>
-        {pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary}
+        <div className="text-2xl font-bold">
+          {pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary}
+        </div>
       </CardContent>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Calendar</DialogTitle>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
-          <DialogContentText>
-            Choose a calendar in which appointments are created.
-          </DialogContentText>
-          {renderCalendarList(
-            calendarList,
-            selected || { [user.push_calendar]: true },
-            setSelected,
-            true
-          )}
+          <DialogHeader>
+            <DialogTitle>Calendar</DialogTitle>
+            <DialogDescription>
+              Choose a calendar in which appointments are created.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            {renderCalendarList(
+              calendarList,
+              selected || { [user.push_calendar]: true },
+              setSelected,
+              true
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleClose}>
+              {t("teal_lofty_hawk_peek")}
+            </Button>
+            <Button onClick={save} data-testid="button-save">
+              {t("mild_raw_elk_delight")}
+            </Button>
+          </DialogFooter>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            {t("teal_lofty_hawk_peek")}
-          </Button>
-          <Button onClick={save} color="primary" data-testid="button-save">
-            {t("mild_raw_elk_delight")}
-          </Button>
-        </DialogActions>
       </Dialog>
     </Card>
   );
@@ -212,48 +214,48 @@ const PullCalendars = ({ user, calendarList }) => {
   if (!user || !calendarList) {
     return <div></div>;
   } else {
-    let _selected = {};
+    const _selected = {};
     user.pull_calendars.forEach((item) => (_selected[item] = true));
     return (
       <>
-        <CardHeader
-          action={
-            <IconButton onClick={handleShow} data-testid="edit-pull-calendar">
-              <EditIcon />
-            </IconButton>
-          }
-          title={t("aware_alert_mare_glow")}
-        />
-        <CardContent>
-          <FormGroup>
-            <ul>{pullCals}</ul>
-          </FormGroup>
-        </CardContent>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">
+              {t("aware_alert_mare_glow")}
+            </CardTitle>
+            <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-pull-calendar">
+              <Edit className="h-4 w-4" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc pl-4">{pullCals}</ul>
+          </CardContent>
+        </Card>
 
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Calendar</DialogTitle>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent>
-            <DialogContentText>
-              {t("big_known_loris_revive")}
-            </DialogContentText>
-            {renderCalendarList(
-              calendarList,
-              selected || _selected,
-              setSelected
-            )}
+            <DialogHeader>
+              <DialogTitle>Calendar</DialogTitle>
+              <DialogDescription>
+                {t("big_known_loris_revive")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              {renderCalendarList(
+                calendarList,
+                selected || _selected,
+                setSelected
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={handleClose}>
+                {t("tiny_teary_clownfish_vent")}
+              </Button>
+              <Button onClick={save}>
+                {t("factual_nimble_snail_clap")}
+              </Button>
+            </DialogFooter>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              {t("tiny_teary_clownfish_vent")}
-            </Button>
-            <Button onClick={save} color="primary">
-              {t("factual_nimble_snail_clap")}
-            </Button>
-          </DialogActions>
         </Dialog>
       </>
     );
@@ -323,31 +325,25 @@ const Calendarintegration = () => {
 
   const renderConnectButton = () =>
     connected ? (
-      <Button variant="contained" onClick={revokeScopes}>
+      <Button onClick={revokeScopes}>
         {t("lower_born_finch_dash")}
       </Button>
     ) : (
-      <Button variant="contained" href={url}>
-        {t("whole_formal_liger_rise")}
+      <Button asChild>
+        <a href={url}>{t("whole_formal_liger_rise")}</a>
       </Button>
     );
 
   return (
     <>
       <AppNavbar />
-      <Container>
-        <Typography variant="h3" gutterBottom>
+      <div className="container mx-auto p-4">
+        <h3 className="text-3xl font-bold mb-4">
           {t("pink_loose_cougar_grin")}
-        </Typography>
-        <Box p="1em">
-          <Grid
-            container
-            direction="row"
-            spacing={2}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid>
+        </h3>
+        <div className="p-4">
+          <div className="flex justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
               <img
                 className="icon"
                 alt="Google Calendar"
@@ -355,31 +351,21 @@ const Calendarintegration = () => {
                 width="32"
               />{" "}
               {t("upper_even_florian_peek")}
-            </Grid>
-            <Grid>{renderConnectButton()}</Grid>
-          </Grid>
-        </Box>
+            </div>
+            <div>{renderConnectButton()}</div>
+          </div>
+        </div>
 
-        <Typography variant="h4" gutterBottom>
+        <h4 className="text-2xl font-bold mb-4">
           {t("merry_north_meerkat_cuddle")}
-        </Typography>
-        <Box p="1em">
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-          >
-            <Card>
-              <PushCalendar user={user} calendarList={calendarList} />
-            </Card>
-            <Card>
-              <PullCalendars user={user} calendarList={calendarList} />
-            </Card>
-          </Grid>
-        </Box>
-      </Container>
+        </h4>
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <PushCalendar user={user} calendarList={calendarList} />
+            <PullCalendars user={user} calendarList={calendarList} />
+          </div>
+        </div>
+      </div>
     </>
   );
 };

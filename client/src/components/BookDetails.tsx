@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
-import { TextField } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 
 export type BookingFormData = {
@@ -24,82 +25,61 @@ const BookDetails = (props: BookDetailsProps) => {
     description: "",
   });
 
-  const nameRef = React.createRef();
-  const emailRef = React.createRef();
-  const descriptionRef = React.createRef();
-  const inputs = {
-    name: nameRef,
-    email: emailRef,
-    description: descriptionRef,
-  };
-
-  const handleOnChange = (text) => (event) => {
+  const handleOnChange = (text: keyof BookingFormData) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newData = { ...formData, [text]: event.target.value };
     setFormData(newData);
     console.log(
-      "BookDetails: formData=%o %o",
-      formData,
-      inputs[event.target.id].current.value
+      "BookDetails: formData=%o",
+      newData
     );
     props.onChange(newData);
   };
 
   return (
-
-    <Grid container alignItems="stretch" direction="column">
-      <Grid>
-        <TextField
+    <div className="flex flex-col gap-4">
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="name">{t("Name")}</Label>
+        <Input
+          type="text"
           id="name"
           name="name"
-          label={t("Name")}
-          error={"name" in props.errors}
-          inputRef={nameRef}
           required
-          fullWidth
-          helperText={t("Please provide your name")}
-          margin="normal"
+          placeholder={t("Please provide your name")}
           onChange={handleOnChange("name")}
-          variant="filled"
           value={formData.name}
+          className={props.errors.name ? "border-red-500" : ""}
         />
-      </Grid>
-      <Grid>
-        <TextField
+      </div>
+
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="email">{t("Email")}</Label>
+        <Input
+          type="email"
           id="email"
           name="email"
-          label={t("Email")}
-          type="email"
-          error={"email" in props.errors}
-          inputRef={emailRef}
           required
-          fullWidth
-          helperText={t("You will receive a confirmation email")}
-          margin="normal"
+          placeholder={t("You will receive a confirmation email")}
           onChange={handleOnChange("email")}
-          variant="filled"
           value={formData.email}
+          className={props.errors.email ? "border-red-500" : ""}
         />
-      </Grid>
-      <Grid>
-        <TextField
+      </div>
+
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="description">{t("Information")}</Label>
+        <Textarea
           id="description"
           name="description"
-          label={t("Information")}
-          inputRef={descriptionRef}
-          multiline
-          error={"info" in props.errors}
-          minRows="4"
-          helperText={t(
+          placeholder={t(
             "Please share anything that will help me to prepare for our meeting"
           )}
-          margin="normal"
+          rows={4}
           onChange={handleOnChange("description")}
-          variant="filled"
           value={formData.description}
+          className={props.errors.info ? "border-red-500" : ""}
         />
-      </Grid>
-    </Grid>
-
+      </div>
+    </div>
   );
 };
 

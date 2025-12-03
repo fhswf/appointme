@@ -100,5 +100,8 @@
     ],
     "noCi": true
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.5.0",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.17"
+  }
 }

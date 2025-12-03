@@ -1,29 +1,20 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormHelperText,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
   Select,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  FormGroup,
-  Typography,
-  Stack,
-  Input,
-  SelectChangeEvent,
-} from "@mui/material";
-
-import Grid from '@mui/material/Grid2';
-
-import { Add, Delete } from "@mui/icons-material";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus, Trash } from "lucide-react";
 import { EventFormProps } from "../pages/EditEvent";
-import { Day, DayNames, Event, Slot } from "common";
+import { Day, Event, Slot } from "common";
 import { t } from "i18next";
 
 type EditSlotProps = {
@@ -33,6 +24,7 @@ type EditSlotProps = {
 };
 
 const EditSlot = (props: EditSlotProps) => {
+  const { i18n } = useTranslation();
   const [slots, setSlots] = useState<Slot[]>([]);
 
   useEffect(() => {
@@ -44,8 +36,8 @@ const EditSlot = (props: EditSlotProps) => {
     );
   }, [props.slots]);
 
-  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
+  const handleCheck = (checked: boolean) => {
+    if (checked) {
       // ensure at least one entry
       if (slots.length === 0) {
         const _slots = [{ start: "09:00", end: "17:00" }];
@@ -60,7 +52,7 @@ const EditSlot = (props: EditSlotProps) => {
 
   const addSlot = () => {
     console.log("add slot");
-    let _slots = slots.slice();
+    const _slots = slots.slice();
     _slots.push({ start: "", end: "" });
     setSlots(_slots);
     props.onChange(_slots);
@@ -77,67 +69,71 @@ const EditSlot = (props: EditSlotProps) => {
     (key: keyof Slot, index: number) =>
       (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("ChangeTime: %s %d %o", key, index, event.target.value);
-        let _slots = slots.slice();
+        const _slots = slots.slice();
         _slots[index][key] = event.target.value;
         setSlots(_slots);
         props.onChange(_slots);
       };
 
   console.log("EditSlot: %o", slots);
+
+  const getDayName = (day: Day) => {
+    // Jan 5, 2025 is a Sunday. Day enum is 0 for Sunday.
+    const date = new Date(2025, 0, 5 + day);
+    return date.toLocaleString(i18n.language, { weekday: 'short' });
+  };
+
   return (
-
-    <Grid container size={{ xs: 12 }}>
-      <Grid size={{ xs: 2 }}>
-        <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox checked={slots.length > 0} onChange={handleCheck} />
-            }
-            label={DayNames[props.day]}
-          />
-        </FormControl>
-      </Grid>
-      <Grid size={{ xs: 9 }}>
-        <Grid container>
-          {slots.map((slot, index) => (
-
-            <FormGroup row key={slot.start} style={{ "alignItems": "baseline" }}>
-              <Grid size={{ xs: 4 }} textAlign="end">
-                <Input
-                  type="time"
-                  placeholder="Starttime"
-                  onChange={changeTime("start", index)}
-                  value={slot.start}
-                />
-              </Grid>
-              <Grid size={{ xs: 2 }} textAlign="center">
-                –
-              </Grid>
-              <Grid size={{ xs: 4 }} textAlign="start">
-                <Input
-                  type="time"
-                  placeholder="Endtime"
-                  onChange={changeTime("end", index)}
-                  value={slot.end}
-                />
-              </Grid>
-              <Grid size={{ xs: 2 }}>
-                <Button onClick={deleteSlot(index)}>
-                  <Delete />
-                </Button>
-              </Grid>
-            </FormGroup >
-
-          ))}
-        </Grid>
-      </Grid>
-      <Grid size={{ xs: 1 }}>
-        {slots.length > 0 ?
-          <Button onClick={addSlot} hidden={slots.length <= 0}>
-            <Add />
-          </Button> : null}
-      </Grid>
-    </Grid >
+    <div className="grid grid-cols-12 gap-4 items-start py-2 border-b last:border-0">
+      <div className="col-span-2 flex items-center space-x-2 pt-2">
+        <Checkbox
+          id={`day-${props.day}`}
+          checked={slots.length > 0}
+          onCheckedChange={handleCheck}
+        />
+        <Label htmlFor={`day-${props.day}`} className="font-medium">
+          {getDayName(props.day)}
+        </Label>
+      </div>
+      <div className="col-span-9 space-y-2">
+        {slots.map((slot, index) => (
+          <div key={`${slot.start}-${index}`} className="flex items-center gap-2">
+            <div className="w-1/3">
+              <Input
+                type="time"
+                placeholder={t("Starttime")}
+                onChange={changeTime("start", index)}
+                value={slot.start}
+              />
+            </div>
+            <span className="text-muted-foreground">–</span>
+            <div className="w-1/3">
+              <Input
+                type="time"
+                placeholder={t("Endtime")}
+                onChange={changeTime("end", index)}
+                value={slot.end}
+              />
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={deleteSlot(index)}
+              type="button"
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+      </div>
+      <div className="col-span-1 pt-1">
+        {slots.length > 0 && (
+          <Button variant="ghost" size="icon" onClick={addSlot} type="button">
+            <Plus className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -156,14 +152,14 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const generateSlug = (str: string) => {
     if (!str) return "";
-    let slug = str.replace(" ", "_").toLocaleLowerCase();
+    const slug = str.replace(" ", "_").toLocaleLowerCase();
     console.log("generateSlug: %s %s", str, slug);
     return slug;
   };
 
   const handleOnChange =
     (key: keyof Event, mult?: number) =>
-      (evt: ChangeEvent<HTMLInputElement>) => {
+      (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setChanged(true);
         console.log("onChange: %o %s", evt, key);
         if (key === "name" && formData.url === generateSlug(formData.name)) {
@@ -181,208 +177,195 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const handleSelect =
     (key: keyof Event) =>
-      (evt: SelectChangeEvent<number>, child: React.ReactNode) => {
+      (value: string) => {
         setChanged(true);
-        console.log("onChange: %o", evt);
-        setFormData({ ...formData, [key]: evt.target.value } as Event);
+        console.log("onChange: %s", value);
+        setFormData({ ...formData, [key]: Number(value) } as Event);
       };
 
   const onChangeSlot = (day: Day) => (slots: Slot[]) => {
     setChanged(true);
     console.log("onChangeSlot: %d %o", day, slots);
-    let event: Event = { ...formData };
+    const event: Event = { ...formData };
     event.available[day] = slots;
     setFormData(event);
   };
 
   return (
-    (<form onSubmit={handleOnSubmit}>
-      <Box>
-        <Typography component="h2" variant="h5">
+    <form onSubmit={handleOnSubmit} className="space-y-8">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
           {t("these_zesty_duck_nudge")}
-        </Typography>
-        <div>
-          <TextField
+        </h2>
+
+        <div className="space-y-2">
+          <Label htmlFor="event-title">{t("lazy_just_duck_spin")}</Label>
+          <Input
             id="event-title"
             data-testid="event-form-title"
             type="text"
-            label={t("lazy_just_duck_spin")}
             required
-            fullWidth
-            margin="normal"
-            variant="filled"
             onChange={handleOnChange("name")}
             value={formData.name}
           />
         </div>
 
-        <div>
-          <TextField
-            label={t("these_moving_fox_create")}
-            helperText={t("north_least_gopher_burn")}
-            multiline
-            fullWidth
-            margin="normal"
-            variant="filled"
+        <div className="space-y-2">
+          <Label htmlFor="description">{t("these_moving_fox_create")}</Label>
+          <Textarea
+            id="description"
             onChange={handleOnChange("description")}
             value={formData.description}
           />
+          <p className="text-sm text-muted-foreground">{t("north_least_gopher_burn")}</p>
         </div>
 
-        <div>
-          <TextField
-            label={t("honest_weak_iguana_rest")}
+        <div className="space-y-2">
+          <Label htmlFor="location">{t("honest_weak_iguana_rest")}</Label>
+          <Input
+            id="location"
             placeholder={t("tired_whole_bumblebee_type")}
-            helperText={t("tiny_factual_platypus_pave")}
             defaultValue="Online via Zoom"
-            margin="normal"
-            variant="filled"
             onChange={handleOnChange("location")}
             value={formData.location}
           />
+          <p className="text-sm text-muted-foreground">{t("tiny_factual_platypus_pave")}</p>
         </div>
 
-        <div>
-          <TextField
-            label={t("quiet_male_yak_slurp")}
-            margin="normal"
-            variant="filled"
+        <div className="space-y-2">
+          <Label htmlFor="url">{t("quiet_male_yak_slurp")}</Label>
+          <Input
+            id="url"
             placeholder={t("dizzy_quiet_walrus_hush")}
-            helperText={t("less_equal_octopus_dine")}
             onChange={handleOnChange("url")}
             value={formData.url}
           />
+          <p className="text-sm text-muted-foreground">{t("less_equal_octopus_dine")}</p>
         </div>
-      </Box>
-      <Box pt="1em">
-        <Typography component="h2" variant="h5">
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
           {t("jumpy_tasty_rook_trust")}
-        </Typography>
+        </h2>
 
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl margin="normal" variant="filled">
-              <InputLabel id="duration-label">{t("ideal_this_coyote_inspire")}</InputLabel>
-              <Select
-                labelId="duration-label"
-                id="duration"
-                value={formData.duration}
-                onChange={handleSelect("duration")}
-              >
-                <MenuItem value={15}>15 min</MenuItem>
-                <MenuItem value={30}>30 min</MenuItem>
-                <MenuItem value={45}>45 min</MenuItem>
-                <MenuItem value={60}>60 min</MenuItem>
-              </Select>
-              <FormHelperText>{t("elegant_early_boar_accept")}</FormHelperText>
-            </FormControl>
-          </Grid>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="duration">{t("ideal_this_coyote_inspire")}</Label>
+            <Select
+              value={formData.duration.toString()}
+              onValueChange={handleSelect("duration")}
+            >
+              <SelectTrigger id="duration">
+                <SelectValue placeholder={t("Select duration")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">15 min</SelectItem>
+                <SelectItem value="30">30 min</SelectItem>
+                <SelectItem value="45">45 min</SelectItem>
+                <SelectItem value="60">60 min</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">{t("elegant_early_boar_accept")}</p>
+          </div>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl component="span" margin="normal" variant="filled">
-              <InputLabel id="buffer-before-label">{t("mealy_happy_ray_flop")}</InputLabel>
-              <Select
-                labelId="buffer-before-label"
-                id={t("left_aloof_stork_leap")}
-                value={formData.bufferbefore}
-                onChange={handleSelect("bufferbefore")}
-              >
-                <MenuItem value={0}>none</MenuItem>
-                <MenuItem value={5}>5 min</MenuItem>
-                <MenuItem value={15}>15 min</MenuItem>
-                <MenuItem value={30}>30 min</MenuItem>
-                <MenuItem value={60}>60 min</MenuItem>
-              </Select>
-              <FormHelperText>{t("real_big_crow_push")}</FormHelperText>
-            </FormControl>
-          </Grid>
+          <div className="space-y-2">
+            <Label htmlFor="buffer-before">{t("mealy_happy_ray_flop")}</Label>
+            <Select
+              value={formData.bufferbefore.toString()}
+              onValueChange={handleSelect("bufferbefore")}
+            >
+              <SelectTrigger id="buffer-before">
+                <SelectValue placeholder={t("Select buffer")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">{t("none")}</SelectItem>
+                <SelectItem value="5">5 min</SelectItem>
+                <SelectItem value="15">15 min</SelectItem>
+                <SelectItem value="30">30 min</SelectItem>
+                <SelectItem value="60">60 min</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">{t("real_big_crow_push")}</p>
+          </div>
 
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl component="span" margin="normal" variant="filled">
-              <InputLabel id="buffer-after-label">{t("close_actual_deer_boil")}</InputLabel>
-              <Select
-                labelId="buffer-after-label"
-                id="buffer-after"
-                value={formData.bufferafter}
-                onChange={handleSelect("bufferafter")}
-              >
-                <MenuItem value={0}>none</MenuItem>
-                <MenuItem value={5}>5 min</MenuItem>
-                <MenuItem value={15}>15 min</MenuItem>
-                <MenuItem value={30}>30 min</MenuItem>
-                <MenuItem value={60}>60 min</MenuItem>
-              </Select>
-              <FormHelperText>{t("keen_zippy_bulldog_gaze")}</FormHelperText>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box pt="1em">
-        <Typography component="h2" variant="h5" gutterBottom>
+          <div className="space-y-2">
+            <Label htmlFor="buffer-after">{t("close_actual_deer_boil")}</Label>
+            <Select
+              value={formData.bufferafter.toString()}
+              onValueChange={handleSelect("bufferafter")}
+            >
+              <SelectTrigger id="buffer-after">
+                <SelectValue placeholder={t("Select buffer")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">{t("none")}</SelectItem>
+                <SelectItem value="5">5 min</SelectItem>
+                <SelectItem value="15">15 min</SelectItem>
+                <SelectItem value="30">30 min</SelectItem>
+                <SelectItem value="60">60 min</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">{t("keen_zippy_bulldog_gaze")}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
           {t("seemly_fine_octopus_slurp")}
-        </Typography>
+        </h2>
 
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
-              id="maxFuture"
-              label={t("Maximum days in advance")}
-              value={formData.maxFuture / 86400}
-              type="number"
-              variant="filled"
-              onChange={handleOnChange("maxFuture", 86400)}
-              helperText={t("How many days in advance is this event available?")}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">Days</InputAdornment>
-                  ),
-                }
-              }}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
-              id="rangedays"
-              label={t("quaint_known_wasp_view")}
-              value={formData.minFuture / 86400}
-              type="number"
-              variant="filled"
-              onChange={handleOnChange("minFuture", 86400)}
-              helperText={t("pretty_grand_cuckoo_arrive")}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">Days</InputAdornment>
-                  ),
-                }
-              }}
-            />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="maxFuture">{t("Maximum days in advance")}</Label>
+            <div className="relative">
+              <Input
+                id="maxFuture"
+                type="number"
+                value={formData.maxFuture / 86400}
+                onChange={handleOnChange("maxFuture", 86400)}
+                className="pr-12"
+              />
+              <span className="absolute right-3 top-2.5 text-sm text-muted-foreground">{t("Days")}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">{t("event_advance_availability_description")}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="rangedays">{t("quaint_known_wasp_view")}</Label>
+            <div className="relative">
+              <Input
+                id="rangedays"
+                type="number"
+                value={formData.minFuture / 86400}
+                onChange={handleOnChange("minFuture", 86400)}
+                className="pr-12"
+              />
+              <span className="absolute right-3 top-2.5 text-sm text-muted-foreground">{t("Days")}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">{t("pretty_grand_cuckoo_arrive")}</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="maxPerDay">{t("grand_wacky_ox_flow")}</Label>
+            <Input
               id="maxPerDay"
-              label={t("grand_wacky_ox_flow")}
-              value={formData.maxPerDay}
               type="number"
-              variant="filled"
+              value={formData.maxPerDay}
               onChange={handleOnChange("maxPerDay")}
-              helperText={t("slow_maroon_spider_praise")}
             />
-          </Grid>
-        </Grid>
-      </Box>
-      <Box pt="1em">
-        <Typography component="h2" variant="h5">
-          {t("Daily availability")}
-        </Typography>
+            <p className="text-sm text-muted-foreground">{t("slow_maroon_spider_praise")}</p>
+          </div>
+        </div>
+      </div>
 
-        <Stack
-          width="fit-content"
-          margin="auto"
-          spacing={2}
-          divider={<Divider orientation="horizontal" flexItem />}
-        >
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {t("Daily availability")}
+        </h2>
+
+        <div className="border rounded-lg p-4 space-y-2">
           {[0, 1, 2, 3, 4, 5, 6].map((day) => (
             <EditSlot
               key={day}
@@ -391,17 +374,17 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               onChange={onChangeSlot(day)}
             />
           ))}
-        </Stack>
-      </Box>
+        </div>
+      </div>
+
       <Button
         data-testid="event-form-submit"
-        variant="contained"
         type="submit"
         className="save"
         disabled={!changed}
       >
-        Save
+        {t("Save")}
       </Button>
-    </form>)
+    </form>
   );
 };

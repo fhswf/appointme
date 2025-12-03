@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
 import { updateEvent, getUsersEvents } from "../helpers/services/event_services";
-import Grid from "@mui/material/Grid2";
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
@@ -57,15 +56,12 @@ const EventList = (props: EventListProps) => {
     );
 
   return (
-    <Grid
-      container
+    <div
       data-testid="event-list"
-      direction="row"
-      size={12}
-      spacing={3}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
     >
       {list}
-    </Grid>
+    </div>
   );
 };
 

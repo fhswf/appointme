@@ -1,16 +1,24 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import istanbul from 'vite-plugin-istanbul';
-import cypress from 'cypress';
+import tailwindcss from '@tailwindcss/vite';
+
+
+import path from "path";
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), istanbul({
+    plugins: [react(), tailwindcss(), istanbul({
       include: 'src/*',
       exclude: ['node_modules', 'test/'],
       extension: ['.js', '.ts', '.tsx'],
       requireEnv: true,
     }),],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
     build: {
       outDir: 'build',
       publicDir: 'public',

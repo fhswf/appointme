@@ -2,20 +2,13 @@ import { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 
-import {
-  Box,
-  Container,
-  Typography,
-} from "@mui/material";
-
-import Grid from "@mui/material/Grid2";
-
 import { getActiveEvents } from "../helpers/services/event_services";
 import { getUserByUrl } from "../helpers/services/user_services";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
 import { EventType } from "../components/EventType";
-import { useSnackbar } from "notistack";
+import { toast } from "sonner";
+import { User } from "common";
 
 
 const Planning = (props: any) => {
@@ -23,13 +16,15 @@ const Planning = (props: any) => {
 
   const { user_url } = useParams<{ user_url: string }>();
   const [events, setEvents] = useState<EventDocument[]>([]);
-  const [user, setUser] = useState({
+
+  // ...
+
+  const [user, setUser] = useState<User | any>({
     name: "",
     welcome: "",
     picture_url: "",
   });
   const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     getUserByUrl(user_url)
@@ -52,13 +47,13 @@ const Planning = (props: any) => {
               }
             })
             .catch((err) => {
-              enqueueSnackbar("Could not get event information", { variant: "error", autoHideDuration: 15000, className: "error" });
+              toast.error("Could not get event information");
               console.log(err);
             });
         }
       })
       .catch((err) => {
-        enqueueSnackbar("Could not get user information", { variant: "error", autoHideDuration: 15000, className: "error" });
+        toast.error("Could not get user information");
         console.log(err);
       });
   }, [user_url, navigate, user.name]);
@@ -71,37 +66,32 @@ const Planning = (props: any) => {
 
   const renderEventlist = () => {
     if (!events || events.length === 0) {
-      return <h4 className="noevents">{t("extra_patient_warbler_praise")}</h4>;
+      return <h4 className="text-xl font-semibold text-center mt-8">{t("extra_patient_warbler_praise")}</h4>;
     } else {
       return (
-        <Grid
-          container
-          spacing={3}
-          direction="row"
-          justifyContent="space-evenly"
-          alignItems="stretch"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <Grid sm={4} xs={6} key={event._id}>
+            <div key={event._id}>
               <EventType
                 event={event}
                 user={user}
+                time={undefined}
                 handleOnClick={handleOnClick} />
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </div>
       );
     }
   };
 
   return (
-    <Container>
-      <Typography variant="h3" gutterBottom>
+    <div className="container mx-auto p-4">
+      <h3 className="text-3xl font-bold mb-4">
         {t("broad_close_butterfly_drop", { name: user.name })}
-      </Typography>
-      {t("weary_known_gazelle_file")}
-      <Box p="1em">{renderEventlist()}</Box>
-    </Container>
+      </h3>
+      <p className="mb-4">{t("weary_known_gazelle_file")}</p>
+      <div className="p-4">{renderEventlist()}</div>
+    </div>
   );
 };
 
