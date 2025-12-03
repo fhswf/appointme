@@ -63,10 +63,13 @@ test.describe('Scheduling page', () => {
             // The mock date is 2024-10-04 (Oct 4th).
             // The test expects '8' to be clicked.
             // await page.getByRole('gridcell', { name: '8' }).click(); 
-            await page.locator('[data-day="2024-10-08"]').click();
+            // Select Oct 8th 2024.
+            // In Europe/Berlin (UTC+2), Oct 8th midnight is Oct 7th 22:00 UTC.
+            await page.locator('[data-testid="2024-10-07T22:00:00.000Z"]').click();
 
             // Click time
-            await page.getByRole('button', { name: '11:00' }).click();
+            // 11:00 Berlin time is 09:00 UTC
+            await page.locator('[data-testid="2024-10-08T09:00:00.000Z"]').click();
 
             // Click Next (stepper)
             // await page.getByRole('button', { name: 'Next' }).click(); // If stepper requires explicit next

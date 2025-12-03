@@ -158,6 +158,7 @@ const Booking = () => {
               variant={selectedTime && time.getTime() === selectedTime.getTime() ? "default" : "outline"}
               onClick={handleTime(time)}
               className="w-full"
+              data-testid={time.toISOString()}
             >
               {format(time, "HH:mm")}
             </Button>

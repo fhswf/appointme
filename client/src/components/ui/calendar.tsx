@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
 import { de, enUS } from "date-fns/locale"
+import { format } from "date-fns"
 
 // ... existing imports
 
@@ -30,7 +31,7 @@ function Calendar({
 }) {
   const defaultClassNames = getDefaultClassNames()
   const { i18n } = useTranslation()
-  
+
   const locale = i18n.language === 'de' ? de : enUS
 
   return (
@@ -199,7 +200,8 @@ function CalendarDayButton({
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString()}
+      data-day={format(day.date, "yyyy-MM-dd")}
+      data-testid={day.date.toISOString()}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

@@ -77,7 +77,7 @@
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
-    "test:ci": "TZ=Europe/Berlin playwright test --reporter=list"
+    "test:ci": "TZ=Europe/Berlin playwright test"
   },
   "eslintConfig": {
     "extends": "react-app"
