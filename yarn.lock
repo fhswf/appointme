@@ -8656,6 +8656,7 @@ __metadata:
     moment: "npm:^2.30.1"
     notistack: "npm:^3.0.1"
     nyc: "npm:^17.1.0"
+    playwright-ctrf-json-reporter: "npm:^0.0.27"
     postcss: "npm:^8.5.6"
     react: "npm:^18.3.1"
     react-day-picker: "npm:^9.11.3"
@@ -18880,6 +18881,13 @@ __metadata:
   bin:
     playwright-core: cli.js
   checksum: 10/ec066602f0196f036006caee14a30d0a57533a76673bb9a0c609ef56e21decf018f0e8d402ba2fb18251393be6a1c9e193c83266f1670fe50838c5340e220de0
+  languageName: node
+  linkType: hard
+
+"playwright-ctrf-json-reporter@npm:^0.0.27":
+  version: 0.0.27
+  resolution: "playwright-ctrf-json-reporter@npm:0.0.27"
+  checksum: 10/f880ff4de02ca4fd1fc95e58c0038a508574dbc4b310f6cc0a5839700c7831ef08fc9cd689ef55a86ef613a02ac58046292f1c72c9d32b25c9fac0d9c1b531ba
   languageName: node
   linkType: hard
 

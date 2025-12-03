@@ -104,6 +104,7 @@
     "i18next-parser": "9.0.2",
     "i18next-scanner": "4.5.0",
     "nyc": "^17.1.0",
+    "playwright-ctrf-json-reporter": "^0.0.27",
     "start-server-and-test": "^1.13.1",
     "vite": "^5.4.7",
     "vite-plugin-istanbul": "^6.0.2",
