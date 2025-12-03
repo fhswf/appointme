@@ -41,6 +41,7 @@ const Booking = () => {
   const [, startTransition] = useTransition();
 
   const updateSlots = (startDate: Date) => {
+    console.log("updateSlots called with", startDate);
     getAvailableTimes(
       startDate,
       addDays(addMonths(startDate, 6), 1),
@@ -52,6 +53,7 @@ const Booking = () => {
         setSlots(slots);
       })
       .catch((err) => {
+        console.error("updateSlots error", err);
         toast.error("Could not get available time slots");
       });
   };
@@ -73,6 +75,7 @@ const Booking = () => {
               if (res.data.isActive === false) {
                 navigate("/notfound");
               } else {
+                console.log("Setting event", res.data);
                 setEvent(res.data);
               }
             })
@@ -89,6 +92,7 @@ const Booking = () => {
   }, [data.url, data.user_url, navigate]);
 
   useEffect(() => {
+    console.log("Effect triggered: user=%o, event=%o", !!user, !!event?.url);
     if (user && event?.url) {
       startTransition(() => updateSlots(beginDate));
     }

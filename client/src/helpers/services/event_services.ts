@@ -65,6 +65,7 @@ export async function getActiveEvents(user_id: string) {
 }
 
 export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, userid: string) {
+  console.log("getAvailableTimes called", { timeMin, timeMax, url, userid });
   return axios.get(
     `${import.meta.env.REACT_APP_API_URL}/events/getAvailable`,
     {
