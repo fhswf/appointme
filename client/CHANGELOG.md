@@ -1,3 +1,21 @@
+# client [1.11.0](https://github.com/fhswf/book_me/compare/client@1.10.0...client@1.11.0) (2025-12-03)
+
+
+### Bug Fixes
+
+* add wait for availability in booking test and correct CTRF report path in quality workflow. ([79d1c76](https://github.com/fhswf/book_me/commit/79d1c766b74a90c04a94e84dc5fb6ad49e5ce28b))
+* prevent race condition in booking test by pre-awaiting `getAvailable` response ([163c2e6](https://github.com/fhswf/book_me/commit/163c2e67e85bf66979a07d8be6bc2924213c0325))
+
+
+### Features
+
+* Add `data-testid` attributes to date and time selectors, update Playwright tests to use them, and standardize calendar date formatting. ([878bd8a](https://github.com/fhswf/book_me/commit/878bd8ad12881debf4a88d6a8a401ec81d586c93))
+* Add Playwright CTRF JSON reporter to enhance test reporting capabilities. ([40609ff](https://github.com/fhswf/book_me/commit/40609ff5ea6891efed12629cbd2740f962a18c56))
+* Enhance i18n for Calendar and EventForm components with dynamic day names and updated German translations. ([25dfaa6](https://github.com/fhswf/book_me/commit/25dfaa6632b7b385e1cbd63276126a4bf16abb7d))
+* Migrate E2E testing from Cypress to Playwright and introduce new UI components with Tailwind CSS. ([cf1ad9e](https://github.com/fhswf/book_me/commit/cf1ad9e56aa7cee7164db84cdb6bf4e5d40a620b))
+* Migrate to new ESLint configuration, implement Playwright test coverage, and add new booking flow translations. ([f637abc](https://github.com/fhswf/book_me/commit/f637abc3d956f5516030e3c5209c0111f9fe0d9c))
+* update Tailwind CSS configuration with calendar component styling. ([bdc9f4b](https://github.com/fhswf/book_me/commit/bdc9f4b7fa2d5f2cb441910cdf8b1a28abbcb45d))
+
 # client [1.10.0](https://github.com/fhswf/book_me/compare/client@1.9.1...client@1.10.0) (2024-11-27)
 
 
