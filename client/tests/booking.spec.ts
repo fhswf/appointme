@@ -58,6 +58,9 @@ test.describe('Scheduling page', () => {
         test('Check simple schedule flow', async ({ page }) => {
             page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
             
+            // Setup wait for getAvailable BEFORE navigation to avoid race condition
+            const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('getAvailable'));
+
             await page.goto('/users/christian-gawron/sprechstunde');
             await page.waitForResponse(resp => resp.url().includes('getEventBy'));
 
@@ -66,8 +69,9 @@ test.describe('Scheduling page', () => {
             // The mock date is 2024-10-04 (Oct 4th).
             // The test expects '8' to be clicked.
             // await page.getByRole('gridcell', { name: '8' }).click(); 
+            
             // Wait for availability to be loaded
-            const response = await page.waitForResponse(resp => resp.url().includes('getAvailable'));
+            const response = await getAvailablePromise;
             console.log('getAvailable status:', response.status());
 
             // Select Oct 8th 2024.
