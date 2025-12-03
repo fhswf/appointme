@@ -30,10 +30,37 @@ const app = express();
 app.use(cookieParser());
 
 //Connecting to the database
+//Connecting to the database
 dataBaseConn();
 
 //Bodyparser
 app.use(bodyParser.json());
+
+import { doubleCsrf } from "csrf-csrf";
+
+const {
+  doubleCsrfProtection,
+  generateCsrfToken
+} = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || "Secret",
+  cookieName: "x-csrf-token",
+  cookieOptions: {
+    sameSite: "lax",
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  },
+  size: 64,
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+  getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
+  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
+});
+
+app.get("/api/v1/csrf-token", (req, res) => {
+  const csrfToken = generateCsrfToken(req, res);
+  res.json({ csrfToken });
+});
+
+app.use(doubleCsrfProtection);
 
 // Dev Loggin Middleware
 if (process.env.NODE_ENV === "development") {

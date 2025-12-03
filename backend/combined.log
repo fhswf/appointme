@@ -325,3 +325,143 @@
 {"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:03:39"}
 {"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:03:39"}
 {"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:03:39"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"Server running on Port 5000","service":"appoint-backend","timestamp":"2025-12-03 19:13:33"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"Server running on Port 3002","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:13:34"}
+{"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:13:34"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:14:38"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"Server running on Port 5000","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"Server running on Port 3002","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:14:39"}
+{"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:14:39"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:07"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"Server running on Port 5000","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"Server running on Port 3002","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:15:08"}
+{"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:15:08"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"Server running on Port 5000","service":"appoint-backend","timestamp":"2025-12-03 19:15:52"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"Server running on Port 3002","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:15:53"}
+{"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:15:53"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"error","message":"CLIENT_SECRET not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"error","message":"CLIENT_ID not set!","service":"appoint-backend","timestamp":"2025-12-03 19:17:54"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"Server running on Port 5000","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"env: {\"parsed\":{\"MONGO_URI\":\"mongodb://mongo-bookme:27017\",\"API_URL\":\"https://hopper.fh-swf.de/meeting/api/v1\",\"CLIENT_URL\":\"https://hopper.fh-swf.de/meeting\",\"BASE_PATH\":\"/meeting\",\"TZ\":\"Europe/Berlin\"}}","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"Server running on Port 3002","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"NODE_ENV: test","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_URL: https://hopper.fh-swf.de/meeting","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"MONGO_URI: mongodb://mongo-bookme:27017","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"CLIENT_ID: undefined","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"enabling CORS for [\"https://hopper.fh-swf.de/meeting\",\"https://appoint.gawron.cloud\"]","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"info","message":"Server running on Port 3001","service":"appoint-backend","timestamp":"2025-12-03 19:17:55"}
+{"level":"error","message":"jwt malformed","name":"JsonWebTokenError","service":"appoint-backend","stack":"JsonWebTokenError: jwt malformed\n    at module.exports (/home/cgawron/git/book_me/node_modules/jsonwebtoken/verify.js:70:17)\n    at requireAuth (/home/cgawron/git/book_me/backend/src/handlers/middleware.ts:44:7)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/cgawron/git/book_me/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/cgawron/git/book_me/node_modules/express/lib/router/layer.js:95:5)\n    at /home/cgawron/git/book_me/node_modules/express/lib/router/index.js:284:15\n    at router.process_params (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:280:10)\n    at router.handle (/home/cgawron/git/book_me/node_modules/express/lib/router/index.js:175:3)","timestamp":"2025-12-03 19:17:55"}
