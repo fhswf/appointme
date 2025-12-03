@@ -107,6 +107,9 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
           items
         }
       })
+        .catch(err => {
+          throw err;
+        })
     })
 }
 

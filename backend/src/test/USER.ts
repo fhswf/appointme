@@ -3,8 +3,17 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' });
 
-console.log(Buffer.from(process.env.GOOGLE_TOKENS, 'base64').toString('utf-8'));
-const google_tokens = JSON.parse(Buffer.from(process.env.GOOGLE_TOKENS, 'base64').toString('utf-8'));
+const dummyTokens = {
+    access_token: "mock_access_token",
+    refresh_token: "mock_refresh_token",
+    scope: "https://www.googleapis.com/auth/calendar",
+    token_type: "Bearer",
+    expiry_date: 1634567890000
+};
+
+const google_tokens = process.env.GOOGLE_TOKENS
+    ? JSON.parse(Buffer.from(process.env.GOOGLE_TOKENS, 'base64').toString('utf-8'))
+    : dummyTokens;
 
 
 export const USER = {
