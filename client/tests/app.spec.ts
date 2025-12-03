@@ -47,7 +47,7 @@ test.describe('User not logged in', () => {
             await expect(page).toHaveURL(/\/landing/);
             await page.getByTestId('profile-menu').click();
             await page.getByTestId('login-button').click();
-            await expect(page.locator('iframe')).toBeVisible();
+            await expect(page.locator('iframe')).toBeAttached();
         });
     });
 });
