@@ -28,6 +28,24 @@ logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 
 const app = express();
 
+const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
+if (process.env.NODE_ENV === "development") {
+  ORIGINS.push("http://localhost:5173", "http://localhost:5174");
+}
+if (process.env.CORS_ALLOWED_ORIGINS) {
+  for (const origin of process.env.CORS_ALLOWED_ORIGINS.split(",")) {
+    ORIGINS.push(origin.trim());
+  }
+}
+
+logger.info("enabling CORS for %j", ORIGINS);
+app.use(
+  cors({
+    origin: ORIGINS,
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 
 //Connecting to the database
@@ -62,28 +80,6 @@ app.get("/api/v1/csrf-token", (req, res) => {
 });
 
 app.use(doubleCsrfProtection);
-
-// Dev Loggin Middleware
-if (process.env.NODE_ENV === "development") {
-  const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud", "http://localhost:5173", "http://localhost:5174"];
-  logger.info("enabling CORS for %j", ORIGINS);
-  app.use(
-    cors({
-      origin: ORIGINS,
-      credentials: true,
-    })
-  );
-}
-else {
-  const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
-  logger.info("enabling CORS for %j", ORIGINS);
-  app.use(
-    cors({
-      origin: ORIGINS,
-      credentials: true,
-    })
-  );
-}
 
 
 //Use routes
