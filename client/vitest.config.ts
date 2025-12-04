@@ -20,6 +20,8 @@ export default defineConfig({
         environment: 'jsdom',
         setupFiles: './src/tests/setup.ts',
         include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+        reporters: ['default', 'junit'],
+        outputFile: './test-results/junit-report.xml',
         coverage: {
             provider: 'istanbul',
             reporter: ['text', 'json', 'html', 'lcov'],

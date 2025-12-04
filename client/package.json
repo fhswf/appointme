@@ -76,7 +76,7 @@
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
-    "test:unit": "vitest run --coverage",
+    "test:unit": "vitest run --coverage; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml",
     "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
   },
   "eslintConfig": {
