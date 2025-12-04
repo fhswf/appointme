@@ -8527,7 +8527,7 @@ __metadata:
     jsonwebtoken: "npm:^9.0.2"
     moment: "npm:^2.29.1"
     mongoose: "npm:^7.5.0"
-    nodemailer: "npm:^6.4.14"
+    nodemailer: "npm:^7.0.11"
     nodemon: "npm:^3.0.1"
     remark: "npm:15.0.1"
     remark-html: "npm:16.0.1"
@@ -18841,10 +18841,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.4.14":
-  version: 6.9.15
-  resolution: "nodemailer@npm:6.9.15"
-  checksum: 10/16079406fe603f6e4debb8ac34bdb919688ad169ddf61e7b10e56abef85b537762eb3a19a15ce32bb9446d68e2f93a1ba4e24836ba86c7363fc42145aa36a291
+"nodemailer@npm:^7.0.11":
+  version: 7.0.11
+  resolution: "nodemailer@npm:7.0.11"
+  checksum: 10/2ad4dd56a4caf84a83aa6f4378ded26d5ef8a644ca3be09c3b4fb2255d861369e620f29be6c3c97148ac4a50aa5fdff6240b9d60805362bd99ca15f2ea62e8a2
   languageName: node
   linkType: hard
 
