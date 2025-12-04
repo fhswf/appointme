@@ -1,3 +1,11 @@
+# client [1.13.0](https://github.com/fhswf/book_me/compare/client@1.12.0...client@1.13.0) (2025-12-04)
+
+
+### Features
+
+* Add client-side unit tests with Vitest and integrate them into the CI workflow. ([65e9286](https://github.com/fhswf/book_me/commit/65e92860732bd0c747ad2397d541c3dd28c0b7f4))
+* Generate JUnit reports from Vitest unit tests and convert them to CTRF for GitHub Actions PR comments. ([afe31bb](https://github.com/fhswf/book_me/commit/afe31bb9a10b5f6462cec0bcd78a057688fe7bcc))
+
 # client [1.12.0](https://github.com/fhswf/book_me/compare/client@1.11.0...client@1.12.0) (2025-12-03)
 
 
