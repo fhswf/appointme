@@ -52,6 +52,11 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Create CTRF Directories
+        run: |
+          mkdir -p ctrf
+          mkdir -p client/ctrf
+
       # Build
       - name: Build
         run: yarn workspace common build
@@ -70,7 +75,10 @@ jobs:
 
       # Run Playwright tests
       - name: Test Client
-        run: cd client && npm run test:ci
+        run: |
+          cd client
+          npm run test:unit
+          npm run test:ci
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
@@ -83,7 +91,7 @@ jobs:
         run: cd client && npm run coverage:report
 
       - name: Post PR Comment
-        run: npx github-actions-ctrf client/ctrf/ctrf-report.json --pr-comment
+        run: npx github-actions-ctrf ctrf/*.json client/ctrf/*.json --pr-comment
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

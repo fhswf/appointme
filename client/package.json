@@ -43,7 +43,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.2.1",
     "@types/react": "^18.2.21",
-    "axios": "^1.7.7",
+    "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "common": "workspace:*",
@@ -76,6 +76,7 @@
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
+    "test:unit": "vitest run --coverage; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml",
     "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
   },
   "eslintConfig": {
@@ -95,9 +96,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/eslint": "^9.6.1",
+    "@types/jsdom": "^27",
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-istanbul": "^4.0.15",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.11.1",
     "eslint-plugin-i18next": "^6.1.0",
@@ -106,12 +110,14 @@
     "globals": "^16.5.0",
     "i18next-parser": "9.0.2",
     "i18next-scanner": "4.5.0",
+    "jsdom": "^27.2.0",
     "nyc": "^17.1.0",
     "playwright-ctrf-json-reporter": "^0.0.27",
     "start-server-and-test": "^1.13.1",
     "typescript-eslint": "^8.48.1",
     "vite": "^5.4.7",
-    "vite-plugin-istanbul": "^6.0.2",
+    "vite-plugin-istanbul": "^7.2.1",
+    "vitest": "^4.0.15",
     "wait-on": "^5.3.0"
   },
   "release": {
