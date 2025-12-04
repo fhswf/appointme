@@ -1,3 +1,10 @@
+# backend [1.16.0](https://github.com/fhswf/book_me/compare/backend@1.15.0...backend@1.16.0) (2025-12-04)
+
+
+### Features
+
+* Add authentication and event controller tests and fix authentication flow. ([ac27ac6](https://github.com/fhswf/book_me/commit/ac27ac6c16249b338c97f7d9ca54693b59d18bb8))
+
 # backend [1.15.0](https://github.com/fhswf/book_me/compare/backend@1.14.0...backend@1.15.0) (2025-12-03)
 
 
