@@ -178,6 +178,7 @@ export const loginController = (req, res): void => {
       .then((user: UserDocument) => {
         if (!user) {
           res.status(400).json({ errors: "User does not exist!" });
+          return;
         }
         const { _id, name, email } = user;
         const access_token = sign(
