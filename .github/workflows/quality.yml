@@ -70,7 +70,10 @@ jobs:
 
       # Run Playwright tests
       - name: Test Client
-        run: cd client && npm run test:ci
+        run: |
+          cd client
+          npm run test:unit
+          npm run test:ci
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
