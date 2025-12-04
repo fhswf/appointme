@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node-mongo
 {
-	"name": "Node.js & Mongo DB",
+	"name": "Book Me Dev Container",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
@@ -17,7 +17,9 @@
 				"GitHub.copilot-chat",
 				"GitHub.copilot",
 				"ms-vscode.vscode-typescript-next",
-				"dotenv.dotenv-vscode"
+				"dotenv.dotenv-vscode",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
