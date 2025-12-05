@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Login from '../../pages/Login';
 import * as authServices from '../../helpers/services/auth_services';
+import { toast } from 'sonner';
 
 // Mock react-router-dom
 const mockNavigate = vi.fn();
@@ -24,6 +25,13 @@ vi.mock('@react-oauth/google', () => ({
 
 // Mock auth_services
 vi.mock('../../helpers/services/auth_services');
+
+// Mock sonner
+vi.mock('sonner', () => ({
+    toast: {
+        error: vi.fn(),
+    },
+}));
 
 describe('Login Component', () => {
     beforeEach(() => {
@@ -64,6 +72,7 @@ describe('Login Component', () => {
         await new Promise(process.nextTick);
 
         expect(consoleSpy).toHaveBeenCalledWith('GOOGLE SIGNIN ERROR', 'error');
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Google login failed'));
         expect(mockNavigate).not.toHaveBeenCalled();
     });
 });

@@ -19,6 +19,7 @@ import { useAuthenticated } from "./helpers/helpers";
 
 import "./i18n";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Toaster } from "sonner";
 import "./index.css";
 
 const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
@@ -90,13 +91,14 @@ const Main = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/notfound" element={<NotFound />} />
           </Routes>
+          <Toaster />
         </BrowserRouter>
       </GoogleOAuthProvider>
     </Suspense>
-  </StrictMode>
+  </StrictMode >
   );
 }
 
 const container = document.getElementById("root");
-const root = createRoot(container!);
+const root = createRoot(container);
 root.render(<Main />);

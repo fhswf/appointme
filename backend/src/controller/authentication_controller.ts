@@ -25,11 +25,11 @@ logger.debug("redirectUri: %s", REDIRECT_URI);
 if (!process.env.CLIENT_SECRET) {
   logger.error("CLIENT_SECRET not set!")
 }
-if (!process.env.CLIENT_ID) {
-  logger.error("CLIENT_ID not set!")
+if (process.env.CLIENT_ID) {
+  logger.debug("clientId: %s", process.env.CLIENT_ID);
 }
 else {
-  logger.debug("clientId: %s", process.env.CLIENT_ID);
+  logger.error("CLIENT_ID not set!")
 }
 const oAuth2Client = new OAuth2Client({
   clientId: process.env.CLIENT_ID,
@@ -66,45 +66,45 @@ export const registerController = (req: Request, res: Response): void => {
   if (!errors.isEmpty()) {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ errors: newError });
+    return;
   }
-  else {
-    UserModel.findOne({ email }).exec()
-      .then(user => {
-        if (user) {
-          res.status(400).json({ errors: "Email already exists!" });
-        } else {
-          const token = sign(
-            { name, email },
-            process.env.ACCOUNT_ACTIVATION,
-            { expiresIn: "10m" }
-          );
 
-          const mailOptions = {
-            from: process.env.EMAIL_FROM,
-            to: email,
-            subject: 'Account activation "Bookme" ',
-            html: `<h1>Click the link below to activate your account</h1>
+  UserModel.findOne({ email }).exec()
+    .then(user => {
+      if (user) {
+        res.status(400).json({ errors: "Email already exists!" });
+      } else {
+        const token = sign(
+          { name, email },
+          process.env.ACCOUNT_ACTIVATION,
+          { expiresIn: "10m" }
+        );
+
+        const mailOptions = {
+          from: process.env.EMAIL_FROM,
+          to: email,
+          subject: 'Account activation "Bookme" ',
+          html: `<h1>Click the link below to activate your account</h1>
                        <p>${process.env.CLIENT_URL}/activate/${token}</p>`,
-          };
+        };
 
-          transporter.sendMail(mailOptions, function (error) {
-            if (error) {
-              res.status(400).json({
-                success: false,
-                errors: "Couldnt send email,try again",
-              });
-            } else {
-              res.status(200).json({
-                message: `Email has been send to ${email}`,
-              });
-            }
-          });
-        }
-      })
-      .catch(err => {
-        res.status(400).json({ errors: "Something went wrong, please try again." });
-      });
-  }
+        transporter.sendMail(mailOptions, function (error) {
+          if (error) {
+            res.status(400).json({
+              success: false,
+              errors: "Couldnt send email,try again",
+            });
+          } else {
+            res.status(200).json({
+              message: `Email has been send to ${email}`,
+            });
+          }
+        });
+      }
+    })
+    .catch(err => {
+      res.status(400).json({ errors: "Something went wrong, please try again." });
+    });
 };
 
 /**
@@ -113,7 +113,7 @@ export const registerController = (req: Request, res: Response): void => {
  * @param {request} req
  * @param {response} res
  */
-export const activationController = (req, res): void => {
+export const activationController = (req: Request, res: Response): void => {
   const header = req.headers.authorization;
   const token = header.split(" ")[1];
 
@@ -163,7 +163,7 @@ export const activationController = (req, res): void => {
  * @param {request} req
  * @param {response} res
  */
-export const loginController = (req, res): void => {
+export const loginController = (req: Request, res: Response): void => {
   let { email } = req.body;
   email = validator.isEmail(email) ? validator.normalizeEmail(email) : "";
   const errors = validationResult(req);
@@ -171,35 +171,36 @@ export const loginController = (req, res): void => {
   if (!errors.isEmpty()) {
     const newError = errors.array().map(error => error.msg)[0];
     res.status(422).json({ errors: newError });
-  } else {
-    UserModel
-      .findOne({ email: { $eq: email } })
-      .exec()
-      .then((user: UserDocument) => {
-        if (!user) {
-          res.status(400).json({ errors: "User does not exist!" });
-          return;
-        }
-        const { _id, name, email } = user;
-        const access_token = sign(
-          { _id, name, email },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: "1d",
-          }
-        );
-        res.status(200).json({
-          access_token,
-          user: {
-            name,
-          },
-        });
-
-      })
-      .catch(err => {
-        res.status(400).json({ errors: "User does not exist!" });
-      });
+    return;
   }
+
+  UserModel
+    .findOne({ email: { $eq: email } })
+    .exec()
+    .then((user: UserDocument) => {
+      if (!user) {
+        res.status(400).json({ errors: "User does not exist!" });
+        return;
+      }
+      const { _id, name, email } = user;
+      const access_token = sign(
+        { _id, name, email },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1d",
+        }
+      );
+      res.status(200).json({
+        access_token,
+        user: {
+          name,
+        },
+      });
+
+    })
+    .catch(err => {
+      res.status(400).json({ errors: "User does not exist!" });
+    });
 };
 
 export const googleLoginController = (req: Request, res: Response): void => {
@@ -242,7 +243,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
           })
           .catch(error => {
             logger.error('Error saving user: %o', error);
-            res.status(400).json({ message: "User signup failed with google", error })
+            res.status(400).json({ message: "User signup failed with google", error: error instanceof Error ? error.message : String(error) })
           });
       } else {
         res.status(400).json({
@@ -250,7 +251,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
         });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       logger.error('Error retrieving access token', err);
       res.status(400).json({
         errors: "Google login failed. Try again",
@@ -267,7 +268,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
 function validateUrl(userEmail: string): string {
   const newEmail = userEmail.split("@");
   const reg = new RegExp(/[~/]/g);
-  let newUrl = newEmail[0].toLowerCase().replace(/[. ,:]+/g, "-");
-  newUrl = newUrl.replace(reg, "-");
+  let newUrl = newEmail[0].toLowerCase().replaceAll(/[. ,:]+/g, "-");
+  newUrl = newUrl.replaceAll(reg, "-");
   return newUrl;
 }
