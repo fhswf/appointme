@@ -5,6 +5,7 @@ import { updateEvent, getUsersEvents } from "../helpers/services/event_services"
 import { EventCard } from "./EventCard";
 import { EventDocument } from "../helpers/EventDocument";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 
 
 type EventListProps = {
@@ -42,7 +43,12 @@ const EventList = (props: EventListProps) => {
 
   const list =
     events.length === 0 ? (
-      <div>{t("sunny_great_halibut_empower")}</div>
+      <div className="flex flex-wrap items-center justify-start gap-4 col-span-full">
+        <p className="text-muted-foreground">{t("sunny_great_halibut_empower")}</p>
+        <Button onClick={() => navigate("/addevent")}>
+          {t("create_first_event_type_button")}
+        </Button>
+      </div>
     ) : (
       events.map((event) => (
         <EventCard

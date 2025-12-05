@@ -18,12 +18,7 @@ import { Event, IntervalSet } from 'common';
 import { logger } from '../logging.js';
 import { getBusySlots } from './caldav_controller.js';
 
-// Dotenv Config
-import dotenv from "dotenv";
 
-const env = dotenv.config({
-  path: "./src/config/config.env",
-});
 
 const config = {
   clientId: process.env.CLIENT_ID,

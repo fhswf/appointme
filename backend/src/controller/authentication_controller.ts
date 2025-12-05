@@ -12,11 +12,7 @@ import { Request, Response } from "express";
 import pkg, { JwtPayload } from 'jsonwebtoken';
 import { logger } from "../logging.js";
 
-// Dotenv Config
-import dotenv from "dotenv";
-const env = dotenv.config({
-  path: "./src/config/config.env",
-});
+
 
 const { sign, verify } = pkg;
 
@@ -218,9 +214,12 @@ export const googleLoginController = (req: Request, res: Response): void => {
         const user = new UserModel({ name, email, picture_url: picture, user_url });
         user._id = sub;
         logger.debug('user: %o', user);
-        UserModel.findOneAndUpdate({ _id: sub }, { name, email, picture_url: picture, user_url }, { upsert: true })
+        UserModel.findOneAndUpdate({ _id: sub }, { name, email, picture_url: picture, user_url }, { upsert: true, new: true })
           .exec()
           .then(user => {
+            if (!user) {
+              throw new Error("User creation failed");
+            }
 
             const { _id, name, email } = user;
             const access_token = sign(
@@ -231,8 +230,10 @@ export const googleLoginController = (req: Request, res: Response): void => {
               }
             );
 
-            const sameSite = process.env.NODE_ENV === 'development' ? 'none' : 'strict';
-            const domain = process.env.DOMAIN || "appoint.gawron.cloud";
+            const isDev = process.env.NODE_ENV === 'development';
+            const domain = process.env.DOMAIN;
+            const sameSite = isDev ? 'lax' : 'strict';
+
             res
               .cookie('access_token',
                 access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite, domain })

@@ -27,3 +27,8 @@ sonar-scanner-5.0.1.3006-linux/**
 */TEST-*.xml
 */*-ctrf.json
 **/ctrf/*.json
+backend/combined.log
+backend/error.log
+backend/combined.log
+backend/debug.log
+backend/error.log

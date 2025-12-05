@@ -1,3 +1,4 @@
+import "./config/env.js";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -14,13 +15,7 @@ import { caldavRouter } from "./routes/caldav_routes.js";
 // logger
 import { logger } from "./logging.js";
 
-// Dotenv Config
-import dotenv from "dotenv";
-const env = dotenv.config({
-  path: "./src/config/config.env",
-});
 
-logger.info("env: %j", env);
 logger.info("NODE_ENV: %s", process.env.NODE_ENV);
 logger.info("CLIENT_URL: %s", process.env.CLIENT_URL);
 logger.info("MONGO_URI: %s", process.env.MONGO_URI);
