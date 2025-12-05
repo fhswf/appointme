@@ -94,7 +94,14 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
-      const items = user.pull_calendars.map(id => { return { id } });
+      const items = user.pull_calendars
+        .filter(id => !id.startsWith('http') && !id.startsWith('/'))
+        .map(id => { return { id } });
+
+      if (items.length === 0) {
+        return Promise.resolve({ data: { calendars: {} } });
+      }
+
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
       return calendar.freebusy.query({
         requestBody: {
@@ -109,15 +116,21 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     })
 }
 
-async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
+export async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
   const interval = new IntervalSet(timeMin, timeMax);
   let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
 
   const [googleRes, calDavSlots] = await Promise.all([
-    freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
-      logger.error('Google freeBusy error', err);
+    (async () => {
+      const user = await UserModel.findOne({ _id: userid }).exec();
+      if (user && user.google_tokens && user.google_tokens.access_token) {
+        return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+          logger.error('Google freeBusy error', err);
+          return null;
+        });
+      }
       return null;
-    }),
+    })(),
     getBusySlots(userid, timeMin.toISOString(), timeMax.toISOString())
   ]);
 
@@ -161,89 +174,25 @@ async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: D
 }
 
 /**
- * Middleware to insert an event to google calendar.
- * @function
- * @param {request} req
- * @param {response} res
+ * Helper to insert event into Google Calendar
  */
-export function insertEventToGoogleCal(req: Request, res: Response) {
-  const starttime = new Date(Number.parseInt(req.body.starttime));
-  const endtime = addMinutes(starttime, req.body.event.duration);
-  logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
+export async function insertGoogleEvent(user: User, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
+  if (!user.google_tokens || !user.google_tokens.access_token) {
+    throw new Error("No Google account connected");
+  }
 
-  checkFree(req.body.event, req.params.user_id, starttime, endtime)
-    .then(free => {
-      if (!free) {
-        res.status(400).json({ error: "requested slot not available" });
-        return;
-      }
+  const oAuth2Client = createOAuthClient(user._id as string);
+  oAuth2Client.setCredentials(user.google_tokens);
+  logger.debug('insert: event=%j', event)
 
-      /*
-        const htmlDescription = await remark()
-        .use(html)
-        .process(req.body.event.description as string)
-      */
-
-      UserModel.findOne({ _id: { $eq: req.params.user_id } })
-        .then(user => {
-
-          const event: Schema$Event = {
-            summary: <string>req.body.event.name + " mit " + <string>req.body.name,
-            location: <string>req.body.event.location,
-            description: String(req.body.event.description) + "<br>" + (req.body.description as string),
-            start: {
-              dateTime: starttime.toISOString(),
-              timeZone: "Europe/Berlin",
-            },
-            end: {
-              dateTime: endtime.toISOString(),
-              timeZone: "Europe/Berlin",
-            },
-            organizer: {
-              displayName: user.name,
-              email: user.email,
-              id: user._id as string
-            },
-            attendees: [
-              {
-                displayName: req.body.name as string,
-                email: req.body.email as string,
-              }
-            ],
-            source: {
-              title: "Appointment",
-              url: "https://appoint.gawron.cloud",
-            },
-            guestsCanModify: true,
-            guestsCanInviteOthers: true,
-          };
-
-          const oAuth2Client = createOAuthClient(user._id as string);
-          oAuth2Client.setCredentials(user.google_tokens);
-          logger.debug('insert: event=%j', event)
-          google.calendar({ version: "v3" }).events
-            .insert({
-              auth: oAuth2Client,
-              calendarId: user.push_calendar,
-              sendUpdates: "all",
-              requestBody: event,
-            })
-            .then((evt: GaxiosResponse<Schema$Event>) => {
-              logger.debug('insert returned %j', evt)
-              res.json({ success: true, message: "Event wurde gebucht", event: evt });
-            })
-            .catch(error => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              res.status(400).json({ error });
-            })
-        })
-
-    })
-    .catch(error => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      res.status(400).json({ error });
-    })
+  return google.calendar({ version: "v3" }).events.insert({
+    auth: oAuth2Client,
+    calendarId: user.push_calendar,
+    sendUpdates: "all",
+    requestBody: event,
+  });
 }
+
 
 /**
  * Middleware function to delete an google Access Token from a user

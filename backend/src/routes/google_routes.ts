@@ -11,7 +11,7 @@ const limiter = rateLimit({
     max: 100, // limit each IP to 100 requests per windowMs
 });
 
-import { generateAuthUrl, googleCallback, revokeScopes, insertEventToGoogleCal, getCalendarList } from "../controller/google_controller.js";
+import { generateAuthUrl, googleCallback, revokeScopes, getCalendarList } from "../controller/google_controller.js";
 
 import { middleware } from "../handlers/middleware.js";
 
@@ -47,14 +47,5 @@ googleRouter.get("/calendarList", limiter, middleware.requireAuth, getCalendarLi
  */
 googleRouter.get("/oauthcallback", limiter, googleCallback);
 
-/**
- * Route to insert an event into the google calendar of a given user
- * @name post/insertEvent/:user_id
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-googleRouter.post("/insertEvent/:user_id", limiter, insertEventToGoogleCal);
 
 export default googleRouter;

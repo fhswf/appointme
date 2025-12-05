@@ -464,8 +464,12 @@ const Calendarintegration = () => {
     });
   }, [user]);
 
+  const [calendarError, setCalendarError] = useState<string | null>(null);
+
   const handleAccountsChange = async (accounts) => {
+    setCalendarError(null);
     const allCalendars = [];
+    const errors = [];
 
     // Keep Google calendars if they exist
     if (calendarList && calendarList.items) {
@@ -480,7 +484,12 @@ const Calendarintegration = () => {
         allCalendars.push(...cals);
       } catch (e) {
         console.error("Failed to load calendars for account", acc.name, e);
+        errors.push(acc.name);
       }
+    }
+
+    if (errors.length > 0) {
+      setCalendarError(`${t("Failed to load calendars for")}: ${errors.join(", ")}`);
     }
 
     setCalendarList({ items: allCalendars });
@@ -504,6 +513,13 @@ const Calendarintegration = () => {
         <h3 className="text-3xl font-bold mb-4">
           {t("pink_loose_cougar_grin")}
         </h3>
+
+        {calendarError && (
+          <div className="mb-4 bg-destructive/15 text-destructive text-sm p-3 rounded-md">
+            {calendarError}
+          </div>
+        )}
+
         <div className="p-4">
           <div className="flex justify-between items-center gap-4">
             <div className="flex items-center gap-2">

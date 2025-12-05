@@ -32,6 +32,7 @@ export type Slots = Record<Day, Slot[]>;
 
 /** Event describes a type of appointment */
 export type Event = {
+  _id?: string;
   user: string;
   name: string;
   location: string;

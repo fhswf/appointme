@@ -75,7 +75,16 @@ app.get("/api/v1/csrf-token", (req, res) => {
   res.json({ csrfToken });
 });
 
-app.use(doubleCsrfProtection);
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/events/:id/slot from CSRF protection
+  if (req.method === 'POST' && /^\/api\/v1\/events\/[^/]+\/slot$/.test(req.path)) {
+    next();
+  } else {
+    doubleCsrfProtection(req, res, next);
+  }
+};
+
+app.use(csrfProtection);
 
 
 //Use routes
@@ -83,7 +92,7 @@ const router = express.Router();
 router.use("/auth/", authenticationRouter);
 router.use("/events/", eventRouter);
 router.use("/google/", googleRouter);
-router.use("/users/", userRouter);
+router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")

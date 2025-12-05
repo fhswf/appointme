@@ -36,9 +36,8 @@ export async function getCalendarList() {
   return response;
 }
 
-export async function insertIntoGoogle(
-  user_id,
-  event,
+export async function insertEvent(
+  event_id,
   time,
   name,
   email,
@@ -47,9 +46,8 @@ export async function insertIntoGoogle(
   const starttime = time.valueOf();
   const csrfToken = await getCsrfToken();
   const response = axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/google/insertEvent/${user_id}`,
+    `${import.meta.env.REACT_APP_API_URL}/events/${event_id}/slot`,
     {
-      event,
       starttime,
       name,
       email,

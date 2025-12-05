@@ -69,23 +69,18 @@ export async function updateEvent(
 
 export async function getActiveEvents(user_id: string) {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/events/getActiveEvents`,
-    {
-      params: { user: user_id },
-    }
+    `${import.meta.env.REACT_APP_API_URL}/events/active/${user_id}`
   );
   return response;
 }
 
-export function getAvailableTimes(timeMin: Date, timeMax: Date, url: string, userid: string) {
+export function getAvailableTimes(timeMin: Date, timeMax: Date, eventId: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/events/getAvailable`,
+    `${import.meta.env.REACT_APP_API_URL}/events/${eventId}/slot`,
     {
       params: {
         timeMin,
         timeMax,
-        url,
-        userid,
       },
     }
   )
@@ -104,9 +99,6 @@ export async function getUsersEvents() {
 
 export async function getEventByUrlAndUser(user_id: string, event_url: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/events/getEventBy`,
-    {
-      params: { user: user_id, url: event_url },
-    }
+    `${import.meta.env.REACT_APP_API_URL}/events/${user_id}/${event_url}`
   );
 }

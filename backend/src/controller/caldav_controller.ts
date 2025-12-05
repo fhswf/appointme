@@ -185,6 +185,11 @@ export const listCalendars = async (req: Request, res: Response) => {
             },
             authMethod: 'Basic',
             defaultAccountType: 'caldav',
+            fetchOptions: {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
+                }
+            }
         });
 
         await client.login();
@@ -200,4 +205,97 @@ export const listCalendars = async (req: Request, res: Response) => {
         logger.error('Failed to list calendars for account %s', accountId, e);
         res.status(400).json({ error: 'Failed to list calendars' });
     }
+};
+
+export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
+    // Find the account that owns the push_calendar URL
+    const account = user.caldav_accounts.find(acc => {
+        if (user.push_calendar.startsWith(acc.serverUrl)) {
+            return true;
+        }
+        try {
+            const serverUrlObj = new URL(acc.serverUrl);
+            if (user.push_calendar.startsWith(serverUrlObj.pathname)) {
+                return true;
+            }
+            // Check if they share the same origin
+            const pushUrlObj = new URL(user.push_calendar);
+            if (pushUrlObj.origin === serverUrlObj.origin) {
+                return true;
+            }
+        } catch (e) {
+            // ignore invalid serverUrl or push_calendar
+        }
+        return false;
+    });
+
+    if (!account) {
+        throw new Error('CalDav account not found for push calendar');
+    }
+
+    const client = new DAVClient({
+        serverUrl: account.serverUrl,
+        credentials: {
+            username: account.username,
+            password: decrypt(account.password),
+        },
+        authMethod: 'Basic',
+        defaultAccountType: 'caldav',
+        fetchOptions: {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
+            }
+        }
+    });
+
+    await client.login();
+
+    // We need to fetch calendars to get the full calendar object for the push_calendar URL
+    // Optimization: We could cache this or construct a minimal object if tsdav allows
+    const calendars = await client.fetchCalendars();
+    const targetCalendar = calendars.find(c => c.url === user.push_calendar);
+
+    if (!targetCalendar) {
+        throw new Error('Target calendar not found');
+    }
+
+    const eventData = {
+        start: eventDetails.start.dateTime,
+        end: eventDetails.end.dateTime,
+        summary: eventDetails.summary,
+        description: eventDetails.description,
+        location: eventDetails.location,
+        organizer: {
+            cn: eventDetails.organizer.displayName,
+            mailto: eventDetails.organizer.email
+        },
+        attendees: eventDetails.attendees.map(a => ({
+            cn: a.displayName,
+            mailto: a.email,
+            partstat: 'NEEDS-ACTION',
+            rsvp: true
+        }))
+    };
+
+    const createdEvent = await client.createCalendarObject({
+        calendar: targetCalendar,
+        filename: `${Date.now()}-${Math.random().toString(36).substring(7)}.ics`,
+        iCalString: `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//BookMe//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:${Date.now()}-${Math.random().toString(36).substring(7)}
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${new Date(eventData.start).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${new Date(eventData.end).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:${eventData.summary}
+DESCRIPTION:${eventData.description}
+LOCATION:${eventData.location}
+ORGANIZER;CN=${eventData.organizer.cn}:mailto:${eventData.organizer.mailto}
+${eventData.attendees.map(a => `ATTENDEE;CN=${a.cn};PARTSTAT=${a.partstat};RSVP=${a.rsvp}:mailto:${a.mailto}`).join('\n')}
+END:VEVENT
+END:VCALENDAR`
+    });
+
+    return createdEvent;
 };

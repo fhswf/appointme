@@ -12,7 +12,7 @@ import {
   getEventByIdController,
   updateEventController,
   getActiveEventsController,
-  getEventByUrl,
+  getEventByUrlController,
   getAvailableTimes,
 } from "../controller/event_controller.js";
 
@@ -76,31 +76,24 @@ eventRouter.get("/event", limiter, middleware.requireAuth, getEventListControlle
 eventRouter.get("/event/:id", limiter, middleware.requireAuth, getEventByIdController);
 
 /**
- * Route to fetch all active events of an given user
- * @name get/getActiveEvents
+ * Route to fetch public events (single by URL or list by user)
+ * @name get/
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getActiveEvents", getActiveEventsController);
+eventRouter.get("/active/:userId", getActiveEventsController);
+eventRouter.get("/:id/slot", getAvailableTimes);
+eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
 
 /**
- * Route to fetch an event of an url and user
- * @name get/getEventBy
+ * Route to insert an event (Google or CalDav)
+ * @name post/insertEvent/:user_id
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getEventBy", getEventByUrl);
-
-/**
- * Route to fetch available times to book this event
- * @name get/getAvailable
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-eventRouter.get("/getAvailable", getAvailableTimes);
+import { insertEvent } from "../controller/event_controller.js";
+eventRouter.post("/:id/slot", limiter, insertEvent);

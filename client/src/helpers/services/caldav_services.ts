@@ -37,7 +37,7 @@ export async function removeAccount(id) {
 
 export async function listAccounts() {
     const response = await axios.get(
-        `${import.meta.env.REACT_APP_API_URL}/caldav/accounts`,
+        `${import.meta.env.REACT_APP_API_URL}/caldav/account`,
         {
             withCredentials: true
         }
