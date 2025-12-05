@@ -1,12 +1,18 @@
 import axios from "axios";
 
 export async function postToRegister(name, email, password) {
+  const csrfToken = await getCsrfToken();
   const response = await axios.post(
     `${import.meta.env.REACT_APP_API_URL}/auth/register`,
     {
       name,
       email,
       password: password,
+    },
+    {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
     }
   );
 
@@ -14,10 +20,14 @@ export async function postToRegister(name, email, password) {
 }
 
 export async function postToActivate(token) {
+  const csrfToken = await getCsrfToken();
   const response = await axios.post(
     `${import.meta.env.REACT_APP_API_URL}/auth/activate`,
     {},
     {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
       withCredentials: true,
     }
   );

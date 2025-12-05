@@ -7,15 +7,26 @@ import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
 
 export const addAccount = async (req: Request, res: Response) => {
-    const { serverUrl, username, password, name } = req.body;
+    let { serverUrl, username, password, name } = req.body;
     const userId = req['user_id'];
+
+    if (serverUrl.endsWith('/')) {
+        serverUrl = serverUrl.slice(0, -1);
+    }
+
+    const fetchOptions = {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
+        }
+    };
 
     try {
         const client = new DAVClient({
             serverUrl,
             credentials: { username, password },
             authMethod: 'Basic',
-            defaultAccountType: 'caldav'
+            defaultAccountType: 'caldav',
+            fetchOptions
         });
         await client.login();
 
@@ -26,7 +37,30 @@ export const addAccount = async (req: Request, res: Response) => {
         res.json({ success: true });
     } catch (e) {
         logger.error('Failed to add CalDAV account', e);
-        res.status(400).json({ error: 'Failed to connect to CalDAV server' });
+        // Retry with homeUrl set to serverUrl if the error suggests it might help, or just try it as a fallback
+        try {
+            const client = new DAVClient({
+                serverUrl,
+                credentials: { username, password },
+                authMethod: 'Basic',
+                defaultAccountType: 'caldav',
+                fetchOptions,
+                // @ts-ignore
+                caldavSettings: {
+                    homeUrl: serverUrl
+                }
+            });
+            await client.login();
+
+            await UserModel.updateOne(
+                { _id: userId },
+                { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name } } }
+            );
+            res.json({ success: true });
+        } catch (retryError) {
+            logger.error('Retry failed to add CalDAV account', retryError);
+            res.status(400).json({ error: 'Failed to connect to CalDAV server' });
+        }
     }
 };
 
@@ -63,6 +97,8 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
     const startRange = new Date(timeMin);
     const endRange = new Date(timeMax);
 
+    const pullCalendars = new Set(user.pull_calendars || []);
+
     for (const account of user.caldav_accounts) {
         try {
             const client = new DAVClient({
@@ -73,13 +109,21 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
                 },
                 authMethod: 'Basic',
                 defaultAccountType: 'caldav',
+                fetchOptions: {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
+                    }
+                }
             });
 
             await client.login();
 
             const calendars = await client.fetchCalendars();
 
-            for (const calendar of calendars) {
+            // Filter calendars based on user selection
+            const selectedCalendars = calendars.filter(cal => pullCalendars.has(cal.url));
+
+            for (const calendar of selectedCalendars) {
                 const objects = await client.fetchCalendarObjects({
                     calendar,
                     timeRange: { start: timeMin, end: timeMax }
@@ -120,3 +164,40 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
     }
     return busySlots;
 }
+
+export const listCalendars = async (req: Request, res: Response) => {
+    const userId = req['user_id'];
+    const accountId = req.params.id;
+
+    try {
+        const user = await UserModel.findOne({ _id: userId }).exec();
+        const account = user?.caldav_accounts?.find(acc => (acc as any)._id.toString() === accountId);
+
+        if (!account) {
+            return res.status(404).json({ error: 'Account not found' });
+        }
+
+        const client = new DAVClient({
+            serverUrl: account.serverUrl,
+            credentials: {
+                username: account.username,
+                password: decrypt(account.password),
+            },
+            authMethod: 'Basic',
+            defaultAccountType: 'caldav',
+        });
+
+        await client.login();
+        const calendars = await client.fetchCalendars();
+
+        const mappedCalendars = calendars.map(cal => ({
+            id: cal.url,
+            summary: cal.displayName || cal.url
+        }));
+
+        res.json(mappedCalendars);
+    } catch (e) {
+        logger.error('Failed to list calendars for account %s', accountId, e);
+        res.status(400).json({ error: 'Failed to list calendars' });
+    }
+};

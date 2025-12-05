@@ -38,6 +38,11 @@ import { Edit } from "lucide-react";
 
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
+import { addAccount, removeAccount, listAccounts, listCalendars } from "../helpers/services/caldav_services";
+import { Input } from "@/components/ui/input";
+import { Trash2, Plus } from "lucide-react";
+
+import ErrorBoundary from "../components/ErrorBoundary";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
   console.log("renderCalendarList: %o", state);
@@ -142,7 +147,7 @@ const PushCalendar = ({ user, calendarList }) => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">
-          {pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary}
+          {pushCal ? (pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary) : "No calendar selected"}
         </div>
       </CardContent>
 
@@ -157,7 +162,7 @@ const PushCalendar = ({ user, calendarList }) => {
           <div className="py-4">
             {renderCalendarList(
               calendarList,
-              selected || { [user.push_calendar]: true },
+              selected || (user.push_calendar ? { [user.push_calendar]: true } : {}),
               setSelected,
               true
             )}
@@ -262,6 +267,142 @@ const PullCalendars = ({ user, calendarList }) => {
   }
 };
 
+const CalDavAccounts = ({ user, onAccountsChange }) => {
+  const [accounts, setAccounts] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    serverUrl: "",
+    username: "",
+    password: "",
+    name: ""
+  });
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    loadAccounts();
+  }, []);
+
+  const loadAccounts = () => {
+    listAccounts().then(res => {
+      setAccounts(res.data);
+      onAccountsChange(res.data);
+    });
+  };
+
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAdd = () => {
+    setError(null);
+    addAccount(formData.serverUrl, formData.username, formData.password, formData.name)
+      .then(() => {
+        setOpen(false);
+        setFormData({ serverUrl: "", username: "", password: "", name: "" });
+        loadAccounts();
+      })
+      .catch(err => {
+        console.error(err);
+        setError(t("Failed to add account. Please check your credentials and server URL."));
+      });
+  };
+
+  const handleRemove = (id) => {
+    removeAccount(id).then(() => loadAccounts());
+  };
+
+  return (
+    <>
+      <div className="p-4">
+        <div className="flex justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 flex items-center justify-center bg-gray-100 rounded-full">
+              <span className="text-xs font-bold">DAV</span>
+            </div>
+            CalDav Calendar
+          </div>
+          <div>
+            <Button onClick={() => setOpen(true)}>
+              {t("Add CalDav Account")}
+            </Button>
+          </div>
+        </div>
+        {accounts.length > 0 && (
+          <div className="mt-4 flex flex-col gap-2">
+            {accounts.map(acc => (
+              <div key={acc._id} className="flex items-center justify-between p-2 border rounded-md">
+                <span>{acc.name}</span>
+                <Button variant="ghost" size="icon" onClick={() => handleRemove(acc._id)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add CalDav Account</DialogTitle>
+            <DialogDescription>
+              Enter your CalDav server details to connect your calendar.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 py-4">
+            {error && (
+              <div className="bg-destructive/15 text-destructive text-sm p-3 rounded-md">
+                {error}
+              </div>
+            )}
+            <form id="caldav-form" onSubmit={(e) => { e.preventDefault(); handleAdd(); }}>
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="My Calendar"
+                />
+              </div>
+              <div className="grid gap-2 mt-2">
+                <Label htmlFor="serverUrl">Server URL</Label>
+                <Input
+                  id="serverUrl"
+                  value={formData.serverUrl}
+                  onChange={e => setFormData({ ...formData, serverUrl: e.target.value })}
+                  placeholder="https://caldav.example.com"
+                />
+              </div>
+              <div className="grid gap-2 mt-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  value={formData.username}
+                  onChange={e => setFormData({ ...formData, username: e.target.value })}
+                  autoComplete="username"
+                />
+              </div>
+              <div className="grid gap-2 mt-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={e => setFormData({ ...formData, password: e.target.value })}
+                  autoComplete="current-password"
+                />
+              </div>
+            </form>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button type="submit" form="caldav-form">Add</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
 const Calendarintegration = () => {
   const navigate = useNavigate();
   const [connected, setConnected] = useState(false);
@@ -288,11 +429,11 @@ const Calendarintegration = () => {
         const primary = calendars.items.filter((item) => item.primary);
         console.log("calendarList: %o %o", calendars, primary);
         let update = false;
-        if (user.pull_calendars.length === 0) {
+        if (user.pull_calendars.length === 0 && primary.length > 0) {
           user.pull_calendars.push(primary[0].id);
           update = true;
         }
-        if (!user.push_calendar) {
+        if (!user.push_calendar && primary.length > 0) {
           user.push_calendar = primary[0].id;
           update = true;
         }
@@ -322,6 +463,28 @@ const Calendarintegration = () => {
       }
     });
   }, [user]);
+
+  const handleAccountsChange = async (accounts) => {
+    const allCalendars = [];
+
+    // Keep Google calendars if they exist
+    if (calendarList && calendarList.items) {
+      const googleCals = calendarList.items.filter(c => !c.isCalDav);
+      allCalendars.push(...googleCals);
+    }
+
+    for (const acc of accounts) {
+      try {
+        const res = await listCalendars(acc._id);
+        const cals = res.data.map(c => ({ ...c, isCalDav: true, accountId: acc._id }));
+        allCalendars.push(...cals);
+      } catch (e) {
+        console.error("Failed to load calendars for account", acc.name, e);
+      }
+    }
+
+    setCalendarList({ items: allCalendars });
+  };
 
   const renderConnectButton = () =>
     connected ? (
@@ -356,13 +519,21 @@ const Calendarintegration = () => {
           </div>
         </div>
 
+        <ErrorBoundary>
+          <CalDavAccounts user={user} onAccountsChange={handleAccountsChange} />
+        </ErrorBoundary>
+
         <h4 className="text-2xl font-bold mb-4">
           {t("merry_north_meerkat_cuddle")}
         </h4>
         <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <PushCalendar user={user} calendarList={calendarList} />
-            <PullCalendars user={user} calendarList={calendarList} />
+            <ErrorBoundary>
+              <PushCalendar user={user} calendarList={calendarList} />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <PullCalendars user={user} calendarList={calendarList} />
+            </ErrorBoundary>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { middleware } from "../handlers/middleware.js";
-import { addAccount, removeAccount, listAccounts } from "../controller/caldav_controller.js";
+import { addAccount, removeAccount, listAccounts, listCalendars } from "../controller/caldav_controller.js";
 
 export const caldavRouter = Router();
 
@@ -12,6 +12,7 @@ const limiter = rateLimit({
 
 caldavRouter.post("/account", limiter, middleware.requireAuth, addAccount);
 caldavRouter.delete("/account/:id", limiter, middleware.requireAuth, removeAccount);
-caldavRouter.get("/accounts", limiter, middleware.requireAuth, listAccounts);
+caldavRouter.get("/account", limiter, middleware.requireAuth, listAccounts);
+caldavRouter.get("/account/:id/calendars", limiter, middleware.requireAuth, listCalendars);
 
 export default caldavRouter;

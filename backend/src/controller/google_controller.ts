@@ -312,6 +312,10 @@ export function getCalendarList(req: Request, res: Response): void {
           res.status(400).json({ error });
         })
     })
+    .catch(error => {
+      logger.error("getAuth failed: %o", error);
+      res.status(400).json({ error: "Failed to authenticate with Google" });
+    });
 }
 
 

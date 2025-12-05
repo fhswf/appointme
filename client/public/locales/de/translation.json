@@ -96,5 +96,11 @@
   "Endtime": "Endzeit",
   "these_moving_fox_create": "Beschreibung",
   "honest_weak_iguana_rest": "Ort",
-  "tired_whole_bumblebee_type": "z.B. Online via Zoom"
+  "tired_whole_bumblebee_type": "z.B. Online via Zoom",
+  "Add Account": "Konto hinzufügen",
+  "Add CalDav Account": "CalDav Konto hinzufügen",
+  "CalDav Accounts": "CalDav Konten",
+  "Server URL": "Server URL",
+  "Username": "Benutzername",
+  "Password": "Passwort"
 }
