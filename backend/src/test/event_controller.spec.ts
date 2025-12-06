@@ -41,12 +41,11 @@ describe("Event Controller", () => {
     let csrfCookie: string;
 
     beforeAll(async () => {
-        process.env.PORT = "3004";
         process.env.JWT_SECRET = "test_secret";
 
         // Re-import to ensure mocks are used
         const { init } = await import("../server.js");
-        app = init();
+        app = init(0);
     });
 
     afterAll(async () => {

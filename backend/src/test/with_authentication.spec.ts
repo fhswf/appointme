@@ -2,11 +2,9 @@
 import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 
 import request from "supertest";
-import { json } from 'body-parser';
 import jsonwebtoken from "jsonwebtoken";
 import { USER } from './USER.js';
 import { EVENT } from './EVENT.js';
-import exp from 'constants';
 
 
 let status = null;
@@ -55,10 +53,9 @@ describe("Server Start", () => {
     })
 
     beforeAll(async () => {
-        process.env.PORT = "3002";
         process.env.JWT_SECRET = "test";
         const { init } = await import("../server.js");
-        app = init();
+        app = init(0);
 
         // Create a JWT 
         jwt = jsonwebtoken.sign({
@@ -83,14 +80,14 @@ describe("Server Start", () => {
 
     it("should return unauthorized", async () => {
         status = 401;
-        const res = await request(app).get("/api/v1/users/user");
+        const res = await request(app).get("/api/v1/user/user");
         expect(res.status).toEqual(401);
     })
 
     it("should return unauthorized", async () => {
         status = 401;
         const res = await request(app)
-            .get("/api/v1/users/user")
+            .get("/api/v1/user/user")
             .set({ "Authorization": "Bearer" })
         expect(res.status).toEqual(401);
     })
@@ -98,14 +95,14 @@ describe("Server Start", () => {
     it("should return unauthorized", async () => {
         status = 401;
         const res = await request(app)
-            .get("/api/v1/users/user")
+            .get("/api/v1/user/user")
             .set({ "Authorization": "Bearer invalid" })
         expect(res.status).toEqual(401);
     })
 
     it("should return the user", async () => {
         const res = await request(app)
-            .get("/api/v1/users/user")
+            .get("/api/v1/user/user")
             .set({ "Cookie": `access_token=${jwt}` })
         expect(res.status).toEqual(200);
         expect(res.body.name).toEqual("Christian Gawron");
@@ -125,7 +122,7 @@ describe("Server Start", () => {
             name: "updated",
         }
         const res = await request(app)
-            .put("/api/v1/users/user")
+            .put("/api/v1/user/")
             .set({ "Cookie": [`access_token=${jwt}`, csrfCookie] })
             .set({ "x-csrf-token": csrfToken })
             .send({ data: newUser })

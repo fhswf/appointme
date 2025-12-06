@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import path from "path";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss(), istanbul({
       include: 'src/*',

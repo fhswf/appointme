@@ -90,11 +90,14 @@ jobs:
       - name: Generate Coverage Report
         run: cd client && npm run coverage:report
 
-      - name: Post PR Comment
-        run: npx github-actions-ctrf ctrf/*.json client/ctrf/*.json --pr-comment
+      - name: Publish Test Report with Pull Request Comment
+        uses: ctrf-io/github-test-reporter@v1
+        with:
+          report-path: '**/ctrf/*.json'
+          pull-request-report: true
         if: always()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
       - uses: actions/upload-artifact@v4
         if: always()
