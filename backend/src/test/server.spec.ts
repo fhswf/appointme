@@ -183,9 +183,10 @@ describe("Server routes", () => {
     vi.spyOn(process, 'exit').mockImplementation(() => { });
     try {
       console.log("Importing server.js...");
+
       const { init } = await import("../server.js");
       console.log("Calling init()...");
-      app = init();
+      app = init(0);
       console.log("init() returned:", app);
     } catch (error) {
       console.error("Error in beforeAll:", error);
@@ -205,7 +206,7 @@ describe("Server routes", () => {
 
   it("should return unauthorized", async () => {
     status = 401;
-    const res = await request(app).get("/api/v1/users/user");
+    const res = await request(app).get("/api/v1/user/user");
     expect(res.status).toEqual(401);
     expect(middleware.requireAuth).toHaveBeenCalled();
     console.log(res.body);

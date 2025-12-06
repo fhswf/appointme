@@ -5,6 +5,9 @@ import path from 'path';
 
 export default defineConfig({
     plugins: [react()],
+    define: {
+        'import.meta.env.REACT_APP_API_URL': JSON.stringify('http://localhost:5000/api/v1'),
+    },
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),

@@ -314,13 +314,16 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
       <div className="p-4">
         <div className="flex justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 flex items-center justify-center bg-gray-100 rounded-full">
-              <span className="text-xs font-bold">DAV</span>
-            </div>
+            <img
+              className="icon"
+              alt="CalDav Calendar"
+              src="/icons/caldav.png"
+              width="32"
+            />
             CalDav Calendar
           </div>
           <div>
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => setOpen(true)} data-testid="add-caldav-button">
               {t("Add CalDav Account")}
             </Button>
           </div>

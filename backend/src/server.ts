@@ -100,9 +100,10 @@ app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
-export const init = () => {
-  const server = app.listen(PORT, () => {
-    logger.info(`Server running on Port ${PORT}`);
+export const init = (port?: number) => {
+  const p = (port !== undefined) ? port : (Number(process.env.PORT) || 5000);
+  const server = app.listen(p, () => {
+    logger.info(`Server running on Port ${p}`);
   });
   return server;
 }

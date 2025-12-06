@@ -44,14 +44,13 @@ test.describe('Scheduling page', () => {
         });
 
         await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
-        await page.route('**/events/?*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+        await page.route('**/events/*/*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
     });
 
     test.describe('Visit scheduling page and schedule appointment', () => {
         test.beforeEach(async ({ page }) => {
             // This must be AFTER the catch-all route so it matches first (routes are evaluated in reverse)
-            await page.route('**/events/*/slot*', async route => {
-                console.log('Mocking getAvailable');
+            await page.route('**/events/**/slot*', async route => {
                 await route.fulfill({ status: 200, path: './tests/fixtures/available.json' });
             });
         });

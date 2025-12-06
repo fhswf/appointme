@@ -10,9 +10,11 @@ export async function postToRegister(name, email, password) {
       password: password,
     },
     {
+      headers: {
         "x-csrf-token": csrfToken,
       },
     }
+  );
   return response;
 }
 
