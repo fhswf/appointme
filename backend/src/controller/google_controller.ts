@@ -10,7 +10,7 @@ import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
 import { User } from "common/src/types";
-import { UserModel } from "../models/User.js";
+import { UserModel, UserDocument } from "../models/User.js";
 import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
@@ -90,7 +90,8 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument | null) => {
+      if (!user) throw new Error("User not found");
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
@@ -99,7 +100,8 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
         .map(id => { return { id } });
 
       if (items.length === 0) {
-        return Promise.resolve({ data: { calendars: {} } });
+        // @ts-ignore
+        return Promise.resolve({ data: { calendars: {} } } as any);
       }
 
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
@@ -176,7 +178,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function insertGoogleEvent(user: User, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
   }
@@ -205,7 +207,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
   let tokens = null;
   const query = UserModel.findOne({ _id: { $eq: userid } });
   query.exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       tokens = user.google_tokens;
       if (tokens.expiry_date <= Date.now()) {
         deleteTokens(userid);
@@ -234,7 +236,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
 export async function getAuth(user_id: string): Promise<OAuth2Client> {
   return UserModel.findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
@@ -274,7 +276,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);

@@ -6,6 +6,7 @@
 import { EventDocument, EventModel } from "../models/Event.js";
 import { Event, IntervalSet } from "common";
 import { freeBusy, events } from "./google_controller.js";
+import { getBusySlots } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
@@ -59,12 +60,17 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       logger.debug("blocked: %o", blocked);
       logger.debug("free: %o", blocked.inverse());
 
-      // Now query freeBusy service
-      return freeBusy(event.user as string, timeMin.toISOString(), timeMax.toISOString())
-        .then(freeBusyResponse => ({ freeBusyResponse, event, blocked }));
+      // Now query freeBusy service and CalDAV
+      return Promise.all([
+        freeBusy(event.user as string, timeMin.toISOString(), timeMax.toISOString()),
+        getBusySlots(event.user as string, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+          logger.error('CalDAV getBusySlots failed', err);
+          return [];
+        })
+      ]).then(([freeBusyResponse, calDavSlots]) => ({ freeBusyResponse, calDavSlots, event, blocked }));
     })
-    .then(({ freeBusyResponse, event, blocked }) => {
-      let freeSlots = calculateFreeSlots(freeBusyResponse, event, timeMin, timeMax, blocked);
+    .then(({ freeBusyResponse, calDavSlots, event, blocked }) => {
+      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked);
       logger.debug('freeSlots before filtering: %j', freeSlots);
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
       logger.debug('freeSlots after filtering: %j', freeSlots);
@@ -98,7 +104,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     return blocked;
   }
 
-  function calculateFreeSlots(response, event, timeMin, timeMax, blocked) {
+  function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
     let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
     freeSlots = freeSlots.intersect(blocked.inverse());
     for (const key in response.data.calendars) {
@@ -110,13 +116,31 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
         const _end = addMinutes(new Date(busy.end), event.bufferafter);
         if (current < _start)
           calIntervals.push({ start: current, end: _start });
-        current = _end;
+        if (_end > current) current = _end;
       }
       if (current < timeMax) {
         calIntervals.push({ start: current, end: timeMax });
       }
       freeSlots = freeSlots.intersect(calIntervals);
     }
+
+    if (calDavSlots && calDavSlots.length > 0) {
+      calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
+      const calIntervals = new IntervalSet();
+      let current = timeMin;
+      for (const busy of calDavSlots) {
+        const _start = addMinutes(busy.start, -event.bufferbefore);
+        const _end = addMinutes(busy.end, event.bufferafter);
+        if (current < _start)
+          calIntervals.push({ start: current, end: _start });
+        if (_end > current) current = _end;
+      }
+      if (current < timeMax) {
+        calIntervals.push({ start: current, end: timeMax });
+      }
+      freeSlots = freeSlots.intersect(calIntervals);
+    }
+
     return freeSlots;
   }
 }
@@ -336,7 +360,7 @@ export const insertEvent = (req: Request, res: Response): void => {
             const event: Schema$Event = {
               summary: <string>eventDoc.name + " mit " + <string>req.body.name,
               location: <string>eventDoc.location,
-              description: String(eventDoc.description) + "<br>" + (req.body.description as string),
+              description: String(eventDoc.description) + "\n" + (req.body.description as string),
               start: {
                 dateTime: starttime.toISOString(),
                 timeZone: "Europe/Berlin",

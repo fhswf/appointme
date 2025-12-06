@@ -85,7 +85,8 @@ async function main() {
         }
 
         const targetCalendarName = process.env.CALDAV_CALENDAR_NAME || 'Sprechstunde';
-        let targetCalendar = calendars.find(c => c.displayName && c.displayName.includes(targetCalendarName));
+        // @ts-ignore
+        let targetCalendar = calendars.find(c => c.displayName && String(c.displayName).includes(targetCalendarName));
 
         if (!targetCalendar) {
             console.log(`Calendar matching "${targetCalendarName}" not found. Available calendars:`);
