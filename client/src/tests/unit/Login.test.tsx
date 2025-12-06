@@ -32,7 +32,6 @@ vi.mock('sonner', () => ({
         error: vi.fn(),
     },
 }));
-
 describe('Login Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();

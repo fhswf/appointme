@@ -15,7 +15,6 @@ import { caldavRouter } from "./routes/caldav_routes.js";
 // logger
 import { logger } from "./logging.js";
 
-
 logger.info("NODE_ENV: %s", process.env.NODE_ENV);
 logger.info("CLIENT_URL: %s", process.env.CLIENT_URL);
 logger.info("MONGO_URI: %s", process.env.MONGO_URI);

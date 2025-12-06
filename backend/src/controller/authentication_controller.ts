@@ -13,7 +13,6 @@ import pkg, { JwtPayload } from 'jsonwebtoken';
 import { logger } from "../logging.js";
 
 
-
 const { sign, verify } = pkg;
 
 const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;

@@ -14,6 +14,7 @@ import {
   getActiveEventsController,
   getEventByUrlController,
   getAvailableTimes,
+  insertEvent
 } from "../controller/event_controller.js";
 
 import { middleware } from "../handlers/middleware.js";
@@ -95,5 +96,4 @@ eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-import { insertEvent } from "../controller/event_controller.js";
 eventRouter.post("/:id/slot", limiter, insertEvent);
