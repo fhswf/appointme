@@ -30,3 +30,4 @@ sonar-scanner-5.0.1.3006-linux/**
 **/*.log
 backend/src/dav_test.js
 test_output.txt
+backend/debug_output.txt

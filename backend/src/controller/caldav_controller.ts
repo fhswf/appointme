@@ -207,6 +207,8 @@ export const listCalendars = async (req: Request, res: Response) => {
     }
 };
 
+const formatICalDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
 export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
     // Find the account that owns the push_calendar URL
     const account = user.caldav_accounts.find(acc => {
@@ -224,14 +226,16 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
                 return true;
             }
         } catch (e) {
-            // ignore invalid serverUrl or push_calendar
+            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${user.push_calendar}`);
         }
         return false;
     });
 
     if (!account) {
+        logger.error('CalDav account not found for push calendar: %s', user.push_calendar);
         throw new Error('CalDav account not found for push calendar');
     }
+    logger.info('Found CalDAV account for push calendar: %s', account.name);
 
     const client = new DAVClient({
         serverUrl: account.serverUrl,
@@ -253,11 +257,14 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
     // We need to fetch calendars to get the full calendar object for the push_calendar URL
     // Optimization: We could cache this or construct a minimal object if tsdav allows
     const calendars = await client.fetchCalendars();
+    logger.debug('Fetched %d calendars', calendars.length);
     const targetCalendar = calendars.find(c => c.url === user.push_calendar);
 
     if (!targetCalendar) {
+        logger.error('Target calendar not found: %s', user.push_calendar);
         throw new Error('Target calendar not found');
     }
+    logger.info('Found target calendar: %s', targetCalendar.url);
 
     const eventData = {
         start: eventDetails.start.dateTime,
@@ -277,25 +284,86 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
         }))
     };
 
+    const uid = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+    // WORKAROUND: tsdav bug where fetchOptions.headers overwrites auth headers in createObject
+    // We pass Auth explicitly in fetchOptions for this call only.
+    // Also must re-include User-Agent as this overrides defaults.
+    // @ts-ignore
+    const authHeader = client.authHeaders?.Authorization || client.authHeaders?.authorization;
+    const creationFetchOptions = {
+        headers: {
+            // @ts-ignore
+            ...(client.fetchOptions?.headers || {}),
+            ...(authHeader ? { Authorization: authHeader } : {})
+        }
+    };
+
     const createdEvent = await client.createCalendarObject({
         calendar: targetCalendar,
-        filename: `${Date.now()}-${Math.random().toString(36).substring(7)}.ics`,
+        filename: `${uid}.ics`,
         iCalString: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//BookMe//NONSGML v1.0//EN
+PRODID:-//BookMe//EN
 BEGIN:VEVENT
-UID:${Date.now()}-${Math.random().toString(36).substring(7)}
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART:${new Date(eventData.start).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTEND:${new Date(eventData.end).toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+UID:${uid}
+DTSTAMP:${formatICalDate(new Date())}
+DTSTART:${formatICalDate(new Date(eventData.start))}
+DTEND:${formatICalDate(new Date(eventData.end))}
 SUMMARY:${eventData.summary}
 DESCRIPTION:${eventData.description}
 LOCATION:${eventData.location}
 ORGANIZER;CN=${eventData.organizer.cn}:mailto:${eventData.organizer.mailto}
 ${eventData.attendees.map(a => `ATTENDEE;CN=${a.cn};PARTSTAT=${a.partstat};RSVP=${a.rsvp}:mailto:${a.mailto}`).join('\n')}
 END:VEVENT
-END:VCALENDAR`
+END:VCALENDAR`,
+        fetchOptions: creationFetchOptions
     });
+
+    // @ts-ignore
+    logger.info('Created CalDAV event status: %s %s', createdEvent.status, createdEvent.statusText);
+
+    // @ts-ignore
+    if (!createdEvent.ok) {
+        // @ts-ignore
+        const errorBody = await createdEvent.text();
+        logger.error('Failed to create event on CalDAV server. Status: %s. Body: %s', createdEvent.status, errorBody);
+        throw new Error(`Failed to create event: ${createdEvent.status} ${createdEvent.statusText}`);
+    }
+
+    // Verify creation
+    try {
+        // Wait a moment for the server to index the event
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const searchStart = new Date(new Date(eventData.start).getTime() - 60000); // -1 minute
+        const searchEnd = new Date(new Date(eventData.end).getTime() + 60000);   // +1 minute
+
+        const fetchedObjects = await client.fetchCalendarObjects({
+            calendar: targetCalendar,
+            timeRange: {
+                start: searchStart.toISOString(),
+                end: searchEnd.toISOString()
+            }
+        });
+
+        logger.debug('Verification fetch returned %d objects', fetchedObjects.length);
+
+        const found = fetchedObjects.find(obj => {
+            if (obj.data) {
+                return obj.data.includes(`UID:${uid}`);
+            }
+            return false;
+        });
+
+        if (found) {
+            logger.info('Successfully verified event creation on server. UID: %s', uid);
+        } else {
+            logger.warn('Event created but not found on server verification. UID: %s', uid);
+        }
+    } catch (verifyError) {
+        logger.error('Error verifying event creation: %o', verifyError);
+    }
 
     return createdEvent;
 };

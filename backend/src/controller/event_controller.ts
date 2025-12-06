@@ -373,7 +373,7 @@ export const insertEvent = (req: Request, res: Response): void => {
                 })
                 .catch(error => {
                   logger.error('CalDav insert failed', error);
-                  res.status(400).json({ error: 'Failed to create event on CalDav server' });
+                  res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to create event on CalDav server' });
                 });
             } else {
               // Fallback to Google Calendar
