@@ -1,5 +1,4 @@
-
-import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import request from "supertest";
 import { USER } from './USER.js';
 import jsonwebtoken from "jsonwebtoken";
@@ -144,7 +143,7 @@ describe("Authentication Controller", () => {
             await getCsrfToken();
             const token = jsonwebtoken.sign(
                 { name: "New User", email: "new@example.com" },
-                process.env.ACCOUNT_ACTIVATION!,
+                process.env.ACCOUNT_ACTIVATION,
                 { expiresIn: "10m" }
             );
 

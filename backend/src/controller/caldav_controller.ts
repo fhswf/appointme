@@ -90,6 +90,83 @@ export const listAccounts = async (req: Request, res: Response) => {
     }
 };
 
+const processParsedEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
+    if (event.type !== 'VEVENT') return;
+
+    // Handle simple events
+    if (event.start && event.end) {
+        // Check if it overlaps (server should have filtered, but double check)
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+        if (start < endRange && end > startRange) {
+            busySlots.push({ start, end });
+        }
+    }
+
+    // Handle recurrence if rrule exists
+    if (event.rrule) {
+        const dates = event.rrule.between(startRange, endRange);
+        const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
+        for (const date of dates) {
+            busySlots.push({ start: date, end: new Date(date.getTime() + duration) });
+        }
+    }
+};
+
+const processCalendarObject = (obj: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
+    if (!obj.data) return;
+
+    const parsed = ical.parseICS(obj.data);
+    for (const k in parsed) {
+        processParsedEvent(parsed[k], startRange, endRange, busySlots);
+    }
+};
+
+const fetchAndProcessAccountCalendars = async (
+    account: any,
+    pullCalendars: Set<string>,
+    timeRange: { start: string, end: string },
+    dateRange: { start: Date, end: Date },
+    busySlots: { start: Date, end: Date }[]
+) => {
+    try {
+        const client = new DAVClient({
+            serverUrl: account.serverUrl,
+            credentials: {
+                username: account.username,
+                password: decrypt(account.password),
+            },
+            authMethod: 'Basic',
+            defaultAccountType: 'caldav',
+            fetchOptions: {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
+                }
+            }
+        });
+
+        await client.login();
+        const calendars = await client.fetchCalendars();
+
+        // Filter calendars based on user selection
+        const selectedCalendars = calendars.filter(cal => pullCalendars.has(cal.url));
+
+        for (const calendar of selectedCalendars) {
+            const objects = await client.fetchCalendarObjects({
+                calendar,
+                timeRange
+            });
+
+            for (const obj of objects) {
+                processCalendarObject(obj, dateRange.start, dateRange.end, busySlots);
+            }
+        }
+    } catch (e) {
+        // logger is imported in the file scope
+        logger.error('CalDAV error for account %s: %o', account.name, e);
+    }
+};
+
 export const getBusySlots = async (user_id: string, timeMin: string, timeMax: string): Promise<{ start: Date, end: Date }[]> => {
     const user = await UserModel.findOne({ _id: user_id }).exec();
     if (!user || !user.caldav_accounts) return [];
@@ -97,71 +174,16 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
     const busySlots: { start: Date, end: Date }[] = [];
     const startRange = new Date(timeMin);
     const endRange = new Date(timeMax);
-
-    const pullCalendars = new Set(user.pull_calendars || []);
+    const pullCalendars = new Set((user.pull_calendars || []) as string[]);
 
     for (const account of user.caldav_accounts) {
-        try {
-            const client = new DAVClient({
-                serverUrl: account.serverUrl,
-                credentials: {
-                    username: account.username,
-                    password: decrypt(account.password),
-                },
-                authMethod: 'Basic',
-                defaultAccountType: 'caldav',
-                fetchOptions: {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
-                    }
-                }
-            });
-
-            await client.login();
-
-            const calendars = await client.fetchCalendars();
-
-            // Filter calendars based on user selection
-            const selectedCalendars = calendars.filter(cal => pullCalendars.has(cal.url));
-
-            for (const calendar of selectedCalendars) {
-                const objects = await client.fetchCalendarObjects({
-                    calendar,
-                    timeRange: { start: timeMin, end: timeMax }
-                });
-
-                for (const obj of objects) {
-                    if (obj.data) {
-                        const parsed = ical.parseICS(obj.data);
-                        for (const k in parsed) {
-                            const event = parsed[k];
-                            if (event.type === 'VEVENT') {
-                                // Handle simple events
-                                if (event.start && event.end) {
-                                    // Check if it overlaps (server should have filtered, but double check)
-                                    const start = new Date(event.start);
-                                    const end = new Date(event.end);
-                                    if (start < endRange && end > startRange) {
-                                        busySlots.push({ start, end });
-                                    }
-                                }
-
-                                // Handle recurrence if rrule exists
-                                if (event.rrule) {
-                                    const dates = event.rrule.between(startRange, endRange);
-                                    const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
-                                    for (const date of dates) {
-                                        busySlots.push({ start: date, end: new Date(date.getTime() + duration) });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e) {
-            logger.error('CalDAV error for user %s account %s: %o', user_id, account.name, e);
-        }
+        await fetchAndProcessAccountCalendars(
+            account,
+            pullCalendars,
+            { start: timeMin, end: timeMax },
+            { start: startRange, end: endRange },
+            busySlots
+        );
     }
     return busySlots;
 }

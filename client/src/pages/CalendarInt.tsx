@@ -531,7 +531,7 @@ const Calendarintegration = () => {
                 alt="Google Calendar"
                 src="/icons/google_calendar_icon.svg"
                 width="32"
-              />{" "}
+              />
               {t("upper_even_florian_peek")}
             </div>
             <div>{renderConnectButton()}</div>
