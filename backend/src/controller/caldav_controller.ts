@@ -2,6 +2,7 @@ import { DAVClient } from 'tsdav';
 import { User } from "common/src/types";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
+import crypto from 'crypto';
 import { logger } from '../logging.js';
 import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
@@ -284,7 +285,8 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
         }))
     };
 
-    const uid = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    const randomStr = crypto.randomBytes(8).toString('hex');
+    const uid = `${Date.now()}-${randomStr}`;
 
     // WORKAROUND: tsdav bug where fetchOptions.headers overwrites auth headers in createObject
     // We pass Auth explicitly in fetchOptions for this call only.
