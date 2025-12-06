@@ -83,7 +83,7 @@ eventRouter.get("/event/:id", limiter, middleware.requireAuth, getEventByIdContr
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/active/:userId", getActiveEventsController);
+eventRouter.get("/active/:userId", limiter, getActiveEventsController);
 eventRouter.get("/:id/slot", getAvailableTimes);
 eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
 
