@@ -172,8 +172,7 @@ test.describe('Main page', () => {
         });
 
         test('Check event actions', async ({ page }) => {
-            page.on('console', msg => console.log('CHECK_EVENT_ACTIONS LOG:', msg.text()));
-            page.on('request', request => console.log('CHECK_EVENT_ACTIONS REQ:', request.method(), request.url()));
+
 
             const userPromise = page.waitForResponse(resp => resp.url().includes('/user/user'));
             const eventPromise = page.waitForResponse(resp => resp.url().includes('/api/v1/event') && resp.request().method() === 'GET');
