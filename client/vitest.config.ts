@@ -27,12 +27,16 @@ export default defineConfig({
         outputFile: './test-results/junit-report.xml',
         coverage: {
             provider: 'istanbul',
-            reporter: ['text', 'json', 'html', 'lcov'],
             include: [
-                'src/helpers/services/auth_services.ts',
-                'src/pages/Login.tsx',
-                'src/helpers/services/csrf_service.ts',
-                'src/helpers/services/user_services.ts'
+                'src/**/*.{ts,tsx}'
+            ],
+            reporter: ['text', 'json', 'html', 'lcov'],
+            exclude: [
+                'src/**/*.spec.tsx',
+                'src/**/*.test.tsx',
+                'src/test/**',
+                'src/tests/**',
+                'src/vite-env.d.ts'
             ],
         },
     },

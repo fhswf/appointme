@@ -1,5 +1,5 @@
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import request from "supertest";
 import { EVENT } from './EVENT.js';
 import { USER } from './USER.js';
@@ -211,6 +211,68 @@ describe("Event Controller", () => {
 
             expect(res.status).toBe(200);
             expect(res.body.msg).toBe("Update successful");
+        });
+    });
+
+    describe("GET /api/v1/event/:id/slot (getAvailableTimes)", () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2025-12-01T12:00:00Z'));
+        });
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it("should return free slots", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                select: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue({
+                    ...EVENT,
+                    minFuture: 0,
+                    maxFuture: 24 * 60 * 60,
+                    duration: 30,
+                    bufferbefore: 0,
+                    bufferafter: 0,
+                    available: {
+                        0: [], 1: [{ start: "09:00", end: "17:00" }], 2: [], 3: [], 4: [], 5: [], 6: []
+                    },
+                    maxPerDay: 5,
+                    user: USER._id
+                })
+            });
+
+            const { events, freeBusy } = await import("../controller/google_controller.js");
+            const { getBusySlots } = await import("../controller/caldav_controller.js");
+
+            (events as any).mockResolvedValue([]);
+            (freeBusy as any).mockResolvedValue({ data: { calendars: { 'primary': { busy: [] } } } });
+            (getBusySlots as any).mockResolvedValue([]);
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-02T00:00:00Z",
+                    timeMax: "2025-12-02T23:59:59Z"
+                });
+
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+        });
+
+        it("should return 400 if event not found", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                select: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-02T00:00:00Z",
+                    timeMax: "2025-12-02T23:59:59Z"
+                });
+
+            expect(res.status).toBe(400); // Controller throws Error -> caught -> 400
         });
     });
 
