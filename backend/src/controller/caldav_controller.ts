@@ -2,7 +2,7 @@ import { DAVClient } from 'tsdav';
 import { User } from "common/src/types";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { logger } from '../logging.js';
 import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
@@ -76,7 +76,7 @@ export const removeAccount = async (req: Request, res: Response) => {
         );
         res.json({ success: true });
     } catch (e) {
-        res.status(400).json({ error: 'Failed to remove account' });
+        res.status(400).json({ error: 'Failed to remove account: ' + e.message });
     }
 };
 
@@ -86,7 +86,7 @@ export const listAccounts = async (req: Request, res: Response) => {
         const user = await UserModel.findOne({ _id: userId }, { 'caldav_accounts.password': 0 }).exec();
         res.json(user?.caldav_accounts || []);
     } catch (e) {
-        res.status(400).json({ error: 'Failed to list accounts' });
+        res.status(400).json({ error: 'Failed to list accounts: ' + e.message });
     }
 };
 
