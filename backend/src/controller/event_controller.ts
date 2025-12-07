@@ -13,6 +13,8 @@ import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
 
 import { logger } from "../logging.js";
+import { sendEventInvitation } from "../utility/mailer.js";
+import crypto from 'node:crypto';
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
 
@@ -393,6 +395,41 @@ export const insertEvent = (req: Request, res: Response): void => {
               createCalDavEvent(user, event)
                 .then((evt) => {
                   logger.debug('CalDav insert returned %j', evt);
+
+                  // Send email invitation with ICS
+                  const formatICalDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                  const randomStr = crypto.randomBytes(8).toString('hex');
+                  const uid = `${Date.now()}-${randomStr}`;
+                  const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//BookMe//EN
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${formatICalDate(new Date())}
+DTSTART:${formatICalDate(new Date(event.start.dateTime))}
+DTEND:${formatICalDate(new Date(event.end.dateTime))}
+SUMMARY:${event.summary}
+DESCRIPTION:${event.description}
+LOCATION:${event.location}
+ORGANIZER;CN=${event.organizer.displayName}:mailto:${event.organizer.email}
+${event.attendees.map(a => `ATTENDEE;CN=${a.displayName};PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${a.email}`).join('\n')}
+END:VEVENT
+END:VCALENDAR`;
+
+                  const attendeeEmail = req.body.email as string;
+                  const attendeeName = req.body.name as string;
+                  const subject = `Invitaion: ${event.summary}`;
+                  const html = `<p>Hi ${attendeeName},</p>
+<p>You have been invited to the following event:</p>
+<h3>${event.summary}</h3>
+<p>${(event.description as string || '').replace(/\n/g, '<br>')}</p>
+<p><strong>Time:</strong> ${new Date(event.start.dateTime).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</p>
+<p>Please find the event details attached.</p>`;
+
+                  sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
+                    .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
+                    .catch(err => logger.error('Failed to send invitation email', err));
+
                   res.json({ success: true, message: "Event wurde gebucht (CalDav)", event: evt });
                 })
                 .catch(error => {

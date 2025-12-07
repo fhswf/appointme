@@ -61,6 +61,11 @@ vi.mock("csrf-csrf", () => {
     };
 });
 
+// Mock mailer
+vi.mock("../utility/mailer.js", () => ({
+    sendEventInvitation: vi.fn().mockResolvedValue({})
+}));
+
 // Mock google_controller
 vi.mock("../controller/google_controller.js", () => ({
     checkFree: vi.fn().mockResolvedValue(true),

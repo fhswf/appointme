@@ -6,11 +6,11 @@
 import { UserDocument, UserModel } from "../models/User.js";
 import { validationResult } from "express-validator";
 import validator from "validator";
-import { createTransport } from "nodemailer";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 import pkg, { JwtPayload } from 'jsonwebtoken';
 import { logger } from "../logging.js";
+import { transporter } from "../utility/mailer.js";
 
 
 const { sign, verify } = pkg;
@@ -34,18 +34,7 @@ const oAuth2Client = new OAuth2Client({
 
 
 
-const transporter = createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_FROM,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-  tls: {
-    rejectUnauthorized: true,
-  },
-  secure: true,
-  requireTLS: true,
-});
+
 
 /**
  * Middleware to register a new User
