@@ -55,6 +55,12 @@ test.describe('User not logged in', () => {
 test.describe('Main page', () => {
     test.describe('Visit app main page & add event type', () => {
         test.beforeEach(async ({ page }) => {
+            await page.route('**/csrf-token', async route => {
+                await route.fulfill({
+                    status: 200,
+                    body: JSON.stringify({ csrfToken: "mock-token" })
+                });
+            });
             await page.route('**/user/user', async route => {
                 if (route.request().method() === 'GET') {
                     await route.fulfill({ path: './tests/fixtures/user.json' });
@@ -62,7 +68,7 @@ test.describe('Main page', () => {
                     await route.continue();
                 }
             });
-            await page.route('**/events/event', async route => {
+            await page.route('**/event', async route => {
                 if (route.request().method() === 'GET') {
                     await route.fulfill({ path: './tests/fixtures/events.json' });
                 } else if (route.request().method() === 'POST') {
@@ -71,7 +77,7 @@ test.describe('Main page', () => {
                     await route.continue();
                 }
             });
-            await page.route('**/events/event/670eca0bc1eebcf903b17528', async route => {
+            await page.route('**/event/670eca0bc1eebcf903b17528', async route => {
                 if (route.request().method() === 'DELETE') {
                     await route.fulfill({
                         status: 200,
@@ -86,10 +92,10 @@ test.describe('Main page', () => {
         test('Check add/delete event type', async ({ page }) => {
             await page.goto('/app');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            await page.waitForResponse(resp => resp.url().includes('/event'));
 
             // Mock events after addition
-            await page.route('**/events/event', async route => {
+            await page.route('**/event', async route => {
                 if (route.request().method() === 'GET') {
                     await route.fulfill({ path: './tests/fixtures/eventsAfter.json' });
                 } else if (route.request().method() === 'POST') {
@@ -105,8 +111,8 @@ test.describe('Main page', () => {
             await page.waitForSelector('[data-testid="event-form-title"]', { state: 'visible' });
             await page.getByTestId('event-form-title').fill('Test event');
 
-            const postPromise = page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'POST');
-            const getPromise = page.waitForResponse(resp => resp.url().includes('/events/event') && resp.request().method() === 'GET', { timeout: 10000 });
+            const postPromise = page.waitForResponse(resp => resp.url().includes('/event') && resp.request().method() === 'POST');
+            const getPromise = page.waitForResponse(resp => resp.url().includes('/event') && resp.request().method() === 'GET', { timeout: 10000 });
 
             await page.getByTestId('event-form-submit').click();
 
@@ -116,7 +122,7 @@ test.describe('Main page', () => {
 
             await page.getByTestId('copy-link-button').last().click({ force: true });
 
-            const deletePromise = page.waitForResponse(resp => resp.url().includes('/events/event/670eca0bc1eebcf903b17528') && resp.request().method() === 'DELETE');
+            const deletePromise = page.waitForResponse(resp => resp.url().includes('/event/670eca0bc1eebcf903b17528') && resp.request().method() === 'DELETE');
             await page.getByTestId('delete-event-button').last().click({ force: true });
             await deletePromise;
 
@@ -125,7 +131,7 @@ test.describe('Main page', () => {
         });
 
         test('Check delete error handling', async ({ page }) => {
-            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => {
+            await page.route('**/event/66e41e641f4f81ece1828ab5', async route => {
                 if (route.request().method() === 'DELETE') {
                     await route.fulfill({
                         status: 500,
@@ -138,9 +144,9 @@ test.describe('Main page', () => {
 
             await page.goto('/app');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            await page.waitForResponse(resp => resp.url().includes('/event'));
 
-            const deleteErrorPromise = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'DELETE');
+            const deleteErrorPromise = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'DELETE');
             await page.getByTestId('delete-event-button').first().click();
             await deleteErrorPromise;
         });
@@ -149,27 +155,41 @@ test.describe('Main page', () => {
     test.describe('Visit app main page & disable event', () => {
         test.beforeEach(async ({ page }) => {
             await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
-            await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
-            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => {
+            await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+            await page.route('**/event/66e41e641f4f81ece1828ab5', async route => {
                 if (route.request().method() === 'GET' || route.request().method() === 'PUT') {
                     await route.fulfill({ path: './tests/fixtures/sprechstunde.json' });
                 } else {
                     await route.continue();
                 }
             });
+            await page.route('**/csrf-token', async route => {
+                await route.fulfill({
+                    status: 200,
+                    body: JSON.stringify({ csrfToken: "mock-token" })
+                });
+            });
         });
 
         test('Check event actions', async ({ page }) => {
-            await page.goto('/app');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            page.on('console', msg => console.log('CHECK_EVENT_ACTIONS LOG:', msg.text()));
+            page.on('request', request => console.log('CHECK_EVENT_ACTIONS REQ:', request.method(), request.url()));
 
-            const putPromise1 = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
-            await page.getByTestId('active-switch').click();
+            const userPromise = page.waitForResponse(resp => resp.url().includes('/user/user'));
+            const eventPromise = page.waitForResponse(resp => resp.url().includes('/api/v1/event') && resp.request().method() === 'GET');
+
+            await page.goto('/app');
+            await userPromise;
+            await eventPromise;
+
+            await eventPromise;
+
+            const putPromise1 = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
+            await page.getByTestId('active-switch').click({ force: true });
             await putPromise1;
             await expect(page.getByTestId('event-card')).toHaveClass(/inactive/);
 
-            const putPromise2 = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
+            const putPromise2 = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
             await page.getByTestId('active-switch').click();
             await putPromise2;
             await expect(page.getByTestId('event-card')).toHaveClass(/active/);
@@ -183,8 +203,8 @@ test.describe('Main page', () => {
     test.describe('Visit app main page & edit event type', () => {
         test.beforeEach(async ({ page }) => {
             await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
-            await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
-            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => {
+            await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+            await page.route('**/event/66e41e641f4f81ece1828ab5', async route => {
                 await route.fulfill({ path: './tests/fixtures/sprechstunde.json' });
             });
         });
@@ -192,9 +212,9 @@ test.describe('Main page', () => {
         test('Check edit event type', async ({ page }) => {
             await page.goto('/app');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            await page.waitForResponse(resp => resp.url().includes('/event'));
 
-            const editPromise = page.waitForResponse(resp => resp.url().includes('/events/event/66e41e641f4f81ece1828ab5'));
+            const editPromise = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5'));
             await page.getByTestId('edit-event-button').click();
             await editPromise;
             await expect(page.getByTestId('event-form-title')).toHaveValue('Sprechstunde');
@@ -204,14 +224,14 @@ test.describe('Main page', () => {
     test.describe('Visit app main page & log out', () => {
         test.beforeEach(async ({ page }) => {
             await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
-            await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
-            await page.route('**/events/event/66e41e641f4f81ece1828ab5', async route => await route.fulfill({ path: './tests/fixtures/sprechstunde.json' }));
+            await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+            await page.route('**/event/66e41e641f4f81ece1828ab5', async route => await route.fulfill({ path: './tests/fixtures/sprechstunde.json' }));
         });
 
         test('Check log out', async ({ page }) => {
             await page.goto('/app');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            await page.waitForResponse(resp => resp.url().includes('/event'));
 
             await page.getByTestId('profile-menu').click();
             await page.getByTestId('logout-button').click();
@@ -229,13 +249,13 @@ test.describe('Main page', () => {
                     await route.fulfill({ path: './tests/fixtures/user.json' });
                 }
             });
-            await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+            await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
             await page.route(url => url.pathname.includes('/google/calendarList'), async route => await route.fulfill({ path: './tests/fixtures/calendarList.json' }));
             await page.route(url => url.pathname.includes('/google/generateUrl'), async route => await route.fulfill({ path: './tests/fixtures/generateUrl.json' }));
 
             await page.goto('/app');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
-            await page.waitForResponse(resp => resp.url().includes('/events/event'));
+            await page.waitForResponse(resp => resp.url().includes('/event'));
 
             await page.getByTestId('profile-menu').click();
 

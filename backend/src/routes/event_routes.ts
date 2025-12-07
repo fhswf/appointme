@@ -33,7 +33,7 @@ const limiter = rateLimit({
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
 */
-eventRouter.post("/event", limiter, middleware.requireAuth, addEventController);
+eventRouter.post("/", limiter, middleware.requireAuth, addEventController);
 eventRouter.post("/addEvent", limiter, middleware.requireAuth, addEventController);
 
 /**
@@ -44,7 +44,7 @@ eventRouter.post("/addEvent", limiter, middleware.requireAuth, addEventControlle
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.delete("/event/:id", limiter, middleware.requireAuth, deleteEventController);
+eventRouter.delete("/:id", limiter, middleware.requireAuth, deleteEventController);
 
 /**
  * Route to update an Event.
@@ -54,7 +54,7 @@ eventRouter.delete("/event/:id", limiter, middleware.requireAuth, deleteEventCon
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.put("/event/:id", limiter, middleware.requireAuth, updateEventController);
+eventRouter.put("/:id", limiter, middleware.requireAuth, updateEventController);
 
 /**
  * Route to fetch all events of the logged in user
@@ -64,7 +64,7 @@ eventRouter.put("/event/:id", limiter, middleware.requireAuth, updateEventContro
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/event", limiter, middleware.requireAuth, getEventListController);
+eventRouter.get("/", limiter, middleware.requireAuth, getEventListController);
 
 /**
  * Route to fetch an event of an given eventid
@@ -74,7 +74,7 @@ eventRouter.get("/event", limiter, middleware.requireAuth, getEventListControlle
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/event/:id", limiter, middleware.requireAuth, getEventByIdController);
+eventRouter.get("/:id", limiter, middleware.requireAuth, getEventByIdController);
 
 /**
  * Route to fetch public events (single by URL or list by user)

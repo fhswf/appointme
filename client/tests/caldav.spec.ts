@@ -11,7 +11,8 @@ test.describe('CalDAV Integration', () => {
             }
         });
         // Mock events
-        await page.route('**/events/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+        await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
+        await page.route('**/csrf-token', async route => await route.fulfill({ body: JSON.stringify({ csrfToken: "mock-token" }) }));
 
         // Mock Google integration routes to avoid 404s
         await page.route('**/google/calendarList', async route => await route.fulfill({ body: '[]' }));

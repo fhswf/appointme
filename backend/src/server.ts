@@ -89,7 +89,7 @@ app.use(csrfProtection);
 //Use routes
 const router = express.Router();
 router.use("/auth/", authenticationRouter);
-router.use("/events/", eventRouter);
+router.use("/event/", eventRouter);
 router.use("/google/", googleRouter);
 router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);

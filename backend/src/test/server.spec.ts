@@ -230,12 +230,12 @@ describe("Server routes", () => {
   it("should get available slots for 'sprechstunde'", async () => {
     // Assuming EVENT._id is the ID used. The mock returns EVENT.
     // We need to use a dummy ID in the URL.
-    const res = await request(app).get("/api/v1/events/12345/slot?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z");
+    const res = await request(app).get("/api/v1/event/12345/slot?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z");
     expect(res.status).toEqual(200);
   })
 
   it("should get the event by url", async () => {
-    const res = await request(app).get("/api/v1/events/109150731150582581691/sprechstunde");
+    const res = await request(app).get("/api/v1/event/109150731150582581691/sprechstunde");
     expect(res.status).toEqual(200);
     console.log(res.body);
   })
