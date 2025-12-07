@@ -34,13 +34,12 @@ import {
   getCalendarList,
 } from "../helpers/services/google_services";
 
-import { Edit } from "lucide-react";
+import { Edit, Trash2, Plus } from "lucide-react";
 
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { addAccount, removeAccount, listAccounts, listCalendars } from "../helpers/services/caldav_services";
 import { Input } from "@/components/ui/input";
-import { Trash2, Plus } from "lucide-react";
 
 import ErrorBoundary from "../components/ErrorBoundary";
 
@@ -274,7 +273,8 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
     serverUrl: "",
     username: "",
     password: "",
-    name: ""
+    name: "",
+    privacyAck: false
   });
   const { t } = useTranslation();
 
@@ -296,7 +296,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
     addAccount(formData.serverUrl, formData.username, formData.password, formData.name)
       .then(() => {
         setOpen(false);
-        setFormData({ serverUrl: "", username: "", password: "", name: "" });
+        setFormData({ serverUrl: "", username: "", password: "", name: "", privacyAck: false });
         loadAccounts();
       })
       .catch(err => {
@@ -364,6 +364,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My Calendar"
+                  data-testid="caldav-name"
                 />
               </div>
               <div className="grid gap-2 mt-2">
@@ -373,6 +374,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                   value={formData.serverUrl}
                   onChange={e => setFormData({ ...formData, serverUrl: e.target.value })}
                   placeholder="https://caldav.example.com"
+                  data-testid="caldav-server-url"
                 />
               </div>
               <div className="grid gap-2 mt-2">
@@ -382,6 +384,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                   value={formData.username}
                   onChange={e => setFormData({ ...formData, username: e.target.value })}
                   autoComplete="username"
+                  data-testid="caldav-username"
                 />
               </div>
               <div className="grid gap-2 mt-2">
@@ -392,13 +395,28 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                   value={formData.password}
                   onChange={e => setFormData({ ...formData, password: e.target.value })}
                   autoComplete="current-password"
+                  data-testid="caldav-password"
                 />
+              </div>
+              <div className="flex items-center space-x-2 mt-4">
+                <Checkbox
+                  id="privacy-ack"
+                  checked={formData.privacyAck}
+                  onCheckedChange={(checked) => setFormData({ ...formData, privacyAck: checked as boolean })}
+                  data-testid="caldav-privacy-ack"
+                />
+                <label
+                  htmlFor="privacy-ack"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {t("I acknowledge that my password will be stored encrypted in the database.")}
+                </label>
               </div>
             </form>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" form="caldav-form">Add</Button>
+            <Button type="submit" form="caldav-form" disabled={!formData.privacyAck}>Add</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

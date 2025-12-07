@@ -49,6 +49,7 @@ test.describe('CalDAV Integration', () => {
     });
 
     test('Add CalDAV account', async ({ page }) => {
+
         await page.getByTestId('profile-menu').click();
         await page.getByTestId('calendar-button').click();
         await expect(page).toHaveURL(/\/integration/);
@@ -57,10 +58,16 @@ test.describe('CalDAV Integration', () => {
         await page.getByTestId('add-caldav-button').click();
 
         // Fill form
-        await page.getByLabel('Server URL').fill('http://caldav.server');
-        await page.getByLabel('User').fill('testuser');
-        await page.getByLabel('Password').fill('password');
-        await page.getByLabel('Name', { exact: true }).fill('My CalDAV');
+        await page.getByTestId('caldav-server-url').fill('http://caldav.server');
+        await page.getByTestId('caldav-username').fill('testuser');
+        await page.getByTestId('caldav-password').fill('password');
+        await page.getByTestId('caldav-name').fill('My CalDAV');
+
+        // Check disabled state
+        await expect(page.getByRole('button', { name: 'Add', exact: true })).toBeDisabled();
+
+        // Check box
+        await page.getByTestId('caldav-privacy-ack').check();
 
         // Submit
         const addAccountPromise = page.waitForResponse(resp => resp.url().includes('/caldav/account') && resp.request().method() === 'POST');
