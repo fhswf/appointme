@@ -404,5 +404,43 @@ END:VCALENDAR` }
             expect(result).toBeDefined();
             expect(result.ok).toBe(true);
         });
+
+        it("should throw error if account not found for push calendar", async () => {
+            const user = {
+                caldav_accounts: [],
+                push_calendar: "https://caldav.example.com/calendar-1"
+            };
+            const eventDetails = {};
+
+            // @ts-ignore
+            await expect(caldavController.createCalDavEvent(user as any, eventDetails))
+                .rejects.toThrow('CalDav account not found for push calendar');
+        });
+
+        it("should throw error if target calendar not found", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([]), // No calendars found
+                });
+            });
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com",
+                        username: "user",
+                        password: "encrypted_password",
+                        name: "Main Account"
+                    }
+                ],
+                push_calendar: "https://caldav.example.com/calendar-1"
+            };
+            // @ts-ignore
+            await expect(caldavController.createCalDavEvent(user as any, {}))
+                .rejects.toThrow('Target calendar not found');
+        });
     });
 });

@@ -4,7 +4,6 @@
  */
 
 
-import { addMinutes } from 'date-fns';
 import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
@@ -118,22 +117,7 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     })
 }
 
-// Helper to convert busy slots to free intervals (duplicated from event_controller for now, can be shared later)
-function convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter) {
-  const freeIntervals = new IntervalSet();
-  let current = timeMin;
-  for (const busy of busySlots) {
-    const _start = addMinutes(new Date(busy.start), -bufferBefore);
-    const _end = addMinutes(new Date(busy.end), bufferAfter);
-    if (current < _start)
-      freeIntervals.push({ start: current, end: _start });
-    if (_end > current) current = _end;
-  }
-  if (current < timeMax) {
-    freeIntervals.push({ start: current, end: timeMax });
-  }
-  return freeIntervals;
-}
+import { convertBusyToFree } from '../utility/scheduler.js';
 
 async function fetchFreeBusyData(userid: string, timeMin: Date, timeMax: Date) {
   return Promise.all([

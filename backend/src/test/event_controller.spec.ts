@@ -176,7 +176,7 @@ describe("Event Controller", () => {
             expect(res.body).toHaveLength(1);
         });
 
-        it.skip("should handle error getting event list", async () => {
+        it("should handle error getting event list", async () => {
             (EventModel.find as any).mockReturnValue({
                 exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
             });
@@ -208,7 +208,7 @@ describe("Event Controller", () => {
             expect(res.status).toBe(404);
         });
 
-        it.skip("should handle error getting event by ID", async () => {
+        it("should handle error getting event by ID", async () => {
             (EventModel.findById as any).mockReturnValue({
                 exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
             });
@@ -221,7 +221,7 @@ describe("Event Controller", () => {
     });
 
     describe("GET /api/v1/event/user/:userId", () => {
-        it.skip("should get active events for user", async () => {
+        it("should get active events for user", async () => {
             (EventModel.find as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue([EVENT])
             });
@@ -234,7 +234,7 @@ describe("Event Controller", () => {
             expect(EventModel.find).toHaveBeenCalledWith({ user: USER._id, isActive: true });
         });
 
-        it.skip("should handle error getting active events", async () => {
+        it("should handle error getting active events", async () => {
             (EventModel.find as any).mockReturnValue({
                 exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
             });
@@ -247,7 +247,7 @@ describe("Event Controller", () => {
     });
 
     describe("GET /api/v1/event/url/:userId/:eventUrl", () => {
-        it.skip("should get event by URL", async () => {
+        it("should get event by URL", async () => {
             (EventModel.findOne as any).mockImplementation(() => ({
                 exec: vi.fn().mockResolvedValue(EVENT)
             }));
@@ -269,7 +269,7 @@ describe("Event Controller", () => {
             expect(res.status).toBe(404);
         });
 
-        it.skip("should handle error getting event by URL", async () => {
+        it("should handle error getting event by URL", async () => {
             (EventModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
             });
@@ -499,7 +499,7 @@ describe("Event Controller", () => {
             expect(res.body.error).toBe("Event not found");
         });
 
-        it.skip("should return 404 if user not found during insert", async () => {
+        it("should return 404 if user not found during insert", async () => {
             (EventModel.findById as any).mockImplementation(() => mockQuery({
                 ...EVENT,
                 duration: 60,

@@ -18,6 +18,7 @@ import { sendEventInvitation } from "../utility/mailer.js";
 import { getLocale, t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
 import { generateIcsContent } from "../utility/ical.js";
+import { convertBusyToFree } from "../utility/scheduler.js";
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
 
@@ -109,21 +110,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     return blocked;
   }
 
-  function convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter) {
-    const freeIntervals = new IntervalSet();
-    let current = timeMin;
-    for (const busy of busySlots) {
-      const _start = addMinutes(new Date(busy.start), -bufferBefore);
-      const _end = addMinutes(new Date(busy.end), bufferAfter);
-      if (current < _start)
-        freeIntervals.push({ start: current, end: _start });
-      if (_end > current) current = _end;
-    }
-    if (current < timeMax) {
-      freeIntervals.push({ start: current, end: timeMax });
-    }
-    return freeIntervals;
-  }
+
 
   function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
     let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");

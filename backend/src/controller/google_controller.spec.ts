@@ -1,27 +1,31 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateAuthUrl, googleCallback, getCalendarList, revokeScopes, checkFree, events, freeBusy } from './google_controller';
+import { google } from 'googleapis';
+import { generateAuthUrl, googleCallback, getCalendarList, revokeScopes, checkFree, events, freeBusy, insertGoogleEvent } from './google_controller';
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { UserModel } from '../models/User';
 
 
 // Mock dependencies
+// Mock dependencies
+const calendarMock = {
+    events: {
+        insert: vi.fn(),
+        list: vi.fn().mockResolvedValue({ data: { items: [] } })
+    },
+    calendarList: {
+        list: vi.fn().mockResolvedValue({ data: { items: [] } })
+    },
+    freebusy: {
+        query: vi.fn().mockResolvedValue({ data: { calendars: {} } })
+    }
+};
+
 vi.mock('googleapis', () => {
     return {
         google: {
-            calendar: () => ({
-                events: {
-                    insert: vi.fn(),
-                    list: vi.fn().mockResolvedValue({ data: { items: [] } })
-                },
-                calendarList: {
-                    list: vi.fn().mockResolvedValue({ data: { items: [] } })
-                },
-                freebusy: {
-                    query: vi.fn().mockResolvedValue({ data: { calendars: {} } })
-                }
-            })
+            calendar: () => calendarMock
         }
     };
 });
@@ -219,6 +223,100 @@ describe('Google Controller', () => {
 
                 const result = await checkFree(mockEvent as any, 'user-id', start, end);
                 expect(result).toBe(true);
+            });
+        });
+
+        describe('insertGoogleEvent', () => {
+            it('should throw error if no google account connected', async () => {
+                const user = { _id: 'user', google_tokens: {} };
+                // @ts-ignore
+                await expect(insertGoogleEvent(user, { summary: 'test' }))
+                    .rejects.toThrow('No Google account connected');
+            });
+
+            it('should insert event if google account connected', async () => {
+                const user = {
+                    _id: 'user',
+                    google_tokens: { access_token: 'token' },
+                    push_calendar: 'primary'
+                };
+
+                // @ts-ignore
+                await insertGoogleEvent(user, { summary: 'test' });
+
+                // Verify google.calendar().events.insert called
+                const insertMock = google.calendar({ version: 'v3' }).events.insert;
+                expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+                    calendarId: 'primary',
+                    requestBody: { summary: 'test' }
+                }));
+            });
+        });
+
+        describe('revokeScopes', () => {
+            it('should delete tokens if expired', async () => {
+                // @ts-ignore
+                mockReq['user_id'] = 'test-user-id';
+                const mockUser = {
+                    google_tokens: {
+                        access_token: 'token',
+                        expiry_date: Date.now() - 10000 // Expired
+                    }
+                };
+
+                (UserModel.findOne as any).mockReturnValue({
+                    exec: vi.fn().mockResolvedValue(mockUser)
+                });
+
+                // Verify findOneAndUpdate is called for deleteTokens
+                // We need to spy on it or check the mock
+
+                await revokeScopes(mockReq as Request, mockRes as Response);
+                await new Promise(resolve => setTimeout(resolve, 0));
+
+                expect(jsonMock).toHaveBeenCalledWith({ msg: "ok" });
+                // Check if deleteTokens logic ran (UserModel.findOneAndUpdate with $unset)
+                expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                    { _id: { $eq: 'test-user-id' } },
+                    { $unset: { google_tokens: "" } }
+                );
+            });
+        });
+
+        describe('freeBusy', () => {
+            it('should return null/empty if user not found', async () => {
+                (UserModel.findOne as any).mockReturnValue({
+                    exec: vi.fn().mockResolvedValue(null)
+                });
+
+                await expect(freeBusy('user-id', '2025-01-01', '2025-01-02')).rejects.toThrow('User not found');
+            });
+
+            it('should return empty calendar object if no items to query', async () => {
+                (UserModel.findOne as any).mockReturnValue({
+                    exec: vi.fn().mockResolvedValue({
+                        google_tokens: { access_token: 'token' },
+                        pull_calendars: [] // Empty
+                    })
+                });
+
+                const res = await freeBusy('user-id', '2025-01-01', '2025-01-02');
+                // @ts-ignore
+                expect(res).toEqual({ data: { calendars: {} } });
+            });
+
+            it('should query google freebusy if items exist', async () => {
+                (UserModel.findOne as any).mockReturnValue({
+                    exec: vi.fn().mockResolvedValue({
+                        google_tokens: { access_token: 'token' },
+                        pull_calendars: ['cal-id-1']
+                    })
+                });
+
+                await freeBusy('user-id', '2025-01-01', '2025-01-02');
+
+                const queryMock = google.calendar({ version: 'v3' }).freebusy.query;
+                expect(queryMock).toHaveBeenCalled();
             });
         });
     });
