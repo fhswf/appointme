@@ -1,4 +1,4 @@
-import { Document, Schema, model } from 'mongoose';
+import { Document, Schema, model, models } from 'mongoose';
 import { Day, Event } from 'common'
 
 
@@ -105,4 +105,4 @@ const eventSchema = new Schema<EventDocument>({
 
 eventSchema.index({ user: 1, url: 1 }, { unique: true });
 
-export const EventModel = model<EventDocument>("Event", eventSchema);
+export const EventModel = models.Event || model<EventDocument>("Event", eventSchema);

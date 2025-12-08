@@ -78,15 +78,28 @@ describe('OIDC Controller', () => {
 
     describe('getAuthUrl', () => {
         it('should return 503 if OIDC is not configured', async () => {
-            // Unset using stubEnv (undefined means removed from process.env in stubEnv context?)
-            // vi.stubEnv val can be string or undefined.
-            vi.stubEnv('OIDC_ISSUER', undefined);
-            // Note: getClient caches the client, so this test might depend on run order if not carefully isolated.
-            // But since we create a new app instance (though modules are cached), the controller's module state persists.
-            // This test is tricky without isolation. We'll skip deep verification here or rely on Vitest isolation if threads are used (usually yes).
+            vi.resetModules();
+            vi.stubEnv('OIDC_ISSUER', '');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const res = await request(app).get('/api/v1/oidc/url');
+
+            expect(res.status).toBe(503);
+            expect(res.body).toEqual({ error: "OIDC not configured" });
         });
 
         it('should return authorization URL when configured', async () => {
+             // Reset modules to ensure fresh state after previous test
+            vi.resetModules();
+             // Re-setup envs as resetModules might affect how they are read if cached? 
+             // Actually, beforeEach runs before this, but if we reset modules inside a test, we might need to re-import app.
+             // beforeEach initializes `app = init(0)`, but that uses the module from TOP LEVEL import which might be stale if we reset modules?
+             // No, resetModules() clears the require cache.
+             // So we must re-import init and re-initialize app.
+            const { init } = await import('../server.js');
+            app = init(0);
+
             const authUrl = 'https://issuer.example.com/auth?scope=openid';
             mockClient.authorizationUrl.mockReturnValue(authUrl);
 
@@ -114,7 +127,24 @@ describe('OIDC Controller', () => {
         });
 
         it('should return 503 if OIDC not configured', async () => {
-            // Skipping as discussed
+            vi.resetModules();
+            vi.stubEnv('OIDC_ISSUER', '');
+            const { init } = await import('../server.js');
+            app = init(0);
+            
+            // We need a fresh CSRF token from the new app instance
+            const resCsrf = await request(app).get("/api/v1/csrf-token");
+            csrfToken = resCsrf.body.csrfToken;
+            csrfCookie = resCsrf.headers["set-cookie"][0];
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ code: 'some-code' });
+
+            expect(res.status).toBe(503);
+            expect(res.body).toEqual({ error: "OIDC not configured" });
         });
 
         it('should login successfully with valid code', async () => {
