@@ -280,10 +280,10 @@ export const getEventByUrlController = (req: Request, res: Response): void => {
     .findOne({ url: url, user: userid })
     .exec()
     .then(event => {
-      if (!event) {
-        res.status(404).json({ error: "Event not found" });
-      } else {
+      if (event) {
         res.status(200).json(event);
+      } else {
+        res.status(404).json({ error: "Event not found" });
       }
     })
     .catch(err => { res.status(400).json({ error: err }); });
