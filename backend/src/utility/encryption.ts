@@ -18,7 +18,8 @@ export const encrypt = (text: string): string => {
         const cipher = crypto.createCipheriv(ALGORITHM, getKey(), iv);
         let encrypted = cipher.update(text, 'utf8', ENCODING);
         encrypted += cipher.final(ENCODING);
-        return `${iv.toString(ENCODING)}:${encrypted}`;
+        const authTag = cipher.getAuthTag();
+        return `${iv.toString(ENCODING)}:${authTag.toString(ENCODING)}:${encrypted}`;
     } catch (error) {
         logger.error('Encryption failed', error);
         throw new Error('Encryption failed');
@@ -29,15 +30,22 @@ export const decrypt = (text: string): string => {
     if (!text) return text;
     try {
         const parts = text.split(':');
-        if (parts.length !== 2) return text; // Not encrypted or invalid format
+        // Backwards compatibility for old format (IV:Encrypted) - likely won't work with GCM but good to avoid crash
+        // If 2 parts, it might be old CBC data. But GCM will fail without tag.
+        // We strict check for 3 parts now.
+        if (parts.length !== 3) return text;
+
         const iv = Buffer.from(parts[0], ENCODING);
-        const encryptedText = parts[1];
+        const authTag = Buffer.from(parts[1], ENCODING);
+        const encryptedText = parts[2];
+
         const decipher = crypto.createDecipheriv(ALGORITHM, getKey(), iv);
+        decipher.setAuthTag(authTag);
         let decrypted = decipher.update(encryptedText, ENCODING, 'utf8');
         decrypted += decipher.final('utf8');
         return decrypted;
     } catch (error) {
         logger.error('Decryption failed', error);
-        return text; // Return original if decryption fails (backward compatibility/error handling)
+        return text;
     }
 };
