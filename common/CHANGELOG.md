@@ -1,3 +1,48 @@
+# common [1.3.0](https://github.com/fhswf/book_me/compare/common@1.2.0...common@1.3.0) (2025-12-08)
+
+
+### Bug Fixes
+
+* **build:** fix build of bookme-common ([2d4e274](https://github.com/fhswf/book_me/commit/2d4e27438e67b864bbb695181604e533136e248d))
+* **build:** fix CI build ([aef4bcb](https://github.com/fhswf/book_me/commit/aef4bcb6905e3b73079a726231681c19a3214564))
+* **build:** fix CI build on GitHub ([d27a4a0](https://github.com/fhswf/book_me/commit/d27a4a05b9d80a5358b18f9986ac75dd43bdc073))
+* **common:** fix IntervalSet constructor ([34b14a9](https://github.com/fhswf/book_me/commit/34b14a9a28061a8aa34c404f906a08c63cda0561))
+* deleting event types ([e7d07ca](https://github.com/fhswf/book_me/commit/e7d07caecb04fa8386bad559e0dfa123570c5e74))
+* freeBusy service corrected ([ff80003](https://github.com/fhswf/book_me/commit/ff8000327717a67a42b326c1acce906112bbb250))
+* improve readability ([83d9f91](https://github.com/fhswf/book_me/commit/83d9f917a429d7f57294f0db557442afcd30a2ee))
+* improve readability ([d336b95](https://github.com/fhswf/book_me/commit/d336b95733d89bb282e63682aa7ae03748079e8f))
+* improve readability ([2042b43](https://github.com/fhswf/book_me/commit/2042b43a8913619896d0428d7512d25e51e01a60))
+* module deps ([04a913c](https://github.com/fhswf/book_me/commit/04a913c10f701e457e18987cf4b6a43fe0827b08))
+* module resolution ([6b3eb2d](https://github.com/fhswf/book_me/commit/6b3eb2d032a7349c117ff738dd1c84c00e00d9e3))
+* module resolution ([fdd128e](https://github.com/fhswf/book_me/commit/fdd128ee14ca2855c15b9353400166cd7fd3943f))
+* Rename url field ([660773a](https://github.com/fhswf/book_me/commit/660773a1950ae368373651b0c6209c32f10187ab))
+* **security:** remove password attribute ([a1fb3e5](https://github.com/fhswf/book_me/commit/a1fb3e5abdacd6037a76ee24b357c71658162f18))
+* semantic release config ([b638ae1](https://github.com/fhswf/book_me/commit/b638ae1bf1f34ba6283a7ab61de5eaf406a27e20))
+* semantic-release config ([e6b7a13](https://github.com/fhswf/book_me/commit/e6b7a1326964a2a7b5f3d088386e60deb6a3b077))
+* semantic-release for common ([ecee172](https://github.com/fhswf/book_me/commit/ecee17292598b18157f25f9f82e2bc7c22b6f5e2))
+* sonarqube issues ([1f5b8fe](https://github.com/fhswf/book_me/commit/1f5b8fe9bc1185cc1b3411b7afec0bcb65699b5a))
+* **test:** test before sonarqube analysis ([50a3389](https://github.com/fhswf/book_me/commit/50a33892f69f3c0a82f8fb77d6c07b95a0dcc6b0))
+* **test:** test before sonarqube analysis ([a5d856f](https://github.com/fhswf/book_me/commit/a5d856f1f4b55f543e5d3e21840fdad2001cff0d))
+* **test:** test before sonarqube analysis ([a6d28c6](https://github.com/fhswf/book_me/commit/a6d28c6e4e3017c9716f2328e784fadc7c30550c))
+* **test:** test before sonarqube analysis ([966b558](https://github.com/fhswf/book_me/commit/966b558099ccf7ec09f30c8676c0b1e9ba9cc9c1))
+* **test:** timezone for tests ([672e71a](https://github.com/fhswf/book_me/commit/672e71a07d5f6d8f850fc60b35daf80311e1f0ed))
+* **test:** unit tests ([40f775f](https://github.com/fhswf/book_me/commit/40f775ff8376d2cb971efd66dff42f4e2f73b132))
+* **test:** version & config updates ([266684c](https://github.com/fhswf/book_me/commit/266684cc69a162ee968ac3ebcce8613df1f25244))
+* timezone issue in interpretation of slots fixed ([fbc5722](https://github.com/fhswf/book_me/commit/fbc57220e7b4dfb377969014735c9b33be0686f9))
+* UI glitches fixed ([14783e1](https://github.com/fhswf/book_me/commit/14783e13cd00b7e3d05aac64354ca30157a679c0))
+* **ui:** changes for vite & mui 6 ([6fc7016](https://github.com/fhswf/book_me/commit/6fc701620d3c9931cbc072e62fb375a96928080d))
+* yarn build/dependency management & docker ([5b491e6](https://github.com/fhswf/book_me/commit/5b491e6b0005db98837286b411d8de9a13fdbb7a))
+
+
+### Features
+
+* caldav integration ([ddc3773](https://github.com/fhswf/book_me/commit/ddc37730f4ccd50b57f70a60394276f3abd29273))
+* common classes for handling free/busy intervals ([118f1ba](https://github.com/fhswf/book_me/commit/118f1ba7cc593681e4e3671f8a286c155d12b57e))
+* **event type:** add min/max timespan for events, add maximum number of events per day ([23fa858](https://github.com/fhswf/book_me/commit/23fa858bc575a67fef4d27908107434298040071))
+* **event type:** remove deprecated fields ([d81686f](https://github.com/fhswf/book_me/commit/d81686f3cc654e3a9388a5dbb055c9be3d21e9c1))
+* Implement Google Calendar event insertion, improve free/busy time calculation, and add token revocation. ([c2e86b3](https://github.com/fhswf/book_me/commit/c2e86b34ae2923a598daa9e513c94a63926b4ccf))
+* quality assurance ([#124](https://github.com/fhswf/book_me/issues/124)) ([87bf9a7](https://github.com/fhswf/book_me/commit/87bf9a7881825d21cf492ae37bb9359aa96d4d87))
+
 # common [1.2.0](https://github.com/fhswf/book_me/compare/common@1.1.11...common@1.2.0) (2025-12-03)
 
 
