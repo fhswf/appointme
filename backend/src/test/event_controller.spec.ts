@@ -176,10 +176,8 @@ describe("Event Controller", () => {
             expect(res.body).toHaveLength(1);
         });
 
-        it.skip("should handle error getting event list", async () => {
-            (EventModel.find as any).mockReturnValue({
-                exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
-            });
+        it("should handle error getting event list", async () => {
+            (EventModel.find as any).mockImplementation(() => mockQuery("DB Error", true));
 
             const res = await request(app)
                 .get("/api/v1/event");
@@ -208,10 +206,8 @@ describe("Event Controller", () => {
             expect(res.status).toBe(404);
         });
 
-        it.skip("should handle error getting event by ID", async () => {
-            (EventModel.findById as any).mockReturnValue({
-                exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
-            });
+        it("should handle error getting event by ID", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery("DB Error", true));
 
             const res = await request(app)
                 .get("/api/v1/event/123");
@@ -220,58 +216,54 @@ describe("Event Controller", () => {
         });
     });
 
-    describe("GET /api/v1/event/user/:userId", () => {
-        it.skip("should get active events for user", async () => {
-            (EventModel.find as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue([EVENT])
-            });
+    describe("GET /api/v1/event/active/:userId", () => {
+        it("should get active events for user", async () => {
+            (EventModel.find as any).mockImplementation(() => mockQuery([EVENT]));
 
             const res = await request(app)
-                .get(`/api/v1/event/user/${USER._id}`);
+                .get(`/api/v1/event/active/${USER._id}`);
 
             expect(res.status).toBe(200);
             expect(res.body).toHaveLength(1);
             expect(EventModel.find).toHaveBeenCalledWith({ user: USER._id, isActive: true });
         });
 
-        it.skip("should handle error getting active events", async () => {
-            (EventModel.find as any).mockReturnValue({
-                exec: vi.fn().mockImplementation(() => Promise.reject(new Error("DB Error")))
-            });
+        it("should handle error getting active events", async () => {
+            (EventModel.find as any).mockImplementation(() => mockQuery("DB Error", true));
 
             const res = await request(app)
-                .get(`/api/v1/event/user/${USER._id}`);
+                .get(`/api/v1/event/active/${USER._id}`);
 
             expect(res.status).toBe(400);
         });
     });
 
-    describe("GET /api/v1/event/url/:userId/:eventUrl", () => {
-        it.skip("should get event by URL", async () => {
+    describe("GET /api/v1/event/:userId/:eventUrl", () => {
+        it("should get event by URL", async () => {
             (EventModel.findOne as any).mockImplementation(() => mockQuery(EVENT));
 
             const res = await request(app)
-                .get(`/api/v1/event/url/${USER._id}/some-url`);
+                .get(`/api/v1/event/${USER._id}/some-url`);
 
             expect(res.status).toBe(200);
             expect(res.body).toEqual(expect.objectContaining(EVENT));
             expect(EventModel.findOne).toHaveBeenCalledWith({ url: 'some-url', user: USER._id });
         });
 
-        it.skip("should return 404 if event by URL not found", async () => {
+        it("should return 404 if event by URL not found", async () => {
             (EventModel.findOne as any).mockImplementation(() => mockQuery(null));
 
             const res = await request(app)
-                .get(`/api/v1/event/url/${USER._id}/some-url`);
+                .get(`/api/v1/event/${USER._id}/some-url`);
 
             expect(res.status).toBe(404);
         });
 
-        it.skip("should handle error getting event by URL", async () => {
+        it("should handle error getting event by URL", async () => {
             (EventModel.findOne as any).mockImplementation(() => mockQuery("DB Error", true));
 
             const res = await request(app)
-                .get(`/api/v1/event/url/${USER._id}/some-url`);
+                .get(`/api/v1/event/${USER._id}/some-url`);
 
             expect(res.status).toBe(400);
         });
