@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { logger } from '../logging.js';
 
-const ALGORITHM = 'aes-256-cbc';
+const ALGORITHM = 'aes-256-gcm';
 const ENCODING = 'hex';
 const IV_LENGTH = 16;
 const KEY = process.env.ENCRYPTION_KEY || 'default_secret_key_must_be_32_bytes_long_!!'; // Fallback for dev, should be in env
