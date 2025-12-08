@@ -1,7 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
-import { postToRegister, postToActivate, postGoogleLogin, postLogin } from '../../helpers/services/auth_services';
+import { postToRegister, postToActivate, postGoogleLogin, postLogin, getOidcConfig, getOidcAuthUrl, postOidcLogin, getAuthConfig } from '../../helpers/services/auth_services';
 import * as csrfService from '../../helpers/services/csrf_service';
 
 vi.mock('axios');
@@ -80,5 +80,48 @@ describe('Auth Services', () => {
                 withCredentials: true
             }
         );
+    });
+
+    it('should get oidc config', async () => {
+        (axios.get as any).mockResolvedValue({ data: { config: 'value' } });
+
+        const result = await getOidcConfig();
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/oidc/config'));
+        expect(result).toEqual({ config: 'value' });
+    });
+
+    it('should get oidc auth url', async () => {
+        (axios.get as any).mockResolvedValue({ data: { url: 'url' } });
+
+        const result = await getOidcAuthUrl();
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/oidc/url'));
+        expect(result).toEqual({ url: 'url' });
+    });
+
+    it('postOidcLogin should call axios.post with correct arguments and CSRF token', async () => {
+        (axios.post as any).mockResolvedValue({ data: 'success' });
+
+        await postOidcLogin('oidc-code');
+
+        expect(csrfService.getCsrfToken).toHaveBeenCalled();
+        expect(axios.post).toHaveBeenCalledWith(
+            expect.stringContaining('/oidc/login'),
+            { code: 'oidc-code' },
+            {
+                headers: { 'x-csrf-token': 'mock-csrf-token' },
+                withCredentials: true
+            }
+        );
+    });
+
+    it('should get auth config', async () => {
+        (axios.get as any).mockResolvedValue({ data: { config: 'value' } });
+
+        const result = await getAuthConfig();
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/auth/config'));
+        expect(result).toEqual({ config: 'value' });
     });
 });

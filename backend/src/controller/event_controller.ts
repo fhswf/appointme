@@ -335,7 +335,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
   logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
 
   try {
-    const eventDoc = await EventModel.findById(eventId);
+    const eventDoc = await EventModel.findById(eventId).exec();
     if (!eventDoc) {
       res.status(404).json({ error: "Event not found" });
       return;
@@ -349,7 +349,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    const user = await UserModel.findOne({ _id: { $eq: userId } });
+    const user = await UserModel.findOne({ _id: { $eq: userId } }).exec();
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -401,7 +401,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 };
 
 const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: Response, userComment: string, event: Schema$Event) => {
-  const calDavAccount = findAccountForCalendar(user, user.push_calendar!);
+  const calDavAccount = findAccountForCalendar(user, user.push_calendar);
   if (calDavAccount) {
     if (validator.isEmail(calDavAccount.username)) {
       logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
@@ -422,18 +422,18 @@ const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: 
 
     const icsContent = generateIcsContent({
       uid,
-      start: new Date(event.start!.dateTime!),
-      end: new Date(event.end!.dateTime!),
-      summary: event.summary!,
-      description: event.description!,
-      location: event.location!,
+      start: new Date(event.start.dateTime),
+      end: new Date(event.end.dateTime),
+      summary: event.summary,
+      description: event.description,
+      location: event.location,
       organizer: {
-        displayName: event.organizer!.displayName!,
-        email: event.organizer!.email!
+        displayName: event.organizer.displayName,
+        email: event.organizer.email
       },
-      attendees: event.attendees!.map(a => ({
-        displayName: a.displayName!,
-        email: a.email!,
+      attendees: event.attendees.map(a => ({
+        displayName: a.displayName,
+        email: a.email,
         partstat: 'NEEDS-ACTION',
         rsvp: true
       }))
@@ -447,11 +447,11 @@ const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: 
     const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
     const escapedComment = validator.escape(userComment || '').replaceAll('\n', '<br>');
 
-    const timeStr = new Date(event.start!.dateTime!).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
+    const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
 
     const html = t(locale, 'invitationBody', {
       attendeeName,
-      summary: validator.escape(event.summary!),
+      summary: validator.escape(event.summary),
       description: escapedDescription + (escapedComment ? '<br><br>Kommentar:<br>' + escapedComment : ''),
       time: timeStr
     });
