@@ -254,10 +254,17 @@ export const googleLoginController = (req: Request, res: Response): void => {
  * @function
  * @param {string} userEmail
  */
-function validateUrl(userEmail: string): string {
+export function validateUrl(userEmail: string): string {
   const newEmail = userEmail.split("@");
   const reg = new RegExp(/[~/]/g);
   let newUrl = newEmail[0].toLowerCase().replaceAll(/[. ,:]+/g, "-");
   newUrl = newUrl.replaceAll(reg, "-");
   return newUrl;
 }
+
+export const getConfig = (req: Request, res: Response): void => {
+  res.json({
+    googleEnabled: process.env.DISABLE_GOOGLE_LOGIN !== "true" && !!process.env.CLIENT_ID,
+    oidcEnabled: !!(process.env.OIDC_ISSUER && process.env.OIDC_CLIENT_ID),
+  });
+};

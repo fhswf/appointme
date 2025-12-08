@@ -11,6 +11,7 @@ import { eventRouter } from "./routes/event_routes.js";
 import { googleRouter } from "./routes/google_routes.js";
 import { userRouter } from "./routes/user_routes.js";
 import { caldavRouter } from "./routes/caldav_routes.js";
+import { oidcRouter } from "./routes/oidc_routes.js";
 
 // logger
 import { logger } from "./logging.js";
@@ -85,7 +86,6 @@ const csrfProtection = (req, res, next) => {
 
 app.use(csrfProtection);
 
-
 //Use routes
 const router = express.Router();
 router.use("/auth/", authenticationRouter);
@@ -93,6 +93,7 @@ router.use("/event/", eventRouter);
 router.use("/google/", googleRouter);
 router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);
+router.use("/oidc/", oidcRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })

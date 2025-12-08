@@ -85,7 +85,8 @@ vi.mock("../controller/caldav_controller.js", () => ({
     addAccount: vi.fn().mockImplementation((req, res) => res.json({})),
     listAccounts: vi.fn().mockImplementation((req, res) => res.json([])),
     removeAccount: vi.fn().mockImplementation((req, res) => res.json({})),
-    listCalendars: vi.fn().mockImplementation((req, res) => res.json([]))
+    listCalendars: vi.fn().mockImplementation((req, res) => res.json([])),
+    findAccountForCalendar: vi.fn().mockReturnValue({ username: "test@caldav.com", serverUrl: "https://caldav.example.com" })
 }));
 
 

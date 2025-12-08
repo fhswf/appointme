@@ -1,5 +1,5 @@
 import { DAVClient } from 'tsdav';
-import { User } from "common/src/types";
+import { User, CalDavAccount } from "common/src/types";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
 import crypto from 'node:crypto';
@@ -232,27 +232,31 @@ export const listCalendars = async (req: Request, res: Response) => {
 
 const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
 
-export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
-    // Find the account that owns the push_calendar URL
-    const account = user.caldav_accounts.find(acc => {
-        if (user.push_calendar.startsWith(acc.serverUrl)) {
+export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavAccount | undefined => {
+    return user.caldav_accounts.find(acc => {
+        if (calendarUrl.startsWith(acc.serverUrl)) {
             return true;
         }
         try {
             const serverUrlObj = new URL(acc.serverUrl);
-            if (user.push_calendar.startsWith(serverUrlObj.pathname)) {
+            if (calendarUrl.startsWith(serverUrlObj.pathname)) {
                 return true;
             }
             // Check if they share the same origin
-            const pushUrlObj = new URL(user.push_calendar);
+            const pushUrlObj = new URL(calendarUrl);
             if (pushUrlObj.origin === serverUrlObj.origin) {
                 return true;
             }
         } catch (e) {
-            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${user.push_calendar}`);
+            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${calendarUrl}`);
         }
         return false;
     });
+};
+
+export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
+    // Find the account that owns the push_calendar URL
+    const account = findAccountForCalendar(user, user.push_calendar);
 
     if (!account) {
         logger.error('CalDav account not found for push calendar: %s', user.push_calendar);

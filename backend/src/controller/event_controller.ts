@@ -6,7 +6,7 @@
 import { EventDocument, EventModel } from "../models/Event.js";
 import { Event, IntervalSet } from "common";
 import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
-import { getBusySlots, createCalDavEvent } from "./caldav_controller.js";
+import { getBusySlots, createCalDavEvent, findAccountForCalendar } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
 import validator from "validator";
 import { errorHandler } from "../handlers/errorhandler.js";
@@ -158,10 +158,7 @@ export const addEventController = (req: Request, res: Response): void => {
   const event: Event = req.body;
   logger.debug('event: %j', event)
 
-  if (!errors.isEmpty()) {
-    const newError = errors.array().map<unknown>((error: ValidationError) => error.msg)[0];
-    res.status(422).json({ error: newError });
-  } else {
+  if (errors.isEmpty()) {
     const eventToSave = new EventModel(event);
 
     eventToSave
@@ -169,13 +166,16 @@ export const addEventController = (req: Request, res: Response): void => {
       .then((doc: EventDocument) => {
         res.status(201).json({
           success: true,
-          message: doc,
+          message: doc, // eslint-disable-line @typescript-eslint/no-unsafe-assignment
           msg: "Successfully saved event!",
         })
       })
       .catch(err => {
         res.status(400).json({ error: errorHandler(err) });
       });
+  } else {
+    const newError = errors.array().map<unknown>((error: ValidationError) => error.msg)[0];
+    res.status(422).json({ error: newError });
   }
 };
 
@@ -229,10 +229,10 @@ export const getEventByIdController = (req: Request, res: Response): void => {
     .findById(eventid)
     .exec()
     .then(event => {
-      if (!event) {
-        res.status(404).json({ error: "Event not found" });
-      } else {
+      if (event) {
         res.status(200).json(event);
+      } else {
+        res.status(404).json({ error: "Event not found" });
       }
     })
     .catch(err => {
@@ -384,8 +384,18 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       guestsCanInviteOthers: true,
     };
 
-    // Check if push_calendar is a CalDav URL (heuristic: starts with http/https)
+    // Check if push_calendar is a CalDav URL (heuristic: starts with http/https) 
     if (user.push_calendar && (user.push_calendar.startsWith('http') || user.push_calendar.startsWith('/'))) {
+      const calDavAccount = findAccountForCalendar(user, user.push_calendar);
+      if (calDavAccount) {
+        if (validator.isEmail(calDavAccount.username)) {
+          logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
+          event.organizer.email = calDavAccount.username;
+        } else {
+          logger.warn('CalDAV account username is not an email, keeping default: %s', calDavAccount.username);
+        }
+      }
+
       try {
         const evt = await createCalDavEvent(user, event);
         logger.debug('CalDav insert returned %j', evt);
