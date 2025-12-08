@@ -46,7 +46,9 @@ vi.mock('google-auth-library', () => {
         revokeToken: vi.fn().mockResolvedValue(true)
     };
     return {
-        OAuth2Client: vi.fn(() => mOAuth2Client)
+        OAuth2Client: vi.fn().mockImplementation(function () {
+            return mOAuth2Client;
+        })
     };
 });
 

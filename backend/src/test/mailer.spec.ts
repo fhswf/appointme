@@ -39,10 +39,10 @@ describe('Mailer Utility', () => {
 
     it('should handle send errors', async () => {
         const error = new Error("Send failed");
-        vi.spyOn(transporter, 'sendMail').mockImplementation(((opts, cb) => {
+        vi.spyOn(transporter, 'sendMail').mockImplementation(function (opts, cb) {
             // @ts-ignore
             cb(error, null);
-        }) as any);
+        });
 
         await expect(sendEventInvitation('fail@test.com', 'Sub', 'Body', 'ICS')).rejects.toThrow("Send failed");
     });

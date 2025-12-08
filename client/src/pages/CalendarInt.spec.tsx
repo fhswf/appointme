@@ -188,4 +188,75 @@ describe('CalendarIntegration Page', () => {
             expect(caldavServices.removeAccount).toHaveBeenCalledWith('acc1');
         });
     });
+
+    it('should update push calendar', async () => {
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-push-calendar')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('edit-push-calendar'));
+
+        // Dialog opens
+        expect(screen.getAllByText('Calendar')).toHaveLength(2); // Dialog title and label
+
+        const saveBtn = screen.getByTestId('button-save');
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+        });
+    });
+
+    it('should update pull calendars', async () => {
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('edit-pull-calendar'));
+
+        const checkbox = screen.getByLabelText('Google Calendar 1');
+        fireEvent.click(checkbox); // Toggle it
+
+        const saveBtn = screen.getByText('factual_nimble_snail_clap');
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle partial failure when listing calendars', async () => {
+        const accounts = [{ _id: 'acc1', name: 'Broken Account' }];
+        (caldavServices.listAccounts as any).mockResolvedValue({ data: accounts });
+        (caldavServices.listCalendars as any).mockRejectedValue(new Error('Network Error'));
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Broken Account')).toBeInTheDocument();
+            expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
+        });
+    });
 });

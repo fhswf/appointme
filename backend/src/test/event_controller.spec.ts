@@ -9,10 +9,12 @@ import { UserModel } from "../models/User.js";
 // Mock dependencies
 vi.mock("../models/Event.js", () => {
     const save = vi.fn().mockResolvedValue(EVENT);
-    const EventModelMock = vi.fn().mockImplementation((data) => ({
-        ...data,
-        save: save
-    }));
+    const EventModelMock = vi.fn().mockImplementation(function (data) {
+        return ({
+            ...data,
+            save: save
+        });
+    });
 
     (EventModelMock as any).findOne = vi.fn();
     (EventModelMock as any).findByIdAndDelete = vi.fn();
@@ -122,10 +124,12 @@ describe("Event Controller", () => {
                 }
             };
 
-            (EventModel as any).mockImplementationOnce((data) => ({
-                ...data,
-                save: vi.fn().mockRejectedValue(validationError)
-            }));
+            (EventModel as any).mockImplementationOnce(function (data) {
+                return ({
+                    ...data,
+                    save: vi.fn().mockRejectedValue(validationError)
+                });
+            });
 
             const res = await request(app)
                 .post("/api/v1/event/addEvent")

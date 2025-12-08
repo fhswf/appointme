@@ -71,7 +71,7 @@ describe('Booking Page', () => {
     const mockSlotsImpl = {
         overlapping: () => ['something'],
         intersect: () => [
-            { start: new Date('2025-12-08T10:00:00'), end: new Date('2025-12-08T10:30:00') }
+            { start: new Date('2025-12-08T10:00:00'), end: new Date('2025-12-08T11:00:00') }
         ]
     };
 
@@ -132,6 +132,125 @@ describe('Booking Page', () => {
         });
     });
 
-    // NOTE: Add interaction tests (clicking next) to verify stepper logic
-    // This requires more complex mocking of the Calendar and DayPicker interaction
+    // Mock UI components to simplify testing
+    vi.mock('@/components/ui/calendar', () => ({
+        Calendar: ({ onSelect, mode }: any) => (
+            <div data-testid="mock-calendar">
+                <button
+                    data-testid="select-date-btn"
+                    onClick={() => onSelect(new Date('2025-12-08T12:00:00Z'))}
+                >
+                    Select Date
+                </button>
+            </div>
+        )
+    }));
+
+    it('should complete a full booking flow successfully', async () => {
+        const { insertEvent } = await import('../helpers/services/google_services');
+        const { toast } = await import('sonner');
+        // @ts-ignore
+        const userEvent = (await import('@testing-library/user-event')).default;
+
+        // Setup mocks
+        (insertEvent as any).mockResolvedValue({});
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        // 1. Initial State
+        await waitFor(() => {
+            expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
+        });
+
+        // 2. Select Date
+        // We use our mock calendar to trigger date selection
+        const selectDateBtn = screen.getByTestId('select-date-btn');
+        await userEvent.click(selectDateBtn);
+
+        // 3. Select Time
+        // The slots should appear after date selection.
+        // Based on mockSlotsImpl returning a slot at 10:00
+        // We need to wait for the slot button to act.
+        // Note: The slot time depends on the intersect mock.
+        // Our mock returns 2025-12-08T10:00:00.
+        // Converting to ISO string might depend on timezone, 
+        // but let's look for the formatted text "10:00" if possible or rely on the button existence
+
+        const slotRegex = /10:00/; // The format is HH:mm
+        const slotBtn = await screen.findByText(slotRegex);
+        await userEvent.click(slotBtn);
+
+        // 4. Fill Details
+        // Stepper should have moved to "Provide details"
+        // We look for inputs
+        const nameInput = await screen.findByLabelText(/Name/i);
+        await userEvent.type(nameInput, 'John Doe');
+
+        const emailInput = screen.getByLabelText(/Email/i);
+        await userEvent.type(emailInput, 'john@example.com');
+
+        const descInput = screen.getByLabelText(/Information/i);
+        await userEvent.type(descInput, 'My meeting notes');
+
+        // 5. Submit
+        const submitBtn = screen.getByRole('button', { name: /whole_acidic_parrot_promise/i }); // Translation key fallback or use actual text if mocked
+        // Our mock translation returns the key.
+        await userEvent.click(submitBtn);
+
+        // 6. Verification
+        await waitFor(() => {
+            expect(insertEvent).toHaveBeenCalledWith(
+                'event1',
+                expect.any(Date), // 10:00 date object
+                'John Doe',
+                'john@example.com',
+                'My meeting notes'
+            );
+            expect(mockNavigate).toHaveBeenCalledWith('/booked', expect.any(Object));
+            expect(toast.success).toHaveBeenCalledWith("Event successfully booked!");
+        });
+    });
+
+    it('should handle booking submission error', async () => {
+        const { insertEvent } = await import('../helpers/services/google_services');
+        const { toast } = await import('sonner');
+        // @ts-ignore
+        const userEvent = (await import('@testing-library/user-event')).default;
+
+        // Mock failure
+        (insertEvent as any).mockRejectedValue(new Error("Booking failed"));
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        // 1. Select Date
+        await userEvent.click(screen.getByTestId('select-date-btn'));
+
+        // 2. Select Time
+        const slotBtn = await screen.findByText(/10:00/);
+        await userEvent.click(slotBtn);
+
+        // 3. Fill Details
+        await userEvent.type(await screen.findByLabelText(/Name/i), 'Jane Doe');
+        await userEvent.type(screen.getByLabelText(/Email/i), 'jane@example.com');
+        await userEvent.type(screen.getByLabelText(/Information/i), 'Notes');
+
+        // 4. Submit
+        const submitBtn = screen.getByRole('button', { name: /whole_acidic_parrot_promise/i });
+        await userEvent.click(submitBtn);
+
+        // Verification
+        await waitFor(() => {
+            expect(insertEvent).toHaveBeenCalled();
+            expect(toast.error).toHaveBeenCalledWith("Could not book event");
+            expect(mockNavigate).not.toHaveBeenCalledWith('/booked', expect.any(Object));
+        });
+    });
 });

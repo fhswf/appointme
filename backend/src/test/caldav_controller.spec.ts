@@ -6,15 +6,16 @@ import { Request, Response } from 'express';
 
 // Mock DAVClient
 vi.mock('tsdav', () => {
-    const DAVClientMock = vi.fn().mockImplementation(() => ({
-        login: vi.fn().mockResolvedValue(true),
-        fetchCalendars: vi.fn().mockResolvedValue([
-            { url: 'url1', displayName: 'Calendar 1' },
-            { url: 'url2', displayName: 'Calendar 2' }
-        ]),
-        fetchCalendarObjects: vi.fn().mockResolvedValue([
-            {
-                data: `BEGIN:VCALENDAR
+    const DAVClientMock = vi.fn().mockImplementation(function () {
+        return ({
+            login: vi.fn().mockResolvedValue(true),
+            fetchCalendars: vi.fn().mockResolvedValue([
+                { url: 'url1', displayName: 'Calendar 1' },
+                { url: 'url2', displayName: 'Calendar 2' }
+            ]),
+            fetchCalendarObjects: vi.fn().mockResolvedValue([
+                {
+                    data: `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//BookMe//EN
 BEGIN:VEVENT
@@ -25,19 +26,22 @@ DTEND:20251224T110000Z
 SUMMARY:Test Event
 END:VEVENT
 END:VCALENDAR`
-            }
-        ]),
-        createCalendarObject: vi.fn().mockResolvedValue({ ok: true, status: 201, statusText: 'Created' }),
-    }));
+                }
+            ]),
+            createCalendarObject: vi.fn().mockResolvedValue({ ok: true, status: 201, statusText: 'Created' }),
+        });
+    })
     return { DAVClient: DAVClientMock };
 });
 
 // Mock UserModel
 vi.mock("../models/User.js", () => {
-    const UserModelMock = vi.fn().mockImplementation((data) => ({
-        ...data,
-        save: vi.fn().mockResolvedValue(data)
-    }));
+    const UserModelMock = vi.fn().mockImplementation(function (data) {
+        return ({
+            ...data,
+            save: vi.fn().mockResolvedValue(data)
+        });
+    });
     (UserModelMock as any).findOne = vi.fn();
     (UserModelMock as any).updateOne = vi.fn();
     return { UserModel: UserModelMock };
@@ -121,11 +125,13 @@ describe("CalDAV Controller Unit Tests", () => {
                 .mockResolvedValueOnce(true);
 
             // @ts-ignore
-            DAVClient.mockImplementation(() => ({
-                login: loginMock,
-                // @ts-ignore
-                fetchCalendars: vi.fn().mockResolvedValue([]),
-            }));
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: loginMock,
+                    // @ts-ignore
+                    fetchCalendars: vi.fn().mockResolvedValue([]),
+                });
+            })
 
             const req = mockRequest();
             req.body = {
@@ -147,9 +153,11 @@ describe("CalDAV Controller Unit Tests", () => {
             const loginMock = vi.fn().mockRejectedValue(new Error("All logins failed"));
 
             // @ts-ignore
-            DAVClient.mockImplementation(() => ({
-                login: loginMock,
-            }));
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: loginMock,
+                });
+            })
 
             const req = mockRequest();
             req.body = {
@@ -248,13 +256,15 @@ describe("CalDAV Controller Unit Tests", () => {
             // Re-mock DAVClient to ensure default behavior for this test
             const { DAVClient } = await import('tsdav');
             // @ts-ignore
-            DAVClient.mockImplementation(() => ({
-                login: vi.fn().mockResolvedValue(true),
-                fetchCalendars: vi.fn().mockResolvedValue([
-                    { url: 'url1', displayName: 'Calendar 1' },
-                    { url: 'url2', displayName: 'Calendar 2' }
-                ]),
-            }));
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: 'url1', displayName: 'Calendar 1' },
+                        { url: 'url2', displayName: 'Calendar 2' }
+                    ]),
+                });
+            })
 
             await caldavController.listCalendars(req, res);
 
@@ -311,13 +321,15 @@ END:VCALENDAR`
             ]);
 
             // @ts-ignore
-            DAVClient.mockImplementation(() => ({
-                login: vi.fn().mockResolvedValue(true),
-                fetchCalendars: vi.fn().mockResolvedValue([
-                    { url: 'url1', displayName: 'Calendar 1' }
-                ]),
-                fetchCalendarObjects: fetchObjectsMock
-            }));
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: 'url1', displayName: 'Calendar 1' }
+                    ]),
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            })
 
             const timeMin = "2025-12-24T00:00:00Z";
             const timeMax = "2025-12-25T00:00:00Z";
@@ -352,15 +364,17 @@ END:VCALENDAR` }
             ]);
 
             // @ts-ignore
-            DAVClient.mockImplementation(() => ({
-                login: vi.fn().mockResolvedValue(true),
-                fetchCalendars: vi.fn().mockResolvedValue([
-                    { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
-                ]),
-                createCalendarObject: createObjectMock,
-                // Verification fetch
-                fetchCalendarObjects: fetchObjectsMock
-            }));
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
+                    ]),
+                    createCalendarObject: createObjectMock,
+                    // Verification fetch
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            })
 
             const user = {
                 caldav_accounts: [

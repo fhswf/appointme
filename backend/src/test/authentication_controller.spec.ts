@@ -18,28 +18,32 @@ vi.mock("nodemailer", () => {
 
 vi.mock("google-auth-library", () => {
     return {
-        OAuth2Client: vi.fn(() => ({
-            verifyIdToken: vi.fn().mockResolvedValue({
-                getAttributes: () => ({
-                    payload: {
-                        email_verified: true,
-                        name: "Google User",
-                        email: "google@example.com",
-                        picture: "http://example.com/pic.jpg",
-                        sub: "google_id_123"
-                    }
+        OAuth2Client: vi.fn().mockImplementation(function () {
+            return ({
+                verifyIdToken: vi.fn().mockResolvedValue({
+                    getAttributes: () => ({
+                        payload: {
+                            email_verified: true,
+                            name: "Google User",
+                            email: "google@example.com",
+                            picture: "http://example.com/pic.jpg",
+                            sub: "google_id_123"
+                        }
+                    })
                 })
-            })
-        }))
+            });
+        })
     }
 });
 
 vi.mock("../models/User.js", () => {
     const save = vi.fn().mockResolvedValue(USER);
-    const UserModelMock = vi.fn().mockImplementation((data) => ({
-        ...data,
-        save: save
-    }));
+    const UserModelMock = vi.fn().mockImplementation(function (data) {
+        return ({
+            ...data,
+            save: save
+        });
+    });
 
     (UserModelMock as any).findOne = vi.fn();
     (UserModelMock as any).findOneAndUpdate = vi.fn();

@@ -24,13 +24,15 @@ vi.mock('googleapis', () => ({
 
 vi.mock('google-auth-library', () => {
     return {
-        OAuth2Client: vi.fn().mockImplementation(() => ({
-            getToken: mockGetToken,
-            setCredentials: mockSetCredentials,
-            on: mockOn,
-            generateAuthUrl: mockGenerateAuthUrl,
-            revokeToken: vi.fn().mockResolvedValue(true)
-        }))
+        OAuth2Client: vi.fn().mockImplementation(function () {
+            return {
+                getToken: mockGetToken,
+                setCredentials: mockSetCredentials,
+                on: mockOn,
+                generateAuthUrl: mockGenerateAuthUrl,
+                revokeToken: vi.fn().mockResolvedValue(true)
+            };
+        })
     };
 });
 

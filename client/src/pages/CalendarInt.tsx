@@ -109,7 +109,7 @@ const PushCalendar = ({ user, calendarList }) => {
     ? calendarList.items.find((item) => item.id === user.push_calendar)
     : undefined;
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(pushCal);
+  const [selected, setSelected] = useState(user.push_calendar ? { [user.push_calendar]: true } : {});
   const { t } = useTranslation();
   const navigate = useNavigate();
 
