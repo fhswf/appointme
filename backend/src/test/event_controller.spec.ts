@@ -388,7 +388,7 @@ describe("Event Controller", () => {
             expect(res.status).toBe(200);
             expect(sendEventInvitation).toHaveBeenCalledWith(
                 "guest@example.com",
-                expect.stringContaining("Invitaion: Event <script>alert(1)</script>"),
+                expect.stringContaining("Invitation: Event <script>alert(1)</script>"),
                 expect.stringContaining("Guest &lt;b&gt;Bold&lt;&#x2F;b&gt;"),
                 expect.any(String),
                 "invite.ics"

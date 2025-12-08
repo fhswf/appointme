@@ -412,7 +412,7 @@ END:VCALENDAR`;
 
         const attendeeEmail = req.body.email as string;
         const attendeeName = validator.escape(req.body.name as string);
-        const subject = `Invitaion: ${event.summary}`;
+        const subject = `Invitation: ${event.summary}`;
         const escapedDescription = validator.escape(event.description || '');
         const html = `<p>Hi ${attendeeName},</p>
 <p>You have been invited to the following event:</p>

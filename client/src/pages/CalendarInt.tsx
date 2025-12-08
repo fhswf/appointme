@@ -111,6 +111,7 @@ const PushCalendar = ({ user, calendarList }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pushCal);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
@@ -121,6 +122,7 @@ const PushCalendar = ({ user, calendarList }) => {
     updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
+        navigate("/");
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
@@ -192,6 +194,7 @@ const PullCalendars = ({ user, calendarList }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pullCals);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
@@ -208,6 +211,7 @@ const PullCalendars = ({ user, calendarList }) => {
     updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
+        navigate("/");
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
@@ -322,7 +326,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
               src="/icons/caldav.png"
               width="32"
             />
-            <span>CalDav Calendar</span>
+            <span>{t("CalDav Calendar")}</span>
           </div>
           <div>
             <Button onClick={() => setOpen(true)} data-testid="add-caldav-button">
@@ -347,9 +351,9 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add CalDav Account</DialogTitle>
+            <DialogTitle>{t("Add CalDav Account")}</DialogTitle>
             <DialogDescription>
-              Enter your CalDav server details to connect your calendar.
+              {t("Enter your CalDav server details to connect your calendar.")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
@@ -360,7 +364,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
             )}
             <form id="caldav-form" onSubmit={(e) => { e.preventDefault(); handleAdd(); }}>
               <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">{t("Name")}</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -370,7 +374,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                 />
               </div>
               <div className="grid gap-2 mt-2">
-                <Label htmlFor="serverUrl">Server URL</Label>
+                <Label htmlFor="serverUrl">{t("Server URL")}</Label>
                 <Input
                   id="serverUrl"
                   value={formData.serverUrl}
@@ -380,7 +384,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                 />
               </div>
               <div className="grid gap-2 mt-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">{t("Username")}</Label>
                 <Input
                   id="username"
                   value={formData.username}
@@ -390,7 +394,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                 />
               </div>
               <div className="grid gap-2 mt-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("Password")}</Label>
                 <Input
                   id="password"
                   type="password"
@@ -417,8 +421,8 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
             </form>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" form="caldav-form" disabled={!formData.privacyAck}>Add</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>{t("Cancel")}</Button>
+            <Button type="submit" form="caldav-form" disabled={!formData.privacyAck}>{t("Add")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
