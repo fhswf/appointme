@@ -4,7 +4,7 @@ import { Day, Event } from 'common'
 
 
 
-export interface EventDocument extends Event, Document<Event> { }
+export interface EventDocument extends Omit<Event, '_id'>, Document { }
 
 const eventSchema = new Schema<EventDocument>({
   user: {

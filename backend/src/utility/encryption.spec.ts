@@ -15,7 +15,7 @@ describe('Encryption Utility', () => {
         expect(encrypted).not.toBe(TEST_TEXT);
         expect(encrypted).toContain(':');
         const parts = encrypted.split(':');
-        expect(parts).toHaveLength(2);
+        expect(parts).toHaveLength(3);
     });
 
     it('should decrypt an encrypted string', () => {
@@ -33,13 +33,13 @@ describe('Encryption Utility', () => {
         expect(decrypt(null)).toBe(null);
     });
 
-    it('should return original text if format is invalid (not containing :)', () => {
+    it('should return original text if format is invalid (not containing : twice)', () => {
         const invalid = 'notencrypted';
         expect(decrypt(invalid)).toBe(invalid);
     });
 
     it('should return original text if decryption fails (e.g. invalid IV)', () => {
-        const invalid = 'invalidiv:encryptedtext';
+        const invalid = 'invalidiv:invalidtag:encryptedtext';
         // This relies on the crypto module throwing an error which is caught
         const result = decrypt(invalid);
         expect(result).toBe(invalid);
