@@ -19,6 +19,9 @@ import { getLocale, t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
 import { generateIcsContent } from "../utility/ical.js";
 import { convertBusyToFree } from "../utility/scheduler.js";
+import { UserModel } from "../models/User.js";
+import { calendar_v3 } from 'googleapis';
+import Schema$Event = calendar_v3.Schema$Event;
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
 
@@ -30,6 +33,48 @@ function max<T>(a: T, b: T): T {
 function min<T>(a: T, b: T): T {
   logger.debug('min: %o %o', a, b)
   return a < b ? a : b;
+}
+
+function calculateBlocked(events, event, timeMin, timeMax) {
+  const eventsPerDay = {};
+  const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
+  events.forEach(evt => {
+    logger.debug('event: %o', evt);
+    if (!evt.start.dateTime) {
+      return;
+    }
+    const day = startOfDay(new Date(evt.start.dateTime)).toISOString();
+    if (day in eventsPerDay) {
+      eventsPerDay[day] += 1;
+    } else {
+      eventsPerDay[day] = 1;
+    }
+  });
+  for (const day in eventsPerDay) {
+    if (eventsPerDay[day] >= event.maxPerDay) {
+      blocked.addRange({ start: new Date(day), end: addDays(new Date(day), 1) });
+    }
+  }
+  return blocked;
+}
+
+function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
+  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+  freeSlots = freeSlots.intersect(blocked.inverse());
+
+  for (const key in response.data.calendars) {
+    const busy = response.data.calendars[key].busy;
+    const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+    freeSlots = freeSlots.intersect(calIntervals);
+  }
+
+  if (calDavSlots && calDavSlots.length > 0) {
+    calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+    freeSlots = freeSlots.intersect(calIntervals);
+  }
+
+  return freeSlots;
 }
 
 /**
@@ -86,51 +131,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       logger.error('getAvailableTime: event not found or freeBusy failed: %o', err);
       res.status(400).json({ error: err });
     });
-
-  function calculateBlocked(events, event, timeMin, timeMax) {
-    const eventsPerDay = {};
-    const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
-    events.forEach(evt => {
-      logger.debug('event: %o', evt);
-      if (!evt.start.dateTime) {
-        return;
-      }
-      const day = startOfDay(new Date(evt.start.dateTime)).toISOString();
-      if (day in eventsPerDay) {
-        eventsPerDay[day] += 1;
-      } else {
-        eventsPerDay[day] = 1;
-      }
-    });
-    for (const day in eventsPerDay) {
-      if (eventsPerDay[day] >= event.maxPerDay) {
-        blocked.addRange({ start: new Date(day), end: addDays(new Date(day), 1) });
-      }
-    }
-    return blocked;
-  }
-
-
-
-  function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
-    let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
-    freeSlots = freeSlots.intersect(blocked.inverse());
-
-    for (const key in response.data.calendars) {
-      const busy = response.data.calendars[key].busy;
-      const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
-      freeSlots = freeSlots.intersect(calIntervals);
-    }
-
-    if (calDavSlots && calDavSlots.length > 0) {
-      calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-      const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
-      freeSlots = freeSlots.intersect(calIntervals);
-    }
-
-    return freeSlots;
-  }
-}
+};
 
 
 
@@ -312,10 +313,6 @@ export const updateEventController = (req: Request, res: Response): void => {
  * @param {response} res
  */
 
-import { UserModel } from "../models/User.js";
-import { calendar_v3 } from 'googleapis';
-import Schema$Event = calendar_v3.Schema$Event;
-
 export const insertEvent = async (req: Request, res: Response): Promise<void> => {
   const starttime = new Date(Number.parseInt(req.body.starttime));
   const eventId = req.params.id;
@@ -392,7 +389,7 @@ const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: 
   if (calDavAccount) {
     if (validator.isEmail(calDavAccount.username)) {
       logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
-      event.organizer!.email = calDavAccount.username;
+      event.organizer.email = calDavAccount.username;
     } else {
       logger.warn('CalDAV account username is not an email, keeping default: %s', calDavAccount.username);
     }

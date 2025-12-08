@@ -170,7 +170,7 @@ const fetchAndProcessAccountCalendars = async (
 
 export const getBusySlots = async (user_id: string, timeMin: string, timeMax: string): Promise<{ start: Date, end: Date }[]> => {
     const user = await UserModel.findOne({ _id: user_id }).exec();
-    if (!user || !user.caldav_accounts) return [];
+    if (!user?.caldav_accounts) return [];
 
     const busySlots: { start: Date, end: Date }[] = [];
     const startRange = new Date(timeMin);
@@ -195,7 +195,7 @@ export const listCalendars = async (req: Request, res: Response) => {
 
     try {
         const user = await UserModel.findOne({ _id: userId }).exec();
-        const account = user?.caldav_accounts?.find(acc => (acc as any)._id.toString() === accountId);
+        const account = user?.caldav_accounts?.find(acc => acc._id.toString() === accountId);
 
         if (!account) {
             return res.status(404).json({ error: 'Account not found' });

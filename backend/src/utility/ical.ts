@@ -29,8 +29,8 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
     const uid = event.uid || `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
 
     // Ensure description handles newlines for ICS
-    const icsDescription = event.description?.replace(/\n/g, '\\n') || '';
-    const icsComment = options?.comment ? options.comment.replace(/\n/g, '\\n') : '';
+    const icsDescription = event.description?.replaceAll('\n', String.raw`\n`) || '';
+    const icsComment = options?.comment ? options.comment.replaceAll('\n', String.raw`\n`) : '';
 
     let attendeesContent = '';
     if (event.attendees && event.attendees.length > 0) {
