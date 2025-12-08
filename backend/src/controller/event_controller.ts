@@ -8,6 +8,7 @@ import { Event, IntervalSet } from "common";
 import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
 import { getBusySlots, createCalDavEvent } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
+import validator from "validator";
 import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { Request, Response } from "express";
@@ -410,12 +411,13 @@ END:VEVENT
 END:VCALENDAR`;
 
         const attendeeEmail = req.body.email as string;
-        const attendeeName = req.body.name as string;
+        const attendeeName = validator.escape(req.body.name as string);
         const subject = `Invitaion: ${event.summary}`;
+        const escapedDescription = validator.escape(event.description || '');
         const html = `<p>Hi ${attendeeName},</p>
 <p>You have been invited to the following event:</p>
-<h3>${event.summary}</h3>
-<p>${(event.description || '').replaceAll('\n', '<br>')}</p>
+<h3>${validator.escape(event.summary)}</h3>
+<p>${escapedDescription.replaceAll('\n', '<br>')}</p>
 <p><strong>Time:</strong> ${new Date(event.start.dateTime).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</p>
 <p>Please find the event details attached.</p>`;
 

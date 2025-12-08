@@ -355,5 +355,51 @@ describe("Event Controller", () => {
             expect(res.status).toBe(400);
             expect(res.body.error).toBe("requested slot not available");
         });
+
+        it("should sanitise HTML in email invitation", async () => {
+            // Mock findById for event
+            (EventModel.findById as any).mockResolvedValue({
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                name: "Event <script>alert(1)</script>",
+                description: "Notes <script>alert(1)</script>"
+            });
+
+            // Mock UserModel.findOne
+            (UserModel.findOne as any).mockResolvedValue({
+                ...USER,
+                push_calendar: "https://caldav.example.com/cal"
+            });
+
+            const { sendEventInvitation } = await import("../utility/mailer.js");
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(true);
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    starttime: Date.now().toString(),
+                    name: "Guest <b>Bold</b>",
+                    email: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(200);
+            expect(sendEventInvitation).toHaveBeenCalledWith(
+                "guest@example.com",
+                expect.stringContaining("Invitaion: Event <script>alert(1)</script>"),
+                expect.stringContaining("Guest &lt;b&gt;Bold&lt;&#x2F;b&gt;"),
+                expect.any(String),
+                "invite.ics"
+            );
+            expect(sendEventInvitation).toHaveBeenCalledWith(
+                "guest@example.com",
+                expect.any(String),
+                expect.stringContaining("Notes &lt;script&gt;alert(1)&lt;&#x2F;script&gt;"),
+                expect.any(String),
+                "invite.ics"
+            );
+        });
     });
 });
