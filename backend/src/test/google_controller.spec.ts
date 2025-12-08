@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { googleCallback, generateAuthUrl, revokeScopes, getCalendarList, events, freeBusy, checkFree } from '../controller/google_controller';
+import { googleCallback, generateAuthUrl, revokeScopes, getCalendarList, events, freeBusy, checkFree, insertGoogleEvent } from '../controller/google_controller';
 import { Event } from 'common';
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
@@ -366,5 +366,49 @@ describe('google_controller', () => {
         const result = await checkFree(event, 'user_id', new Date('2023-01-01T09:00:00Z'), new Date('2023-01-01T10:00:00Z'));
 
         expect(result).toBeDefined();
+    });
+    describe('insertGoogleEvent', () => {
+        it('should throw error if no google account connected', async () => {
+            const user = { _id: 'user', google_tokens: {} };
+            // @ts-ignore
+            await expect(insertGoogleEvent(user, { summary: 'test' }))
+                .rejects.toThrow('No Google account connected');
+        });
+
+        it('should insert event if google account connected', async () => {
+            const user = {
+                _id: 'user',
+                google_tokens: { access_token: 'token' },
+                push_calendar: 'primary'
+            };
+
+            const insertMock = vi.fn().mockResolvedValue({});
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: {
+                    insert: insertMock
+                }
+            });
+
+            // @ts-ignore
+            await insertGoogleEvent(user, { summary: 'test' });
+
+            // Verify google.calendar().events.insert called
+            expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
+                calendarId: 'primary',
+                requestBody: { summary: 'test' }
+            }));
+        });
+    });
+
+    describe('freeBusy errors', () => {
+        it('should return null/empty if user not found', async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            await expect(freeBusy('user-id', '2025-01-01', '2025-01-02')).rejects.toThrow('User not found');
+        });
     });
 });

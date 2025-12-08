@@ -13,7 +13,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "jest src/**/*.spec.ts --coverage --forceExit --detectOpenHandles",
+    "test": "TZ=Europe/Berlin jest src/**/*.spec.ts --coverage --forceExit --detectOpenHandles",
     "ci": "TZ=Europe/Berlin jest src/**/*.spec.ts --ci --coverage --forceExit --detectOpenHandles",
     "build": "tsc",
     "doc": "jsdoc -c jsdoc.json"
