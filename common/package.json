@@ -10,8 +10,8 @@
     "registry": "https://npm.pkg.github.com"
   },
   "type": "module",
-  "main": "./lib/types.js",
-  "types": "./lib/types.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "jest src/**/*.spec.ts --coverage --forceExit --detectOpenHandles",
     "ci": "TZ=Europe/Berlin jest src/**/*.spec.ts --ci --coverage --forceExit --detectOpenHandles",

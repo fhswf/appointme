@@ -21,7 +21,7 @@
     ]
   },
   "include": [
-    "src/*.ts",
+    "src/**/*.ts",
     "src/test/intervalSet.spec.ts",
     "src/test/freeBusy.spec.ts"
   ],

@@ -15,6 +15,7 @@ import { Request, Response } from "express";
 
 import { logger } from "../logging.js";
 import { sendEventInvitation } from "../utility/mailer.js";
+import { getLocale, t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
@@ -397,6 +398,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       }
 
       try {
+        const locale = getLocale(req.headers['accept-language']);
         const evt = await createCalDavEvent(user, event);
         logger.debug('CalDav insert returned %j', evt);
 
@@ -404,6 +406,10 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
         const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
         const randomStr = crypto.randomBytes(8).toString('hex');
         const uid = `${Date.now()}-${randomStr}`;
+
+        // Ensure description handles newlines for ICS
+        const icsDescription = event.description?.replace(/\n/g, '\\n') || '';
+
         const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//BookMe//EN
@@ -413,7 +419,7 @@ DTSTAMP:${formatICalDate(new Date())}
 DTSTART:${formatICalDate(new Date(event.start.dateTime))}
 DTEND:${formatICalDate(new Date(event.end.dateTime))}
 SUMMARY:${event.summary}
-DESCRIPTION:${event.description}
+DESCRIPTION:${icsDescription}
 LOCATION:${event.location}
 ORGANIZER;CN=${event.organizer.displayName}:mailto:${event.organizer.email}
 ${event.attendees.map(a => `ATTENDEE;CN=${a.displayName};PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${a.email}`).join('\n')}
@@ -422,14 +428,19 @@ END:VCALENDAR`;
 
         const attendeeEmail = req.body.email as string;
         const attendeeName = validator.escape(req.body.name as string);
-        const subject = `Invitation: ${event.summary}`;
-        const escapedDescription = validator.escape(event.description || '');
-        const html = `<p>Hi ${attendeeName},</p>
-<p>You have been invited to the following event:</p>
-<h3>${validator.escape(event.summary)}</h3>
-<p>${escapedDescription.replaceAll('\n', '<br>')}</p>
-<p><strong>Time:</strong> ${new Date(event.start.dateTime).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</p>
-<p>Please find the event details attached.</p>`;
+        const subject = t(locale, 'invitationSubject', { summary: event.summary });
+
+        // Escape description for HTML email, preserving newlines as <br>
+        const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
+
+        const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
+
+        const html = t(locale, 'invitationBody', {
+          attendeeName,
+          summary: validator.escape(event.summary),
+          description: escapedDescription,
+          time: timeStr
+        });
 
         sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
           .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
