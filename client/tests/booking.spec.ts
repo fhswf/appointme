@@ -44,13 +44,14 @@ test.describe('Scheduling page', () => {
         });
 
         await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
-        await page.route('**/events/*/*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+        await page.route('**/event/*/*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+
     });
 
     test.describe('Visit scheduling page and schedule appointment', () => {
         test.beforeEach(async ({ page }) => {
             // This must be AFTER the catch-all route so it matches first (routes are evaluated in reverse)
-            await page.route('**/events/**/slot*', async route => {
+            await page.route('**/event/**/slot*', async route => {
                 await route.fulfill({ status: 200, path: './tests/fixtures/available.json' });
             });
         });
@@ -60,7 +61,7 @@ test.describe('Scheduling page', () => {
 
             // Setup wait for getAvailable BEFORE navigation to avoid race condition
             const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('/slot'));
-            const getEventsPromise = page.waitForResponse(resp => resp.url().includes('/events/'));
+            const getEventsPromise = page.waitForResponse(resp => resp.url().includes('/event'));
 
             await page.goto('/users/christian-gawron/sprechstunde');
             await getEventsPromise;
@@ -92,10 +93,11 @@ test.describe('Scheduling page', () => {
             await page.getByLabel('Email').fill('mustermann.max@fh-swf.de');
 
             // Submit
+            const bookPromise = page.waitForRequest(req => req.url().includes('/event/') && req.method() === 'POST');
             await page.getByRole('button', { name: 'Book Appointment' }).click(); // Adjust text
 
             // Check request
-            // await page.waitForRequest(...)
+            await bookPromise;
         });
     });
 });

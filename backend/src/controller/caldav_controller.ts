@@ -174,7 +174,7 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
     const busySlots: { start: Date, end: Date }[] = [];
     const startRange = new Date(timeMin);
     const endRange = new Date(timeMax);
-    const pullCalendars = new Set((user.pull_calendars || []) as string[]);
+    const pullCalendars = new Set(user.pull_calendars || []);
 
     for (const account of user.caldav_accounts) {
         await fetchAndProcessAccountCalendars(
@@ -230,7 +230,7 @@ export const listCalendars = async (req: Request, res: Response) => {
     }
 };
 
-const formatICalDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
 
 export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
     // Find the account that owns the push_calendar URL
@@ -318,7 +318,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
     const creationFetchOptions = {
         headers: {
             // @ts-ignore
-            ...(client.fetchOptions?.headers || {}),
+            ...(client.fetchOptions?.headers),
             ...(authHeader ? { Authorization: authHeader } : {})
         }
     };

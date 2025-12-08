@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { EventForm } from './EventForm';
 
@@ -20,7 +20,7 @@ vi.mock('@/components/ui/select', () => ({
     SelectTrigger: ({ children }: any) => <button>{children}</button>,
     SelectValue: () => <span>Select Value</span>,
     SelectContent: ({ children }: any) => <div>{children}</div>,
-    SelectItem: ({ value, children, onClick }: any) => <div onClick={() => onClick && onClick(value)} data-value={value}>{children}</div>,
+    SelectItem: ({ value, children, onClick }: any) => <button onClick={() => onClick?.(value)} data-value={value}>{children}</button>,
 }));
 
 // Mock Textarea

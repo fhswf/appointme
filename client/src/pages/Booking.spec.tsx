@@ -1,12 +1,10 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import Booking from './Booking';
 import { MemoryRouter } from 'react-router-dom';
 import * as userServices from '../helpers/services/user_services';
 import * as eventServices from '../helpers/services/event_services';
-import * as googleServices from '../helpers/services/google_services';
-import { Day, IntervalSet } from 'common';
 
 // Mock dependencies
 vi.mock('../helpers/services/user_services');
@@ -134,6 +132,6 @@ describe('Booking Page', () => {
         });
     });
 
-    // TODO: Add interaction tests (clicking next) to verify stepper logic
+    // NOTE: Add interaction tests (clicking next) to verify stepper logic
     // This requires more complex mocking of the Calendar and DayPicker interaction
 });

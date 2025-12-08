@@ -76,7 +76,7 @@ app.get("/api/v1/csrf-token", (req, res) => {
 
 const csrfProtection = (req, res, next) => {
   // Exclude POST /api/v1/events/:id/slot from CSRF protection
-  if (req.method === 'POST' && /^\/api\/v1\/events\/[^/]+\/slot$/.test(req.path)) {
+  if (req.method === 'POST' && /^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path)) {
     next();
   } else {
     doubleCsrfProtection(req, res, next);

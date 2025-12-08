@@ -34,7 +34,7 @@ import {
   getCalendarList,
 } from "../helpers/services/google_services";
 
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
@@ -146,7 +146,7 @@ const PushCalendar = ({ user, calendarList }) => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">
-          {pushCal ? (pushCal.summaryOverride ? pushCal.summaryOverride : pushCal.summary) : "No calendar selected"}
+          {pushCal ? (pushCal.summaryOverride || pushCal.summary) : "No calendar selected"}
         </div>
       </CardContent>
 
@@ -198,13 +198,13 @@ const PullCalendars = ({ user, calendarList }) => {
   const save = () => {
     console.log("save: selected: %o", selected);
     user.pull_calendars = [];
-    Object.keys(selected).forEach((item) => {
+    for (const item of Object.keys(selected)) {
       console.log("save: item %s", item);
       if (selected[item]) {
         console.log("save: %s is true", item);
         user.pull_calendars.push(item);
       }
-    });
+    }
     updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
@@ -219,7 +219,9 @@ const PullCalendars = ({ user, calendarList }) => {
     return <div></div>;
   } else {
     const _selected = {};
-    user.pull_calendars.forEach((item) => (_selected[item] = true));
+    for (const item of user.pull_calendars) {
+      _selected[item] = true;
+    }
     return (
       <>
         <Card>
@@ -320,7 +322,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
               src="/icons/caldav.png"
               width="32"
             />
-            CalDav Calendar
+            <span>CalDav Calendar</span>
           </div>
           <div>
             <Button onClick={() => setOpen(true)} data-testid="add-caldav-button">
@@ -493,7 +495,7 @@ const Calendarintegration = () => {
     const errors = [];
 
     // Keep Google calendars if they exist
-    if (calendarList && calendarList.items) {
+    if (calendarList?.items) {
       const googleCals = calendarList.items.filter(c => !c.isCalDav);
       allCalendars.push(...googleCals);
     }

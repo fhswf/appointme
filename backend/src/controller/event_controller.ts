@@ -5,8 +5,8 @@
  */
 import { EventDocument, EventModel } from "../models/Event.js";
 import { Event, IntervalSet } from "common";
-import { freeBusy, events } from "./google_controller.js";
-import { getBusySlots } from "./caldav_controller.js";
+import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
+import { getBusySlots, createCalDavEvent } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
 import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
@@ -54,7 +54,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       logger.debug("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
 
       // Request currently booked events. We need them for the maxPerDay restriction
-      return events(event.user as string, timeMin.toISOString(), timeMax.toISOString())
+      return events(event.user, timeMin.toISOString(), timeMax.toISOString())
         .then(events => ({ events, event }));
     })
     .then(({ events, event }) => {
@@ -64,8 +64,8 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
 
       // Now query freeBusy service and CalDAV
       return Promise.all([
-        freeBusy(event.user as string, timeMin.toISOString(), timeMax.toISOString()),
-        getBusySlots(event.user as string, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+        freeBusy(event.user, timeMin.toISOString(), timeMax.toISOString()),
+        getBusySlots(event.user, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
           logger.error('CalDAV getBusySlots failed', err);
           return [];
         })
@@ -106,40 +106,35 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     return blocked;
   }
 
+  function convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter) {
+    const freeIntervals = new IntervalSet();
+    let current = timeMin;
+    for (const busy of busySlots) {
+      const _start = addMinutes(new Date(busy.start), -bufferBefore);
+      const _end = addMinutes(new Date(busy.end), bufferAfter);
+      if (current < _start)
+        freeIntervals.push({ start: current, end: _start });
+      if (_end > current) current = _end;
+    }
+    if (current < timeMax) {
+      freeIntervals.push({ start: current, end: timeMax });
+    }
+    return freeIntervals;
+  }
+
   function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
     let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
     freeSlots = freeSlots.intersect(blocked.inverse());
+
     for (const key in response.data.calendars) {
-      const calIntervals = new IntervalSet();
-      let current = timeMin;
-      for (const busy of response.data.calendars[key].busy) {
-        logger.debug('freeBusy: %o %o %d %d', busy.start, busy.end, event.bufferbefore, event.bufferafter);
-        const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-        const _end = addMinutes(new Date(busy.end), event.bufferafter);
-        if (current < _start)
-          calIntervals.push({ start: current, end: _start });
-        if (_end > current) current = _end;
-      }
-      if (current < timeMax) {
-        calIntervals.push({ start: current, end: timeMax });
-      }
+      const busy = response.data.calendars[key].busy;
+      const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
       freeSlots = freeSlots.intersect(calIntervals);
     }
 
     if (calDavSlots && calDavSlots.length > 0) {
       calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-      const calIntervals = new IntervalSet();
-      let current = timeMin;
-      for (const busy of calDavSlots) {
-        const _start = addMinutes(busy.start, -event.bufferbefore);
-        const _end = addMinutes(busy.end, event.bufferafter);
-        if (current < _start)
-          calIntervals.push({ start: current, end: _start });
-        if (_end > current) current = _end;
-      }
-      if (current < timeMax) {
-        calIntervals.push({ start: current, end: timeMax });
-      }
+      const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
       freeSlots = freeSlots.intersect(calIntervals);
     }
 
@@ -326,81 +321,79 @@ export const updateEventController = (req: Request, res: Response): void => {
  * @param {request} req
  * @param {response} res
  */
-import { checkFree, insertGoogleEvent } from "./google_controller.js";
-import { createCalDavEvent } from "./caldav_controller.js";
+
 import { UserModel } from "../models/User.js";
 import { calendar_v3 } from 'googleapis';
 import Schema$Event = calendar_v3.Schema$Event;
 
-export const insertEvent = (req: Request, res: Response): void => {
+export const insertEvent = async (req: Request, res: Response): Promise<void> => {
   const starttime = new Date(Number.parseInt(req.body.starttime));
   const eventId = req.params.id;
   logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
 
-  EventModel.findById(eventId).then(eventDoc => {
+  try {
+    const eventDoc = await EventModel.findById(eventId);
     if (!eventDoc) {
       res.status(404).json({ error: "Event not found" });
       return;
     }
     const endtime = addMinutes(starttime, eventDoc.duration);
-    const userId = eventDoc.user as string;
+    const userId = eventDoc.user;
 
-    checkFree(eventDoc, userId, starttime, endtime)
-      .then(free => {
-        if (!free) {
-          res.status(400).json({ error: "requested slot not available" });
-          return;
+    const free = await checkFree(eventDoc, userId, starttime, endtime);
+    if (!free) {
+      res.status(400).json({ error: "requested slot not available" });
+      return;
+    }
+
+    const user = await UserModel.findOne({ _id: { $eq: userId } });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const event: Schema$Event = {
+      summary: eventDoc.name + " mit " + (req.body.name),
+      location: eventDoc.location,
+      description: String(eventDoc.description) + "\n" + (req.body.description),
+      start: {
+        dateTime: starttime.toISOString(),
+        timeZone: "Europe/Berlin",
+      },
+      end: {
+        dateTime: endtime.toISOString(),
+        timeZone: "Europe/Berlin",
+      },
+      organizer: {
+        displayName: user.name,
+        email: user.email,
+        id: user._id as string
+      },
+      attendees: [
+        {
+          displayName: req.body.name as string,
+          email: req.body.email as string,
         }
+      ],
+      source: {
+        title: "Appointment",
+        url: "https://appoint.gawron.cloud",
+      },
+      guestsCanModify: true,
+      guestsCanInviteOthers: true,
+    };
 
-        UserModel.findOne({ _id: { $eq: userId } })
-          .then(user => {
-            if (!user) {
-              res.status(404).json({ error: "User not found" });
-              return;
-            }
+    // Check if push_calendar is a CalDav URL (heuristic: starts with http/https)
+    if (user.push_calendar && (user.push_calendar.startsWith('http') || user.push_calendar.startsWith('/'))) {
+      try {
+        const evt = await createCalDavEvent(user, event);
+        logger.debug('CalDav insert returned %j', evt);
 
-            const event: Schema$Event = {
-              summary: <string>eventDoc.name + " mit " + <string>req.body.name,
-              location: <string>eventDoc.location,
-              description: String(eventDoc.description) + "\n" + (req.body.description as string),
-              start: {
-                dateTime: starttime.toISOString(),
-                timeZone: "Europe/Berlin",
-              },
-              end: {
-                dateTime: endtime.toISOString(),
-                timeZone: "Europe/Berlin",
-              },
-              organizer: {
-                displayName: user.name,
-                email: user.email,
-                id: user._id as string
-              },
-              attendees: [
-                {
-                  displayName: req.body.name as string,
-                  email: req.body.email as string,
-                }
-              ],
-              source: {
-                title: "Appointment",
-                url: "https://appoint.gawron.cloud",
-              },
-              guestsCanModify: true,
-              guestsCanInviteOthers: true,
-            };
-
-            // Check if push_calendar is a CalDav URL (heuristic: starts with http/https)
-            if (user.push_calendar && (user.push_calendar.startsWith('http') || user.push_calendar.startsWith('/'))) {
-              createCalDavEvent(user, event)
-                .then((evt) => {
-                  logger.debug('CalDav insert returned %j', evt);
-
-                  // Send email invitation with ICS
-                  const formatICalDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                  const randomStr = crypto.randomBytes(8).toString('hex');
-                  const uid = `${Date.now()}-${randomStr}`;
-                  const icsContent = `BEGIN:VCALENDAR
+        // Send email invitation with ICS
+        const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
+        const randomStr = crypto.randomBytes(8).toString('hex');
+        const uid = `${Date.now()}-${randomStr}`;
+        const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//BookMe//EN
 BEGIN:VEVENT
@@ -416,46 +409,36 @@ ${event.attendees.map(a => `ATTENDEE;CN=${a.displayName};PARTSTAT=NEEDS-ACTION;R
 END:VEVENT
 END:VCALENDAR`;
 
-                  const attendeeEmail = req.body.email as string;
-                  const attendeeName = req.body.name as string;
-                  const subject = `Invitaion: ${event.summary}`;
-                  const html = `<p>Hi ${attendeeName},</p>
+        const attendeeEmail = req.body.email as string;
+        const attendeeName = req.body.name as string;
+        const subject = `Invitaion: ${event.summary}`;
+        const html = `<p>Hi ${attendeeName},</p>
 <p>You have been invited to the following event:</p>
 <h3>${event.summary}</h3>
-<p>${(event.description as string || '').replace(/\n/g, '<br>')}</p>
+<p>${(event.description || '').replaceAll('\n', '<br>')}</p>
 <p><strong>Time:</strong> ${new Date(event.start.dateTime).toLocaleString('de-DE', { timeZone: 'Europe/Berlin' })}</p>
 <p>Please find the event details attached.</p>`;
 
-                  sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
-                    .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
-                    .catch(err => logger.error('Failed to send invitation email', err));
+        sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
+          .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
+          .catch(err => logger.error('Failed to send invitation email', err));
 
-                  res.json({ success: true, message: "Event wurde gebucht (CalDav)", event: evt });
-                })
-                .catch(error => {
-                  logger.error('CalDav insert failed', error);
-                  res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to create event on CalDav server' });
-                });
-            } else {
-              // Fallback to Google Calendar
-              insertGoogleEvent(user, event)
-                .then((evt) => {
-                  logger.debug('insert returned %j', evt)
-                  res.json({ success: true, message: "Event wurde gebucht", event: evt });
-                })
-                .catch(error => {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  res.status(400).json({ error });
-                })
-            }
-          })
-
-      })
-      .catch(error => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        res.json({ success: true, message: "Event wurde gebucht (CalDav)", event: evt });
+      } catch (error) {
+        logger.error('CalDav insert failed', error);
+        res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to create event on CalDav server' });
+      }
+    } else {
+      // Fallback to Google Calendar
+      try {
+        const evt = await insertGoogleEvent(user, event);
+        logger.debug('insert returned %j', evt)
+        res.json({ success: true, message: "Event wurde gebucht", event: evt });
+      } catch (error) {
         res.status(400).json({ error });
-      })
-  }).catch(err => {
+      }
+    }
+  } catch (err) {
     res.status(400).json({ error: err });
-  });
+  }
 };

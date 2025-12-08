@@ -101,7 +101,7 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
 
       if (items.length === 0) {
         // @ts-ignore
-        return Promise.resolve({ data: { calendars: {} } } as any);
+        return { data: { calendars: {} } } as any;
       }
 
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
@@ -118,14 +118,28 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     })
 }
 
-export async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
-  const interval = new IntervalSet(timeMin, timeMax);
-  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+// Helper to convert busy slots to free intervals (duplicated from event_controller for now, can be shared later)
+function convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter) {
+  const freeIntervals = new IntervalSet();
+  let current = timeMin;
+  for (const busy of busySlots) {
+    const _start = addMinutes(new Date(busy.start), -bufferBefore);
+    const _end = addMinutes(new Date(busy.end), bufferAfter);
+    if (current < _start)
+      freeIntervals.push({ start: current, end: _start });
+    if (_end > current) current = _end;
+  }
+  if (current < timeMax) {
+    freeIntervals.push({ start: current, end: timeMax });
+  }
+  return freeIntervals;
+}
 
-  const [googleRes, calDavSlots] = await Promise.all([
+async function fetchFreeBusyData(userid: string, timeMin: Date, timeMax: Date) {
+  return Promise.all([
     (async () => {
       const user = await UserModel.findOne({ _id: userid }).exec();
-      if (user && user.google_tokens && user.google_tokens.access_token) {
+      if (user?.google_tokens?.access_token) {
         return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
           logger.error('Google freeBusy error', err);
           return null;
@@ -135,39 +149,25 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
     })(),
     getBusySlots(userid, timeMin.toISOString(), timeMax.toISOString())
   ]);
+}
 
-  if (googleRes && googleRes.data && googleRes.data.calendars) {
+export async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
+  const interval = new IntervalSet(timeMin, timeMax);
+  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+
+  const [googleRes, calDavSlots] = await fetchFreeBusyData(userid, timeMin, timeMax);
+
+  if (googleRes?.data?.calendars) {
     for (const key in googleRes.data.calendars) {
-      const calIntervals = new IntervalSet();
-      let current = timeMin;
-      for (const busy of googleRes.data.calendars[key].busy) {
-        const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-        const _end = addMinutes(new Date(busy.end), event.bufferafter);
-        if (current < _start)
-          calIntervals.push({ start: current, end: _start });
-        if (current < _end) current = _end;
-      }
-      if (current < timeMax) {
-        calIntervals.push({ start: current, end: timeMax });
-      }
+      const busy = googleRes.data.calendars[key].busy;
+      const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
       freeSlots = freeSlots.intersect(calIntervals)
     }
   }
 
   if (calDavSlots && calDavSlots.length > 0) {
     calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-    const calIntervals = new IntervalSet();
-    let current = timeMin;
-    for (const busy of calDavSlots) {
-      const _start = addMinutes(busy.start, -event.bufferbefore);
-      const _end = addMinutes(busy.end, event.bufferafter);
-      if (current < _start)
-        calIntervals.push({ start: current, end: _start });
-      if (current < _end) current = _end;
-    }
-    if (current < timeMax) {
-      calIntervals.push({ start: current, end: timeMax });
-    }
+    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
@@ -179,7 +179,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
  * Helper to insert event into Google Calendar
  */
 export async function insertGoogleEvent(user: UserDocument, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
-  if (!user.google_tokens || !user.google_tokens.access_token) {
+  if (!user.google_tokens?.access_token) {
     throw new Error("No Google account connected");
   }
 
@@ -315,11 +315,11 @@ function deleteTokens(userid: string) {
 function saveTokens(user: string, token) {
   const _KEYS = ["access_token", "refresh_token", "scope", "expiry_date"];
   const update = {};
-  _KEYS.forEach(key => {
+  for (const key of _KEYS) {
     if (key in token.tokens && token.tokens[key]) {
       update[`google_tokens.${key}`] = <string>token.tokens[key];
     }
-  });
+  }
   UserModel.findOneAndUpdate({ _id: { $eq: user } }, { $set: update }, { new: true })
     .then(user => {
       logger.debug('saveTokens: %o', user)

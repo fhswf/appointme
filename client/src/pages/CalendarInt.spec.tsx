@@ -132,7 +132,7 @@ describe('CalendarIntegration Page', () => {
 
         // Check privacy ack
         // The checkbox from shadcn/ui might be tricky to click by label or role, let's try finding by testid or role
-        const checkboxes = screen.getAllByRole('checkbox');
+        // Check privacy ack
         // Assuming the last one is privacy-ack or use testid if available. 
         // I added data-testid="caldav-privacy-ack" in previous diffs for user, but I am writing fresh here.
         // Wait, did I edit CalendarInt before? Yes, I added test-ids in step 24-28!
@@ -180,7 +180,9 @@ describe('CalendarIntegration Page', () => {
 
         // I can just click the button near the text.
         const removeButton = screen.getByText('Existing Account').nextElementSibling;
-        fireEvent.click(removeButton!);
+        if (removeButton) {
+            fireEvent.click(removeButton);
+        }
 
         await waitFor(() => {
             expect(caldavServices.removeAccount).toHaveBeenCalledWith('acc1');
