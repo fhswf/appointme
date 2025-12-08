@@ -17,6 +17,7 @@ import { logger } from "../logging.js";
 import { sendEventInvitation } from "../utility/mailer.js";
 import { getLocale, t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
+import { generateIcsContent } from "../utility/ical.js";
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
 
@@ -354,10 +355,13 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
+    const userComment = req.body.description as string;
+    const eventDescription = String(eventDoc.description);
+
     const event: Schema$Event = {
       summary: eventDoc.name + " mit " + (req.body.name),
       location: eventDoc.location,
-      description: String(eventDoc.description) + "\n" + (req.body.description),
+      description: eventDescription, // Description only contains the service description
       start: {
         dateTime: starttime.toISOString(),
         timeZone: "Europe/Berlin",
@@ -399,32 +403,31 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 
       try {
         const locale = getLocale(req.headers['accept-language']);
-        const evt = await createCalDavEvent(user, event);
+        // Pass userComment separately to CalDAV interaction
+        const evt = await createCalDavEvent(user, event, userComment);
         logger.debug('CalDav insert returned %j', evt);
 
-        // Send email invitation with ICS
-        const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
         const randomStr = crypto.randomBytes(8).toString('hex');
         const uid = `${Date.now()}-${randomStr}`;
 
-        // Ensure description handles newlines for ICS
-        const icsDescription = event.description?.replace(/\n/g, '\\n') || '';
-
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//BookMe//EN
-BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${formatICalDate(new Date())}
-DTSTART:${formatICalDate(new Date(event.start.dateTime))}
-DTEND:${formatICalDate(new Date(event.end.dateTime))}
-SUMMARY:${event.summary}
-DESCRIPTION:${icsDescription}
-LOCATION:${event.location}
-ORGANIZER;CN=${event.organizer.displayName}:mailto:${event.organizer.email}
-${event.attendees.map(a => `ATTENDEE;CN=${a.displayName};PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${a.email}`).join('\n')}
-END:VEVENT
-END:VCALENDAR`;
+        const icsContent = generateIcsContent({
+          uid,
+          start: new Date(event.start.dateTime),
+          end: new Date(event.end.dateTime),
+          summary: event.summary,
+          description: event.description,
+          location: event.location,
+          organizer: {
+            displayName: event.organizer.displayName,
+            email: event.organizer.email
+          },
+          attendees: event.attendees.map(a => ({
+            displayName: a.displayName,
+            email: a.email,
+            partstat: 'NEEDS-ACTION',
+            rsvp: true
+          }))
+        }, { comment: userComment });
 
         const attendeeEmail = req.body.email as string;
         const attendeeName = validator.escape(req.body.name as string);
@@ -432,13 +435,14 @@ END:VCALENDAR`;
 
         // Escape description for HTML email, preserving newlines as <br>
         const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
+        const escapedComment = validator.escape(userComment || '').replaceAll('\n', '<br>');
 
         const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
 
         const html = t(locale, 'invitationBody', {
           attendeeName,
           summary: validator.escape(event.summary),
-          description: escapedDescription,
+          description: escapedDescription + (escapedComment ? '<br><br>Kommentar:<br>' + escapedComment : ''),
           time: timeStr
         });
 
@@ -454,7 +458,11 @@ END:VCALENDAR`;
     } else {
       // Fallback to Google Calendar
       try {
-        const evt = await insertGoogleEvent(user, event);
+        const googleEvent = { ...event };
+        if (userComment) {
+          googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
+        }
+        const evt = await insertGoogleEvent(user, googleEvent);
         logger.debug('insert returned %j', evt)
         res.json({ success: true, message: "Event wurde gebucht", event: evt });
       } catch (error) {

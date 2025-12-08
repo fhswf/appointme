@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import { logger } from '../logging.js';
 import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
+import { generateIcsContent } from '../utility/ical.js';
 
 export const addAccount = async (req: Request, res: Response) => {
     let { serverUrl, username, password, name } = req.body;
@@ -230,7 +231,7 @@ export const listCalendars = async (req: Request, res: Response) => {
     }
 };
 
-const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
+
 
 export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavAccount | undefined => {
     return user.caldav_accounts.find(acc => {
@@ -254,7 +255,7 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string): Promise<any> => {
     // Find the account that owns the push_calendar URL
     const account = findAccountForCalendar(user, user.push_calendar);
 
@@ -327,24 +328,29 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
         }
     };
 
+    const icsContent = generateIcsContent({
+        uid,
+        start: new Date(eventData.start),
+        end: new Date(eventData.end),
+        summary: eventData.summary,
+        description: eventData.description,
+        location: eventData.location,
+        organizer: {
+            displayName: eventData.organizer.cn,
+            email: eventData.organizer.mailto
+        },
+        attendees: eventData.attendees.map(a => ({
+            displayName: a.cn,
+            email: a.mailto,
+            partstat: a.partstat,
+            rsvp: a.rsvp
+        }))
+    }, { comment: userComment });
+
     const createdEvent = await client.createCalendarObject({
         calendar: targetCalendar,
         filename: `${uid}.ics`,
-        iCalString: `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//BookMe//EN
-BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${formatICalDate(new Date())}
-DTSTART:${formatICalDate(new Date(eventData.start))}
-DTEND:${formatICalDate(new Date(eventData.end))}
-SUMMARY:${eventData.summary}
-DESCRIPTION:${eventData.description}
-LOCATION:${eventData.location}
-ORGANIZER;CN=${eventData.organizer.cn}:mailto:${eventData.organizer.mailto}
-${eventData.attendees.map(a => `ATTENDEE;CN=${a.cn};PARTSTAT=${a.partstat};RSVP=${a.rsvp}:mailto:${a.mailto}`).join('\n')}
-END:VEVENT
-END:VCALENDAR`,
+        iCalString: icsContent,
         fetchOptions: creationFetchOptions
     });
 
