@@ -26,7 +26,7 @@ const getClient = async (): Promise<Client | null> => {
             jwks_uri: `${issuerUrl}/protocol/openid-connect/certs`,
         });
         client = new issuer.Client({
-            client_id: process.env.OIDC_CLIENT_ID!,
+            client_id: process.env.OIDC_CLIENT_ID,
             client_secret: process.env.OIDC_CLIENT_SECRET,
             redirect_uris: [`${process.env.CLIENT_URL}/oidc-callback`],
             response_types: ['code'],
@@ -109,7 +109,7 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
 
         const access_token = sign(
             { _id: user._id, name: user.name, email: user.email },
-            process.env.JWT_SECRET!,
+            process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
 

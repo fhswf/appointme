@@ -35,7 +35,7 @@ const Login = (props: any) => {
   const handleOidcLogin = () => {
     getOidcAuthUrl()
       .then((res: any) => {
-        if (res.url) window.location.href = res.url;
+        if (res.url) globalThis.location.href = res.url;
       })
       .catch((err) => {
         console.error(err);
