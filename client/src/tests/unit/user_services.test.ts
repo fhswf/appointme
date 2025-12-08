@@ -19,7 +19,7 @@ describe('User Services', () => {
         const response = await getUser();
 
         expect(axios.get).toHaveBeenCalledWith(
-            expect.stringContaining('/users/user'),
+            expect.stringContaining('/user/user'),
             { withCredentials: true }
         );
         expect(response).toEqual({ data: 'user-data' });
@@ -33,7 +33,7 @@ describe('User Services', () => {
 
         expect(csrfService.getCsrfToken).toHaveBeenCalled();
         expect(axios.put).toHaveBeenCalledWith(
-            expect.stringContaining('/users/user'),
+            expect.stringContaining('/user/'),
             { data: userData },
             {
                 headers: { 'x-csrf-token': 'mock-csrf-token' },
@@ -48,8 +48,7 @@ describe('User Services', () => {
         await getUserByUrl('test-url');
 
         expect(axios.get).toHaveBeenCalledWith(
-            expect.stringContaining('/users/user/test-url'),
-            { params: { url: 'test-url' } }
+            expect.stringContaining('/user/test-url')
         );
     });
 });

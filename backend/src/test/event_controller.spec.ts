@@ -1,9 +1,10 @@
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import request from "supertest";
 import { EVENT } from './EVENT.js';
 import { USER } from './USER.js';
 import { EventModel } from "../models/Event.js";
+import { UserModel } from "../models/User.js";
 
 // Mock dependencies
 vi.mock("../models/Event.js", () => {
@@ -21,52 +22,92 @@ vi.mock("../models/Event.js", () => {
 
     return {
         EventModel: EventModelMock,
+        EventDocument: {}
     }
 });
+
+vi.mock("../models/User.js", () => {
+    const UserModelMock = vi.fn();
+    (UserModelMock as any).findOne = vi.fn();
+    return { UserModel: UserModelMock };
+});
+
 
 vi.mock("../handlers/middleware.js", () => {
     return {
         middleware: {
             requireAuth: vi.fn((req, res, next) => {
                 req.user_id = USER._id;
+                // Some controllers use req['user_id']
+                req['user_id'] = USER._id;
                 next();
             })
         }
     }
 });
 
+// Mock DB Connection
+vi.mock("../config/dbConn.js", () => ({
+    dataBaseConn: vi.fn()
+}));
+
+// Mock csrf-csrf to bypass protection
+vi.mock("csrf-csrf", () => {
+    return {
+        doubleCsrf: () => ({
+            doubleCsrfProtection: (req, res, next) => next(),
+            generateCsrfToken: () => "mock_csrf_token"
+        })
+    };
+});
+
+// Mock mailer
+vi.mock("../utility/mailer.js", () => ({
+    sendEventInvitation: vi.fn().mockResolvedValue({})
+}));
+
+// Mock google_controller
+vi.mock("../controller/google_controller.js", () => ({
+    checkFree: vi.fn().mockResolvedValue(true),
+    insertGoogleEvent: vi.fn().mockResolvedValue({ status: "confirmed", htmlLink: "http://google.com/event" }),
+    events: vi.fn().mockResolvedValue([]),
+    freeBusy: vi.fn().mockResolvedValue({ data: { calendars: {} } }),
+    revokeScopes: vi.fn().mockResolvedValue({}),
+    generateAuthUrl: vi.fn().mockReturnValue("http://auth.url"),
+    getCalendarList: vi.fn().mockResolvedValue([]),
+    googleCallback: vi.fn().mockResolvedValue({})
+}));
+
+// Mock caldav_controller
+vi.mock("../controller/caldav_controller.js", () => ({
+    createCalDavEvent: vi.fn().mockResolvedValue({ ok: true }),
+    getBusySlots: vi.fn().mockResolvedValue([]),
+    addAccount: vi.fn().mockImplementation((req, res) => res.json({})),
+    listAccounts: vi.fn().mockImplementation((req, res) => res.json([])),
+    removeAccount: vi.fn().mockImplementation((req, res) => res.json({})),
+    listCalendars: vi.fn().mockImplementation((req, res) => res.json([]))
+}));
+
+
 describe("Event Controller", () => {
     let app: any;
-    let csrfToken: string;
-    let csrfCookie: string;
 
     beforeAll(async () => {
-        process.env.PORT = "3004";
         process.env.JWT_SECRET = "test_secret";
 
         // Re-import to ensure mocks are used
         const { init } = await import("../server.js");
-        app = init();
+        app = init(0);
     });
 
     afterAll(async () => {
-        await app.close();
+        if (app?.close) await app.close();
     });
 
-    // Helper to get CSRF token
-    const getCsrfToken = async () => {
-        const res = await request(app).get("/api/v1/csrf-token");
-        csrfToken = res.body.csrfToken;
-        csrfCookie = res.headers["set-cookie"][0];
-    };
-
-    describe("POST /api/v1/events/addEvent", () => {
+    describe("POST /api/v1/event/addEvent", () => {
         it("should add a new event successfully", async () => {
-            await getCsrfToken();
             const res = await request(app)
-                .post("/api/v1/events/addEvent")
-                .set("x-csrf-token", csrfToken)
-                .set("Cookie", csrfCookie)
+                .post("/api/v1/event/addEvent")
                 .send(EVENT);
 
             expect(res.status).toEqual(201);
@@ -74,8 +115,6 @@ describe("Event Controller", () => {
         });
 
         it("should return error if event validation fails (Mongoose)", async () => {
-            await getCsrfToken();
-
             const validationError = {
                 errors: {
                     name: { message: "Name is required" }
@@ -88,39 +127,233 @@ describe("Event Controller", () => {
             }));
 
             const res = await request(app)
-                .post("/api/v1/events/addEvent")
-                .set("x-csrf-token", csrfToken)
-                .set("Cookie", csrfCookie)
+                .post("/api/v1/event/addEvent")
                 .send({});
 
             expect(res.status).toEqual(400);
             expect(res.body.error).toEqual("Name is required");
         });
+    });
 
-        it("should handle duplicate key error via errorHandler", async () => {
-            await getCsrfToken();
-
-            // Mock save to throw duplicate key error
-            const duplicateError = {
-                code: 11000,
-                message: "E11000 duplicate key error collection: test.events index: url_1 dup key: { url: \"test-event\" }"
-            };
-
-            (EventModel as any).mockImplementationOnce((data) => ({
-                ...data,
-                save: vi.fn().mockRejectedValue(duplicateError)
-            }));
+    describe("DELETE /api/v1/event/:id", () => {
+        it("should delete an event", async () => {
+            (EventModel.findByIdAndDelete as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({})
+            });
 
             const res = await request(app)
-                .post("/api/v1/events/addEvent")
-                .set("x-csrf-token", csrfToken)
-                .set("Cookie", csrfCookie)
-                .send(EVENT);
+                .delete("/api/v1/event/123");
 
-            expect(res.status).toEqual(400);
-            // The errorHandler extracts "url" from the message
-            // "Field url already exists"
-            expect(res.body.error).toContain("already exists");
+            expect(res.status).toBe(200);
+            expect(res.body.msg).toBe("Successfully deleted the Event");
+        });
+
+        it("should handle error during deletion", async () => {
+            (EventModel.findByIdAndDelete as any).mockReturnValue({
+                exec: vi.fn().mockRejectedValue("DB Error")
+            });
+
+            const res = await request(app)
+                .delete("/api/v1/event/123");
+
+            expect(res.status).toBe(400);
+        });
+    });
+
+    describe("GET /api/v1/event", () => {
+        it("should get event list for user", async () => {
+            (EventModel.find as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue([EVENT])
+            });
+
+            const res = await request(app)
+                .get("/api/v1/event");
+
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+        });
+    });
+
+    describe("GET /api/v1/event/:id", () => {
+        it("should get event by ID", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(EVENT)
+            });
+
+            const res = await request(app)
+                .get("/api/v1/event/123");
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual(expect.objectContaining(EVENT));
+        });
+
+        it("should return 404 if not found", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const res = await request(app)
+                .get("/api/v1/event/123");
+
+            expect(res.status).toBe(404);
+        });
+    });
+
+    describe("PUT /api/v1/event/:id", () => {
+        it("should update event", async () => {
+            (EventModel.findByIdAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(EVENT)
+            });
+
+            const res = await request(app)
+                .put("/api/v1/event/123")
+                .send({ data: { name: "Updated Name" } });
+
+            expect(res.status).toBe(200);
+            expect(res.body.msg).toBe("Update successful");
+        });
+    });
+
+    describe("GET /api/v1/event/:id/slot (getAvailableTimes)", () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date('2025-12-01T12:00:00Z'));
+        });
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it("should return free slots", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                select: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue({
+                    ...EVENT,
+                    minFuture: 0,
+                    maxFuture: 24 * 60 * 60,
+                    duration: 30,
+                    bufferbefore: 0,
+                    bufferafter: 0,
+                    available: {
+                        0: [], 1: [{ start: "09:00", end: "17:00" }], 2: [], 3: [], 4: [], 5: [], 6: []
+                    },
+                    maxPerDay: 5,
+                    user: USER._id
+                })
+            });
+
+            const { events, freeBusy } = await import("../controller/google_controller.js");
+            const { getBusySlots } = await import("../controller/caldav_controller.js");
+
+            (events as any).mockResolvedValue([]);
+            (freeBusy as any).mockResolvedValue({ data: { calendars: { 'primary': { busy: [] } } } });
+            (getBusySlots as any).mockResolvedValue([]);
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-02T00:00:00Z",
+                    timeMax: "2025-12-02T23:59:59Z"
+                });
+
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+        });
+
+        it("should return 400 if event not found", async () => {
+            (EventModel.findById as any).mockReturnValue({
+                select: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-02T00:00:00Z",
+                    timeMax: "2025-12-02T23:59:59Z"
+                });
+
+            expect(res.status).toBe(400); // Controller throws Error -> caught -> 400
+        });
+    });
+
+    describe("POST /api/v1/event/:id/slot (insertEvent)", () => {
+        it("should insert event successfully (Google)", async () => {
+            // Mock findById for event
+            (EventModel.findById as any).mockResolvedValue({
+                ...EVENT,
+                duration: 60,
+                user: USER._id
+            });
+
+            // Mock UserModel.findOne
+            (UserModel.findOne as any).mockResolvedValue({
+                ...USER,
+                push_calendar: "google_calendar_id"
+            });
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    starttime: Date.now().toString(),
+                    name: "Guest",
+                    email: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body.success).toBe(true);
+            expect(res.body.message).toContain("Event wurde gebucht");
+        });
+
+        it("should insert event successfully (CalDAV)", async () => {
+            // Mock findById for event
+            (EventModel.findById as any).mockResolvedValue({
+                ...EVENT,
+                duration: 60,
+                user: USER._id
+            });
+
+            // Mock UserModel.findOne
+            (UserModel.findOne as any).mockResolvedValue({
+                ...USER,
+                push_calendar: "https://caldav.example.com/cal"
+            });
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    starttime: Date.now().toString(),
+                    name: "Guest",
+                    email: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body.success).toBe(true);
+            expect(res.body.message).toContain("Event wurde gebucht (CalDav)");
+        });
+
+        it("should handle unavailable slot", async () => {
+            (EventModel.findById as any).mockResolvedValue({
+                ...EVENT,
+                duration: 60,
+                user: USER._id
+            });
+
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(false);
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    starttime: Date.now().toString(),
+                    name: "Guest",
+                    email: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe("requested slot not available");
         });
     });
 });

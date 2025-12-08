@@ -10,19 +10,15 @@ import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
 import { User } from "common/src/types";
-import { UserModel } from "../models/User.js";
+import { UserModel, UserDocument } from "../models/User.js";
 import { Request, Response } from 'express';
 
 import { Event, IntervalSet } from 'common';
 
 import { logger } from '../logging.js';
+import { getBusySlots } from './caldav_controller.js';
 
-// Dotenv Config
-import dotenv from "dotenv";
 
-const env = dotenv.config({
-  path: "./src/config/config.env",
-});
 
 const config = {
   clientId: process.env.CLIENT_ID,
@@ -94,11 +90,20 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument | null) => {
+      if (!user) throw new Error("User not found");
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
-      const items = user.pull_calendars.map(id => { return { id } });
+      const items = user.pull_calendars
+        .filter(id => !id.startsWith('http') && !id.startsWith('/'))
+        .map(id => { return { id } });
+
+      if (items.length === 0) {
+        // @ts-ignore
+        return Promise.resolve({ data: { calendars: {} } } as any);
+      }
+
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
       return calendar.freebusy.query({
         requestBody: {
@@ -113,116 +118,83 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     })
 }
 
-async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
-  const interval = new IntervalSet(timeMin, timeMax)
-  return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString())
-    .then(res => {
-      let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+export async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
+  const interval = new IntervalSet(timeMin, timeMax);
+  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
 
-      for (const key in res.data.calendars) {
-        const calIntervals = new IntervalSet();
-        let current = timeMin;
-        for (const busy of res.data.calendars[key].busy) {
-          const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
-          const _end = addMinutes(new Date(busy.end), event.bufferafter);
-          if (current < _start)
-            calIntervals.push({ start: current, end: _start });
-          current = _end;
-        }
-        if (current < timeMax) {
-          calIntervals.push({ start: current, end: timeMax });
-        }
-        freeSlots = freeSlots.intersect(calIntervals)
+  const [googleRes, calDavSlots] = await Promise.all([
+    (async () => {
+      const user = await UserModel.findOne({ _id: userid }).exec();
+      if (user && user.google_tokens && user.google_tokens.access_token) {
+        return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+          logger.error('Google freeBusy error', err);
+          return null;
+        });
       }
-      const intersection = freeSlots.intersect(interval)
-      return intersection.length == 1 && IntervalSet.equals(intersection[0], interval[0]);
-    })
+      return null;
+    })(),
+    getBusySlots(userid, timeMin.toISOString(), timeMax.toISOString())
+  ]);
+
+  if (googleRes && googleRes.data && googleRes.data.calendars) {
+    for (const key in googleRes.data.calendars) {
+      const calIntervals = new IntervalSet();
+      let current = timeMin;
+      for (const busy of googleRes.data.calendars[key].busy) {
+        const _start = addMinutes(new Date(busy.start), -event.bufferbefore);
+        const _end = addMinutes(new Date(busy.end), event.bufferafter);
+        if (current < _start)
+          calIntervals.push({ start: current, end: _start });
+        if (current < _end) current = _end;
+      }
+      if (current < timeMax) {
+        calIntervals.push({ start: current, end: timeMax });
+      }
+      freeSlots = freeSlots.intersect(calIntervals)
+    }
+  }
+
+  if (calDavSlots && calDavSlots.length > 0) {
+    calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const calIntervals = new IntervalSet();
+    let current = timeMin;
+    for (const busy of calDavSlots) {
+      const _start = addMinutes(busy.start, -event.bufferbefore);
+      const _end = addMinutes(busy.end, event.bufferafter);
+      if (current < _start)
+        calIntervals.push({ start: current, end: _start });
+      if (current < _end) current = _end;
+    }
+    if (current < timeMax) {
+      calIntervals.push({ start: current, end: timeMax });
+    }
+    freeSlots = freeSlots.intersect(calIntervals);
+  }
+
+  const intersection = freeSlots.intersect(interval)
+  return intersection.length == 1 && IntervalSet.equals(intersection[0], interval[0]);
 }
 
 /**
- * Middleware to insert an event to google calendar.
- * @function
- * @param {request} req
- * @param {response} res
+ * Helper to insert event into Google Calendar
  */
-export function insertEventToGoogleCal(req: Request, res: Response) {
-  const starttime = new Date(Number.parseInt(req.body.starttime));
-  const endtime = addMinutes(starttime, req.body.event.duration);
-  logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
+  if (!user.google_tokens || !user.google_tokens.access_token) {
+    throw new Error("No Google account connected");
+  }
 
-  checkFree(req.body.event, req.params.user_id, starttime, endtime)
-    .then(free => {
-      if (!free) {
-        res.status(400).json({ error: "requested slot not available" });
-        return;
-      }
+  const oAuth2Client = createOAuthClient(user._id as string);
+  oAuth2Client.setCredentials(user.google_tokens);
+  logger.debug('insert: event=%j', event)
 
-      /*
-        const htmlDescription = await remark()
-        .use(html)
-        .process(req.body.event.description as string)
-      */
-
-      UserModel.findOne({ _id: { $eq: req.params.user_id } })
-        .then(user => {
-
-          const event: Schema$Event = {
-            summary: <string>req.body.event.name + " mit " + <string>req.body.name,
-            location: <string>req.body.event.location,
-            description: String(req.body.event.description) + "<br>" + (req.body.description as string),
-            start: {
-              dateTime: starttime.toISOString(),
-              timeZone: "Europe/Berlin",
-            },
-            end: {
-              dateTime: endtime.toISOString(),
-              timeZone: "Europe/Berlin",
-            },
-            organizer: {
-              displayName: user.name,
-              email: user.email,
-              id: user._id as string
-            },
-            attendees: [
-              {
-                displayName: req.body.name as string,
-                email: req.body.email as string,
-              }
-            ],
-            source: {
-              title: "Appointment",
-              url: "https://appoint.gawron.cloud",
-            },
-            guestsCanModify: true,
-            guestsCanInviteOthers: true,
-          };
-
-          const oAuth2Client = createOAuthClient(user._id as string);
-          oAuth2Client.setCredentials(user.google_tokens);
-          logger.debug('insert: event=%j', event)
-          google.calendar({ version: "v3" }).events
-            .insert({
-              auth: oAuth2Client,
-              calendarId: user.push_calendar,
-              sendUpdates: "all",
-              requestBody: event,
-            })
-            .then((evt: GaxiosResponse<Schema$Event>) => {
-              logger.debug('insert returned %j', evt)
-              res.json({ success: true, message: "Event wurde gebucht", event: evt });
-            })
-            .catch(error => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              res.status(400).json({ error });
-            })
-        })
-
-    })
-    .catch(error => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      res.status(400).json({ error });
-    })
+  return google.calendar({ version: "v3" }).events.insert({
+    auth: oAuth2Client,
+    calendarId: user.push_calendar,
+    sendUpdates: "all",
+    requestBody: event,
+  });
 }
+
 
 /**
  * Middleware function to delete an google Access Token from a user
@@ -235,7 +207,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
   let tokens = null;
   const query = UserModel.findOne({ _id: { $eq: userid } });
   query.exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       tokens = user.google_tokens;
       if (tokens.expiry_date <= Date.now()) {
         deleteTokens(userid);
@@ -264,7 +236,7 @@ export const revokeScopes = (req: Request, res: Response): void => {
 export async function getAuth(user_id: string): Promise<OAuth2Client> {
   return UserModel.findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
@@ -291,6 +263,10 @@ export function getCalendarList(req: Request, res: Response): void {
           res.status(400).json({ error });
         })
     })
+    .catch(error => {
+      logger.error("getAuth failed: %o", error);
+      res.status(400).json({ error: "Failed to authenticate with Google" });
+    });
 }
 
 
@@ -300,7 +276,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
-    .then((user: User) => {
+    .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);

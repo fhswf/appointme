@@ -39,7 +39,8 @@
   "clear_close_racoon_pat": "{{value, dateTime}}",
   "cuddly_spare_felix_stir": "Schritt {{val}}",
   "extra_misty_panda_grip": "Über diesen Link können Nutzer Termine buchen.",
-  "sunny_great_halibut_empower": "Noch keine Events, erstelle eines",
+  "sunny_great_halibut_empower": "Erstelle den ersten",
+  "create_first_event_type_button": "Veranstaltungstypen",
   "orange_grand_racoon_fall": "So funktioniert Appoint",
   "male_patient_hedgehog_ask": "Appoint ist ein einfaches, leicht zu bedienendes Terminbuchungssystem.  Es ermöglicht Ihnen, Veranstaltungen zu erstellen, Ihren Link zu teilen und Nutzer Termine bei Ihnen buchen zu lassen.",
   "factual_moving_hawk_belong": "Geben Sie an, wo Appoint Ihre Termine hinzufügt und wo es prüft, ob Sie beschäftigt sind.",
@@ -95,5 +96,11 @@
   "Endtime": "Endzeit",
   "these_moving_fox_create": "Beschreibung",
   "honest_weak_iguana_rest": "Ort",
-  "tired_whole_bumblebee_type": "z.B. Online via Zoom"
+  "tired_whole_bumblebee_type": "z.B. Online via Zoom",
+  "Add Account": "Konto hinzufügen",
+  "Add CalDav Account": "CalDav Konto hinzufügen",
+  "CalDav Accounts": "CalDav Konten",
+  "Server URL": "Server URL",
+  "Username": "Benutzername",
+  "Password": "Passwort"
 }

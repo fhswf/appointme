@@ -12,8 +12,9 @@ import {
   getEventByIdController,
   updateEventController,
   getActiveEventsController,
-  getEventByUrl,
+  getEventByUrlController,
   getAvailableTimes,
+  insertEvent
 } from "../controller/event_controller.js";
 
 import { middleware } from "../handlers/middleware.js";
@@ -32,7 +33,7 @@ const limiter = rateLimit({
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
 */
-eventRouter.post("/event", limiter, middleware.requireAuth, addEventController);
+eventRouter.post("/", limiter, middleware.requireAuth, addEventController);
 eventRouter.post("/addEvent", limiter, middleware.requireAuth, addEventController);
 
 /**
@@ -43,7 +44,7 @@ eventRouter.post("/addEvent", limiter, middleware.requireAuth, addEventControlle
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.delete("/event/:id", limiter, middleware.requireAuth, deleteEventController);
+eventRouter.delete("/:id", limiter, middleware.requireAuth, deleteEventController);
 
 /**
  * Route to update an Event.
@@ -53,7 +54,7 @@ eventRouter.delete("/event/:id", limiter, middleware.requireAuth, deleteEventCon
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.put("/event/:id", limiter, middleware.requireAuth, updateEventController);
+eventRouter.put("/:id", limiter, middleware.requireAuth, updateEventController);
 
 /**
  * Route to fetch all events of the logged in user
@@ -63,7 +64,7 @@ eventRouter.put("/event/:id", limiter, middleware.requireAuth, updateEventContro
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/event", limiter, middleware.requireAuth, getEventListController);
+eventRouter.get("/", limiter, middleware.requireAuth, getEventListController);
 
 /**
  * Route to fetch an event of an given eventid
@@ -73,34 +74,26 @@ eventRouter.get("/event", limiter, middleware.requireAuth, getEventListControlle
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/event/:id", limiter, middleware.requireAuth, getEventByIdController);
+eventRouter.get("/:id", limiter, middleware.requireAuth, getEventByIdController);
 
 /**
- * Route to fetch all active events of an given user
- * @name get/getActiveEvents
+ * Route to fetch public events (single by URL or list by user)
+ * @name get/
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getActiveEvents", getActiveEventsController);
+eventRouter.get("/active/:userId", limiter, getActiveEventsController);
+eventRouter.get("/:id/slot", getAvailableTimes);
+eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
 
 /**
- * Route to fetch an event of an url and user
- * @name get/getEventBy
+ * Route to insert an event (Google or CalDav)
+ * @name post/insertEvent/:user_id
  * @function
  * @inner
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-eventRouter.get("/getEventBy", getEventByUrl);
-
-/**
- * Route to fetch available times to book this event
- * @name get/getAvailable
- * @function
- * @inner
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-eventRouter.get("/getAvailable", getAvailableTimes);
+eventRouter.post("/:id/slot", limiter, insertEvent);

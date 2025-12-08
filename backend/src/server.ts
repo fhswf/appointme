@@ -1,3 +1,4 @@
+import "./config/env.js";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -9,23 +10,36 @@ import { authenticationRouter } from "./routes/authentication_route.js";
 import { eventRouter } from "./routes/event_routes.js";
 import { googleRouter } from "./routes/google_routes.js";
 import { userRouter } from "./routes/user_routes.js";
+import { caldavRouter } from "./routes/caldav_routes.js";
 
 // logger
 import { logger } from "./logging.js";
 
-// Dotenv Config
-import dotenv from "dotenv";
-const env = dotenv.config({
-  path: "./src/config/config.env",
-});
-
-logger.info("env: %j", env);
 logger.info("NODE_ENV: %s", process.env.NODE_ENV);
 logger.info("CLIENT_URL: %s", process.env.CLIENT_URL);
 logger.info("MONGO_URI: %s", process.env.MONGO_URI);
 logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 
 const app = express();
+app.disable("x-powered-by");
+
+const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
+if (process.env.NODE_ENV === "development") {
+  ORIGINS.push("http://localhost:5173", "http://localhost:5174");
+}
+if (process.env.CORS_ALLOWED_ORIGINS) {
+  for (const origin of process.env.CORS_ALLOWED_ORIGINS.split(",")) {
+    ORIGINS.push(origin.trim());
+  }
+}
+
+logger.info("enabling CORS for %j", ORIGINS);
+app.use(
+  cors({
+    origin: ORIGINS,
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 
@@ -60,37 +74,25 @@ app.get("/api/v1/csrf-token", (req, res) => {
   res.json({ csrfToken });
 });
 
-app.use(doubleCsrfProtection);
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/events/:id/slot from CSRF protection
+  if (req.method === 'POST' && /^\/api\/v1\/events\/[^/]+\/slot$/.test(req.path)) {
+    next();
+  } else {
+    doubleCsrfProtection(req, res, next);
+  }
+};
 
-// Dev Loggin Middleware
-if (process.env.NODE_ENV === "development") {
-  const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud", "http://localhost:5173", "http://localhost:5174"];
-  logger.info("enabling CORS for %j", ORIGINS);
-  app.use(
-    cors({
-      origin: ORIGINS,
-      credentials: true,
-    })
-  );
-}
-else {
-  const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
-  logger.info("enabling CORS for %j", ORIGINS);
-  app.use(
-    cors({
-      origin: ORIGINS,
-      credentials: true,
-    })
-  );
-}
+app.use(csrfProtection);
 
 
 //Use routes
 const router = express.Router();
 router.use("/auth/", authenticationRouter);
-router.use("/events/", eventRouter);
+router.use("/event/", eventRouter);
 router.use("/google/", googleRouter);
-router.use("/users/", userRouter);
+router.use("/user/", userRouter);
+router.use("/caldav/", caldavRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
@@ -98,9 +100,10 @@ app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
-export const init = () => {
-  const server = app.listen(PORT, () => {
-    logger.info(`Server running on Port ${PORT}`);
+export const init = (port?: number) => {
+  const p = port ?? (Number(process.env.PORT) || 5000);
+  const server = app.listen(p, () => {
+    logger.info(`Server running on Port ${p}`);
   });
   return server;
 }

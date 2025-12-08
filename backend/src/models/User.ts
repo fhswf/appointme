@@ -36,6 +36,13 @@ const tokenSchema = new Schema<GoogleTokensDocument>({
   },
 });
 
+const calDavAccountSchema = new Schema({
+  serverUrl: { type: String, required: true },
+  username: { type: String, required: true },
+  password: { type: String, required: false },
+  name: { type: String, required: true }
+});
+
 // User schema for the Database
 const userSchema = new Schema<UserDocument>(
   {
@@ -51,6 +58,10 @@ const userSchema = new Schema<UserDocument>(
     },
     google_tokens: {
       type: tokenSchema
+    },
+    caldav_accounts: {
+      type: [calDavAccountSchema],
+      default: []
     },
     name: {
       type: String,

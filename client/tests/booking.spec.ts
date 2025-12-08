@@ -3,12 +3,12 @@ import { test, expect } from './fixtures/base';
 test.describe('Error handling', () => {
     test.describe('Error getting user', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/users/user/christian-gawron?*', async route => await route.fulfill({ status: 500, body: JSON.stringify({ error: "no data" }) }));
+            await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ status: 500, body: JSON.stringify({ error: "no data" }) }));
         });
 
         test('Should show error message', async ({ page }) => {
             await page.goto('/users/christian-gawron/sprechstunde');
-            await page.waitForResponse(resp => resp.url().includes('/api/v1/users/user'));
+            await page.waitForResponse(resp => resp.url().includes('/api/v1/user/christian-gawron'));
             // Toast error check
             // await expect(page.getByText('Error getting user')).toBeVisible(); // Sonner toast
         });
@@ -35,7 +35,7 @@ test.describe('Scheduling page', () => {
         });
 
         // Catch-all for API requests - defined first so it can be overridden
-        await page.route('**/api/v1/**', async route => {
+        await page.route("**/api/v1/user/user", async (route) => {
             if (route.request().method() === 'POST') {
                 await route.fulfill({ body: JSON.stringify({ error: 'not possible' }) }); // Default mock
             } else {
@@ -43,15 +43,14 @@ test.describe('Scheduling page', () => {
             }
         });
 
-        await page.route('**/users/user/christian-gawron*', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
-        await page.route('**/events/getEventBy*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+        await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
+        await page.route('**/events/*/*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
     });
 
     test.describe('Visit scheduling page and schedule appointment', () => {
         test.beforeEach(async ({ page }) => {
             // This must be AFTER the catch-all route so it matches first (routes are evaluated in reverse)
-            await page.route('**/events/getAvailable*', async route => {
-                console.log('Mocking getAvailable');
+            await page.route('**/events/**/slot*', async route => {
                 await route.fulfill({ status: 200, path: './tests/fixtures/available.json' });
             });
         });
@@ -60,10 +59,11 @@ test.describe('Scheduling page', () => {
             page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
 
             // Setup wait for getAvailable BEFORE navigation to avoid race condition
-            const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('getAvailable'));
+            const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('/slot'));
+            const getEventsPromise = page.waitForResponse(resp => resp.url().includes('/events/'));
 
             await page.goto('/users/christian-gawron/sprechstunde');
-            await page.waitForResponse(resp => resp.url().includes('getEventBy'));
+            await getEventsPromise;
 
             // Shadcn Calendar interaction
             // Need to find the day.

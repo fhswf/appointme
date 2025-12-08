@@ -1,5 +1,4 @@
-
-import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import request from "supertest";
 import { USER } from './USER.js';
 import jsonwebtoken from "jsonwebtoken";
@@ -56,7 +55,6 @@ describe("Authentication Controller", () => {
     let csrfCookie: string;
 
     beforeAll(async () => {
-        process.env.PORT = "3003";
         process.env.JWT_SECRET = "test_secret";
         process.env.ACCOUNT_ACTIVATION = "activation_secret";
         process.env.CLIENT_ID = "test_client_id";
@@ -67,7 +65,7 @@ describe("Authentication Controller", () => {
 
         // Re-import to ensure mocks are used
         const { init } = await import("../server.js");
-        app = init();
+        app = init(0);
     });
 
     afterAll(async () => {
@@ -145,7 +143,7 @@ describe("Authentication Controller", () => {
             await getCsrfToken();
             const token = jsonwebtoken.sign(
                 { name: "New User", email: "new@example.com" },
-                process.env.ACCOUNT_ACTIVATION!,
+                process.env.ACCOUNT_ACTIVATION,
                 { expiresIn: "10m" }
             );
 

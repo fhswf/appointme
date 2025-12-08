@@ -6,7 +6,6 @@ import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Toaster } from "sonner";
 
 const App = () => {
   const user = useContext(UserContext).user;
@@ -77,7 +76,6 @@ const App = () => {
 
         {renderList()}
       </div>
-      <Toaster />
     </>
   );
 };

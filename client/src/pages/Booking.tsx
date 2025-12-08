@@ -7,7 +7,7 @@ import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser, getAvailableTimes } from "../helpers/services/event_services";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
 import BookDetails from "../components/BookDetails";
-import { insertIntoGoogle } from "../helpers/services/google_services";
+import { insertEvent } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, IntervalSet } from "common";
 import { UserDocument } from "../helpers/UserDocument";
 import { useTranslation } from "react-i18next";
@@ -44,8 +44,7 @@ const Booking = () => {
     getAvailableTimes(
       startDate,
       addDays(addMonths(startDate, 6), 1),
-      event.url,
-      user!._id
+      (event as any)._id
     )
       .then((slots) => {
         setSlots(slots);
@@ -175,9 +174,8 @@ const Booking = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (user && details && selectedTime) {
-      insertIntoGoogle(
-        user._id,
-        event,
+      insertEvent(
+        (event as any)._id,
         selectedTime,
         details.name,
         details.email,

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="600" height="200" viewBox="0 0 600 200" role="img" aria-label="FreeSlot logo — calendar icon and wordmark">
+  <defs>
+    <style>
+      .stroke { stroke: #111; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; fill: none; }
+      .fill-dark { fill: #111; }
+      .fill-mid  { fill: #666; }
+      .fill-light{ fill: #999; }
+      .wordmark { font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; }
+    </style>
+  </defs>
+
+  <!-- Calendar icon (left) -->
+  <!-- Outer rounded rectangle -->
+  <rect x="28" y="24" width="120" height="120" rx="12" class="stroke"/>
+
+  <!-- Top bar (binding) -->
+  <rect x="28" y="24" width="120" height="28" rx="8" class="fill-dark"/>
+
+  <!-- Two small ring indicators (holes) -->
+  <rect x="40" y="14" width="12" height="12" rx="2" class="fill-dark"/>
+  <rect x="120" y="14" width="12" height="12" rx="2" class="fill-dark"/>
+
+  <!-- Inner free slot indicator -->
+  <rect x="44" y="76" width="88" height="24" rx="6" class="fill-mid"/>
+
+  <!-- Small clock-like glyph inside slot (simple) -->
+  <circle cx="52" cy="88" r="4" class="fill-light"/>
+  <rect x="50" y="86" width="4" height="4" rx="1" class="fill-mid"/>
+
+  <!-- Wordmark: "FreeSlot" (Free = dark, Slot = mid gray) -->
+  <text x="170" y="110" class="wordmark" dominant-baseline="middle" aria-hidden="false">
+    <tspan fill="#111">Free</tspan>
+    <tspan fill="#666">Slot</tspan>
+  </text>
+</svg>

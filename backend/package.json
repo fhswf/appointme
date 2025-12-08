@@ -12,7 +12,7 @@
     "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
     "ci": "vitest run src/**/*.spec.ts --coverage; yarn dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml",
     "start": "node build/server.js",
-    "server": "nodemon src/server.ts",
+    "server": "node --import tsx --watch src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "tsc",
     "doc": "jsdoc -c jsdoc.json"
@@ -49,10 +49,11 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.1",
     "mongoose": "^7.5.0",
+    "node-ical": "^0.22.1",
     "nodemailer": "^7.0.11",
     "remark": "15.0.1",
     "remark-html": "16.0.1",
-    "tsdav": "^2.1.2",
+    "tsdav": "^2.1.6",
     "validator": "^13.12.0",
     "winston": "^3.16.0"
   },
@@ -79,6 +80,7 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.6.2",
     "vitest": "^2.1.3"
   },

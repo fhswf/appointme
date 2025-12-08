@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from '@react-oauth/google';
+import { toast } from "sonner";
 import { postGoogleLogin } from "../helpers/services/auth_services";
 
 const Login = (props: any) => {
@@ -14,6 +15,7 @@ const Login = (props: any) => {
       })
       .catch((error) => {
         console.log("GOOGLE SIGNIN ERROR", error.response);
+        toast.error("Google login failed: " + (error.response?.data?.message || error.message));
       });
   };
 

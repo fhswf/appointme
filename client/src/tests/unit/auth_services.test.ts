@@ -25,6 +25,9 @@ describe('Auth Services', () => {
                 name: 'Test User',
                 email: 'test@example.com',
                 password: 'password'
+            },
+            {
+                headers: { 'x-csrf-token': 'mock-csrf-token' }
             }
         );
     });
@@ -37,7 +40,10 @@ describe('Auth Services', () => {
         expect(axios.post).toHaveBeenCalledWith(
             expect.stringContaining('/auth/activate'),
             {},
-            { withCredentials: true }
+            {
+                headers: { 'x-csrf-token': 'mock-csrf-token' },
+                withCredentials: true
+            }
         );
     });
 

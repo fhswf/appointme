@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function getUser() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/users/user`,
+    `${import.meta.env.REACT_APP_API_URL}/user/user`,
     {
       withCredentials: true,
     }
@@ -15,7 +15,7 @@ import { getCsrfToken } from "./csrf_service";
 export async function updateUser(user: any) {
   const csrfToken = await getCsrfToken();
   const response = await axios.put(
-    `${import.meta.env.REACT_APP_API_URL}/users/user`,
+    `${import.meta.env.REACT_APP_API_URL}/user/`,
     { data: user },
     {
       headers: {
@@ -29,9 +29,6 @@ export async function updateUser(user: any) {
 
 export async function getUserByUrl(url: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/users/user/${url}`,
-    {
-      params: { url: url },
-    }
+    `${import.meta.env.REACT_APP_API_URL}/user/${url}`
   );
 }

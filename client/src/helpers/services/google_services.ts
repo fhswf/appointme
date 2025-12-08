@@ -1,10 +1,15 @@
 import axios from "axios";
+import { getCsrfToken } from "./csrf_service";
 
 export async function deleteAccess(token) {
+  const csrfToken = await getCsrfToken();
   const response = await axios.delete(
     `${import.meta.env.REACT_APP_API_URL}/google/revoke`,
     {
       data: null,
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
       withCredentials: true
     }
   );
@@ -31,23 +36,27 @@ export async function getCalendarList() {
   return response;
 }
 
-export async function insertIntoGoogle(
-  user_id,
-  event,
+export async function insertEvent(
+  event_id,
   time,
   name,
   email,
   description
 ) {
   const starttime = time.valueOf();
+  const csrfToken = await getCsrfToken();
   const response = axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/google/insertEvent/${user_id}`,
+    `${import.meta.env.REACT_APP_API_URL}/events/${event_id}/slot`,
     {
-      event,
       starttime,
       name,
       email,
       description,
+    },
+    {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
     }
   );
   return response;

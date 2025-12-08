@@ -2,18 +2,13 @@
  * @module router/user
  */
 import { Router } from "express";
-import rateLimit from "express-rate-limit";
-import { getUser, getUserByUrl, putUser } from "../controller/user_controller.js";
-
 import { middleware } from "../handlers/middleware.js";
+import { userRateLimiter } from "../config/rateLimit.js";
+import { getUserByUrl, updateUser, getUser } from "../controller/user_controller.js";
+
+const { requireAuth } = middleware;
 
 export const userRouter = Router();
-
-const userRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes"
-});
 
 
 /**
@@ -34,11 +29,11 @@ userRouter.get("/user", middleware.requireAuth, getUser);
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-userRouter.get("/user/:url", userRateLimiter, getUserByUrl);
+userRouter.get("/:url", userRateLimiter, getUserByUrl);
 
 /**
  * Update the currently logged in user
  */
-userRouter.put("/user", middleware.requireAuth, putUser);
+userRouter.put("/", requireAuth, updateUser);
 
 export default userRouter;

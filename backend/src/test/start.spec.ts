@@ -11,9 +11,8 @@ describe("Server Start", () => {
     let app: any;
 
     beforeAll(async () => {
-        process.env.PORT = "3001";
         const { init } = await import("../server.js");
-        app = init();
+        app = init(0);
     });
 
     afterEach(() => {

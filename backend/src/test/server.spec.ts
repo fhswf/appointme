@@ -1,4 +1,3 @@
-
 import { afterAll, beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { middleware } from "../handlers/middleware.js";
 
@@ -82,6 +81,18 @@ describe("Server routes", () => {
               }
             })
           }
+        }),
+        findById: vi.fn((id) => {
+          console.log("EventModel: mocked findById");
+          return {
+            select: vi.fn(() => {
+              console.log("mocked findById select");
+              return {
+                exec
+              }
+            }),
+            exec
+          }
         })
       }
     }
@@ -158,9 +169,28 @@ describe("Server routes", () => {
     };
   });
 
+  vi.mock("../config/dbConn.js", () => {
+    return {
+      dataBaseConn: vi.fn().mockImplementation(() => {
+        console.log("MOCKED dataBaseConn called");
+        return Promise.resolve({});
+      })
+    }
+  });
+
   beforeAll(async () => {
-    const { init } = await import("../server.js");
-    app = init();
+    // @ts-ignore
+    vi.spyOn(process, 'exit').mockImplementation(() => { });
+    try {
+      console.log("Importing server.js...");
+
+      const { init } = await import("../server.js");
+      console.log("Calling init()...");
+      app = init(0);
+      console.log("init() returned:", app);
+    } catch (error) {
+      console.error("Error in beforeAll:", error);
+    }
   });
 
   afterEach(() => {
@@ -168,27 +198,29 @@ describe("Server routes", () => {
   })
 
   afterAll(async () => {
-    await app.close();
+    if (app) {
+      await app.close();
+    }
   });
 
 
   it("should return unauthorized", async () => {
     status = 401;
-    const res = await request(app).get("/api/v1/users/user");
+    const res = await request(app).get("/api/v1/user/user");
     expect(res.status).toEqual(401);
     expect(middleware.requireAuth).toHaveBeenCalled();
     console.log(res.body);
   })
 
   it("should return the user", async () => {
-    const res = await request(app).get("/api/v1/users/user");
+    const res = await request(app).get("/api/v1/user/user");
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
     console.log(res.body);
   })
 
-  it("should get the user by url", async () => {
-    const res = await request(app).get("/api/v1/users/user?url=christian-gawron");
+  it("should get user by url", async () => {
+    const res = await request(app).get("/api/v1/user/christian-gawron");
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
     expect(res.body).toEqual(USER);
@@ -196,13 +228,14 @@ describe("Server routes", () => {
   })
 
   it("should get available slots for 'sprechstunde'", async () => {
-    const res = await request(app).get("/api/v1/events/getAvailable?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z&url=sprechstunde&userid=109150731150582581691");
+    // Assuming EVENT._id is the ID used. The mock returns EVENT.
+    // We need to use a dummy ID in the URL.
+    const res = await request(app).get("/api/v1/event/12345/slot?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z");
     expect(res.status).toEqual(200);
-    console.log(res.body);
   })
 
   it("should get the event by url", async () => {
-    const res = await request(app).get("/api/v1/events/getEventBy?url=sprechstunde&user=109150731150582581691");
+    const res = await request(app).get("/api/v1/event/109150731150582581691/sprechstunde");
     expect(res.status).toEqual(200);
     console.log(res.body);
   })
