@@ -1,3 +1,12 @@
+# common [1.4.0](https://github.com/fhswf/book_me/compare/common@1.3.0...common@1.4.0) (2025-12-09)
+
+
+### Features
+
+* Add new i18n keys for booking and CalDav features, and refine iCal attendee RSVP logic. ([0c1872f](https://github.com/fhswf/book_me/commit/0c1872fa8fe7b4d15fe58dba5acb4166cfef8845))
+* add OIDC controller tests and update Vitest dependencies. ([8d80865](https://github.com/fhswf/book_me/commit/8d8086527915a67e4868b62cf944a55a10794c32))
+* i18n restructured ([2d25c89](https://github.com/fhswf/book_me/commit/2d25c895228f4c4ad17e4237ba5c45f229527fa9))
+
 # common [1.3.0](https://github.com/fhswf/book_me/compare/common@1.2.0...common@1.3.0) (2025-12-08)
 
 
