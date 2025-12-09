@@ -14,7 +14,26 @@ As a _client_, you can search for available slots and book an appointment. You w
 
 ## Deployment
 
-details tbd ...
+### Deployment on Kubernetes
+
+To deploy the application on Kubernetes, you need to create the necessary ConfigMap and Secret resources.
+
+1.  **Prepare Configuration:**
+    Detailed configuration templates are provided in `backend/k8s/`.
+    *   `backend/k8s/configmap.yaml.example`: Use this as a template. Rename it to `configmap.yaml` (or create a new one) and set non-sensitive environment variables such as URLs (`API_URL`, `CLIENT_URL`), `MONGO_URI`, and `CORS_ALLOWED_ORIGINS`.
+    *   `backend/k8s/secret.yaml.example`: Use this as a template. Rename it to `secret.yaml` (or create a new one) and set sensitive secrets. **Important:** Replace the placeholder values (e.g., `changeme`) with your actual secrets before applying.
+
+2.  **Apply Resources:**
+    ```bash
+    # Example command (after creating the actual files)
+    kubectl apply -f backend/k8s/configmap.yaml
+    kubectl apply -f backend/k8s/secret.yaml
+    ```
+
+3.  **Deploy Application:**
+    ```bash
+    kubectl apply -f backend/k8s/deployment.yaml
+    ```
 
 ### Configuration
 
