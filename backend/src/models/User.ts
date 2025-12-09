@@ -4,7 +4,6 @@ import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
 import { User } from "common/src/types";
 
-
 export interface GoogleTokens extends Document {
   access_token?: string;
   refresh_token?: string;
