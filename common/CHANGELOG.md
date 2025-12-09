@@ -1,3 +1,10 @@
+# common [1.6.0](https://github.com/fhswf/book_me/compare/common@1.5.0...common@1.6.0) (2025-12-09)
+
+
+### Features
+
+* Add French, Italian, Japanese, Korean, Chinese, and Spanish locales and update i18n integration. ([ba21d93](https://github.com/fhswf/book_me/commit/ba21d93db3826e3ea2944da115e6ae64ad6abeae))
+
 # common [1.5.0](https://github.com/fhswf/book_me/compare/common@1.4.0...common@1.5.0) (2025-12-09)
 
 
