@@ -175,7 +175,7 @@ export const getBusySlots = async (user_id: string, timeMin: string, timeMax: st
     const busySlots: { start: Date, end: Date }[] = [];
     const startRange = new Date(timeMin);
     const endRange = new Date(timeMax);
-    const pullCalendars = new Set(user.pull_calendars || []);
+    const pullCalendars = new Set<string>(user.pull_calendars || []);
 
     for (const account of user.caldav_accounts) {
         await fetchAndProcessAccountCalendars(

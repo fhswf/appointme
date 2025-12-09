@@ -306,7 +306,7 @@ describe("Authentication Controller", () => {
             const saveMock = vi.fn().mockRejectedValue(new Error("Save failed"));
             UserModelMock.mockImplementationOnce(function (data) {
                 return {
-                    ...data,
+                    ...(data as any),
                     save: saveMock
                 } as any;
             });
