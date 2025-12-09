@@ -1,3 +1,18 @@
+# client [1.15.0](https://github.com/fhswf/book_me/compare/client@1.14.0...client@1.15.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* Correct 'Invitaion' typo in event invitation subject and feat: introduce navigation after calendar updates and internationalize CalDav UI text. ([0b2e7c4](https://github.com/fhswf/book_me/commit/0b2e7c4a211cf1054fd81110fa64e686a50c35a8))
+
+
+### Features
+
+* add comprehensive tests for EventForm fields and submit button, refine Login and OidcCallback tests, and update EventList navigation tests. ([179f4d6](https://github.com/fhswf/book_me/commit/179f4d60678b97cdf88e69d1017c8e5c6e1078e7))
+* Add scheduler utility, OIDC callback tests, Google event insertion, and enable event controller tests. ([83ade1d](https://github.com/fhswf/book_me/commit/83ade1dba8966463cab7aec894cf651785ff576c))
+* i18n restructured ([2d25c89](https://github.com/fhswf/book_me/commit/2d25c895228f4c4ad17e4237ba5c45f229527fa9))
+* Implement OIDC authentication flow ([d8e4cdd](https://github.com/fhswf/book_me/commit/d8e4cdd073a99338257b2ee90721bd91afa0b633))
+
 # client [1.14.0](https://github.com/fhswf/book_me/compare/client@1.13.0...client@1.14.0) (2025-12-08)
 
 
