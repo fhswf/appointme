@@ -97,7 +97,8 @@ describe("CalDAV Controller Unit Tests", () => {
                 serverUrl: "https://caldav.example.com",
                 username: "user",
                 password: "password",
-                name: "Test Account"
+                name: "Test Account",
+                email: "test@example.com"
             };
             const res = mockResponse();
 
@@ -111,7 +112,8 @@ describe("CalDAV Controller Unit Tests", () => {
                 expect.objectContaining({
                     $push: expect.objectContaining({
                         caldav_accounts: expect.objectContaining({
-                            serverUrl: "https://caldav.example.com"
+                            serverUrl: "https://caldav.example.com",
+                            email: "test@example.com"
                         })
                     })
                 })
@@ -403,6 +405,58 @@ END:VCALENDAR` }
 
             expect(result).toBeDefined();
             expect(result.ok).toBe(true);
+        });
+
+        it("should use account email as organizer if configured for createCalDavEvent", async () => {
+            const { DAVClient } = await import('tsdav');
+            const createObjectMock = vi.fn().mockResolvedValue({
+                ok: true,
+                status: 201,
+                statusText: "Created",
+                text: vi.fn().mockResolvedValue("")
+            });
+
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
+                    ]),
+                    createCalendarObject: createObjectMock,
+                    fetchCalendarObjects: vi.fn()
+                });
+            })
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com",
+                        username: "user",
+                        password: "encrypted_password",
+                        name: "Main Account",
+                        email: "custom@example.com"
+                    }
+                ],
+                push_calendar: "https://caldav.example.com/calendar-1"
+            };
+
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Christmas Brunch",
+                description: "Desc",
+                location: "Loc",
+                organizer: { displayName: "Org", email: "original@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            await caldavController.createCalDavEvent(user as any, eventDetails);
+
+            // Check if the generated ICS content in the call includes the custom email
+            const createCall = createObjectMock.mock.calls[0][0];
+            expect(createCall.iCalString).toContain("ORGANIZER;CN=Org:mailto:custom@example.com");
         });
 
         it("should throw error if account not found for push calendar", async () => {

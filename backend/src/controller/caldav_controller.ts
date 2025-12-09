@@ -9,7 +9,7 @@ import { encrypt, decrypt } from '../utility/encryption.js';
 import { generateIcsContent } from '../utility/ical.js';
 
 export const addAccount = async (req: Request, res: Response) => {
-    let { serverUrl, username, password, name } = req.body;
+    let { serverUrl, username, password, name, email } = req.body;
     const userId = req['user_id'];
 
     if (serverUrl.endsWith('/')) {
@@ -34,7 +34,7 @@ export const addAccount = async (req: Request, res: Response) => {
 
         await UserModel.updateOne(
             { _id: userId },
-            { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name } } }
+            { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name, email } } }
         );
         res.json({ success: true });
     } catch (e) {
@@ -56,7 +56,7 @@ export const addAccount = async (req: Request, res: Response) => {
 
             await UserModel.updateOne(
                 { _id: userId },
-                { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name } } }
+                { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name, email } } }
             );
             res.json({ success: true });
         } catch (retryError) {
@@ -337,7 +337,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         location: eventData.location,
         organizer: {
             displayName: eventData.organizer.cn,
-            email: eventData.organizer.mailto
+            email: account.email || eventData.organizer.mailto
         },
         attendees: eventData.attendees.map(a => ({
             displayName: a.cn,
