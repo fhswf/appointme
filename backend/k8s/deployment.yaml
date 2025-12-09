@@ -99,7 +99,6 @@ spec:
                  secretKeyRef:
                    key: OIDC_CLIENT_SECRET
                    name: bookme-secret
-          image: ghcr.io/fhswf/book_me/backend:1.16.0
           image: ghcr.io/fhswf/book_me/backend:1.17.0
           name: bookme
           ports:
