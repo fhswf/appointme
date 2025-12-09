@@ -45,8 +45,8 @@ describe('Login Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         // Suppress console.log for cleaner test output
-        vi.spyOn(console, 'log').mockImplementation(() => {});
-        vi.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'log').mockImplementation(() => { });
+        vi.spyOn(console, 'error').mockImplementation(() => { });
     });
 
     it('should render with Google login when enabled', async () => {
@@ -124,7 +124,7 @@ describe('Login Component', () => {
             googleEnabled: true,
             oidcEnabled: false
         });
-        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ data: { success: true } });
+        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ data: { success: true }, status: 200, statusText: 'OK', headers: {}, config: {} as any });
 
         render(
             <BrowserRouter>
@@ -286,7 +286,7 @@ describe('Login Component', () => {
             googleEnabled: true,
             oidcEnabled: false
         });
-        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ data: {} });
+        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ data: {}, status: 200, statusText: 'OK', headers: {}, config: {} as any });
 
         render(
             <BrowserRouter>
@@ -328,4 +328,95 @@ describe('Login Component', () => {
 
         expect(consoleSpy).toHaveBeenCalledWith('Login Failed');
     });
+
+    it('should log postGoogleLogin response', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+        const mockResponse = { data: { user: { id: '123' } } };
+        vi.mocked(authServices.getAuthConfig).mockResolvedValue({
+            googleEnabled: true,
+            oidcEnabled: false
+        });
+        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ ...mockResponse, status: 200, statusText: 'OK', headers: {}, config: {} as any });
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+        });
+
+        const googleButton = screen.getByText('Sign in with Google');
+        fireEvent.click(googleButton);
+
+        await waitFor(() => {
+            // The third call is the response logging
+            expect(consoleSpy).toHaveBeenCalledWith('postGoogleLogin: %o', expect.objectContaining({
+                data: { user: { id: '123' } }
+            }));
+        });
+    });
+
+    it('should handle OIDC auth URL without url property', async () => {
+        vi.mocked(authServices.getAuthConfig).mockResolvedValue({
+            googleEnabled: false,
+            oidcEnabled: true
+        });
+        vi.mocked(authServices.getOidcAuthUrl).mockResolvedValue({} as any);
+
+        const originalLocation = globalThis.location;
+        delete (globalThis as any).location;
+        globalThis.location = { href: '' } as any;
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+        });
+
+        const oidcButton = screen.getByText('Login with SSO');
+        fireEvent.click(oidcButton);
+
+        await waitFor(() => {
+            expect(authServices.getOidcAuthUrl).toHaveBeenCalled();
+        });
+
+        // Should not redirect if url is not present
+        expect(globalThis.location.href).toBe('');
+
+        globalThis.location = originalLocation;
+    });
+
+    it('should log credential on Google success', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+        vi.mocked(authServices.getAuthConfig).mockResolvedValue({
+            googleEnabled: true,
+            oidcEnabled: false
+        });
+        vi.mocked(authServices.postGoogleLogin).mockResolvedValue({ data: {}, status: 200, statusText: 'OK', headers: {}, config: {} as any });
+
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+        });
+
+        const googleButton = screen.getByText('Sign in with Google');
+        fireEvent.click(googleButton);
+
+        await waitFor(() => {
+            expect(consoleSpy).toHaveBeenCalledWith('postGoogleLogin: code=%s', 'mock-credential');
+        });
+    });
 });
+

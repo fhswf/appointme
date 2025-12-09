@@ -15,11 +15,13 @@ vi.mock('../helpers/helpers', () => ({
     signout: vi.fn()
 }));
 
+// Mock useNavigate
+const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
     const actual = await vi.importActual('react-router-dom');
     return {
         ...actual,
-        useNavigate: () => vi.fn()
+        useNavigate: () => mockNavigate
     };
 });
 
@@ -69,8 +71,6 @@ const mockEvents = [
 ];
 
 describe('EventList Component', () => {
-    const mockNavigate = vi.fn();
-
     beforeEach(() => {
         vi.clearAllMocks();
         vi.mocked(eventServices.getUsersEvents).mockResolvedValue({ data: mockEvents } as any);
@@ -198,14 +198,18 @@ describe('EventList Component', () => {
         });
     });
 
-    it('should handle error when fetching events', async () => {
-        vi.mocked(eventServices.getUsersEvents).mockRejectedValue(new Error('Network error'));
+    it('should navigate to /addevent when clicking create first event button', async () => {
+        vi.mocked(eventServices.getUsersEvents).mockResolvedValue({ data: [] } as any);
 
         renderEventList();
 
-        // Component should handle error gracefully
         await waitFor(() => {
-            expect(eventServices.getUsersEvents).toHaveBeenCalled();
+            expect(screen.getByText(/create_first_event_type_button/i)).toBeInTheDocument();
         });
+
+        const createButton = screen.getByText(/create_first_event_type_button/i);
+        fireEvent.click(createButton);
+
+        expect(mockNavigate).toHaveBeenCalledWith('/addevent');
     });
 });

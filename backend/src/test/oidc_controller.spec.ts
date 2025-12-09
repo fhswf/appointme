@@ -272,4 +272,53 @@ describe('OIDC Controller', () => {
             expect(res.body.details).toBe("OIDC Error");
         });
     });
+
+    describe('GET /api/v1/oidc/config', () => {
+        it('should return enabled true when OIDC is configured', async () => {
+            const res = await request(app).get('/api/v1/oidc/config');
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ enabled: true });
+        });
+
+        it('should return enabled false when OIDC_ISSUER is not set', async () => {
+            vi.resetModules();
+            vi.stubEnv('OIDC_ISSUER', '');
+            vi.stubEnv('OIDC_CLIENT_ID', 'client_id');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const res = await request(app).get('/api/v1/oidc/config');
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ enabled: false });
+        });
+
+        it('should return enabled false when OIDC_CLIENT_ID is not set', async () => {
+            vi.resetModules();
+            vi.stubEnv('OIDC_ISSUER', 'https://issuer.example.com');
+            vi.stubEnv('OIDC_CLIENT_ID', '');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const res = await request(app).get('/api/v1/oidc/config');
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ enabled: false });
+        });
+
+        it('should return enabled false when both OIDC vars are not set', async () => {
+            vi.resetModules();
+            vi.stubEnv('OIDC_ISSUER', '');
+            vi.stubEnv('OIDC_CLIENT_ID', '');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const res = await request(app).get('/api/v1/oidc/config');
+
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual({ enabled: false });
+        });
+    });
 });
+

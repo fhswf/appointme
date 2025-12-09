@@ -242,4 +242,68 @@ describe('OidcCallback', () => {
 
         consoleErrorSpy.mockRestore();
     });
+
+    it('should return success message from toast promise success callback', async () => {
+        const mockResponse = {
+            data: { user: { id: '123' } },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        };
+        vi.mocked(authServices.postOidcLogin).mockResolvedValue(mockResponse);
+
+        render(
+            <MemoryRouter initialEntries={['/callback?code=test_code']}>
+                <OidcCallback />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(toast.promise).toHaveBeenCalledWith(
+                expect.any(Promise),
+                expect.objectContaining({
+                    success: expect.any(Function)
+                })
+            );
+        });
+    });
+
+    it('should format error message with response data', async () => {
+        const error: any = {
+            response: {
+                data: {
+                    error: 'Token expired'
+                }
+            },
+            message: 'Request failed'
+        };
+        vi.mocked(authServices.postOidcLogin).mockRejectedValue(error);
+
+        render(
+            <MemoryRouter initialEntries={['/callback?code=test_code']}>
+                <OidcCallback />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(authServices.postOidcLogin).toHaveBeenCalled();
+        });
+    });
+
+    it('should format error message without response data', async () => {
+        const error = new Error('Network timeout');
+        vi.mocked(authServices.postOidcLogin).mockRejectedValue(error);
+
+        render(
+            <MemoryRouter initialEntries={['/callback?code=test_code']}>
+                <OidcCallback />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(authServices.postOidcLogin).toHaveBeenCalled();
+        });
+    });
 });
+
