@@ -1,3 +1,10 @@
+# backend [1.20.0](https://github.com/fhswf/book_me/compare/backend@1.19.0...backend@1.20.0) (2025-12-09)
+
+
+### Features
+
+* Add ENCRYPTION_KEY environment variable for CalDAV password encryption to deployment, secret example, and README. ([12dc113](https://github.com/fhswf/book_me/commit/12dc113cb4f337c28fd6b313665bc362d090f62f))
+
 # backend [1.19.0](https://github.com/fhswf/book_me/compare/backend@1.18.0...backend@1.19.0) (2025-12-09)
 
 
