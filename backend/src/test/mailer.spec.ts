@@ -96,4 +96,15 @@ describe('Mailer Configuration', () => {
         expect(newTransporter).toBeDefined();
     });
 
+    it('should configure for SMTP without auth when credentials are not set', async () => {
+        process.env.SMTP_HOST = 'internal.smtp.com';
+        process.env.EMAIL_FROM = 'noreply@internal.com';
+        delete process.env.SMTP_USER;
+        delete process.env.SMTP_PASSWORD;
+        delete process.env.EMAIL_PASSWORD;
+
+        const { transporter: newTransporter } = await import('../utility/mailer.js?update=' + Date.now());
+        expect(newTransporter).toBeDefined();
+    });
+
 });

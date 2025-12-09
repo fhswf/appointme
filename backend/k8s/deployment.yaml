@@ -32,11 +32,6 @@ spec:
                 secretKeyRef:
                   key: EMAIL_FROM
                   name: bookme-secret
-            - name: EMAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: EMAIL_PASSWORD
-                  name: bookme-secret
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

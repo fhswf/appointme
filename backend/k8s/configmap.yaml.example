@@ -29,6 +29,11 @@ data:
   # OIDC Configuration
   OIDC_ISSUER: "https://accounts.google.com"
   OIDC_CLIENT_ID: "changeme"
+
+  # SMTP Configuration
+  SMTP_HOST: "smtp.example.com"
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
   
   # Client Configuration (Build-time variables for the frontend)
   REACT_APP_API_URL: "https://api.bookme.example.com/api/v1"

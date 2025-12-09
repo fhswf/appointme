@@ -1,30 +1,32 @@
 import { createTransport } from "nodemailer";
 import { logger } from "../logging.js";
 
-export const transporter = createTransport(
-    process.env.SMTP_HOST
-        ? {
-            host: process.env.SMTP_HOST,
-            port: Number(process.env.SMTP_PORT) || 587,
-            secure: process.env.SMTP_SECURE === "true",
-            auth: {
-                user: process.env.SMTP_USER || process.env.EMAIL_FROM,
-                pass: process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD,
-            },
-        }
-        : {
-            service: "gmail",
-            auth: {
-                user: process.env.SMTP_USER || process.env.EMAIL_FROM,
-                pass: process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD,
-            },
-            tls: {
-                rejectUnauthorized: true,
-            },
-            secure: true,
-            requireTLS: true,
-        }
-);
+const smtpUser = process.env.SMTP_USER || process.env.EMAIL_FROM;
+const smtpPassword = process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD;
+
+const smtpConfig: any = process.env.SMTP_HOST
+    ? {
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: process.env.SMTP_SECURE === "true",
+    }
+    : {
+        service: "gmail",
+        tls: {
+            rejectUnauthorized: true,
+        },
+        secure: true,
+        requireTLS: true,
+    };
+
+if (smtpPassword || process.env.SMTP_USER) {
+    smtpConfig.auth = {
+        user: smtpUser,
+        pass: smtpPassword,
+    };
+}
+
+export const transporter = createTransport(smtpConfig);
 
 /**
  * Sends an email with an ICS attachment
