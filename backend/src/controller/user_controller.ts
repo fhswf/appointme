@@ -47,17 +47,35 @@ const filterUser = (user) => Object.keys(user)
 export const updateUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   /* eslint-disable @typescript-eslint/naming-convention */
-  const { user_url, use_gravatar, ...otherFields } = req.body.data as User;
+  const { user_url, use_gravatar, ...otherFieldsRaw } = req.body.data as User;
 
-  // Prepare update object
-  let update: any = filterUser(otherFields);
+  // Securely build the update object: allow only permitted keys, validate types.
+  const ALLOWED_UPDATE_FIELDS = [
+    "name", "email", "pull_calendars", "push_calendar", "welcome"
+  ];
+  let update: Record<string, any> = {};
 
-  if (user_url) {
+  // Filter out any dangerous field names, deep objects, or operators
+  for (const key of Object.keys(otherFieldsRaw)) {
+    if (
+      ALLOWED_UPDATE_FIELDS.includes(key) &&
+      typeof otherFieldsRaw[key] !== "object" &&
+      typeof key === "string" &&
+      !key.startsWith("$") &&
+      !key.includes(".")
+    ) {
+      update[key] = otherFieldsRaw[key];
+    }
+    // else: Ignore the key; optionally log/reject malicious input
+  }
+
+  // Validate user_url type and sanitize
+  if (typeof user_url === "string" && user_url && !user_url.startsWith("$") && !user_url.includes(".")) {
     update.user_url = user_url;
   }
 
-  // Handle Gravatar toggle
-  if (use_gravatar !== undefined) {
+  // Handle Gravatar toggle, validate type
+  if (typeof use_gravatar === "boolean") {
     update.use_gravatar = use_gravatar;
   }
 
