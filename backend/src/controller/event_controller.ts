@@ -35,7 +35,7 @@ function min<T>(a: T, b: T): T {
   return a < b ? a : b;
 }
 
-function calculateBlocked(events, event, timeMin, timeMax) {
+export function calculateBlocked(events, event, timeMin, timeMax) {
   const eventsPerDay = {};
   const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
   events.forEach(evt => {
@@ -58,7 +58,7 @@ function calculateBlocked(events, event, timeMin, timeMax) {
   return blocked;
 }
 
-function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
+export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
   let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
   freeSlots = freeSlots.intersect(blocked.inverse());
 
