@@ -1,3 +1,18 @@
+# backend [1.22.0](https://github.com/fhswf/book_me/compare/backend@1.21.0...backend@1.22.0) (2025-12-09)
+
+
+### Features
+
+* Add optional email field to CalDAV accounts and use it for event organizers when creating events. ([6283fdc](https://github.com/fhswf/book_me/commit/6283fdc9f3c682e52cee82a4f859d90032928300))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.5.0
+
 # backend [1.21.0](https://github.com/fhswf/book_me/compare/backend@1.20.0...backend@1.21.0) (2025-12-09)
 
 
