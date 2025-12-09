@@ -99,7 +99,7 @@ spec:
                 secretKeyRef:
                   key: OIDC_CLIENT_SECRET
                   name: bookme-secret
-          image: ghcr.io/fhswf/book_me/backend:1.18.0
+          image: ghcr.io/fhswf/book_me/backend:1.19.0
           name: bookme
           ports:
             - containerPort: 5000

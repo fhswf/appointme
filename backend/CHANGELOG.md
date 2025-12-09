@@ -1,3 +1,10 @@
+# backend [1.19.0](https://github.com/fhswf/book_me/compare/backend@1.18.0...backend@1.19.0) (2025-12-09)
+
+
+### Features
+
+* add Kubernetes deployment examples for ConfigMap and Secret, update README and gitignore. ([beb7391](https://github.com/fhswf/book_me/commit/beb739184d4d3a91b660297ab9a9dd34ae453259))
+
 # backend [1.18.0](https://github.com/fhswf/book_me/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
 
 
