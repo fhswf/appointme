@@ -1,5 +1,5 @@
-import { en } from './locales/en.js';
-import { de } from './locales/de.js';
+import { en } from './locales/en';
+import { de } from './locales/de';
 
 export const resources = {
     en: {
