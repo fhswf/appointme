@@ -33,6 +33,14 @@ vi.mock('react-router-dom', async () => {
 describe('OidcCallback', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        // Provide a default mock implementation that returns a resolved promise
+        vi.mocked(authServices.postOidcLogin).mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        });
     });
 
     it('should render authenticating message', () => {
@@ -57,7 +65,13 @@ describe('OidcCallback', () => {
     });
 
     it('should call postOidcLogin with code', async () => {
-        const mockPostOidcLogin = vi.mocked(authServices.postOidcLogin).mockResolvedValue({ success: true });
+        const mockPostOidcLogin = vi.mocked(authServices.postOidcLogin).mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        });
 
         render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
@@ -69,7 +83,13 @@ describe('OidcCallback', () => {
     });
 
     it('should redirect to /app on successful login', async () => {
-        vi.mocked(authServices.postOidcLogin).mockResolvedValue({ success: true });
+        vi.mocked(authServices.postOidcLogin).mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        });
 
         render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
@@ -120,7 +140,13 @@ describe('OidcCallback', () => {
     });
 
     it('should prevent duplicate processing with useRef', async () => {
-        vi.mocked(authServices.postOidcLogin).mockResolvedValue({ success: true });
+        vi.mocked(authServices.postOidcLogin).mockResolvedValue({
+            data: {},
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        });
 
         const { rerender } = render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
@@ -142,7 +168,13 @@ describe('OidcCallback', () => {
     });
 
     it('should show toast promise with loading state', async () => {
-        vi.mocked(authServices.postOidcLogin).mockResolvedValue({ data: { user: 'test' } });
+        vi.mocked(authServices.postOidcLogin).mockResolvedValue({
+            data: { user: 'test' },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        });
 
         render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
@@ -171,7 +203,13 @@ describe('OidcCallback', () => {
 
     it('should log success response', async () => {
         const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
-        const mockResponse = { data: { user: { id: '123' } } };
+        const mockResponse = {
+            data: { user: { id: '123' } },
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: {} as any
+        };
         vi.mocked(authServices.postOidcLogin).mockResolvedValue(mockResponse);
 
         render(
