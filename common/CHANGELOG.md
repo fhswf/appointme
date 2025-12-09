@@ -1,3 +1,15 @@
+# common [1.5.0](https://github.com/fhswf/book_me/compare/common@1.4.0...common@1.5.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* Adjust module resolution by adding `.js` extensions to i18n imports and Jest module mapping. ([84c51b6](https://github.com/fhswf/book_me/commit/84c51b663f8d35ead87c9f0449ab860066f691c9))
+
+
+### Features
+
+* Add optional email field to CalDAV accounts and use it for event organizers when creating events. ([6283fdc](https://github.com/fhswf/book_me/commit/6283fdc9f3c682e52cee82a4f859d90032928300))
+
 # common [1.4.0](https://github.com/fhswf/book_me/compare/common@1.3.0...common@1.4.0) (2025-12-09)
 
 
