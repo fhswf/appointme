@@ -55,5 +55,6 @@ To deploy the application on Kubernetes, you need to create the necessary Config
 | `OIDC_CLIENT_SECRET` | OIDC Client Secret (for Confidential clients) | No | |
 | `EMAIL_FROM` | Email address for sending notifications | Yes | |
 | `EMAIL_PASSWORD` | Password for the email account | Yes | |
+| `ENCRYPTION_KEY` | 32-byte hex key for encrypting CalDAV passwords | Yes | |
 
 
