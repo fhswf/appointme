@@ -99,6 +99,8 @@ export interface User {
   name: string;
   user_url: string;
   picture_url: string;
+  google_picture_url?: string;
+  use_gravatar?: boolean;
   google_tokens: GoogleTokens;
   caldav_accounts?: CalDavAccount[];
   push_calendar: string;

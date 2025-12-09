@@ -8,6 +8,7 @@ import { USER } from './USER.js';
 vi.mock("../models/User.js", () => {
     const UserModelMock = vi.fn();
     (UserModelMock as any).findOne = vi.fn();
+    (UserModelMock as any).findById = vi.fn();
     (UserModelMock as any).findByIdAndUpdate = vi.fn();
     return { UserModel: UserModelMock };
 });
@@ -56,6 +57,9 @@ describe("User Controller", () => {
 
     describe("PUT /api/v1/user", () => {
         it("should successfully update user URL", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
             (UserModel.findByIdAndUpdate as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue({ ...USER, user_url: "new-unique-url" })
             });
@@ -71,8 +75,13 @@ describe("User Controller", () => {
         it("should fail when updating with a duplicate user URL", async () => {
             const duplicateError = {
                 code: 11000,
-                message: "Duplicate key error collection: test.users index: user_url_1 dup key: { user_url: \"existing-url\" }"
+                keyPattern: { user_url: 1 },
+                message: "Duplicate key error..."
             };
+
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
 
             (UserModel.findByIdAndUpdate as any).mockReturnValue({
                 exec: vi.fn().mockRejectedValue(duplicateError)
@@ -82,8 +91,47 @@ describe("User Controller", () => {
                 .put("/api/v1/user")
                 .send({ data: { user_url: "existing-url" } });
 
-            expect(res.status).toBe(400);
-            expect(res.body.error).toEqual(duplicateError);
+            expect(res.status).toBe(409);
+            expect(res.body.error).toEqual("User user_url already exists");
+        });
+
+        it("should successfully switch to gravatar", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({ ...USER, use_gravatar: false })
+            });
+            // Mock findByIdAndUpdate to return what we expect (though controller ignores return for response mostly)
+            (UserModel.findByIdAndUpdate as any).mockImplementation((id, update, options) => ({
+                exec: vi.fn().mockResolvedValue({ ...USER, ...update, use_gravatar: true })
+            }));
+
+            const res = await request(app)
+                .put("/api/v1/user")
+                .send({ data: { use_gravatar: true } });
+
+            expect(res.status).toBe(200);
+            const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
+            const updateArg = updateCall[1];
+            expect(updateArg.use_gravatar).toBe(true);
+            expect(updateArg.picture_url).toMatch(/gravatar\.com\/avatar\//);
+        });
+
+        it("should switch back to google picture when gravatar disabled", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({ ...USER, use_gravatar: true, google_picture_url: "google_pic_url" })
+            });
+            (UserModel.findByIdAndUpdate as any).mockImplementation((id, update, options) => ({
+                exec: vi.fn().mockResolvedValue({ ...USER, ...update, use_gravatar: false })
+            }));
+
+            const res = await request(app)
+                .put("/api/v1/user")
+                .send({ data: { use_gravatar: false } });
+
+            expect(res.status).toBe(200);
+            const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
+            const updateArg = updateCall[1];
+            expect(updateArg.use_gravatar).toBe(false);
+            expect(updateArg.picture_url).toBe("google_pic_url");
         });
     });
 });

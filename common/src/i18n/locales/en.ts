@@ -108,5 +108,22 @@ export const en = {
     "invitationSubject": "Invitation: {{summary}}",
     "invitationBody": "<p>Hi {{attendeeName}},</p><p>You have been invited to the following event:</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>Time:</strong> {{time}}</p><p>Please find the event details attached.</p>",
     "icsDescription": "Event Description:\n{{description}}",
-    "dateFormat": "en-US"
+    "dateFormat": "en-US",
+
+    // User Menu
+    "user_menu_log_out": "Log out",
+    "user_menu_log_in": "Log in",
+    "user_menu_profile": "Profile",
+    "user_menu_my_account": "My account",
+    "user_menu_calendar_integration": "Calendar Integration",
+    "user_menu_copy_link": "Copy your link",
+    "user_menu_link_copied": "Link copied",
+    "name": "Name",
+    "user_url": "User URL",
+    "use_gravatar": "Use Gravatar",
+    "save": "Save",
+    "profile_updated": "Profile updated successfully",
+    "error_saving_profile": "Error saving profile",
+    "user_url_taken": "User URL already taken",
+    "error_loading_profile": "Error loading profile"
 };

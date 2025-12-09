@@ -4,6 +4,7 @@
 import { UserModel } from "../models/User.js";
 import { User } from "common/src/types";
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 
 /**
  * Middleware to get the logged in user
@@ -45,29 +46,63 @@ const filterUser = (user) => Object.keys(user)
 
 export const updateUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
-  const user = filterUser(req.body.data as User);
-  void UserModel.findByIdAndUpdate(userid, user,
-    {
-      new: true,
-      projection: {
-        "_id": 1,
-        "email": 1,
-        "name": 1,
-        "picture_url": 1,
-        "pull_calendars": 1,
-        "push_calendar": 1,
-        "user_url": 1,
-        "welcome": 1,
-        "updatedAt": 1,
-        "google_tokens.access_token": 1
+  /* eslint-disable @typescript-eslint/naming-convention */
+  const { user_url, use_gravatar, ...otherFields } = req.body.data as User;
+
+  // Prepare update object
+  let update: any = filterUser(otherFields);
+
+  if (user_url) {
+    update.user_url = user_url;
+  }
+
+  // Handle Gravatar toggle
+  if (use_gravatar !== undefined) {
+    update.use_gravatar = use_gravatar;
+  }
+
+  UserModel.findById(userid).exec()
+    .then(currentUser => {
+      if (!currentUser) throw new Error("User not found");
+
+      if (use_gravatar !== undefined && use_gravatar !== currentUser.use_gravatar) {
+        if (use_gravatar) {
+          // Switched to Gravatar
+          const emailHash = crypto.createHash('md5').update(currentUser.email.toLowerCase().trim()).digest('hex');
+          update.picture_url = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
+        } else {
+          // Switched back to Google picture (or empty if not available)
+          update.picture_url = currentUser.google_picture_url || "";
+        }
       }
+
+      return UserModel.findByIdAndUpdate(userid, update,
+        {
+          new: true,
+          projection: {
+            "_id": 1,
+            "email": 1,
+            "name": 1,
+            "picture_url": 1,
+            "pull_calendars": 1,
+            "push_calendar": 1,
+            "user_url": 1,
+            "welcome": 1,
+            "updatedAt": 1,
+            "google_tokens.access_token": 1,
+            "use_gravatar": 1 // Return this too
+          }
+        }).exec();
     })
-    .exec()
     .then(user => {
       res.status(200).json(user);
     })
     .catch(err => {
-      res.status(400).json({ error: err });
+      if (err.code === 11000 && err.keyPattern && err.keyPattern.user_url) {
+        res.status(409).json({ error: "User user_url already exists", field: "user_url" });
+      } else {
+        res.status(400).json({ error: err });
+      }
     });
 };
 

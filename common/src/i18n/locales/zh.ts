@@ -108,5 +108,14 @@ export const zh = {
     "invitationSubject": "邀请：{{summary}}",
     "invitationBody": "<p>嗨 {{attendeeName}}，</p><p>您已受邀参加以下活动：</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>时间：</strong> {{time}}</p><p>请查阅附件中的活动详情。</p>",
     "icsDescription": "活动描述：\n{{description}}",
-    "dateFormat": "zh-CN"
+    "dateFormat": "zh-CN",
+
+    // User Menu
+    "user_menu_log_out": "Log out",
+    "user_menu_log_in": "Log in",
+    "user_menu_profile": "Profile",
+    "user_menu_my_account": "My account",
+    "user_menu_calendar_integration": "Calendar Integration",
+    "user_menu_copy_link": "Copy your link",
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
 };

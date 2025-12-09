@@ -25,6 +25,14 @@ describe("Server Start", () => {
                         })
                     }
                 }),
+                findById: vi.fn((id) => {
+                    console.log("mocked findById");
+                    return {
+                        exec: vi.fn(() => {
+                            return Promise.resolve(USER);
+                        })
+                    }
+                }),
                 findByIdAndUpdate: vi.fn((id, user) => {
                     console.log("mocked findByIdAndUpdate");
                     return {

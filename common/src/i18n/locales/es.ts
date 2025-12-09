@@ -108,5 +108,14 @@ export const es = {
     "invitationSubject": "Invitación: {{summary}}",
     "invitationBody": "<p>Hola {{attendeeName}},</p><p>Has sido invitado al siguiente evento:</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>Hora:</strong> {{time}}</p><p>Por favor, encuentre los detalles del evento adjuntos.</p>",
     "icsDescription": "Descripción del evento:\n{{description}}",
-    "dateFormat": "es-ES"
+    "dateFormat": "es-ES",
+
+    // User Menu
+    "user_menu_log_out": "Cerrar sesión",
+    "user_menu_log_in": "Iniciar sesión",
+    "user_menu_profile": "Perfil",
+    "user_menu_my_account": "Mi cuenta",
+    "user_menu_calendar_integration": "Integración de calendario",
+    "user_menu_copy_link": "Copiar tu enlace",
+    "user_menu_link_copied": "Enlace copiado"
 };

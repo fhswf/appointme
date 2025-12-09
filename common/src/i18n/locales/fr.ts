@@ -108,5 +108,14 @@ export const fr = {
     "invitationSubject": "Invitation : {{summary}}",
     "invitationBody": "<p>Bonjour {{attendeeName}},</p><p>Vous avez été invité à l'événement suivant :</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>Heure :</strong> {{time}}</p><p>Veuillez trouver les détails de l'événement ci-joint.</p>",
     "icsDescription": "Description de l'événement :\n{{description}}",
-    "dateFormat": "fr-FR"
+    "dateFormat": "fr-FR",
+
+    // User Menu
+    "user_menu_log_out": "Se déconnecter",
+    "user_menu_log_in": "Se connecter",
+    "user_menu_profile": "Profil",
+    "user_menu_my_account": "Mon compte",
+    "user_menu_calendar_integration": "Intégration du calendrier",
+    "user_menu_copy_link": "Copier le lien",
+    "user_menu_link_copied": "Lien copié"
 };
