@@ -1,3 +1,10 @@
+# backend [1.21.0](https://github.com/fhswf/book_me/compare/backend@1.20.0...backend@1.21.0) (2025-12-09)
+
+
+### Features
+
+* Allow SMTP configuration without authentication and update K8s manifests and tests. ([1a3dee0](https://github.com/fhswf/book_me/commit/1a3dee0ce116c6542236dfeda1e206ddb0f1467e))
+
 # backend [1.20.0](https://github.com/fhswf/book_me/compare/backend@1.19.0...backend@1.20.0) (2025-12-09)
 
 
