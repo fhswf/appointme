@@ -41,4 +41,38 @@ describe('i18n', () => {
         expect(deBody).toContain('Treffen');
         expect(deBody).toContain('Dinge besprechen');
     });
+
+    it('should return key if translation not found', () => {
+        const result = t('en', 'nonExistentKey' as any);
+        expect(result).toBe('nonExistentKey');
+    });
+
+    it('should handle empty parameters', () => {
+        const result = t('en', 'invitationSubject', {});
+        expect(result).toContain('Invitation');
+    });
+
+    it('should handle multiple parameter replacements', () => {
+        const result = t('en', 'invitationBody', {
+            attendeeName: 'Alice',
+            summary: 'Team Sync',
+            description: 'Weekly sync',
+            time: '14:00'
+        });
+        expect(result).toContain('Alice');
+        expect(result).toContain('Team Sync');
+        expect(result).toContain('Weekly sync');
+        expect(result).toContain('14:00');
+    });
+
+    it('should detect locale from complex accept-language header', () => {
+        expect(getLocale('en-US,en;q=0.9')).toBe('en');
+        expect(getLocale('de-CH,de;q=0.9,en;q=0.8')).toBe('de');
+    });
+
+    it('should handle locale with region code', () => {
+        expect(getLocale('de-AT')).toBe('de');
+        expect(getLocale('de-CH')).toBe('de');
+    });
 });
+
