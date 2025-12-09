@@ -1,5 +1,7 @@
 
-import { Document, Schema, model, models } from 'mongoose';
+import mongoose from 'mongoose';
+import type { Document } from 'mongoose';
+const { Schema, model, models } = mongoose;
 import { User } from "common/src/types";
 
 
