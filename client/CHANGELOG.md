@@ -1,3 +1,28 @@
+## client [1.16.1](https://github.com/fhswf/book_me/compare/client@1.16.0...client@1.16.1) (2025-12-09)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.6.0
+
+# client [1.16.0](https://github.com/fhswf/book_me/compare/client@1.15.0...client@1.16.0) (2025-12-09)
+
+
+### Features
+
+* Add optional email field to CalDAV account creation and display. ([93f743c](https://github.com/fhswf/book_me/commit/93f743c77a8f5e5fdbfaf5d6b5f4c1f0c039c582))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.5.0
+
 # client [1.15.0](https://github.com/fhswf/book_me/compare/client@1.14.0...client@1.15.0) (2025-12-09)
 
 

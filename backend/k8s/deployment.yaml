@@ -94,7 +94,7 @@ spec:
                 secretKeyRef:
                   key: ENCRYPTION_KEY
                   name: bookme-secret
-          image: ghcr.io/fhswf/book_me/backend:1.21.0
+          image: ghcr.io/fhswf/book_me/backend:1.22.2
           name: bookme
           ports:
             - containerPort: 5000
