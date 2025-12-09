@@ -1,5 +1,5 @@
-import { getLocale, t } from '../src/utility/i18n';
-import { describe, it, expect } from '@jest/globals';
+import { getLocale, t } from '../utility/i18n';
+import { describe, it, expect } from 'vitest';
 
 describe('i18n', () => {
     it('should default to en if no accept-language header', () => {

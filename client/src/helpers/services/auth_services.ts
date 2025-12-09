@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCsrfToken } from "./csrf_service";
 
 export async function postToRegister(name, email, password) {
   const csrfToken = await getCsrfToken();
@@ -34,7 +35,7 @@ export async function postToActivate(token) {
   return response;
 }
 
-import { getCsrfToken } from "./csrf_service";
+
 
 export async function postGoogleLogin(code) {
   console.log("postGoogleLogin: %s", `${import.meta.env.REACT_APP_API_URL}/auth/google_oauth2_code`);
