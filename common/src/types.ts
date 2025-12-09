@@ -91,6 +91,7 @@ export interface CalDavAccount {
   username: string;
   password?: string;
   name: string;
+  email?: string;
 }
 
 export interface User {

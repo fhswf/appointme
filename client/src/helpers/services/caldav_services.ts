@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getCsrfToken } from "./csrf_service";
 
-export async function addAccount(serverUrl, username, password, name) {
+export async function addAccount(serverUrl, username, password, name, email) {
     const csrfToken = await getCsrfToken();
     const response = await axios.post(
         `${import.meta.env.REACT_APP_API_URL}/caldav/account`,
@@ -9,7 +9,8 @@ export async function addAccount(serverUrl, username, password, name) {
             serverUrl,
             username,
             password,
-            name
+            name,
+            email
         },
         {
             headers: {

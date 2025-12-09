@@ -280,6 +280,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
     username: "",
     password: "",
     name: "",
+    email: "",
     privacyAck: false
   });
   const { t } = useTranslation();
@@ -299,10 +300,10 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
 
   const handleAdd = () => {
     setError(null);
-    addAccount(formData.serverUrl, formData.username, formData.password, formData.name)
+    addAccount(formData.serverUrl, formData.username, formData.password, formData.name, formData.email)
       .then(() => {
         setOpen(false);
-        setFormData({ serverUrl: "", username: "", password: "", name: "", privacyAck: false });
+        setFormData({ serverUrl: "", username: "", password: "", name: "", email: "", privacyAck: false });
         loadAccounts();
       })
       .catch(err => {
@@ -338,7 +339,10 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
           <div className="mt-4 flex flex-col gap-2">
             {accounts.map(acc => (
               <div key={acc._id} className="flex items-center justify-between p-2 border rounded-md">
-                <span>{acc.name}</span>
+                <div className="flex flex-col">
+                  <span className="font-medium">{acc.name}</span>
+                  {acc.email && <span className="text-xs text-muted-foreground">{acc.email}</span>}
+                </div>
                 <Button variant="ghost" size="icon" onClick={() => handleRemove(acc._id)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -371,6 +375,16 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My Calendar"
                   data-testid="caldav-name"
+                />
+              </div>
+              <div className="grid gap-2 mt-2">
+                <Label htmlFor="email">{t("Email (Optional)")}</Label>
+                <Input
+                  id="email"
+                  value={formData.email}
+                  onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="name@example.com"
+                  data-testid="caldav-email"
                 />
               </div>
               <div className="grid gap-2 mt-2">

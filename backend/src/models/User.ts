@@ -40,7 +40,8 @@ const calDavAccountSchema = new Schema({
   serverUrl: { type: String, required: true },
   username: { type: String, required: true },
   password: { type: String, required: false },
-  name: { type: String, required: true }
+  name: { type: String, required: true },
+  email: { type: String, required: false }
 });
 
 // User schema for the Database
