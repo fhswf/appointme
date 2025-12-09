@@ -90,13 +90,13 @@ describe('OIDC Controller', () => {
         });
 
         it('should return authorization URL when configured', async () => {
-             // Reset modules to ensure fresh state after previous test
+            // Reset modules to ensure fresh state after previous test
             vi.resetModules();
-             // Re-setup envs as resetModules might affect how they are read if cached? 
-             // Actually, beforeEach runs before this, but if we reset modules inside a test, we might need to re-import app.
-             // beforeEach initializes `app = init(0)`, but that uses the module from TOP LEVEL import which might be stale if we reset modules?
-             // No, resetModules() clears the require cache.
-             // So we must re-import init and re-initialize app.
+            // Re-setup envs as resetModules might affect how they are read if cached? 
+            // Actually, beforeEach runs before this, but if we reset modules inside a test, we might need to re-import app.
+            // beforeEach initializes `app = init(0)`, but that uses the module from TOP LEVEL import which might be stale if we reset modules?
+            // No, resetModules() clears the require cache.
+            // So we must re-import init and re-initialize app.
             const { init } = await import('../server.js');
             app = init(0);
 
@@ -131,7 +131,7 @@ describe('OIDC Controller', () => {
             vi.stubEnv('OIDC_ISSUER', '');
             const { init } = await import('../server.js');
             app = init(0);
-            
+
             // We need a fresh CSRF token from the new app instance
             const resCsrf = await request(app).get("/api/v1/csrf-token");
             csrfToken = resCsrf.body.csrfToken;
@@ -159,6 +159,11 @@ describe('OIDC Controller', () => {
 
             mockClient.callback.mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // Mock findOne to return null (user not found, proceed to create)
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
             });
 
             (UserModel.findOneAndUpdate as any).mockReturnValue({
@@ -228,6 +233,10 @@ describe('OIDC Controller', () => {
                 claims: vi.fn().mockReturnValue(claims)
             });
 
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
             (UserModel.findOneAndUpdate as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue(null) // Fail to create/find
             });
@@ -242,10 +251,122 @@ describe('OIDC Controller', () => {
             expect(res.body.error).toBe("Authentication failed");
         });
 
-        it('should handle duplicate user error (11000)', async () => {
+
+
+        it('should login successfully if user with email already exists', async () => {
+            await getCsrfToken();
+            const code = 'valid_code_existing_user';
+            const claims = {
+                sub: 'new_sub_id',
+                email: 'existing@example.com',
+                name: 'Existing User',
+                picture: 'http://pic.com/existing.jpg'
+            };
+
+            mockClient.callback.mockResolvedValue({
+                claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // Mock findOne to return an existing user
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: 'existing_user_id',
+                    name: 'Existing User',
+                    email: 'existing@example.com',
+                    picture_url: 'http://pic.com/existing.jpg'
+                })
+            });
+
+            // findOneAndUpdate should NOT be called (or we don't care, but for this test flow it matters)
+            // But wait, the code calls findOne first. If it returns user, we skip creation.
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ code });
+
+            expect(res.status).toBe(200);
+            expect(res.body.user).toEqual({
+                _id: 'existing_user_id',
+                email: 'existing@example.com',
+                name: 'Existing User',
+                picture_url: 'http://pic.com/existing.jpg'
+            });
+        });
+
+        it('should retry and succeed if user_url collision occurs', async () => {
+            await getCsrfToken();
+            const code = 'valid_code_collision';
+            const claims = {
+                sub: 'user_collision',
+                email: 'collision@example.com',
+                name: 'Collision User',
+            };
+
+            mockClient.callback.mockResolvedValue({
+                claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // first findOne returns null (user not found)
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            // findOneAndUpdate mocks
+            const execMock = vi.fn();
+
+            // First call fails with 11000 for user_url
+            execMock.mockRejectedValueOnce({
+                code: 11000,
+                keyPattern: { user_url: 1 }
+            });
+
+            // Second call succeeds
+            execMock.mockResolvedValueOnce({
+                _id: 'user_collision',
+                name: 'Collision User',
+                email: 'collision@example.com',
+                user_url: 'collision-user-1234'
+            });
+
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: execMock
+            });
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ code });
+
+            expect(res.status).toBe(200);
+            expect(execMock).toHaveBeenCalledTimes(2);
+        });
+
+        it('should handle duplicate user error (11000) for other keys', async () => {
             await getCsrfToken();
             const code = 'valid_code';
-            mockClient.callback.mockRejectedValue({ code: 11000 });
+            const claims = { sub: 'u', email: 'e@e.com' };
+            mockClient.callback.mockResolvedValue({
+                claims: vi.fn().mockReturnValue(claims)
+            });
+
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const execMock = vi.fn();
+            // Error without keyPattern (or different key)
+            execMock.mockRejectedValue({ code: 11000 });
+
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: execMock
+            });
 
             const res = await request(app)
                 .post('/api/v1/oidc/login')
