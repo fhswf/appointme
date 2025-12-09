@@ -129,6 +129,7 @@ describe('CalendarIntegration Page', () => {
         fireEvent.change(screen.getByTestId('caldav-server-url'), { target: { value: 'http://caldav' } });
         fireEvent.change(screen.getByTestId('caldav-username'), { target: { value: 'user' } });
         fireEvent.change(screen.getByTestId('caldav-password'), { target: { value: 'pass' } });
+        fireEvent.change(screen.getByTestId('caldav-email'), { target: { value: 'user@example.com' } });
 
         // Check privacy ack
         // The checkbox from shadcn/ui might be tricky to click by label or role, let's try finding by testid or role
@@ -145,7 +146,7 @@ describe('CalendarIntegration Page', () => {
         fireEvent.click(saveButton);
 
         await waitFor(() => {
-            expect(caldavServices.addAccount).toHaveBeenCalledWith('http://caldav', 'user', 'pass', 'My CalDAV');
+            expect(caldavServices.addAccount).toHaveBeenCalledWith('http://caldav', 'user', 'pass', 'My CalDAV', 'user@example.com');
         });
     });
 
@@ -178,8 +179,13 @@ describe('CalendarIntegration Page', () => {
         // Actually, listing accounts renders:
         // <span>{acc.name}</span> <Button ...>
 
-        // I can just click the button near the text.
-        const removeButton = screen.getByText('Existing Account').nextElementSibling;
+        // The text is now inside a flex-col div, which is inside the row div.
+        // The button is a sibling of the flex-col div.
+        const accountName = screen.getByText('Existing Account');
+        // closest row container
+        const row = accountName.closest('.border');
+        const removeButton = row?.querySelector('button');
+
         if (removeButton) {
             fireEvent.click(removeButton);
         }
