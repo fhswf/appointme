@@ -1,3 +1,27 @@
+# backend [1.18.0](https://github.com/fhswf/book_me/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
+
+
+### Bug Fixes
+
+* Correct 'Invitaion' typo in event invitation subject and feat: introduce navigation after calendar updates and internationalize CalDav UI text. ([0b2e7c4](https://github.com/fhswf/book_me/commit/0b2e7c4a211cf1054fd81110fa64e686a50c35a8))
+* Sanitize HTML in email invitation content for attendee name, event summary, and description, and add a corresponding test. ([d9d77fb](https://github.com/fhswf/book_me/commit/d9d77fbe543690ea85d4949015f0dfd6a4415d24))
+* syntax error in deployment.yaml ([1ac2707](https://github.com/fhswf/book_me/commit/1ac2707de8e1c37639198291d5bd9d8d1addc9d8))
+
+
+### Features
+
+* add comprehensive tests for EventForm fields and submit button, refine Login and OidcCallback tests, and update EventList navigation tests. ([179f4d6](https://github.com/fhswf/book_me/commit/179f4d60678b97cdf88e69d1017c8e5c6e1078e7))
+* Add configurable SMTP support to mailer, falling back to Gmail service. ([01767b1](https://github.com/fhswf/book_me/commit/01767b11d2853a199fad6a0e278a7e5a0489ae60))
+* Add new i18n keys for booking and CalDav features, and refine iCal attendee RSVP logic. ([0c1872f](https://github.com/fhswf/book_me/commit/0c1872fa8fe7b4d15fe58dba5acb4166cfef8845))
+* add OIDC controller tests and update Vitest dependencies. ([8d80865](https://github.com/fhswf/book_me/commit/8d8086527915a67e4868b62cf944a55a10794c32))
+* Add rate limiting to OIDC `/url` and `/login` endpoints. ([ba54e48](https://github.com/fhswf/book_me/commit/ba54e488da832e7204ad719ae32af98c674e0dd0))
+* Add scheduler utility, OIDC callback tests, Google event insertion, and enable event controller tests. ([83ade1d](https://github.com/fhswf/book_me/commit/83ade1dba8966463cab7aec894cf651785ff576c))
+* i18n restructured ([2d25c89](https://github.com/fhswf/book_me/commit/2d25c895228f4c4ad17e4237ba5c45f229527fa9))
+* Implement OIDC authentication flow ([d8e4cdd](https://github.com/fhswf/book_me/commit/d8e4cdd073a99338257b2ee90721bd91afa0b633))
+* Introduce iCal utility to centralize ICS generation and enhance event creation with user comments for CalDAV, Google Calendar, and email invitations. ([657c969](https://github.com/fhswf/book_me/commit/657c969d61806e674e57d1ea075df8e1ba8cc7b2))
+* Prevent Mongoose model re-compilation, enhance OIDC controller tests for unconfigured scenarios, and include `.tsx` files in SonarQube test inclusions. ([f8d0b7f](https://github.com/fhswf/book_me/commit/f8d0b7f47ef8fe4a6ed239a75664bbd4fb684b9d))
+* test duplicate `user_url` ([f730e0b](https://github.com/fhswf/book_me/commit/f730e0b27ab7aaa3bf17bd10ef0fcbad3b9fb353))
+
 # backend [1.17.0](https://github.com/fhswf/book_me/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
 
 
