@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 import { updateUser } from "../helpers/services/user_services";
 import {
@@ -44,28 +45,52 @@ import { Input } from "@/components/ui/input";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 const renderCalendarList = (calendarList, state, setState, single = false) => {
-  console.log("renderCalendarList: %o", state);
+  // Merge google and caldav items for display if they are separate in the future, 
+  // but for now we will pass a unified list or handle them inside the list.
+  // Actually, the plan is to display them with icons.
+
+  const items = calendarList.items.map((item) => {
+    const iconSrc = item.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg";
+    const label = item.summaryOverride ? item.summaryOverride : item.summary;
+
+    if (single) {
+      return (
+        <SelectItem key={item.id} value={item.id}>
+          <div className="flex items-center gap-2">
+            <img src={iconSrc} alt="icon" className="w-4 h-4" />
+            <span>{label}</span>
+          </div>
+        </SelectItem>
+      );
+    } else {
+      return (
+        <div className="flex items-center gap-2" key={item.id}>
+          <Checkbox
+            id={item.id}
+            checked={state[item.id]}
+            onCheckedChange={(checked) => {
+              setState({ ...state, [item.id]: checked });
+            }}
+            name={item.id}
+          />
+          <Label htmlFor={item.id} className="flex items-center gap-2 cursor-pointer">
+            <img src={iconSrc} alt="icon" className="w-4 h-4" />
+            <span>{label}</span>
+          </Label>
+        </div>
+      );
+    }
+  });
 
   if (single) {
     const selected = Object.keys(state)[0];
-    console.log("selected: %o", selected);
-    const items = calendarList.items.map((item) => {
-      return (
-        <SelectItem key={item.id} value={item.id}>
-          {item.summaryOverride ? item.summaryOverride : item.summary}
-        </SelectItem>
-      );
-    });
-
     return (
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="calendar-select">Calendar</Label>
         <Select
           value={selected}
           onValueChange={(value) => {
-            state = { [value]: true };
-            console.log("select: %o %o", value, state);
-            setState(state);
+            setState({ [value]: true });
           }}
         >
           <SelectTrigger id="calendar-select" data-testid="calendar-select">
@@ -78,28 +103,6 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
       </div>
     );
   } else {
-    const items = calendarList.items.map((item) => (
-      <div className="flex items-center gap-2" key={item.id}>
-        <Checkbox
-          id={item.id}
-          checked={state[item.id]}
-          onCheckedChange={(checked) => {
-            console.log(
-              "onChange: %s %o\n%o",
-              item.id,
-              checked,
-              state
-            );
-            setState({ ...state, [item.id]: checked });
-          }}
-          name={item.id}
-        />
-        <Label htmlFor={item.id}>
-          {item.summaryOverride ? item.summaryOverride : item.summary}
-        </Label>
-      </div>
-    ));
-
     return <div className="flex flex-col gap-2">{items}</div>;
   }
 };
@@ -122,10 +125,11 @@ const PushCalendar = ({ user, calendarList }) => {
     updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
-        navigate("/");
+        toast.success(t("Calendar settings saved"));
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
+        toast.error(t("Failed to save settings"));
       });
     setOpen(false);
   };
@@ -202,19 +206,18 @@ const PullCalendars = ({ user, calendarList }) => {
     console.log("save: selected: %o", selected);
     user.pull_calendars = [];
     for (const item of Object.keys(selected)) {
-      console.log("save: item %s", item);
       if (selected[item]) {
-        console.log("save: %s is true", item);
         user.pull_calendars.push(item);
       }
     }
     updateUser(user)
       .then((user) => {
         console.log("updated user: %o", user);
-        navigate("/");
+        toast.success(t("Calendar settings saved"));
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
+        toast.error(t("Failed to save settings"));
       });
     setOpen(false);
   };
@@ -465,10 +468,17 @@ const Calendarintegration = () => {
     getCalendarList()
       .then((res) => {
         setConnected(true);
-        setCalendarList(res.data.data);
         const calendars = res.data.data;
-        const primary = calendars.items.filter((item) => item.primary);
-        console.log("calendarList: %o %o", calendars, primary);
+        const googleItems = calendars.items.map(c => ({ ...c, isCalDav: false }));
+        setGoogleCalendars(googleItems);
+
+        // Initial setup for default calendars (moved logic slightly to use the fresh list)
+        // ... (preserving logic but relying on the effect to update the main list)
+
+        const primary = googleItems.filter((item) => item.primary);
+        // ... update push/pull if needed ...
+        console.log("google calendars loaded: %o", googleItems);
+
         let update = false;
         if (user.pull_calendars.length === 0 && primary.length > 0) {
           user.pull_calendars.push(primary[0].id);
@@ -507,22 +517,25 @@ const Calendarintegration = () => {
 
   const [calendarError, setCalendarError] = useState<string | null>(null);
 
+  const [googleCalendars, setGoogleCalendars] = useState([]);
+  const [calDavCalendars, setCalDavCalendars] = useState([]);
+
+  // Merge calendar lists whenever they change
+  useEffect(() => {
+    const allCalendars = [...googleCalendars, ...calDavCalendars];
+    setCalendarList({ items: allCalendars });
+  }, [googleCalendars, calDavCalendars]);
+
   const handleAccountsChange = async (accounts) => {
     setCalendarError(null);
-    const allCalendars = [];
+    const newCalDavCalendars = [];
     const errors = [];
-
-    // Keep Google calendars if they exist
-    if (calendarList?.items) {
-      const googleCals = calendarList.items.filter(c => !c.isCalDav);
-      allCalendars.push(...googleCals);
-    }
 
     for (const acc of accounts) {
       try {
         const res = await listCalendars(acc._id);
         const cals = res.data.map(c => ({ ...c, isCalDav: true, accountId: acc._id }));
-        allCalendars.push(...cals);
+        newCalDavCalendars.push(...cals);
       } catch (e) {
         console.error("Failed to load calendars for account", acc.name, e);
         errors.push(acc.name);
@@ -533,7 +546,7 @@ const Calendarintegration = () => {
       setCalendarError(`${t("Failed to load calendars for")}: ${errors.join(", ")}`);
     }
 
-    setCalendarList({ items: allCalendars });
+    setCalDavCalendars(newCalDavCalendars);
   };
 
   const renderConnectButton = () =>
@@ -592,6 +605,12 @@ const Calendarintegration = () => {
               <PullCalendars user={user} calendarList={calendarList} />
             </ErrorBoundary>
           </div>
+        </div>
+
+        <div className="p-4 flex justify-end">
+          <Button onClick={() => navigate("/")} data-testid="close-button">
+            {t("Close")}
+          </Button>
         </div>
       </div>
     </>
