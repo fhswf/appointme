@@ -79,6 +79,27 @@ spec:
                   name: bookme
             - name: NODE_ENV
               value: development
+            - name: DISABLE_GOOGLE_LOGIN
+              valueFrom:
+                configMapKeyRef:
+                  key: DISABLE_GOOGLE_LOGIN
+                  name: bookme
+            - name: OIDC_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  key: OIDC_ISSUER
+                  name: bookme
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: OIDC_CLIENT_ID
+                  name: bookme
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                 secretKeyRef:
+                   key: OIDC_CLIENT_SECRET
+                   name: bookme-secret
+          image: ghcr.io/fhswf/book_me/backend:1.16.0
           image: ghcr.io/fhswf/book_me/backend:1.17.0
           name: bookme
           ports:

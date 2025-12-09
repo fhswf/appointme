@@ -1,11 +1,12 @@
 import { DAVClient } from 'tsdav';
-import { User } from "common/src/types";
+import { User, CalDavAccount } from "common/src/types";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
 import crypto from 'node:crypto';
 import { logger } from '../logging.js';
 import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
+import { generateIcsContent } from '../utility/ical.js';
 
 export const addAccount = async (req: Request, res: Response) => {
     let { serverUrl, username, password, name } = req.body;
@@ -169,12 +170,12 @@ const fetchAndProcessAccountCalendars = async (
 
 export const getBusySlots = async (user_id: string, timeMin: string, timeMax: string): Promise<{ start: Date, end: Date }[]> => {
     const user = await UserModel.findOne({ _id: user_id }).exec();
-    if (!user || !user.caldav_accounts) return [];
+    if (!user?.caldav_accounts) return [];
 
     const busySlots: { start: Date, end: Date }[] = [];
     const startRange = new Date(timeMin);
     const endRange = new Date(timeMax);
-    const pullCalendars = new Set((user.pull_calendars || []) as string[]);
+    const pullCalendars = new Set(user.pull_calendars || []);
 
     for (const account of user.caldav_accounts) {
         await fetchAndProcessAccountCalendars(
@@ -194,7 +195,7 @@ export const listCalendars = async (req: Request, res: Response) => {
 
     try {
         const user = await UserModel.findOne({ _id: userId }).exec();
-        const account = user?.caldav_accounts?.find(acc => (acc as any)._id.toString() === accountId);
+        const account = user?.caldav_accounts?.find(acc => acc._id.toString() === accountId);
 
         if (!account) {
             return res.status(404).json({ error: 'Account not found' });
@@ -230,29 +231,33 @@ export const listCalendars = async (req: Request, res: Response) => {
     }
 };
 
-const formatICalDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
-export const createCalDavEvent = async (user: User, eventDetails: any): Promise<any> => {
-    // Find the account that owns the push_calendar URL
-    const account = user.caldav_accounts.find(acc => {
-        if (user.push_calendar.startsWith(acc.serverUrl)) {
+
+export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavAccount | undefined => {
+    return user.caldav_accounts.find(acc => {
+        if (calendarUrl.startsWith(acc.serverUrl)) {
             return true;
         }
         try {
             const serverUrlObj = new URL(acc.serverUrl);
-            if (user.push_calendar.startsWith(serverUrlObj.pathname)) {
+            if (calendarUrl.startsWith(serverUrlObj.pathname)) {
                 return true;
             }
             // Check if they share the same origin
-            const pushUrlObj = new URL(user.push_calendar);
+            const pushUrlObj = new URL(calendarUrl);
             if (pushUrlObj.origin === serverUrlObj.origin) {
                 return true;
             }
         } catch (e) {
-            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${user.push_calendar}`);
+            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${calendarUrl}`);
         }
         return false;
     });
+};
+
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string): Promise<any> => {
+    // Find the account that owns the push_calendar URL
+    const account = findAccountForCalendar(user, user.push_calendar);
 
     if (!account) {
         logger.error('CalDav account not found for push calendar: %s', user.push_calendar);
@@ -318,29 +323,34 @@ export const createCalDavEvent = async (user: User, eventDetails: any): Promise<
     const creationFetchOptions = {
         headers: {
             // @ts-ignore
-            ...(client.fetchOptions?.headers || {}),
+            ...(client.fetchOptions?.headers),
             ...(authHeader ? { Authorization: authHeader } : {})
         }
     };
 
+    const icsContent = generateIcsContent({
+        uid,
+        start: new Date(eventData.start),
+        end: new Date(eventData.end),
+        summary: eventData.summary,
+        description: eventData.description,
+        location: eventData.location,
+        organizer: {
+            displayName: eventData.organizer.cn,
+            email: eventData.organizer.mailto
+        },
+        attendees: eventData.attendees.map(a => ({
+            displayName: a.cn,
+            email: a.mailto,
+            partstat: a.partstat,
+            rsvp: a.rsvp
+        }))
+    }, { comment: userComment });
+
     const createdEvent = await client.createCalendarObject({
         calendar: targetCalendar,
         filename: `${uid}.ics`,
-        iCalString: `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//BookMe//EN
-BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${formatICalDate(new Date())}
-DTSTART:${formatICalDate(new Date(eventData.start))}
-DTEND:${formatICalDate(new Date(eventData.end))}
-SUMMARY:${eventData.summary}
-DESCRIPTION:${eventData.description}
-LOCATION:${eventData.location}
-ORGANIZER;CN=${eventData.organizer.cn}:mailto:${eventData.organizer.mailto}
-${eventData.attendees.map(a => `ATTENDEE;CN=${a.cn};PARTSTAT=${a.partstat};RSVP=${a.rsvp}:mailto:${a.mailto}`).join('\n')}
-END:VEVENT
-END:VCALENDAR`,
+        iCalString: icsContent,
         fetchOptions: creationFetchOptions
     });
 

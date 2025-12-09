@@ -12,6 +12,12 @@ test.describe('User not logged in', () => {
             await page.route('https://accounts.google.com/gsi/button', async route => {
                 await route.fulfill({ status: 200, body: '{}' });
             });
+            await page.route('**/auth/config', async route => {
+                await route.fulfill({
+                    status: 200,
+                    body: JSON.stringify({ googleEnabled: true, oidcEnabled: false })
+                });
+            });
         });
 
         test('Should redirect to landing', async ({ page }) => {

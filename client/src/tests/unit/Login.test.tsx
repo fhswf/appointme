@@ -35,11 +35,16 @@ vi.mock('sonner', () => ({
 describe('Login Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        (authServices.getAuthConfig as any).mockResolvedValue({
+            oidcEnabled: false,
+            googleEnabled: true
+        });
     });
 
-    it('should render Google Login button', () => {
+    it('should render Google Login button', async () => {
         render(<Login />);
-        expect(screen.getByTestId('google-login-button')).toBeInTheDocument();
+        const button = await screen.findByTestId('google-login-button');
+        expect(button).toBeInTheDocument();
     });
 
     it('should call postGoogleLogin and navigate on success', async () => {
@@ -47,7 +52,8 @@ describe('Login Component', () => {
 
         render(<Login />);
 
-        fireEvent.click(screen.getByTestId('google-login-button'));
+        const button = await screen.findByTestId('google-login-button');
+        fireEvent.click(button);
 
         expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-google-token');
 
@@ -63,7 +69,8 @@ describe('Login Component', () => {
 
         render(<Login />);
 
-        fireEvent.click(screen.getByTestId('google-login-button'));
+        const button = await screen.findByTestId('google-login-button');
+        fireEvent.click(button);
 
         expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-google-token');
 

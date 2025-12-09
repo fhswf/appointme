@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { EventForm } from './EventForm';
 
@@ -20,7 +20,7 @@ vi.mock('@/components/ui/select', () => ({
     SelectTrigger: ({ children }: any) => <button>{children}</button>,
     SelectValue: () => <span>Select Value</span>,
     SelectContent: ({ children }: any) => <div>{children}</div>,
-    SelectItem: ({ value, children, onClick }: any) => <div onClick={() => onClick && onClick(value)} data-value={value}>{children}</div>,
+    SelectItem: ({ value, children, onClick }: any) => <button onClick={() => onClick?.(value)} data-value={value}>{children}</button>,
 }));
 
 // Mock Textarea
@@ -111,4 +111,92 @@ describe('EventForm Component', () => {
 
         expect(mockSubmit.mock.calls[1][0].url).toBe('new_name'); // 'New Name' slugified
     });
+
+    it('should update description field', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const descriptionInput = screen.getByTestId('event-description');
+        fireEvent.change(descriptionInput, { target: { value: 'New description' } });
+
+        expect(descriptionInput).toHaveValue('New description');
+    });
+
+    it('should update location field', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const locationInput = screen.getByDisplayValue('Test Location');
+        fireEvent.change(locationInput, { target: { value: 'New Location' } });
+
+        expect(locationInput).toHaveValue('New Location');
+    });
+
+    it('should update url field independently', () => {
+        const eventWithDifferentUrl = { ...mockEvent, url: 'custom_url' };
+        render(<EventForm event={eventWithDifferentUrl} handleOnSubmit={mockSubmit} />);
+
+        const titleInput = screen.getByTestId('event-form-title');
+        fireEvent.change(titleInput, { target: { value: 'New Name' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        // URL should NOT auto-update if it doesn't match the slug
+        expect(mockSubmit.mock.calls[2][0].url).toBe('custom_url');
+    });
+
+    it('should update maxFuture field', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const maxFutureInput = screen.getAllByRole('spinbutton')[0]; // First number input
+        fireEvent.change(maxFutureInput, { target: { value: '30' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        // maxFuture is multiplied by 86400 (seconds in a day), but value is string
+        expect(mockSubmit.mock.calls[3][0].maxFuture).toBe('30');
+    });
+
+    it('should update minFuture field', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const minFutureInput = screen.getAllByRole('spinbutton')[1]; // Second number input
+        fireEvent.change(minFutureInput, { target: { value: '2' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        // Value is string
+        expect(mockSubmit.mock.calls[4][0].minFuture).toBe('2');
+    });
+
+    it('should update maxPerDay field', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const maxPerDayInput = screen.getAllByRole('spinbutton')[2]; // Third number input
+        fireEvent.change(maxPerDayInput, { target: { value: '5' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        expect(mockSubmit.mock.calls[5][0].maxPerDay).toBe('5');
+    });
+
+    it('should keep submit button disabled when form is unchanged', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        expect(submitButton).toBeDisabled();
+    });
+
+    it('should enable submit button when form is changed', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const titleInput = screen.getByTestId('event-form-title');
+        fireEvent.change(titleInput, { target: { value: 'Changed' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        expect(submitButton).toBeEnabled();
+    });
 });
+

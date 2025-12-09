@@ -14,6 +14,7 @@ import EditEvent from "./pages/EditEvent";
 import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
+import OidcCallback from "./pages/OidcCallback";
 
 import { useAuthenticated } from "./helpers/helpers";
 
@@ -72,6 +73,10 @@ const Main = () => {
               element={<Finished />}
             />
 
+            <Route
+              path="/oidc-callback"
+              element={<OidcCallback />}
+            />
             <Route
               path="/login"
               element={<Login />}

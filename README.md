@@ -20,19 +20,21 @@ details tbd ...
 
 - provide details in `docker.env` and `.env`
 
-### Docker
+#### Environment Variables
 
-- Check configuration in `docker-compose.yml` (exposed port)
-- build & deploy frontend by running
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `MONGO_URI` | Connection string for MongoDB | Yes | |
+| `CLIENT_URL` | URL of the frontend application (e.g., `https://example.com`) | Yes | |
+| `API_URL` | URL of the backend API (e.g., `https://api.example.com/api/v1`) | Yes | |
+| `JWT_SECRET` | Secret key for signing JWTs | Yes | |
+| `CLIENT_ID` | Google OAuth2 Client ID | No (if Google Login disabled) | |
+| `CLIENT_SECRET` | Google OAuth2 Client Secret | No (if Google Login disabled) | |
+| `DISABLE_GOOGLE_LOGIN`| Set to `true` to disable Google Login | No | `false` |
+| `OIDC_ISSUER` | OIDC Provider URL (e.g., Keycloak Realm URL) | No (if OIDC disabled) | |
+| `OIDC_CLIENT_ID` | OIDC Client ID | No (if OIDC disabled) | |
+| `OIDC_CLIENT_SECRET` | OIDC Client Secret (for Confidential clients) | No | |
+| `EMAIL_FROM` | Email address for sending notifications | Yes | |
+| `EMAIL_PASSWORD` | Password for the email account | Yes | |
 
-```shell
-npm run-script build
-cp -r build/* <deployment dir>
-```
 
-- build an run backend
-
-```shell
-docker-compose build
-docker-compose up
-```

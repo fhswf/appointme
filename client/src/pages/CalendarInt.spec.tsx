@@ -132,7 +132,7 @@ describe('CalendarIntegration Page', () => {
 
         // Check privacy ack
         // The checkbox from shadcn/ui might be tricky to click by label or role, let's try finding by testid or role
-        const checkboxes = screen.getAllByRole('checkbox');
+        // Check privacy ack
         // Assuming the last one is privacy-ack or use testid if available. 
         // I added data-testid="caldav-privacy-ack" in previous diffs for user, but I am writing fresh here.
         // Wait, did I edit CalendarInt before? Yes, I added test-ids in step 24-28!
@@ -180,10 +180,83 @@ describe('CalendarIntegration Page', () => {
 
         // I can just click the button near the text.
         const removeButton = screen.getByText('Existing Account').nextElementSibling;
-        fireEvent.click(removeButton!);
+        if (removeButton) {
+            fireEvent.click(removeButton);
+        }
 
         await waitFor(() => {
             expect(caldavServices.removeAccount).toHaveBeenCalledWith('acc1');
+        });
+    });
+
+    it('should update push calendar', async () => {
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-push-calendar')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('edit-push-calendar'));
+
+        // Dialog opens
+        expect(screen.getAllByText('Calendar')).toHaveLength(2); // Dialog title and label
+
+        const saveBtn = screen.getByTestId('button-save');
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+        });
+    });
+
+    it('should update pull calendars', async () => {
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId('edit-pull-calendar'));
+
+        const checkbox = screen.getByLabelText('Google Calendar 1');
+        fireEvent.click(checkbox); // Toggle it
+
+        const saveBtn = screen.getByText('factual_nimble_snail_clap');
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle partial failure when listing calendars', async () => {
+        const accounts = [{ _id: 'acc1', name: 'Broken Account' }];
+        (caldavServices.listAccounts as any).mockResolvedValue({ data: accounts });
+        (caldavServices.listCalendars as any).mockRejectedValue(new Error('Network Error'));
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Broken Account')).toBeInTheDocument();
+            expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
         });
     });
 });

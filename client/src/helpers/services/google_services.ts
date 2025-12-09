@@ -44,19 +44,13 @@ export async function insertEvent(
   description
 ) {
   const starttime = time.valueOf();
-  const csrfToken = await getCsrfToken();
   const response = axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/events/${event_id}/slot`,
+    `${import.meta.env.REACT_APP_API_URL}/event/${event_id}/slot`,
     {
       starttime,
       name,
       email,
       description,
-    },
-    {
-      headers: {
-        "x-csrf-token": csrfToken,
-      },
     }
   );
   return response;

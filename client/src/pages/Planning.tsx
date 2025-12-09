@@ -36,15 +36,7 @@ const Planning = (props: any) => {
           getActiveEvents(res.data._id)
             .then((res) => {
               console.log(res.data);
-              if (res.data.length === 0) {
-                setUser({
-                  name: user.name,
-                  welcome: "No active Events",
-                  picture_url: "",
-                });
-              } else {
-                setEvents(res.data);
-              }
+              setEvents(res.data);
             })
             .catch((err) => {
               toast.error("Could not get event information");
@@ -56,7 +48,7 @@ const Planning = (props: any) => {
         toast.error("Could not get user information");
         console.log(err);
       });
-  }, [user_url, navigate, user.name]);
+  }, [user_url, navigate]);
 
   const handleOnClick = (bookingEvent: EventDocument) => {
     navigate(`/users/${user_url}/${bookingEvent.url}`, {

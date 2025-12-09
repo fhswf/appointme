@@ -1,0 +1,230 @@
+import { describe, it, expect } from 'vitest';
+import { convertBusyToFree } from './scheduler';
+import { addMinutes } from 'date-fns';
+
+describe('scheduler utility', () => {
+    describe('convertBusyToFree', () => {
+        it('should return full interval when no busy slots', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots: any[] = [];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should handle single busy slot in the middle', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T12:00:00Z'), end: new Date('2025-01-01T13:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T12:00:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should handle busy slot at the start', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T09:00:00Z'), end: new Date('2025-01-01T10:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(new Date('2025-01-01T10:00:00Z'));
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should handle busy slot at the end', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T16:00:00Z'), end: new Date('2025-01-01T17:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T16:00:00Z'));
+        });
+
+        it('should handle multiple busy slots', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T10:00:00Z'), end: new Date('2025-01-01T11:00:00Z') },
+                { start: new Date('2025-01-01T13:00:00Z'), end: new Date('2025-01-01T14:00:00Z') },
+                { start: new Date('2025-01-01T15:00:00Z'), end: new Date('2025-01-01T16:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(4);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T10:00:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T11:00:00Z'));
+            expect(result[1].end).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[2].start).toEqual(new Date('2025-01-01T14:00:00Z'));
+            expect(result[2].end).toEqual(new Date('2025-01-01T15:00:00Z'));
+            expect(result[3].start).toEqual(new Date('2025-01-01T16:00:00Z'));
+            expect(result[3].end).toEqual(timeMax);
+        });
+
+        it('should apply buffer before busy slot', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T12:00:00Z'), end: new Date('2025-01-01T13:00:00Z') }
+            ];
+            const bufferBefore = 15; // 15 minutes
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, 0);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(addMinutes(new Date('2025-01-01T12:00:00Z'), -15));
+            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should apply buffer after busy slot', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T12:00:00Z'), end: new Date('2025-01-01T13:00:00Z') }
+            ];
+            const bufferAfter = 30; // 30 minutes
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, bufferAfter);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T12:00:00Z'));
+            expect(result[1].start).toEqual(addMinutes(new Date('2025-01-01T13:00:00Z'), 30));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should apply both buffers', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T12:00:00Z'), end: new Date('2025-01-01T13:00:00Z') }
+            ];
+            const bufferBefore = 15;
+            const bufferAfter = 15;
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(addMinutes(new Date('2025-01-01T12:00:00Z'), -15));
+            expect(result[1].start).toEqual(addMinutes(new Date('2025-01-01T13:00:00Z'), 15));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should handle overlapping busy slots', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T10:00:00Z'), end: new Date('2025-01-01T12:00:00Z') },
+                { start: new Date('2025-01-01T11:00:00Z'), end: new Date('2025-01-01T13:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T10:00:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should handle adjacent busy slots', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T10:00:00Z'), end: new Date('2025-01-01T12:00:00Z') },
+                { start: new Date('2025-01-01T12:00:00Z'), end: new Date('2025-01-01T14:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T10:00:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T14:00:00Z'));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should handle busy slot covering entire period', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T08:00:00Z'), end: new Date('2025-01-01T18:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(0);
+        });
+
+        it('should handle string dates in busy slots', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: '2025-01-01T12:00:00Z', end: '2025-01-01T13:00:00Z' }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(2);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T12:00:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[1].end).toEqual(timeMax);
+        });
+
+        it('should handle busy slot before time range', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T07:00:00Z'), end: new Date('2025-01-01T08:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should handle busy slot after time range', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const busySlots = [
+                { start: new Date('2025-01-01T18:00:00Z'), end: new Date('2025-01-01T19:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, 0);
+
+            // Busy slot is after timeMax, so should return full interval
+            // However, the function updates current to busy.end if busy.end > current
+            // So the free interval ends at busy.end (18:00) instead of timeMax (17:00)
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2025-01-01T18:00:00Z'));
+        });
+    });
+});

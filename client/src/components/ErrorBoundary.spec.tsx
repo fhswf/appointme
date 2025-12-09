@@ -36,7 +36,7 @@ describe('ErrorBoundary Component', () => {
     it('should reset error state when "Try again" is clicked', () => {
         const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
-        const { rerender } = render(
+        render(
             <ErrorBoundary>
                 <ThrowError />
             </ErrorBoundary>

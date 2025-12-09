@@ -1,18 +1,30 @@
 import { createTransport } from "nodemailer";
 import { logger } from "../logging.js";
 
-export const transporter = createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_FROM,
-        pass: process.env.EMAIL_PASSWORD,
-    },
-    tls: {
-        rejectUnauthorized: true,
-    },
-    secure: true,
-    requireTLS: true,
-});
+export const transporter = createTransport(
+    process.env.SMTP_HOST
+        ? {
+            host: process.env.SMTP_HOST,
+            port: Number(process.env.SMTP_PORT) || 587,
+            secure: process.env.SMTP_SECURE === "true",
+            auth: {
+                user: process.env.SMTP_USER || process.env.EMAIL_FROM,
+                pass: process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD,
+            },
+        }
+        : {
+            service: "gmail",
+            auth: {
+                user: process.env.SMTP_USER || process.env.EMAIL_FROM,
+                pass: process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD,
+            },
+            tls: {
+                rejectUnauthorized: true,
+            },
+            secure: true,
+            requireTLS: true,
+        }
+);
 
 /**
  * Sends an email with an ICS attachment

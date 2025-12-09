@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { sendEventInvitation, transporter } from '../utility/mailer.js';
 
 // Mock nodemailer
@@ -39,11 +39,61 @@ describe('Mailer Utility', () => {
 
     it('should handle send errors', async () => {
         const error = new Error("Send failed");
-        vi.spyOn(transporter, 'sendMail').mockImplementation(((opts, cb) => {
-            // @ts-ignore
-            cb(error, null);
+        vi.spyOn(transporter, 'sendMail').mockImplementation(((opts: any, cb: any) => {
+            if (typeof cb === 'function') {
+                cb(error, null);
+            }
+            return Promise.reject(error);
         }) as any);
 
         await expect(sendEventInvitation('fail@test.com', 'Sub', 'Body', 'ICS')).rejects.toThrow("Send failed");
     });
+});
+
+// Test suite for SMTP configuration coverage
+describe('Mailer Configuration', () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+        vi.resetModules();
+        process.env = { ...originalEnv };
+    });
+
+    afterEach(() => {
+        process.env = originalEnv;
+        vi.clearAllMocks();
+    });
+
+    it('should configure for Gmail service when SMTP_HOST is not set', async () => {
+        delete process.env.SMTP_HOST;
+        process.env.EMAIL_FROM = 'gmail@example.com';
+        process.env.EMAIL_PASSWORD = 'password';
+
+        // Re-import to trigger transporter creation with new env
+        const { transporter: newTransporter } = await import('../utility/mailer.js?update=' + Date.now());
+
+        // No direct way to inspect `transporter.options` easily without type widening or knowing internal structure match
+        // But we can verify it doesn't crash and is created.
+        expect(newTransporter).toBeDefined();
+    });
+
+    it('should configure for SMTP when SMTP_HOST is set', async () => {
+        process.env.SMTP_HOST = 'smtp.example.com';
+        process.env.SMTP_PORT = '587';
+        process.env.SMTP_SECURE = 'false';
+        process.env.SMTP_USER = 'user';
+        process.env.SMTP_PASSWORD = 'pass';
+
+        const { transporter: newTransporter } = await import('../utility/mailer.js?update=' + Date.now());
+        expect(newTransporter).toBeDefined();
+    });
+
+    it('should configure for SMTP with secure true', async () => {
+        process.env.SMTP_HOST = 'smtp.secure.com';
+        process.env.SMTP_SECURE = 'true';
+
+        const { transporter: newTransporter } = await import('../utility/mailer.js?update=' + Date.now());
+        expect(newTransporter).toBeDefined();
+    });
+
 });

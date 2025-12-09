@@ -159,23 +159,25 @@ describe("Server routes", () => {
 
   vi.mock('google-auth-library', () => {
     return {
-      OAuth2Client: vi.fn().mockImplementation(() => ({
-        getToken: vi.fn(),
-        setCredentials: vi.fn(),
-        on: vi.fn(),
-        generateAuthUrl: vi.fn(),
-        revokeToken: vi.fn().mockResolvedValue(true)
-      }))
+      OAuth2Client: vi.fn().mockImplementation(function () {
+        return ({
+          getToken: vi.fn(),
+          setCredentials: vi.fn(),
+          on: vi.fn(),
+          generateAuthUrl: vi.fn(),
+          revokeToken: vi.fn().mockResolvedValue(true)
+        });
+      })
     };
   });
 
   vi.mock("../config/dbConn.js", () => {
     return {
-      dataBaseConn: vi.fn().mockImplementation(() => {
+      dataBaseConn: vi.fn().mockImplementation(function () {
         console.log("MOCKED dataBaseConn called");
         return Promise.resolve({});
       })
-    }
+    };
   });
 
   beforeAll(async () => {

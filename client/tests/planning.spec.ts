@@ -42,7 +42,7 @@ test.describe('Planning page success', () => {
         });
 
         await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
-        await page.route('**/events/active/*', async route => await route.fulfill({ path: './tests/fixtures/activeEvents.json' }));
+        await page.route('**/event/active/*', async route => await route.fulfill({ path: './tests/fixtures/activeEvents.json' }));
         await page.route("**/api/v1/user/user", async (route) => {
             await route.fulfill({ path: './tests/fixtures/available.json' });
         });
@@ -52,7 +52,18 @@ test.describe('Planning page success', () => {
 
         test('Check simple schedule flow', async ({ page }) => {
             await page.goto('/users/christian-gawron');
-            await page.waitForResponse(resp => resp.url().includes('/events/'));
+            await page.waitForResponse(resp => resp.url().includes('/event/'));
+        });
+
+        test('Check no active events flow', async ({ page }) => {
+            await page.route('**/event/active/*', async route => {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                await route.fulfill({ body: JSON.stringify([]) });
+            });
+            await page.goto('/users/christian-gawron');
+            await page.waitForResponse(resp => resp.url().includes('/event/'));
+            await expect(page.getByRole('heading', { level: 3 })).toHaveText('Schedule an appointment with Christian Gawron');
+            await expect(page.getByText('No events to book')).toBeVisible();
         });
     });
 });

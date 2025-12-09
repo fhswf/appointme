@@ -1,5 +1,5 @@
 
-import { Document, Schema, model } from 'mongoose';
+import { Document, Schema, model, models } from 'mongoose';
 import { User } from "common/src/types";
 
 
@@ -91,4 +91,4 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
-export const UserModel = model<UserDocument>("User", userSchema);
+export const UserModel = models.User || model<UserDocument>("User", userSchema);
