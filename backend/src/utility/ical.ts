@@ -36,7 +36,7 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
     if (event.attendees && event.attendees.length > 0) {
         attendeesContent = event.attendees.map(a => {
             const partstat = a.partstat || 'NEEDS-ACTION';
-            const rsvp = a.rsvp !== undefined ? String(a.rsvp).toUpperCase() : 'TRUE';
+            const rsvp = a.rsvp === undefined ? 'TRUE' : String(a.rsvp).toUpperCase();
             return `ATTENDEE;CN=${a.displayName};PARTSTAT=${partstat};RSVP=${rsvp}:mailto:${a.email}`;
         }).join('\n');
     }

@@ -3,6 +3,7 @@ export const de = {
     "north_least_gopher_burn": "Was ist der Zweck dieser Terminart?",
     "lazy_just_duck_spin": "Titel des Events",
     "Confirm meeting": "Termin bestätigen",
+    "Meeting with {{name}}": "Termin mit {{name}}",
     "Daily availability": "Tägliche Verfügbarkeit",
     "tiny_factual_platypus_pave": "Wo findet das Meeting statt?",
     "less_equal_octopus_dine": "Anpassbarer Teil der URL",
