@@ -1,3 +1,10 @@
+## backend [1.22.1](https://github.com/fhswf/book_me/compare/backend@1.22.0...backend@1.22.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* mongoose import ([a243b54](https://github.com/fhswf/book_me/commit/a243b5440ab91b4ddcbda55a5a66c413e651e310))
+
 # backend [1.22.0](https://github.com/fhswf/book_me/compare/backend@1.21.0...backend@1.22.0) (2025-12-09)
 
 
