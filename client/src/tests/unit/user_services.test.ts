@@ -14,15 +14,13 @@ describe('User Services', () => {
     });
 
     it('getUser should call axios.get', async () => {
-        (axios.get as any).mockResolvedValue({ data: 'user-data' });
+        const user_response = { data: 'user-data' };
+        (axios.get as any).mockResolvedValueOnce(user_response);
 
-        const response = await getUser();
+        const result = await getUser();
 
-        expect(axios.get).toHaveBeenCalledWith(
-            expect.stringContaining('/user/user'),
-            { withCredentials: true }
-        );
-        expect(response).toEqual({ data: 'user-data' });
+        expect(axios.get).toHaveBeenCalledWith(`${process.env.REACT_APP_API_URL}/user/me`, { withCredentials: true });
+        expect(result).toEqual(user_response);
     });
 
     it('updateUser should call axios.put with CSRF token', async () => {
@@ -33,7 +31,7 @@ describe('User Services', () => {
 
         expect(csrfService.getCsrfToken).toHaveBeenCalled();
         expect(axios.put).toHaveBeenCalledWith(
-            expect.stringContaining('/user/'),
+            expect.stringContaining('/user/me'),
             { data: userData },
             {
                 headers: { 'x-csrf-token': 'mock-csrf-token' },

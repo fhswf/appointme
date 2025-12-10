@@ -169,12 +169,15 @@ export class IntervalSet extends Array<TimeRange> {
     let t = timeMin;
     while (t < timeMax) {
       let day = t.getDay();
+
       let s: Slot[] = slots[day];
-      s.forEach((slot) => {
-        const start = this.createDateFromSlot(t, slot.start, timeZone);
-        const end = this.createDateFromSlot(t, slot.end, timeZone);
-        this.push({ start, end });
-      });
+      if (s) {
+        s.forEach((slot) => {
+          const start = this.createDateFromSlot(t, slot.start, timeZone);
+          const end = this.createDateFromSlot(t, slot.end, timeZone);
+          this.push({ start, end });
+        });
+      }
       t = new Date(t.getTime() + 1000 * 86400);
     }
   }
