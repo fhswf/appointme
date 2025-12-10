@@ -1,3 +1,12 @@
+# common [1.7.0](https://github.com/fhswf/book_me/compare/common@1.6.0...common@1.7.0) (2025-12-10)
+
+
+### Features
+
+* Add new localization strings for user profile management in French, Italian, German, and Spanish. ([99523ac](https://github.com/fhswf/book_me/commit/99523ac0bdbfe5b2b3e00d2bfdfb7ddd1047a5a8))
+* Add user welcome field, update i18n password key, enhance user update security, and integrate new client icons. ([ac5aac0](https://github.com/fhswf/book_me/commit/ac5aac038d07ad84f167c787c47d062c47ddc7e8))
+* Implement user profile page with Gravatar support, user URL updates, and i18n for navigation. ([1bfa2d6](https://github.com/fhswf/book_me/commit/1bfa2d64c04897dba6a99e6391cec0a5a51270d2))
+
 # common [1.6.0](https://github.com/fhswf/book_me/compare/common@1.5.0...common@1.6.0) (2025-12-09)
 
 
