@@ -1,3 +1,19 @@
+# backend [1.24.0](https://github.com/fhswf/book_me/compare/backend@1.23.0...backend@1.24.0) (2025-12-10)
+
+
+### Features
+
+* branding update ([f101231](https://github.com/fhswf/book_me/commit/f101231fc8c8a3d54188a8ec03b3b85b0c81f5e5))
+* ui improvements ([bd566a4](https://github.com/fhswf/book_me/commit/bd566a4def557b95e47a5dc65ba369131af7b613))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.8.0
+
 # backend [1.23.0](https://github.com/fhswf/book_me/compare/backend@1.22.2...backend@1.23.0) (2025-12-10)
 
 
