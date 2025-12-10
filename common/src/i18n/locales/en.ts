@@ -134,5 +134,9 @@ export const en = {
     "login_with_sso": "Login with SSO",
     "login_successful": "Login successful",
     "login_failed": "Login failed",
-    "google_login_failed": "Google login failed"
+    "google_login_failed": "Google login failed",
+    "Add": "Add",
+    "Close": "Close",
+    "Cancel": "Cancel",
+    "I acknowledge that my password will be stored encrypted in the database.": "I acknowledge that my password will be stored encrypted in the database."
 };

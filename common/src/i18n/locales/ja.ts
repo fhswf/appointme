@@ -126,5 +126,9 @@ export const ja = {
     "login_with_sso": "SSOでログイン",
     "login_successful": "ログイン成功",
     "login_failed": "ログイン失敗",
-    "google_login_failed": "Googleログイン失敗"
+    "google_login_failed": "Googleログイン失敗",
+    "Add": "追加",
+    "Close": "閉じる",
+    "Cancel": "キャンセル",
+    "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。"
 };

@@ -134,5 +134,9 @@ export const fr = {
     "login_with_sso": "Se connecter avec SSO",
     "login_successful": "Connexion réussie",
     "login_failed": "Échec de la connexion",
-    "google_login_failed": "Échec de la connexion Google"
+    "google_login_failed": "Échec de la connexion Google",
+    "Add": "Ajouter",
+    "Close": "Fermer",
+    "Cancel": "Annuler",
+    "I acknowledge that my password will be stored encrypted in the database.": "Je reconnais que mon mot de passe sera stocké chiffré dans la base de données."
 };

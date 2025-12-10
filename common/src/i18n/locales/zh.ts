@@ -126,5 +126,9 @@ export const zh = {
     "login_with_sso": "使用 SSO 登录",
     "login_successful": "登录成功",
     "login_failed": "登录失败",
-    "google_login_failed": "Google 登录失败"
+    "google_login_failed": "Google 登录失败",
+    "Add": "添加",
+    "Close": "关闭",
+    "Cancel": "取消",
+    "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。"
 };

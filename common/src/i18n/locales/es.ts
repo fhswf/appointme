@@ -134,5 +134,9 @@ export const es = {
     "login_with_sso": "Iniciar sesión con SSO",
     "login_successful": "Inicio de sesión exitoso",
     "login_failed": "Inicio de sesión fallido",
-    "google_login_failed": "Fallo en el inicio de sesión con Google"
+    "google_login_failed": "Fallo en el inicio de sesión con Google",
+    "Add": "Añadir",
+    "Close": "Cerrar",
+    "Cancel": "Cancelar",
+    "I acknowledge that my password will be stored encrypted in the database.": "Reconozco que mi contraseña se almacenará cifrada en la base de datos."
 };

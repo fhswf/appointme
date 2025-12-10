@@ -126,5 +126,9 @@ export const ko = {
     "login_with_sso": "SSO로 로그인",
     "login_successful": "로그인 성공",
     "login_failed": "로그인 실패",
-    "google_login_failed": "Google 로그인 실패"
+    "google_login_failed": "Google 로그인 실패",
+    "Add": "추가",
+    "Close": "닫기",
+    "Cancel": "취소",
+    "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다."
 };
