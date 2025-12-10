@@ -1,3 +1,25 @@
+# client [1.20.0](https://github.com/fhswf/book_me/compare/client@1.19.0...client@1.20.0) (2025-12-10)
+
+
+### Features
+
+* add health check ([e3f3928](https://github.com/fhswf/book_me/commit/e3f392870fe8cd64a25af6ef8d8e09fae0407903))
+* add health check ([5ec74d6](https://github.com/fhswf/book_me/commit/5ec74d6bc2542da3ef035a7a66683b7bb66fa628))
+* add legal information ([06908d1](https://github.com/fhswf/book_me/commit/06908d1c969be381fc863e13d63af0181b8e952f))
+* add legal information ([09a69a1](https://github.com/fhswf/book_me/commit/09a69a14d0f6e3ce2924e49a8cdaa0602b230673))
+* add legal information ([1b2233c](https://github.com/fhswf/book_me/commit/1b2233ca29b402260fc0c0b530787197eda4c863))
+* externalize contact information to environment variables and a new component, updating legal pages and i18n. ([d5d1fe3](https://github.com/fhswf/book_me/commit/d5d1fe3e15b23140117a5d155de382d74aaa96c7))
+* externalize contact information to environment variables and a new component, updating legal pages and i18n. ([5e9aa07](https://github.com/fhswf/book_me/commit/5e9aa0732d026874d77d1f58107ffddeb4befae1))
+* externalize contact information to environment variables and a new component, updating legal pages and i18n. ([d6c292c](https://github.com/fhswf/book_me/commit/d6c292c58600e018377f814b6e2a55d847807110))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.9.0
+
 # client [1.19.0](https://github.com/fhswf/book_me/compare/client@1.18.0...client@1.19.0) (2025-12-10)
 
 
