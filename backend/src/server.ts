@@ -96,6 +96,11 @@ router.use("/oidc/", oidcRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
+
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
