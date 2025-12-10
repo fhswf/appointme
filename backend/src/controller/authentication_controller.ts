@@ -293,5 +293,6 @@ export const getConfig = (req: Request, res: Response): void => {
   res.json({
     googleEnabled: process.env.DISABLE_GOOGLE_LOGIN !== "true" && !!process.env.CLIENT_ID,
     oidcEnabled: !!(process.env.OIDC_ISSUER && process.env.OIDC_CLIENT_ID),
+    contactInfo: process.env.CONTACT_INFO,
   });
 };
