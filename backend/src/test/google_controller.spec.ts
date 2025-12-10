@@ -14,7 +14,7 @@ vi.mock('../models/User', () => ({
     }
 }));
 
-vi.mock('./caldav_controller', () => ({
+vi.mock('../controller/caldav_controller', () => ({
     getBusySlots: vi.fn().mockResolvedValue([])
 }));
 
@@ -287,6 +287,27 @@ describe('google_controller', () => {
         });
     });
 
+    it('should handle error in events list', async () => {
+        // @ts-ignore
+        UserModel.findOne.mockReturnValue({
+            exec: vi.fn().mockResolvedValue({
+                google_tokens: { access_token: 'token' },
+                push_calendar: 'primary'
+            })
+        });
+
+        // @ts-ignore
+        vi.mocked(google.calendar).mockReturnValue({
+            // @ts-ignore
+            events: {
+                list: vi.fn().mockRejectedValue(new Error('API Error'))
+            }
+        });
+
+        const result = await events('user_id', '2023-01-01', '2023-01-02');
+        expect(result).toEqual([]);
+    });
+
     it('should check free busy', async () => {
         const mockUser = {
             google_tokens: {
@@ -367,6 +388,65 @@ describe('google_controller', () => {
 
         expect(result).toBeDefined();
     });
+
+    it('should checkFree with CalDAV slots', async () => {
+        const event = {
+            available: { 1: [{ start: '09:00', end: '17:00' }] }, // Monday
+            bufferbefore: 0,
+            bufferafter: 0
+        } as unknown as Event;
+
+        // @ts-ignore
+        UserModel.findOne.mockReturnValue({
+            exec: vi.fn().mockResolvedValue({ google_tokens: { access_token: 'token' }, pull_calendars: [] })
+        });
+
+        // Mock CalDAV busy slots
+        const { getBusySlots } = await import('../controller/caldav_controller');
+        // @ts-ignore
+        vi.mocked(getBusySlots).mockResolvedValue([
+            { start: new Date('2023-01-02T10:00:00Z'), end: new Date('2023-01-02T11:00:00Z') }
+        ]);
+
+        // Mock Google freeBusy return empty
+        // @ts-ignore
+        vi.mocked(google.calendar).mockReturnValue({
+            // @ts-ignore
+            freebusy: {
+                query: vi.fn().mockResolvedValue({ data: { calendars: {} } })
+            }
+        });
+
+        // Checking Monday 2023-01-02
+        const result = await checkFree(event, 'user_id', new Date('2023-01-02T09:00:00Z'), new Date('2023-01-02T12:00:00Z'));
+        // 9-12 range. 10-11 is busy.
+        // Should return false because requested interval (9-12) is not fully free.
+        expect(result).toBe(false);
+    });
+
+    it('should checkFree handling Google freeBusy error', async () => {
+        const event = { available: {}, bufferbefore: 0, bufferafter: 0 } as unknown as Event;
+
+        // @ts-ignore
+        UserModel.findOne.mockReturnValue({
+            exec: vi.fn().mockResolvedValue({ google_tokens: { access_token: 'token' }, pull_calendars: [] })
+        });
+
+        // Google throws
+        // @ts-ignore
+        vi.mocked(google.calendar).mockReturnValue({
+            // @ts-ignore
+            freebusy: {
+                query: vi.fn().mockRejectedValue(new Error('Google Error'))
+            }
+        });
+
+        const result = await checkFree(event, 'user_id', new Date('2023-01-01'), new Date('2023-01-02'));
+        // If google fails, it logs error and returns null for googleRes.
+        // Then it proceeds with other logic.
+        expect(result).toBe(false); // Since no slots available defined in event (empty)
+    });
+
     describe('insertGoogleEvent', () => {
         it('should throw error if no google account connected', async () => {
             const user = { _id: 'user', google_tokens: {} };

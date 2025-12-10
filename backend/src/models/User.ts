@@ -100,6 +100,10 @@ const userSchema = new Schema<UserDocument>(
     send_invitation_email: {
       type: Boolean,
       default: false
+    },
+    use_gravatar: {
+      type: Boolean,
+      default: false
     }
   },
   {

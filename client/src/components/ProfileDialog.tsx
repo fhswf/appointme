@@ -163,7 +163,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
 
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>
-                        {t("cancel")}
+                        {t("Cancel")}
                     </Button>
                     <Button type="submit" form="profile-form">
                         {t("save")}
