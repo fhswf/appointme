@@ -1,3 +1,26 @@
+# backend [1.25.0](https://github.com/fhswf/book_me/compare/backend@1.24.0...backend@1.25.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* add user rate limiter and update authentication middleware for the /me route ([ab310cf](https://github.com/fhswf/book_me/commit/ab310cf1f28e2eb8729c301fb247507c11dc9229))
+
+
+### Features
+
+* add health check ([e3f3928](https://github.com/fhswf/book_me/commit/e3f392870fe8cd64a25af6ef8d8e09fae0407903))
+* Enhance health check endpoint to report database connection status with error handling. ([eac3bf9](https://github.com/fhswf/book_me/commit/eac3bf9ee4e63e0fb3894c842361b85668f9e68c))
+* externalize contact information to environment variables and a new component, updating legal pages and i18n. ([5e9aa07](https://github.com/fhswf/book_me/commit/5e9aa0732d026874d77d1f58107ffddeb4befae1))
+* Implement 404 response and cache control for `GET /api/v1/user/me` and add a new test case. ([eb0c1c6](https://github.com/fhswf/book_me/commit/eb0c1c6075d70306f9249f350b7cbe16097253a5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.9.0
+
 # backend [1.24.0](https://github.com/fhswf/book_me/compare/backend@1.23.0...backend@1.24.0) (2025-12-10)
 
 
