@@ -4,7 +4,10 @@
 import { UserModel } from "../models/User.js";
 import { User } from "common/src/types";
 import { Request, Response } from 'express';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+// ...
+// (We need to be careful with multi-replacements. I'll use multi_replace for safety as there are scattered changes)
+
 
 /**
  * Middleware to get the logged in user
@@ -46,19 +49,23 @@ const filterUser = (user) => Object.keys(user)
 
 export const updateUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
+  if (typeof userid !== 'string') {
+    res.status(400).json({ error: "Invalid user id" });
+    return;
+  }
   /* eslint-disable @typescript-eslint/naming-convention */
   const { user_url, use_gravatar, ...otherFieldsRaw } = req.body.data as User;
 
   // Securely build the update object: allow only permitted keys, validate types.
-  const ALLOWED_UPDATE_FIELDS = [
+  const ALLOWED_UPDATE_FIELDS = new Set([
     "name", "email", "pull_calendars", "push_calendar", "welcome"
-  ];
+  ]);
   let update: Record<string, any> = {};
 
   // Filter out any dangerous field names, deep objects, or operators
   for (const key of Object.keys(otherFieldsRaw)) {
     if (
-      ALLOWED_UPDATE_FIELDS.includes(key) &&
+      ALLOWED_UPDATE_FIELDS.has(key) &&
       typeof otherFieldsRaw[key] !== "object" &&
       typeof key === "string" &&
       !key.startsWith("$") &&
@@ -116,7 +123,7 @@ export const updateUser = (req: Request, res: Response): void => {
       res.status(200).json(user);
     })
     .catch(err => {
-      if (err.code === 11000 && err.keyPattern && err.keyPattern.user_url) {
+      if (err.code === 11000 && err.keyPattern?.user_url) {
         res.status(409).json({ error: "User user_url already exists", field: "user_url" });
       } else {
         res.status(400).json({ error: err });

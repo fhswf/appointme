@@ -34,6 +34,6 @@ userRouter.get("/:url", userRateLimiter, getUserByUrl);
 /**
  * Update the currently logged in user
  */
-userRouter.put("/", requireAuth, updateUser);
+userRouter.put("/", userRateLimiter, requireAuth, updateUser);
 
 export default userRouter;
