@@ -17,7 +17,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     name: "",
     user_url: "",
-    use_gravatar: false
+    use_gravatar: false,
+    send_invitation_email: false
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ export default function Profile() {
           setFormData({
             name: res.data.name,
             user_url: res.data.user_url,
-            use_gravatar: res.data.use_gravatar || false
+            use_gravatar: res.data.use_gravatar || false,
+            send_invitation_email: res.data.send_invitation_email || false
           });
           setLoading(false);
         })
@@ -136,6 +138,23 @@ export default function Profile() {
           >
             {t("save")}
           </button>
+
+          <div className="flex items-center">
+            <input
+              id="send_invitation_email"
+              name="send_invitation_email"
+              type="checkbox"
+              checked={formData.send_invitation_email || false}
+              onChange={handleChange}
+              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label htmlFor="send_invitation_email" className="ml-2 block text-sm text-gray-900">
+              {t("send_invitation_email")}
+            </label>
+          </div>
+          <div className="text-sm text-gray-500 ml-6 mb-4">
+            {t("send_invitation_email_notice")}
+          </div>
 
           <div className="border-t pt-4 mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</label>

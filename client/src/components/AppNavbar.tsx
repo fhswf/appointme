@@ -81,7 +81,7 @@ const AppNavbar = () => {
           >
             <Calendar className="h-6 w-6" />
           </Button>
-          <h1 className="text-xl font-bold">BookMe</h1>
+          <h1 className="text-xl font-bold">Appoint Me</h1>
         </div>
 
         <div className="flex items-center gap-2">

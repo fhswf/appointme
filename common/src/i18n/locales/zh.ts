@@ -103,6 +103,9 @@ export const zh = {
     "Server URL": "服务器 URL",
     "Username": "用户名",
     "label_password": "密码",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "邀请：{{summary}}",

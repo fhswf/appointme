@@ -497,4 +497,32 @@ END:VCALENDAR` }
                 .rejects.toThrow('Target calendar not found');
         });
     });
+
+    describe("findAccountForCalendar", () => {
+        it("should find account for a given calendar URL", async () => {
+            const user = {
+                caldav_accounts: [
+                    { _id: "acc1", name: "Account 1", serverUrl: "https://caldav.example.com", username: "u" }
+                ]
+            };
+            // @ts-ignore
+            const account = await caldavController.findAccountForCalendar(user, "https://caldav.example.com/calendars/u/cal");
+
+            expect(account).toBeDefined();
+            expect(account.name).toBe("Account 1");
+        });
+
+        it("should return undefined if no matching account found", async () => {
+            const user = {
+                caldav_accounts: [
+                    { _id: "acc1", name: "Account 1", serverUrl: "https://other.example.com", username: "u" }
+                ]
+            };
+
+            // @ts-ignore
+            const account = await caldavController.findAccountForCalendar(user, "https://caldav.example.com/calendars/u/cal");
+
+            expect(account).toBeUndefined();
+        });
+    });
 });

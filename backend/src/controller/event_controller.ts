@@ -440,9 +440,13 @@ const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: 
       time: timeStr
     });
 
-    sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
-      .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
-      .catch(err => logger.error('Failed to send invitation email', err));
+    if (user.send_invitation_email) {
+      sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
+        .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
+        .catch(err => logger.error('Failed to send invitation email', err));
+    } else {
+      logger.info('Invitation email skipped for %s (user setting)', attendeeEmail);
+    }
 
     res.json({ success: true, message: "Event wurde gebucht (CalDav)", event: evt });
   } catch (error) {

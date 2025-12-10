@@ -103,6 +103,9 @@ export const ko = {
     "Server URL": "서버 URL",
     "Username": "사용자 이름",
     "label_password": "비밀번호",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "초대: {{summary}}",

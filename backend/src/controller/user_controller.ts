@@ -32,6 +32,7 @@ export const getUser = (req: Request, res: Response): void => {
       "user_url": 1,
       "welcome": 1,
       "updatedAt": 1,
+      "send_invitation_email": 1,
       "google_tokens.access_token": 1
     })
     .exec()
@@ -91,6 +92,10 @@ export const updateUser = (req: Request, res: Response): void => {
     update.use_gravatar = userData.use_gravatar;
   }
 
+  if (typeof userData.send_invitation_email === "boolean") {
+    update.send_invitation_email = userData.send_invitation_email;
+  }
+
   UserModel.findById(userid).exec()
     .then(currentUser => {
       if (!currentUser) throw new Error("User not found");
@@ -120,7 +125,8 @@ export const updateUser = (req: Request, res: Response): void => {
             "welcome": 1,
             "updatedAt": 1,
             "google_tokens.access_token": 1,
-            "use_gravatar": 1
+            "use_gravatar": 1,
+            "send_invitation_email": 1
           }
         }).exec();
     })

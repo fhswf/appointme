@@ -106,6 +106,7 @@ export interface User {
   push_calendar: string;
   pull_calendars: string[];
   welcome?: string;
+  send_invitation_email?: boolean;
 };
 
 export class TimeRange {

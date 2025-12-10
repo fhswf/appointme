@@ -91,6 +91,10 @@ const userSchema = new Schema<UserDocument>(
     },
     push_calendar: {
       type: String
+    },
+    send_invitation_email: {
+      type: Boolean,
+      default: false
     }
   },
   {

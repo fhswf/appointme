@@ -298,7 +298,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         start: eventDetails.start.dateTime,
         end: eventDetails.end.dateTime,
         summary: eventDetails.summary,
-        description: eventDetails.description,
+        description: eventDetails.description + (userComment ? `\n\nComment:\n${userComment}` : ''),
         location: eventDetails.location,
         organizer: {
             cn: eventDetails.organizer.displayName,

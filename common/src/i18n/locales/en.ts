@@ -103,6 +103,9 @@ export const en = {
     "Server URL": "Server URL",
     "Username": "Username",
     "label_password": "Password",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "Invitation: {{summary}}",
