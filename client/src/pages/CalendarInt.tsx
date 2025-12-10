@@ -411,7 +411,7 @@ const CalDavAccounts = ({ user, onAccountsChange }) => {
                 />
               </div>
               <div className="grid gap-2 mt-2">
-                <Label htmlFor="password">{t("Password")}</Label>
+                <Label htmlFor="password">{t("label_password")}</Label>
                 <Input
                   id="password"
                   type="password"

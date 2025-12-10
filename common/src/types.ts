@@ -105,6 +105,7 @@ export interface User {
   caldav_accounts?: CalDavAccount[];
   push_calendar: string;
   pull_calendars: string[];
+  welcome?: string;
 };
 
 export class TimeRange {

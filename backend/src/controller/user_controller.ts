@@ -53,45 +53,46 @@ export const updateUser = (req: Request, res: Response): void => {
     res.status(400).json({ error: "Invalid user id" });
     return;
   }
-  /* eslint-disable @typescript-eslint/naming-convention */
-  const { user_url, use_gravatar, ...otherFieldsRaw } = req.body.data as User;
 
-  // Securely build the update object: allow only permitted keys, validate types.
-  const ALLOWED_UPDATE_FIELDS = new Set([
-    "name", "email", "pull_calendars", "push_calendar", "welcome"
-  ]);
-  let update: Record<string, any> = {};
+  const userData = req.body.data as Partial<User>;
+  const update: Record<string, any> = {};
 
-  // Filter out any dangerous field names, deep objects, or operators
-  for (const key of Object.keys(otherFieldsRaw)) {
-    if (
-      ALLOWED_UPDATE_FIELDS.has(key) &&
-      typeof otherFieldsRaw[key] !== "object" &&
-      typeof key === "string" &&
-      !key.startsWith("$") &&
-      !key.includes(".")
-    ) {
-      update[key] = otherFieldsRaw[key];
+  // Explicitly allowlist and validate fields
+  if (typeof userData.name === 'string') update.name = userData.name;
+  if (typeof userData.email === 'string') update.email = userData.email;
+  if (typeof userData.welcome === 'string') update.welcome = userData.welcome;
+
+  // Validate arrays and specific types
+  if (Array.isArray(userData.pull_calendars)) {
+    // Ensure all elements are strings
+    if (userData.pull_calendars.every(c => typeof c === 'string')) {
+      update.pull_calendars = userData.pull_calendars;
     }
-    // else: Ignore the key; optionally log/reject malicious input
   }
 
-  // Validate user_url type and sanitize
-  if (typeof user_url === "string" && user_url && !user_url.startsWith("$") && !user_url.includes(".")) {
-    update.user_url = user_url;
+  if (typeof userData.push_calendar === 'string') {
+    update.push_calendar = userData.push_calendar;
+  } else if (userData.push_calendar === null || userData.push_calendar === undefined) {
+    // Allow clearing it if needed, or just ignore. 
+    // Based on original code, it seems we might just want to set it if it's a string.
   }
 
-  // Handle Gravatar toggle, validate type
-  if (typeof use_gravatar === "boolean") {
-    update.use_gravatar = use_gravatar;
+  // Handle User URL
+  if (typeof userData.user_url === "string" && userData.user_url && !userData.user_url.startsWith("$") && !userData.user_url.includes(".")) {
+    update.user_url = userData.user_url;
+  }
+
+  // Handle Gravatar
+  if (typeof userData.use_gravatar === "boolean") {
+    update.use_gravatar = userData.use_gravatar;
   }
 
   UserModel.findById(userid).exec()
     .then(currentUser => {
       if (!currentUser) throw new Error("User not found");
 
-      if (use_gravatar !== undefined && use_gravatar !== currentUser.use_gravatar) {
-        if (use_gravatar) {
+      if (userData.use_gravatar !== undefined && userData.use_gravatar !== currentUser.use_gravatar) {
+        if (userData.use_gravatar) {
           // Switched to Gravatar
           const emailHash = crypto.createHash('md5').update(currentUser.email.toLowerCase().trim()).digest('hex');
           update.picture_url = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
@@ -115,7 +116,7 @@ export const updateUser = (req: Request, res: Response): void => {
             "welcome": 1,
             "updatedAt": 1,
             "google_tokens.access_token": 1,
-            "use_gravatar": 1 // Return this too
+            "use_gravatar": 1
           }
         }).exec();
     })

@@ -102,7 +102,7 @@ export const zh = {
     "CalDav Accounts": "CalDav 账户",
     "Server URL": "服务器 URL",
     "Username": "用户名",
-    "Password": "密码",
+    "label_password": "密码",
 
     // Backend specific
     "invitationSubject": "邀请：{{summary}}",

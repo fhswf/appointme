@@ -102,7 +102,7 @@ export const es = {
     "CalDav Accounts": "Cuentas CalDav",
     "Server URL": "URL del servidor",
     "Username": "Nombre de usuario",
-    "Password": "Contraseña",
+    "label_password": "Contraseña",
 
     // Backend specific
     "invitationSubject": "Invitación: {{summary}}",

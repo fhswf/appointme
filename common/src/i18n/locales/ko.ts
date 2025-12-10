@@ -102,7 +102,7 @@ export const ko = {
     "CalDav Accounts": "CalDav 계정",
     "Server URL": "서버 URL",
     "Username": "사용자 이름",
-    "Password": "비밀번호",
+    "label_password": "비밀번호",
 
     // Backend specific
     "invitationSubject": "초대: {{summary}}",

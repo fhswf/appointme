@@ -102,7 +102,7 @@ export const ja = {
     "CalDav Accounts": "CalDavアカウント",
     "Server URL": "サーバーURL",
     "Username": "ユーザー名",
-    "Password": "パスワード",
+    "label_password": "パスワード",
 
     // Backend specific
     "invitationSubject": "招待：{{summary}}",
