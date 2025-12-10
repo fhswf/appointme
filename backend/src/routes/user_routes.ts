@@ -19,7 +19,7 @@ export const userRouter = Router();
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-userRouter.get("/me", middleware.requireAuth, getUser);
+userRouter.get("/me", userRateLimiter, requireAuth, getUser);
 
 /**
  * Route to fetch a user by a given url
