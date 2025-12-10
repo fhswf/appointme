@@ -1,3 +1,10 @@
+# common [1.9.0](https://github.com/fhswf/book_me/compare/common@1.8.0...common@1.9.0) (2025-12-10)
+
+
+### Features
+
+* externalize contact information to environment variables and a new component, updating legal pages and i18n. ([5e9aa07](https://github.com/fhswf/book_me/commit/5e9aa0732d026874d77d1f58107ffddeb4befae1))
+
 # common [1.8.0](https://github.com/fhswf/book_me/compare/common@1.7.0...common@1.8.0) (2025-12-10)
 
 
