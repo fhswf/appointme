@@ -117,5 +117,13 @@ export const fr = {
     "user_menu_my_account": "Mon compte",
     "user_menu_calendar_integration": "Intégration du calendrier",
     "user_menu_copy_link": "Copier le lien",
-    "user_menu_link_copied": "Lien copié"
+    "user_menu_link_copied": "Lien copié",
+    "name": "Nom",
+    "user_url": "URL utilisateur",
+    "use_gravatar": "Utiliser Gravatar",
+    "save": "Enregistrer",
+    "profile_updated": "Profil mis à jour avec succès",
+    "error_saving_profile": "Erreur lors de l'enregistrement du profil",
+    "user_url_taken": "URL utilisateur déjà prise",
+    "error_loading_profile": "Erreur lors du chargement du profil"
 };
