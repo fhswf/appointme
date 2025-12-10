@@ -7,22 +7,23 @@ test.describe('CalDAV Integration', () => {
             if (route.request().method() === 'PUT') {
                 await route.fulfill({ status: 200 });
             } else {
-                await route.fulfill({ path: './tests/fixtures/user.json' });
+                await route.fulfill({ path: './tests/fixtures/user.json', contentType: 'application/json' });
             }
         });
         // Mock events
-        await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
-        await page.route('**/csrf-token', async route => await route.fulfill({ body: JSON.stringify({ csrfToken: "mock-token" }) }));
+        await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json', contentType: 'application/json' }));
+        await page.route('**/csrf-token', async route => await route.fulfill({ body: JSON.stringify({ csrfToken: "mock-token" }), contentType: 'application/json' }));
 
         // Mock Google integration routes to avoid 404s
-        await page.route('**/google/calendarList', async route => await route.fulfill({ body: '[]' }));
-        await page.route('**/google/generateUrl', async route => await route.fulfill({ body: JSON.stringify({ url: 'http://mock-auth-url' }) }));
+        await page.route('**/google/calendarList', async route => await route.fulfill({ body: '[]', contentType: 'application/json' }));
+        await page.route('**/google/generateUrl', async route => await route.fulfill({ body: JSON.stringify({ url: 'http://mock-auth-url' }), contentType: 'application/json' }));
 
         // Mock CalDAV routes
         await page.route('**/caldav/account', async route => {
             if (route.request().method() === 'POST') {
                 await route.fulfill({
                     status: 200,
+                    contentType: 'application/json',
                     body: JSON.stringify({
                         source: 'caldav',
                         account: { user: 'testuser', server: 'http://caldav.server' },
@@ -30,21 +31,22 @@ test.describe('CalDAV Integration', () => {
                     })
                 });
             } else if (route.request().method() === 'DELETE') {
-                await route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });
+                await route.fulfill({ status: 200, body: JSON.stringify({ success: true }), contentType: 'application/json' });
             } else {
                 // GET
-                await route.fulfill({ body: JSON.stringify([{ user: 'testuser', server: 'http://caldav.server' }]) });
+                await route.fulfill({ body: JSON.stringify([{ user: 'testuser', server: 'http://caldav.server' }]), contentType: 'application/json' });
             }
         });
 
         await page.route('**/caldav/calendar', async route => {
             await route.fulfill({
                 status: 200,
+                contentType: 'application/json',
                 body: JSON.stringify([{ name: 'Work Calendar', url: 'http://caldav.server/work', ctag: '123' }])
             });
         });
 
-        await page.goto('/app');
+        await page.goto('/');
         await page.waitForResponse(resp => resp.url().includes('/user/user'));
     });
 
