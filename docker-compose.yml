@@ -25,6 +25,12 @@ services:
     restart: always
     env_file:
       - docker.env
+    environment:
+      CONTACT_INFO: |
+        [Prof. Dr. Christian Gawron](https://jupiter.fh-swf.de/team/cgawron)  
+        [gawron.christian@fh-swf.de](mailto:gawron.christian@fh-swf.de)  
+        [+49 2371 566 1565](tel:+4923715661565)  
+        [Raum P.103, Frauenstuhlweg 31, 58644 Iserlohn](geo:51.36785,7.68687)
     ports:
       - "127.0.0.1:48001:5000"
     links:

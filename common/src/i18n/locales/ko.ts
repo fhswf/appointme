@@ -130,5 +130,6 @@ export const ko = {
     "Add": "추가",
     "Close": "닫기",
     "Cancel": "취소",
+    "Contact": "연락처",
     "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다."
 };

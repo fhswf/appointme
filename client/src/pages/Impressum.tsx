@@ -5,18 +5,11 @@ import AppNavbar from '../components/AppNavbar';
 import Footer from '../components/Footer';
 import { markdownComponents } from '../components/MarkdownComponents';
 
+import ContactInfo from '../components/ContactInfo';
+
 const impressumContent = `
 # Impressum
 
-Prof. Dr. Christian Gawron  
-Fachhochschule Südwestfalen  
-Fachbereich Informatik und Naturwissenschaften  
-Frauenstuhlweg 31  
-59844 Iserlohn  
-[gawron.christian@fh-swf.de](mailto:gawron.christian@fh-swf.de)  
-[+49 2371 566 565](tel:+492371566565)
-
-## Disclaimer
 Die Inhalte auf diesem Server gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.
 `;
 
@@ -27,6 +20,7 @@ const Impressum: React.FC = () => {
             <div className="container mx-auto p-8 flex-grow">
                 <div className="max-w-3xl mx-auto">
                     <ReactMarkdown components={markdownComponents}>{impressumContent}</ReactMarkdown>
+                    <ContactInfo />
                 </div>
             </div>
             <Footer />

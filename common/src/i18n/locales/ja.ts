@@ -130,5 +130,6 @@ export const ja = {
     "Add": "追加",
     "Close": "閉じる",
     "Cancel": "キャンセル",
+    "Contact": "お問い合わせ",
     "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。"
 };

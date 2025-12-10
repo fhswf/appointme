@@ -130,5 +130,6 @@ export const zh = {
     "Add": "添加",
     "Close": "关闭",
     "Cancel": "取消",
+    "Contact": "联系方式",
     "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。"
 };
