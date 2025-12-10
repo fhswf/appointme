@@ -1,3 +1,14 @@
+# common [1.8.0](https://github.com/fhswf/book_me/compare/common@1.7.0...common@1.8.0) (2025-12-10)
+
+
+### Features
+
+* Add i18n support to login and OIDC callback pages, including new translation keys and updated tests. ([eb54d13](https://github.com/fhswf/book_me/commit/eb54d13fb1f0db4ba6550cadecbb2e1329a8809e))
+* branding update ([f101231](https://github.com/fhswf/book_me/commit/f101231fc8c8a3d54188a8ec03b3b85b0c81f5e5))
+* Dynamically inject app title into i18n strings and add 'Step 1: Configure calendars' translation. ([b74d15d](https://github.com/fhswf/book_me/commit/b74d15de3e8f77e67d20c18a8c6360a5b0fd3983))
+* introduce AuthProvider for centralized authentication and streamline root routing to use `/` instead of `/app`. ([679d71b](https://github.com/fhswf/book_me/commit/679d71b34dd2f26cb9df58c7408e8e47cbc20f7b))
+* ui improvements ([bd566a4](https://github.com/fhswf/book_me/commit/bd566a4def557b95e47a5dc65ba369131af7b613))
+
 # common [1.7.0](https://github.com/fhswf/book_me/compare/common@1.6.0...common@1.7.0) (2025-12-10)
 
 
