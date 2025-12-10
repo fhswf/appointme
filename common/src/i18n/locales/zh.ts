@@ -105,8 +105,8 @@ export const zh = {
     "Server URL": "服务器 URL",
     "Username": "用户名",
     "label_password": "密码",
-    "send_invitation_email": "Send invitation email",
-    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+    "send_invitation_email": "发送邀请邮件",
+    "send_invitation_email_notice": "仅当您的 CalDAV 服务器不自动发送邀请时需要。",
 
 
     // Backend specific
@@ -116,11 +116,11 @@ export const zh = {
     "dateFormat": "zh-CN",
 
     // User Menu
-    "user_menu_log_out": "Log out",
-    "user_menu_log_in": "Log in",
-    "user_menu_profile": "Profile",
-    "user_menu_my_account": "My account",
-    "user_menu_calendar_integration": "Calendar Integration",
-    "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
+    "user_menu_log_out": "登出",
+    "user_menu_log_in": "登录",
+    "user_menu_profile": "个人资料",
+    "user_menu_my_account": "我的账户",
+    "user_menu_calendar_integration": "日历集成",
+    "user_menu_copy_link": "复制链接",
+    "user_menu_link_copied": "链接已复制", "name": "姓名", "user_url": "用户链接", "use_gravatar": "使用 Gravatar", "save": "保存", "profile_updated": "个人资料已更新", "error_saving_profile": "保存个人资料时出错", "user_url_taken": "用户链接已被占用", "error_loading_profile": "加载个人资料时出错"
 };
