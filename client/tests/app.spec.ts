@@ -3,7 +3,7 @@ import { test, expect } from './fixtures/base';
 test.describe('User not logged in', () => {
     test.describe('Error getting user', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/user/user', async route => {
+            await page.route('**/user/me', async route => {
                 await route.fulfill({
                     status: 200,
                     body: JSON.stringify({ "success": false, "message": "Unauthorized! Sign in again!" })
@@ -22,34 +22,34 @@ test.describe('User not logged in', () => {
 
         test('Should redirect to landing', async ({ page }) => {
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await expect(page).toHaveURL(/\/landing/);
         });
 
         test('Should redirect to landing on 401', async ({ page }) => {
-            await page.route('**/user/user', async route => {
+            await page.route('**/user/me', async route => {
                 await route.fulfill({
                     status: 401,
                     body: JSON.stringify({ "success": false, "message": "Unauthorized! Sign in again!" })
                 });
             });
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await expect(page).toHaveURL(/\/landing/);
         });
 
         test('Should redirect to landing on 500', async ({ page }) => {
-            await page.route('**/user/user', async route => {
+            await page.route('**/user/me', async route => {
                 await route.fulfill({ status: 500 });
             });
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await expect(page).toHaveURL(/\/landing/);
         });
 
         test('should show login button', async ({ page }) => {
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await expect(page).toHaveURL(/\/landing/);
             await page.getByTestId('profile-menu').click();
             await page.getByTestId('login-button').click();
@@ -67,7 +67,7 @@ test.describe('Main page', () => {
                     body: JSON.stringify({ csrfToken: "mock-token" })
                 });
             });
-            await page.route('**/user/user', async route => {
+            await page.route('**/user/me', async route => {
                 if (route.request().method() === 'GET') {
                     await route.fulfill({ path: './tests/fixtures/user.json' });
                 } else {
@@ -97,7 +97,7 @@ test.describe('Main page', () => {
 
         test('Check add/delete event type', async ({ page }) => {
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
             // Mock events after addition
@@ -149,7 +149,7 @@ test.describe('Main page', () => {
             });
 
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
             const deleteErrorPromise = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'DELETE');
@@ -160,7 +160,7 @@ test.describe('Main page', () => {
 
     test.describe('Visit app main page & disable event', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
+            await page.route('**/user/me', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
             await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
             await page.route('**/event/66e41e641f4f81ece1828ab5', async route => {
                 if (route.request().method() === 'GET' || route.request().method() === 'PUT') {
@@ -180,7 +180,7 @@ test.describe('Main page', () => {
         test('Check event actions', async ({ page }) => {
 
 
-            const userPromise = page.waitForResponse(resp => resp.url().includes('/user/user'));
+            const userPromise = page.waitForResponse(resp => resp.url().includes('/user/me'));
             const eventPromise = page.waitForResponse(resp => resp.url().includes('/api/v1/event') && resp.request().method() === 'GET');
 
             await page.goto('/');
@@ -207,7 +207,7 @@ test.describe('Main page', () => {
 
     test.describe('Visit app main page & edit event type', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
+            await page.route('**/user/me', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
             await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
             await page.route('**/event/66e41e641f4f81ece1828ab5', async route => {
                 await route.fulfill({ path: './tests/fixtures/sprechstunde.json' });
@@ -216,7 +216,7 @@ test.describe('Main page', () => {
 
         test('Check edit event type', async ({ page }) => {
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
             const editPromise = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5'));
@@ -228,14 +228,14 @@ test.describe('Main page', () => {
 
     test.describe('Visit app main page & log out', () => {
         test.beforeEach(async ({ page }) => {
-            await page.route('**/user/user', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
+            await page.route('**/user/me', async route => await route.fulfill({ path: './tests/fixtures/user.json' }));
             await page.route('**/event', async route => await route.fulfill({ path: './tests/fixtures/events.json' }));
             await page.route('**/event/66e41e641f4f81ece1828ab5', async route => await route.fulfill({ path: './tests/fixtures/sprechstunde.json' }));
         });
 
         test('Check log out', async ({ page }) => {
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
             await page.getByTestId('profile-menu').click();
@@ -247,7 +247,7 @@ test.describe('Main page', () => {
     test.describe('Visit app main page & open calendar integration', () => {
         test('Open calendar integration', async ({ page }) => {
             // Set up all mocks at the start of the test
-            await page.route('**/user/user', async route => {
+            await page.route('**/user/me', async route => {
                 if (route.request().method() === 'PUT') {
                     await route.fulfill({ status: 200 });
                 } else {
@@ -259,7 +259,7 @@ test.describe('Main page', () => {
             await page.route(url => url.pathname.includes('/google/generateUrl'), async route => await route.fulfill({ path: './tests/fixtures/generateUrl.json' }));
 
             await page.goto('/');
-            await page.waitForResponse(resp => resp.url().includes('/user/user'));
+            await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
             await page.getByTestId('profile-menu').click();
