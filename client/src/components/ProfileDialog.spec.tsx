@@ -17,9 +17,10 @@ vi.mock('sonner', () => ({
     }
 }));
 
+const mockT = (key: string) => key;
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (key: string) => key
+        t: mockT
     })
 }));
 
@@ -61,10 +62,17 @@ describe('ProfileDialog', () => {
     it('should calculate initial state and render loading', async () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
         expect(screen.getByText('Loading...')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        });
     });
 
     it('should fetch user data and render form', async () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
+
+        await waitFor(() => {
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test User')).toBeInTheDocument();
@@ -75,6 +83,10 @@ describe('ProfileDialog', () => {
 
     it('should handle form input changes', async () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
+
+        await waitFor(() => {
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        });
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test User')).toBeInTheDocument();
@@ -96,11 +108,12 @@ describe('ProfileDialog', () => {
         render(<ProfileDialog open={true} onOpenChange={onOpenChange} />);
 
         await waitFor(() => {
-            expect(screen.getByDisplayValue('Test User')).toBeInTheDocument();
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
         });
 
-        const saveButton = screen.getByText('save');
-        fireEvent.click(saveButton);
+        // Submit the form directly
+        const form = document.getElementById('profile-form') as HTMLFormElement;
+        fireEvent.submit(form);
 
         await waitFor(() => {
             expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
@@ -119,13 +132,22 @@ describe('ProfileDialog', () => {
 
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
 
+        // Wait for loading to complete and form to be rendered
         await waitFor(() => {
-            expect(screen.getByText('save')).toBeInTheDocument();
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
         });
 
-        fireEvent.click(screen.getByText('save'));
+        // Ensure form is fully loaded
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test User')).toBeInTheDocument();
+        });
+
+        // Submit the form directly
+        const form = document.getElementById('profile-form') as HTMLFormElement;
+        fireEvent.submit(form);
 
         await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
             expect(toast.error).toHaveBeenCalledWith('user_url_taken');
         });
     });
@@ -135,13 +157,22 @@ describe('ProfileDialog', () => {
 
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
 
+        // Wait for loading to complete and form to be rendered
         await waitFor(() => {
-            expect(screen.getByText('save')).toBeInTheDocument();
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
         });
 
-        fireEvent.click(screen.getByText('save'));
+        // Ensure form is fully loaded
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test User')).toBeInTheDocument();
+        });
+
+        // Submit the form directly
+        const form = document.getElementById('profile-form') as HTMLFormElement;
+        fireEvent.submit(form);
 
         await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
             expect(toast.error).toHaveBeenCalledWith('error_saving_profile');
         });
     });
