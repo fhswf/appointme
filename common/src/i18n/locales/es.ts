@@ -138,5 +138,6 @@ export const es = {
     "Add": "Añadir",
     "Close": "Cerrar",
     "Cancel": "Cancelar",
+    "Contact": "Contacto",
     "I acknowledge that my password will be stored encrypted in the database.": "Reconozco que mi contraseña se almacenará cifrada en la base de datos."
 };

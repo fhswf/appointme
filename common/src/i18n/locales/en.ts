@@ -138,5 +138,6 @@ export const en = {
     "Add": "Add",
     "Close": "Close",
     "Cancel": "Cancel",
+    "Contact": "Contact",
     "I acknowledge that my password will be stored encrypted in the database.": "I acknowledge that my password will be stored encrypted in the database."
 };
