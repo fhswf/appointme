@@ -122,5 +122,9 @@ export const ko = {
     "user_menu_my_account": "My account",
     "user_menu_calendar_integration": "Calendar Integration",
     "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile",
+    "login_with_sso": "SSO로 로그인",
+    "login_successful": "로그인 성공",
+    "login_failed": "로그인 실패",
+    "google_login_failed": "Google 로그인 실패"
 };

@@ -130,5 +130,9 @@ export const de = {
     "profile_updated": "Profil erfolgreich aktualisiert",
     "error_saving_profile": "Fehler beim Speichern des Profils",
     "user_url_taken": "Benutzer-URL bereits vergeben",
-    "error_loading_profile": "Fehler beim Laden des Profils"
+    "error_loading_profile": "Fehler beim Laden des Profils",
+    "login_with_sso": "Anmelden mit SSO",
+    "login_successful": "Anmeldung erfolgreich",
+    "login_failed": "Anmeldung fehlgeschlagen",
+    "google_login_failed": "Google-Anmeldung fehlgeschlagen"
 };

@@ -19,6 +19,13 @@ vi.mock('sonner', () => ({
     }
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 // Mock Google OAuth
 vi.mock('@react-oauth/google', () => ({
     GoogleLogin: ({ onSuccess, onError }: any) => (
@@ -79,7 +86,7 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+            expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
     });
 
@@ -97,7 +104,7 @@ describe('Login Component', () => {
 
         await waitFor(() => {
             expect(screen.getByTestId('google-login')).toBeInTheDocument();
-            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+            expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
     });
 
@@ -115,7 +122,7 @@ describe('Login Component', () => {
 
         await waitFor(() => {
             expect(screen.queryByTestId('google-login')).not.toBeInTheDocument();
-            expect(screen.queryByText('Login with SSO')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('login-sso')).not.toBeInTheDocument();
         });
     });
 
@@ -174,7 +181,7 @@ describe('Login Component', () => {
         fireEvent.click(googleButton);
 
         await waitFor(() => {
-            expect(toast.error).toHaveBeenCalledWith('Google login failed: Invalid credentials');
+            expect(toast.error).toHaveBeenCalledWith('google_login_failed: Invalid credentials');
         });
     });
 
@@ -200,7 +207,7 @@ describe('Login Component', () => {
         fireEvent.click(googleButton);
 
         await waitFor(() => {
-            expect(toast.error).toHaveBeenCalledWith('Google login failed: Network error');
+            expect(toast.error).toHaveBeenCalledWith('google_login_failed: Network error');
         });
     });
 
@@ -225,10 +232,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+            expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
 
-        const oidcButton = screen.getByText('Login with SSO');
+        const oidcButton = screen.getByTestId('login-sso');
         fireEvent.click(oidcButton);
 
         await waitFor(() => {
@@ -254,14 +261,14 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+            expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
 
-        const oidcButton = screen.getByText('Login with SSO');
+        const oidcButton = screen.getByTestId('login-sso');
         fireEvent.click(oidcButton);
 
         await waitFor(() => {
-            expect(toast.error).toHaveBeenCalledWith('Failed to start SSO login');
+            expect(toast.error).toHaveBeenCalledWith('login_failed');
         });
     });
 
@@ -377,10 +384,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Login with SSO')).toBeInTheDocument();
+            expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
 
-        const oidcButton = screen.getByText('Login with SSO');
+        const oidcButton = screen.getByTestId('login-sso');
         fireEvent.click(oidcButton);
 
         await waitFor(() => {

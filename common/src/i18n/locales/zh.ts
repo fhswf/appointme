@@ -122,5 +122,9 @@ export const zh = {
     "user_menu_my_account": "我的账户",
     "user_menu_calendar_integration": "日历集成",
     "user_menu_copy_link": "复制链接",
-    "user_menu_link_copied": "链接已复制", "name": "姓名", "user_url": "用户链接", "use_gravatar": "使用 Gravatar", "save": "保存", "profile_updated": "个人资料已更新", "error_saving_profile": "保存个人资料时出错", "user_url_taken": "用户链接已被占用", "error_loading_profile": "加载个人资料时出错"
+    "user_menu_link_copied": "链接已复制", "name": "姓名", "user_url": "用户链接", "use_gravatar": "使用 Gravatar", "save": "保存", "profile_updated": "个人资料已更新", "error_saving_profile": "保存个人资料时出错", "user_url_taken": "用户链接已被占用", "error_loading_profile": "加载个人资料时出错",
+    "login_with_sso": "使用 SSO 登录",
+    "login_successful": "登录成功",
+    "login_failed": "登录失败",
+    "google_login_failed": "Google 登录失败"
 };

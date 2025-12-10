@@ -4,9 +4,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { postGoogleLogin, getAuthConfig, getOidcAuthUrl } from "../helpers/services/auth_services";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Login = (props: any) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [oidcEnabled, setOidcEnabled] = useState(false);
   const [googleEnabled, setGoogleEnabled] = useState(false);
 
@@ -28,7 +30,7 @@ const Login = (props: any) => {
       })
       .catch((error) => {
         console.log("GOOGLE SIGNIN ERROR", error.response);
-        toast.error("Google login failed: " + (error.response?.data?.message || error.message));
+        toast.error(t("google_login_failed") + ": " + (error.response?.data?.message || error.message));
       });
   };
 
@@ -39,7 +41,7 @@ const Login = (props: any) => {
       })
       .catch((err) => {
         console.error(err);
-        toast.error("Failed to start SSO login");
+        toast.error(t("login_failed"));
       });
   }
 
@@ -58,8 +60,8 @@ const Login = (props: any) => {
         />
       )}
       {oidcEnabled && (
-        <Button onClick={handleOidcLogin} variant="outline">
-          Login with SSO
+        <Button onClick={handleOidcLogin} variant="outline" data-testid="login-sso">
+          {t("login_with_sso")}
         </Button>
       )}
     </div>
