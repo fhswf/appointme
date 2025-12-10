@@ -71,7 +71,7 @@
   "scripts": {
     "start": "vite --force",
     "build": "vite build",
-    "build:icons": "npx -y sharp-cli -i public/logo.svg -o public/logo192.png resize 192 && npx -y sharp-cli -i public/logo.svg -o public/logo512.png resize 512 && npx -y sharp-cli -i public/logo_no_text.svg -o public/favicon.png resize 256 && convert -background none public/favicon.png -define icon:auto-resize=64,32,16 public/favicon.ico && rm public/favicon.png",
+    "build:icons": "node scripts/generate-icons.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
