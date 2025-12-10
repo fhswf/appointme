@@ -90,9 +90,6 @@ const userSchema = new Schema<UserDocument>(
       type: [String],
       default: []
     },
-    push_calendar: {
-      type: String
-    },
     push_calendars: {
       type: [String],
       default: []

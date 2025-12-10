@@ -29,7 +29,6 @@ export const getUser = (req: Request, res: Response): void => {
       "name": 1,
       "picture_url": 1,
       "pull_calendars": 1,
-      "push_calendar": 1,
       "push_calendars": 1,
       "user_url": 1,
       "welcome": 1,
@@ -90,13 +89,6 @@ export const updateUser = (req: Request, res: Response): void => {
     }
   }
 
-  if (typeof userData.push_calendar === 'string') {
-    update.push_calendar = userData.push_calendar;
-  } else if (userData.push_calendar === null || userData.push_calendar === undefined) {
-    // Allow clearing it if needed, or just ignore. 
-    // Based on original code, it seems we might just want to set it if it's a string.
-  }
-
   // Handle User URL
   if (typeof userData.user_url === "string" && userData.user_url && !userData.user_url.startsWith("$") && !userData.user_url.includes(".")) {
     update.user_url = userData.user_url;
@@ -135,7 +127,6 @@ export const updateUser = (req: Request, res: Response): void => {
             "name": 1,
             "picture_url": 1,
             "pull_calendars": 1,
-            "push_calendar": 1,
             "push_calendars": 1,
             "user_url": 1,
             "welcome": 1,

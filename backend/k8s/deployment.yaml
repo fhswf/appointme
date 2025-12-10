@@ -25,6 +25,16 @@ spec:
         io.kompose.network/traefik: 'true'
         io.kompose.service: bookme
     spec:
+      initContainers:
+        - name: migrations
+          image: ghcr.io/fhswf/book_me/backend:1.25.1
+          command: ["yarn", "migrate"]
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_URI
+                  name: bookme
       containers:
         - env:
             - name: JWT_SECRET
