@@ -104,7 +104,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
 
       // Request currently booked events. We need them for the maxPerDay restriction
       return events(event.user, timeMin.toISOString(), timeMax.toISOString())
-        .then(events => ({ events, event }));
+        .then(events => ({ events, event }))
     })
     .then(({ events, event }) => {
       const blocked = calculateBlocked(events, event, timeMin, timeMax);
@@ -128,8 +128,8 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       res.status(200).json(freeSlots);
     })
     .catch((err: unknown) => {
-      logger.error('getAvailableTime: event not found or freeBusy failed: %o', err);
-      res.status(400).json({ error: err });
+      logger.error('getAvailableTime: event not found or freeBusy failed: %j', err);
+      res.status(400).json({ error: err, message: "event not found or freeBusy failed: " + err.message });
     });
 };
 
@@ -314,9 +314,9 @@ export const updateEventController = (req: Request, res: Response): void => {
  */
 
 export const insertEvent = async (req: Request, res: Response): Promise<void> => {
-  const starttime = new Date(Number.parseInt(req.body.starttime));
+  const starttime = new Date(Number.parseInt(req.body.start));
   const eventId = req.params.id;
-  logger.debug("insertEvent: %s %o", req.body.starttime, starttime);
+  logger.debug("insertEvent: %s %o", req.body.start, starttime);
 
   try {
     const eventDoc = await EventModel.findById(eventId).exec();
@@ -343,7 +343,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     const eventDescription = String(eventDoc.description);
 
     const event: Schema$Event = {
-      summary: eventDoc.name + " mit " + (req.body.name),
+      summary: eventDoc.name + " mit " + (req.body.attendeeName),
       location: eventDoc.location,
       description: eventDescription, // Description only contains the service description
       start: {
@@ -361,8 +361,8 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       },
       attendees: [
         {
-          displayName: req.body.name as string,
-          email: req.body.email as string,
+          displayName: req.body.attendeeName as string,
+          email: req.body.attendeeEmail as string,
         }
       ],
       source: {
@@ -473,8 +473,9 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
         }))
       }, { comment: userComment });
 
-      const attendeeEmail = req.body.email as string;
-      const attendeeName = validator.escape(req.body.name as string);
+
+      const attendeeEmail = req.body.attendeeEmail as string;
+      const attendeeName = validator.escape(req.body.attendeeName as string);
       const subject = t(locale, 'invitationSubject', { summary: event.summary });
 
       // Escape description for HTML email, preserving newlines as <br>

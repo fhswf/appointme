@@ -35,6 +35,7 @@ const limiter = rateLimit({
  *               serverUrl:
  *                 type: string
  *                 description: CalDAV server URL
+ *                 example: "https://caldav.example.com"
  *               username:
  *                 type: string
  *                 description: CalDAV username
@@ -42,15 +43,26 @@ const limiter = rateLimit({
  *                 type: string
  *                 format: password
  *                 description: CalDAV password
+ *               name:
+ *                 type: string
+ *                 description: Optional display name for the account
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Optional email associated with the account
  *     responses:
- *       201:
+ *       200:
  *         description: Account added successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CalendarAccount'
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *       400:
- *         description: Invalid input data
+ *         description: Invalid input data or failed to connect to CalDAV server
  *         content:
  *           application/json:
  *             schema:

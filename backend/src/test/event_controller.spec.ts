@@ -376,9 +376,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -401,9 +401,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -424,9 +424,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -456,9 +456,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest <b>Bold</b>",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest <b>Bold</b>",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -478,9 +478,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -503,9 +503,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 
@@ -570,9 +570,9 @@ describe("Event Controller", () => {
             const res = await request(app)
                 .post("/api/v1/event/123/slot")
                 .send({
-                    starttime: Date.now().toString(),
-                    name: "Guest",
-                    email: "guest@example.com",
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
                     description: "Notes"
                 });
 

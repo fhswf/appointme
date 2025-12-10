@@ -145,22 +145,28 @@ eventRouter.delete("/:id", limiter, middleware.requireAuth, deleteEventControlle
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - data
  *             properties:
- *               title:
- *                 type: string
- *                 description: Event title
- *               description:
- *                 type: string
- *                 description: Event description
- *               duration:
- *                 type: number
- *                 description: Event duration in minutes
- *               url:
- *                 type: string
- *                 description: Event URL slug
- *               active:
- *                 type: boolean
- *                 description: Whether the event is active
+ *               data:
+ *                 type: object
+ *                 description: Event data to update
+ *                 properties:
+ *                   title:
+ *                     type: string
+ *                     description: Event title
+ *                   description:
+ *                     type: string
+ *                     description: Event description
+ *                   duration:
+ *                     type: number
+ *                     description: Event duration in minutes
+ *                   url:
+ *                     type: string
+ *                     description: Event URL slug
+ *                   active:
+ *                     type: boolean
+ *                     description: Whether the event is active
  *     responses:
  *       200:
  *         description: Event updated successfully
@@ -307,17 +313,21 @@ eventRouter.get("/active/:userId", limiter, getActiveEventsController);
  *           type: string
  *         description: Event ID
  *       - in: query
- *         name: startDate
+ *         name: timeMin
+ *         required: true
  *         schema:
  *           type: string
- *           format: date
- *         description: Start date for availability check
+ *           format: date-time
+ *         description: Start date-time for availability check
+ *         example: "2024-12-15T00:00:00Z"
  *       - in: query
- *         name: endDate
+ *         name: timeMax
+ *         required: true
  *         schema:
  *           type: string
- *           format: date
- *         description: End date for availability check
+ *           format: date-time
+ *         description: End date-time for availability check
+ *         example: "2024-12-22T23:59:59Z"
  *     responses:
  *       200:
  *         description: Available slots retrieved successfully
@@ -339,8 +349,8 @@ eventRouter.get("/active/:userId", limiter, getActiveEventsController);
  *                         type: string
  *                         format: date-time
  *                         description: Slot end time
- *       404:
- *         description: Event not found
+ *       400:
+ *         description: Event not found or freeBusy failed
  *         content:
  *           application/json:
  *             schema:
@@ -408,18 +418,13 @@ eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
  *             type: object
  *             required:
  *               - start
- *               - end
  *               - attendeeName
  *               - attendeeEmail
  *             properties:
  *               start:
  *                 type: string
- *                 format: date-time
- *                 description: Appointment start time
- *               end:
- *                 type: string
- *                 format: date-time
- *                 description: Appointment end time
+ *                 description: Appointment start time as Unix timestamp in milliseconds
+ *                 example: "1702396800000"
  *               attendeeName:
  *                 type: string
  *                 description: Attendee name
@@ -427,20 +432,39 @@ eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
  *                 type: string
  *                 format: email
  *                 description: Attendee email address
+ *               description:
+ *                 type: string
+ *                 description: Optional user comment or description
  *     responses:
- *       201:
+ *       200:
  *         description: Appointment booked successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the booking was successful
+ *                 type:
  *                   type: string
- *                   description: Success message
- *                 appointmentId:
- *                   type: string
- *                   description: Created appointment ID
+ *                   enum: [google, caldav]
+ *                   description: Calendar type used
+ *                 results:
+ *                   type: array
+ *                   description: Results for each calendar
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       calendar:
+ *                         type: string
+ *                         description: Calendar identifier
+ *                       success:
+ *                         type: boolean
+ *                         description: Whether this calendar booking succeeded
+ *                       type:
+ *                         type: string
+ *                         description: Calendar type
  *       400:
  *         description: Invalid input or slot not available
  *         content:

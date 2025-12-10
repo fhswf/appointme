@@ -87,20 +87,40 @@ userRouter.get("/:url", userRateLimiter, getUserByUrl);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - data
  *             properties:
- *               name:
- *                 type: string
- *                 description: User full name
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User email address
- *               url:
- *                 type: string
- *                 description: User URL slug
- *               locale:
- *                 type: string
- *                 description: User preferred locale
+ *               data:
+ *                 type: object
+ *                 description: User data to update
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: User full name
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     description: User email address
+ *                   user_url:
+ *                     type: string
+ *                     description: User URL slug
+ *                   welcome:
+ *                     type: string
+ *                     description: Welcome message
+ *                   pull_calendars:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Calendar IDs to pull events from
+ *                   push_calendar:
+ *                     type: string
+ *                     description: Calendar ID to push events to
+ *                   use_gravatar:
+ *                     type: boolean
+ *                     description: Whether to use Gravatar for profile picture
+ *                   send_invitation_email:
+ *                     type: boolean
+ *                     description: Whether to send invitation emails
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -120,8 +140,20 @@ userRouter.get("/:url", userRateLimiter, getUserByUrl);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       409:
+ *         description: User URL already exists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                 field:
+ *                   type: string
  */
 userRouter.put("/me", userRateLimiter, requireAuth, updateUser);
 
 export default userRouter;
+
 
