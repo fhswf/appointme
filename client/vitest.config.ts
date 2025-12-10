@@ -30,7 +30,8 @@ export default defineConfig({
             include: [
                 'src/**/*.{ts,tsx}'
             ],
-            reporter: ['text', 'json', 'html', 'lcov'],
+            reporter: ['text', 'json', 'html', 'lcov', 'json-summary'],
+            reportsDirectory: 'coverage',
             exclude: [
                 'src/**/*.spec.tsx',
                 'src/**/*.test.tsx',

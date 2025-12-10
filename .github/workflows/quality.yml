@@ -85,6 +85,7 @@ jobs:
         run: |
           cd client
           npm run test:unit
+          npm run coverage:copy-unit
           npm run test:ci
         env:
           CI: true
@@ -95,7 +96,7 @@ jobs:
           VITE_COVERAGE: true
 
       - name: Generate Coverage Report
-        run: cd client && npm run coverage:report
+        run: cd client && npm run coverage:merge
 
       - name: Publish Test Report with Pull Request Comment
         uses: ctrf-io/github-test-reporter@v1

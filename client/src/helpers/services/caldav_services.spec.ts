@@ -24,10 +24,11 @@ describe('CalDAV Services', () => {
       serverUrl: 'http://test.com',
       username: 'user',
       password: 'pw',
-      name: 'Test'
+      name: 'Test',
+      email: 'test@example.com'
     };
 
-    const result = await addAccount(accountData.serverUrl, accountData.username, accountData.password, accountData.name);
+    const result = await addAccount(accountData.serverUrl, accountData.username, accountData.password, accountData.name, accountData.email);
 
     expect(csrfService.getCsrfToken).toHaveBeenCalled();
     expect(axios.post).toHaveBeenCalledWith(
@@ -88,5 +89,62 @@ describe('CalDAV Services', () => {
       })
     );
     expect(result).toBe(mockResponse);
+  });
+
+  it('addAccount should handle errors', async () => {
+    const error = new Error('Failed to add account');
+    (axios.post as any).mockRejectedValue(error);
+
+    await expect(addAccount('http://test.com', 'user', 'pw', 'Test', 'test@example.com')).rejects.toThrow('Failed to add account');
+  });
+
+  it('addAccount should handle CSRF token fetch failure', async () => {
+    const error = new Error('CSRF token unavailable');
+    vi.spyOn(csrfService, 'getCsrfToken').mockRejectedValue(error);
+
+    await expect(addAccount('http://test.com', 'user', 'pw', 'Test', 'test@example.com')).rejects.toThrow('CSRF token unavailable');
+  });
+
+  it('removeAccount should handle errors', async () => {
+    const error = new Error('Failed to remove account');
+    (axios.delete as any).mockRejectedValue(error);
+
+    await expect(removeAccount('123')).rejects.toThrow('Failed to remove account');
+  });
+
+  it('removeAccount should handle CSRF token fetch failure', async () => {
+    const error = new Error('CSRF token unavailable');
+    vi.spyOn(csrfService, 'getCsrfToken').mockRejectedValue(error);
+
+    await expect(removeAccount('123')).rejects.toThrow('CSRF token unavailable');
+  });
+
+  it('listAccounts should handle errors', async () => {
+    const error = new Error('Failed to list accounts');
+    (axios.get as any).mockRejectedValue(error);
+
+    await expect(listAccounts()).rejects.toThrow('Failed to list accounts');
+  });
+
+  it('listCalendars should handle errors', async () => {
+    const error = new Error('Failed to list calendars');
+    (axios.get as any).mockRejectedValue(error);
+
+    await expect(listCalendars('123')).rejects.toThrow('Failed to list calendars');
+  });
+
+  it('addAccount should include email parameter', async () => {
+    const mockResponse = { data: { success: true } };
+    (axios.post as any).mockResolvedValue(mockResponse);
+
+    await addAccount('http://test.com', 'user', 'pw', 'Test', 'test@example.com');
+
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining('/caldav/account'),
+      expect.objectContaining({
+        email: 'test@example.com'
+      }),
+      expect.any(Object)
+    );
   });
 });
