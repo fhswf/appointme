@@ -15,7 +15,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
 import OidcCallback from "./pages/OidcCallback";
-import Profile from "./pages/Profile";
 import Impressum from "./pages/Impressum";
 import Privacy from "./pages/Privacy";
 import { AuthProvider } from "./components/AuthProvider";
@@ -46,11 +45,7 @@ const Main = () => {
                 </PrivateRoute>
               } />
 
-              <Route path="/profile" element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              } />
+
 
               <Route path="/addevent" element={
                 <PrivateRoute>

@@ -33,7 +33,8 @@ export const getUser = (req: Request, res: Response): void => {
       "welcome": 1,
       "updatedAt": 1,
       "send_invitation_email": 1,
-      "google_tokens.access_token": 1
+      "google_tokens.access_token": 1,
+      "use_gravatar": 1
     })
     .exec()
     .then(user => {
