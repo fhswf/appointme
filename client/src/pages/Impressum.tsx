@@ -17,7 +17,7 @@ Frauenstuhlweg 31
 [+49 2371 566 565](tel:+492371566565)
 
 ## Disclaimer
-Unter jupiter.fh-swf.de stelle ich Beispielprojekte und Materialien aus meiner Lehr- und Forschungstätigkeit vor. Die Inhalte auf diesem Sever gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.
+Die Inhalte auf diesem Server gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.
 `;
 
 const Impressum: React.FC = () => {
