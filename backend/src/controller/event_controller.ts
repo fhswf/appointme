@@ -374,14 +374,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     };
 
     // Determine target calendars
-    let targetCalendars = user.push_calendars;
-    if (!targetCalendars || targetCalendars.length === 0) {
-      if (user.push_calendar) {
-        targetCalendars = [user.push_calendar];
-      } else {
-        targetCalendars = [];
-      }
-    }
+    let targetCalendars = user.push_calendars || [];
 
     const results = [];
     let successCount = 0;
@@ -512,16 +505,8 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       if (userComment) {
         googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
       }
-      // Note: insertGoogleEvent currently pushes to primary calendar. 
-      // If we want to support pushing to a specific google calendar ID (which calendarUrl would be), 
-      // we need to update insertGoogleEvent or pass the ID.
-      // For now, assuming standard google integration pushes to 'primary', but if calendarUrl is a google calendar ID, we might need to use it.
-      // However, the current google_controller.ts/insertGoogleEvent might not accept a calendar ID.
-      // Checking types: insertGoogleEvent(user, event).
-      // If we want to support non-primary Google calendars, that would be another task.
-      // For now, consistent signature.
 
-      const evt = await insertGoogleEvent(user, googleEvent);
+      const evt = await insertGoogleEvent(user, googleEvent, calendarUrl);
       logger.debug('insert returned %j', evt)
       return { success: true, message: "Event wurde gebucht", event: evt };
     } catch (error) {

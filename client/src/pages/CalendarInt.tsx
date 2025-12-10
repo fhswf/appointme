@@ -108,10 +108,8 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
 };
 
 const PushCalendar = ({ user, calendarList }) => {
-  // Support legacy push_calendar by ensuring it's in the list if not already
-  const currentPushCalendars = user.push_calendars && user.push_calendars.length > 0
-    ? user.push_calendars
-    : (user.push_calendar ? [user.push_calendar] : []);
+  // Get current push calendars
+  const currentPushCalendars = user.push_calendars || [];
 
   const pushCals = calendarList
     ? calendarList.items
@@ -146,7 +144,6 @@ const PushCalendar = ({ user, calendarList }) => {
   const save = () => {
     console.log("save: selected: %o", selected);
     user.push_calendars = [];
-    user.push_calendar = null; // Clear legacy field
     
     const newSelection = [];
     for (const item of Object.keys(selected)) {
@@ -522,7 +519,7 @@ const Calendarintegration = () => {
           user.pull_calendars.push(primary[0].id);
           update = true;
         }
-        if ((!user.push_calendars || user.push_calendars.length === 0) && (!user.push_calendar) && primary.length > 0) {
+        if ((!user.push_calendars || user.push_calendars.length === 0) && primary.length > 0) {
           user.push_calendars = [primary[0].id];
           update = true;
         }

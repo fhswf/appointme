@@ -104,8 +104,6 @@ export interface User {
   google_tokens: GoogleTokens;
   caldav_accounts?: CalDavAccount[];
   push_calendars: string[];
-  /** @deprecated use push_calendars instead */
-  push_calendar: string;
   pull_calendars: string[];
   welcome?: string;
   send_invitation_email?: boolean;
