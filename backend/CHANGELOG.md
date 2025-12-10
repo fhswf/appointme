@@ -1,3 +1,10 @@
+## backend [1.25.2](https://github.com/fhswf/book_me/compare/backend@1.25.1...backend@1.25.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* handle multiple push calendars ([c33f087](https://github.com/fhswf/book_me/commit/c33f08716eb1eff9eda8e4b9401196670dae2ff3))
+
 ## backend [1.25.1](https://github.com/fhswf/book_me/compare/backend@1.25.0...backend@1.25.1) (2025-12-10)
 
 
