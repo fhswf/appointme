@@ -65,6 +65,13 @@ jobs:
       - name: Install Playwright Browsers
         run: cd client && npx playwright install --with-deps chromium
 
+      # Clean old coverage data to ensure fresh reports
+      - name: Clean Coverage Data
+        run: |
+          rm -rf client/.nyc_output
+          rm -rf client/coverage
+          mkdir -p client/.nyc_output
+
       # Run Common tests
       - name: Test Common
         run: yarn workspace common ci

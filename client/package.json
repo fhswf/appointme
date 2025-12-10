@@ -78,6 +78,8 @@
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
     "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml",
+    "coverage": "npm run test:unit && npm run test:ci && npm run coverage:report",
+    "coverage:clean": "rm -rf .nyc_output coverage",
     "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
   },
   "eslintConfig": {
