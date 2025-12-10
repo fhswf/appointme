@@ -12,6 +12,9 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Event, User } from 'common';
 import { Hourglass, MapPin, CalendarClock } from 'lucide-react';
+import { format } from 'date-fns';
+import { enUS, de, fr, es, it, ja, ko, zhCN } from 'date-fns/locale';
+
 
 export type EventTypeProps = {
     event: Event;
@@ -22,7 +25,8 @@ export type EventTypeProps = {
 
 export const EventType = (props: EventTypeProps) => {
     const { event, user, time, handleOnClick } = props;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
 
     console.log("EventType: event=%o, user=%o, time=%o", event, user, time);
     return (
@@ -50,7 +54,23 @@ export const EventType = (props: EventTypeProps) => {
                     <div className="flex items-center gap-4">
                         <CalendarClock className="h-5 w-5 text-muted-foreground" />
                         <span>
-                            {time.toLocaleDateString()} {time.toLocaleTimeString()}
+                            <span>
+                                {format(time, "Pp", {
+                                    locale: (() => {
+                                        switch (i18n.language) {
+                                            case 'de': return de;
+                                            case 'fr': return fr;
+                                            case 'es': return es;
+                                            case 'it': return it;
+                                            case 'ja': return ja;
+                                            case 'ko': return ko;
+                                            case 'zh': return zhCN;
+                                            default: return enUS;
+                                        }
+                                    })()
+                                })}
+                            </span>
+
                         </span>
                     </div>
                 )}

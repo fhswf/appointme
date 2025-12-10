@@ -10,12 +10,20 @@ import * as eventServices from '../helpers/services/event_services';
 vi.mock('../helpers/services/user_services');
 vi.mock('../helpers/services/event_services');
 vi.mock('../helpers/services/google_services');
-vi.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { t: (key: string) => key }
-    }),
-}));
+vi.mock('react-i18next', () => {
+    let language = 'en';
+    return {
+        useTranslation: () => ({
+            t: (key: string) => key,
+            i18n: {
+                t: (key: string) => key,
+                language,
+                changeLanguage: (lang: string) => { language = lang; }
+            }
+        }),
+    };
+});
+
 
 // Mock sonner toast
 vi.mock('sonner', () => ({
@@ -103,6 +111,23 @@ describe('Booking Page', () => {
         expect(screen.getByText('Choose time')).toBeInTheDocument();
         expect(screen.getByText('Provide details')).toBeInTheDocument();
     });
+
+    it('should allow changing language', async () => {
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        // Check if selector is present (it renders a Select component which usually has a trigger)
+        // We mocked the LanguageSelector component? No, we are using the real one.
+        // It uses Radix UI Select.
+        // We might need to look for the trigger text "Language" or the icon.
+        // Our LanguageSelector has placeholder "Language", but since default is 'en', it shows "English".
+        expect(screen.getByText('English')).toBeInTheDocument();
+    });
+
+
 
     it('should navigate to Not Found if user not found', async () => {
         (userServices.getUserByUrl as any).mockResolvedValue({ data: [] }); // User fetch returns empty

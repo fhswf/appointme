@@ -6,6 +6,8 @@ import { defineStepper } from "@stepperize/react";
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser, getAvailableTimes } from "../helpers/services/event_services";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
+import { enUS, de, fr, es, it, ja, ko, zhCN } from 'date-fns/locale';
+
 import BookDetails from "../components/BookDetails";
 import { insertEvent } from "../helpers/services/google_services";
 import { EMPTY_EVENT, Event, IntervalSet } from "common";
@@ -16,12 +18,28 @@ import { toast } from "sonner";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { LanguageSelector } from "../components/LanguageSelector";
+
 
 const { useStepper, steps } = defineStepper(
   { id: "date", title: "Choose date" },
   { id: "time", title: "Choose time" },
   { id: "details", title: "Provide details" }
 );
+
+const getLocale = (lang: string) => {
+  switch (lang) {
+    case 'de': return de;
+    case 'fr': return fr;
+    case 'es': return es;
+    case 'it': return it;
+    case 'ja': return ja;
+    case 'ko': return ko;
+    case 'zh': return zhCN;
+    default: return enUS;
+  }
+};
+
 
 type Details = { name: string; email: string; description: string };
 
@@ -158,8 +176,9 @@ const Booking = () => {
               className="w-full"
               data-testid={time.toISOString()}
             >
-              {format(time, "HH:mm")}
+              {format(time, "p", { locale: getLocale(i18n.language) })}
             </Button>
+
           ))}
         </div>
       </div>
@@ -197,9 +216,13 @@ const Booking = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">
-        {t("Schedule an appointment")}
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">
+          {t("Schedule an appointment")}
+        </h1>
+        <LanguageSelector />
+      </div>
+
 
       <EventType event={event} user={user} time={selectedTime} />
 
