@@ -40,7 +40,7 @@ const EditEvent = (): JSX.Element => {
           navigate("/landing");
         } else {
           toast.success(t("happy_caring_fox_spur"));
-          navigate("/app");
+          navigate("/");
         }
       })
       .catch((err) => {

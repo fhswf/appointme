@@ -44,9 +44,11 @@ export const es = {
     "extra_misty_panda_grip": "Los usuarios pueden usar este enlace para reservar citas.",
     "sunny_great_halibut_empower": "Crear el primero",
     "create_first_event_type_button": "Tipo de evento",
-    "orange_grand_racoon_fall": "Cómo funciona Appoint",
-    "male_patient_hedgehog_ask": "Appoint es un sistema de reserva de citas simple y fácil de usar. Le permite crear eventos, compartir su enlace y permitir que los usuarios reserven citas con usted.",
-    "factual_moving_hawk_belong": "Especifique dónde agrega Appoint sus citas y dónde verifica si está ocupado.",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "Cómo funciona {{app_title}}",
+    "male_patient_hedgehog_ask": "{{app_title}} es un sistema de reserva de citas simple y fácil de usar. Le permite crear eventos, compartir su enlace y permitir que los usuarios reserven citas con usted.",
+    "factual_moving_hawk_belong": "Especifique dónde agrega {{app_title}} sus citas y dónde verifica si está ocupado.",
+    "step_1_configure_calendars": "Paso 1: Configurar calendarios",
     "pink_polite_racoon_earn": "Paso 2: Crear eventos",
     "happy_wise_mantis_laugh": "\"¡Agregue sus horarios disponibles y listo!\"",
     "careful_misty_bullock_splash": "Paso 3: Compartir su enlace",
@@ -103,6 +105,9 @@ export const es = {
     "Server URL": "URL del servidor",
     "Username": "Nombre de usuario",
     "label_password": "Contraseña",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "Invitación: {{summary}}",
@@ -125,5 +130,13 @@ export const es = {
     "profile_updated": "Perfil actualizado correctamente",
     "error_saving_profile": "Error al guardar el perfil",
     "user_url_taken": "URL de usuario ya en uso",
-    "error_loading_profile": "Error al cargar el perfil"
+    "error_loading_profile": "Error al cargar el perfil",
+    "login_with_sso": "Iniciar sesión con SSO",
+    "login_successful": "Inicio de sesión exitoso",
+    "login_failed": "Inicio de sesión fallido",
+    "google_login_failed": "Fallo en el inicio de sesión con Google",
+    "Add": "Añadir",
+    "Close": "Cerrar",
+    "Cancel": "Cancelar",
+    "I acknowledge that my password will be stored encrypted in the database.": "Reconozco que mi contraseña se almacenará cifrada en la base de datos."
 };

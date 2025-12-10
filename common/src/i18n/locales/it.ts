@@ -44,9 +44,11 @@ export const it = {
     "extra_misty_panda_grip": "Gli utenti possono utilizzare questo link per prenotare appuntamenti.",
     "sunny_great_halibut_empower": "Crea il primo",
     "create_first_event_type_button": "Tipo di evento",
-    "orange_grand_racoon_fall": "Come funziona Appoint",
-    "male_patient_hedgehog_ask": "Appoint è un sistema di prenotazione appuntamenti semplice e facile da usare. Ti consente di creare eventi, condividere il tuo link e consentire agli utenti di prenotare appuntamenti con te.",
-    "factual_moving_hawk_belong": "Specifica dove Appoint aggiunge i tuoi appuntamenti e dove controlla se sei occupato.",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "Come funziona {{app_title}}",
+    "male_patient_hedgehog_ask": "{{app_title}} è un sistema di prenotazione appuntamenti semplice e facile da usare. Ti consente di creare eventi, condividere il tuo link e consentire agli utenti di prenotare appuntamenti con te.",
+    "factual_moving_hawk_belong": "Specifica dove {{app_title}} aggiunge i tuoi appuntamenti e dove controlla se sei occupato.",
+    "step_1_configure_calendars": "Passo 1: Configura calendari",
     "pink_polite_racoon_earn": "Passo 2: Crea eventi",
     "happy_wise_mantis_laugh": "\"Aggiungi i tuoi orari disponibili e sei pronto!\"",
     "careful_misty_bullock_splash": "Passo 3: Condividi il tuo link",
@@ -103,6 +105,9 @@ export const it = {
     "Server URL": "URL del server",
     "Username": "Nome utente",
     "label_password": "Password",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "Invito: {{summary}}",
@@ -125,5 +130,13 @@ export const it = {
     "profile_updated": "Profilo aggiornato con successo",
     "error_saving_profile": "Errore durante il salvataggio del profilo",
     "user_url_taken": "URL utente già in uso",
-    "error_loading_profile": "Errore durante il caricamento del profilo"
+    "error_loading_profile": "Errore durante il caricamento del profilo",
+    "login_with_sso": "Accedi con SSO",
+    "login_successful": "Accesso riuscito",
+    "login_failed": "Accesso fallito",
+    "google_login_failed": "Accesso Google fallito",
+    "Add": "Aggiungi",
+    "Close": "Chiudi",
+    "Cancel": "Annulla",
+    "I acknowledge that my password will be stored encrypted in the database.": "Riconosco che la mia password verrà memorizzata crittografata nel database."
 };

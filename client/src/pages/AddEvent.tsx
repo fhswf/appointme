@@ -3,6 +3,7 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { signout } from "../helpers/helpers";
+import { Button } from "@/components/ui/button";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
@@ -30,7 +31,7 @@ const AddEvent = (props: AddEventProps) => {
             navigate("/landing");
           } else {
             toast.success(t("best_due_parakeet_zip"));
-            navigate("/app");
+            navigate("/");
           }
         })
         .catch((err) => {
@@ -45,7 +46,10 @@ const AddEvent = (props: AddEventProps) => {
     <>
       <AppNavbar></AppNavbar>
       <div className="container mx-auto p-4 max-w-3xl">
-        <h2 className="text-2xl font-bold mb-4">{t("Add Event Type")}</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">{t("Add Event Type")}</h2>
+          <Button variant="outline" onClick={() => navigate("/")}>{t("Cancel")}</Button>
+        </div>
         <EventForm event={formData} handleOnSubmit={saveEvent} data-testid="event-form" />
       </div>
     </>

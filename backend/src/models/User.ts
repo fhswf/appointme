@@ -7,6 +7,7 @@ import { User } from "common/src/types";
 export interface UserDocument extends Document, User {
   google_picture_url?: string;
   use_gravatar?: boolean;
+  push_calendars: string[];
 }
 
 
@@ -91,6 +92,14 @@ const userSchema = new Schema<UserDocument>(
     },
     push_calendar: {
       type: String
+    },
+    push_calendars: {
+      type: [String],
+      default: []
+    },
+    send_invitation_email: {
+      type: Boolean,
+      default: false
     }
   },
   {

@@ -41,11 +41,13 @@ export const de = {
     "extra_misty_panda_grip": "Über diesen Link können Nutzer Termine buchen.",
     "sunny_great_halibut_empower": "Erstelle den ersten",
     "create_first_event_type_button": "Veranstaltungstypen",
-    "orange_grand_racoon_fall": "So funktioniert Appoint",
-    "male_patient_hedgehog_ask": "Appoint ist ein einfaches, leicht zu bedienendes Terminbuchungssystem.  Es ermöglicht Ihnen, Veranstaltungen zu erstellen, Ihren Link zu teilen und Nutzer Termine bei Ihnen buchen zu lassen.",
-    "factual_moving_hawk_belong": "Geben Sie an, wo Appoint Ihre Termine hinzufügt und wo es prüft, ob Sie beschäftigt sind.",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "Wie {{app_title}} funktioniert",
+    "male_patient_hedgehog_ask": "{{app_title}} ist eine einfache und benutzerfreundliche Terminverwaltung. Erstellen Sie Ereignisse, teilen Sie Ihren Link und lassen Sie andere Termine mit Ihnen buchen.",
+    "factual_moving_hawk_belong": "Legen Sie fest, wo {{app_title}} Termine eintragen und wo Ihre Verfügbarkeit geprüft werden soll.",
+    "step_1_configure_calendars": "Schritt 1: Kalender konfigurieren",
     "pink_polite_racoon_earn": "Schritt 2: Ereignisse erstellen",
-    "happy_wise_mantis_laugh": "\"Fügen Sie Ihre verfügbaren Zeiten hinzu und Sie sind\ngut zu gehen!\"",
+    "happy_wise_mantis_laugh": "Fügen Sie Ihre verfügbaren Zeiten hinzu und legen Sie los!",
     "careful_misty_bullock_splash": "Schritt 3: Teilen Sie Ihren Link",
     "game_frail_vole_treasure": "Erledigt! Glückwunsch!",
     "still_helpful_koala_trust": "Sobald ein Benutzer einen Termin bucht, wird das Ereignis Ihrem Kalender hinzugefügt.",
@@ -103,6 +105,9 @@ export const de = {
     "Server URL": "Server URL",
     "Username": "Benutzername",
     "label_password": "Passwort",
+    "send_invitation_email": "Einladungs-E-Mail senden",
+    "send_invitation_email_notice": "Nur erforderlich, wenn Ihr CalDAV-Server keine Einladungen automatisch versendet.",
+
 
     // Backend specific
     "invitationSubject": "Einladung: {{summary}}",
@@ -125,5 +130,13 @@ export const de = {
     "profile_updated": "Profil erfolgreich aktualisiert",
     "error_saving_profile": "Fehler beim Speichern des Profils",
     "user_url_taken": "Benutzer-URL bereits vergeben",
-    "error_loading_profile": "Fehler beim Laden des Profils"
+    "error_loading_profile": "Fehler beim Laden des Profils",
+    "login_with_sso": "Anmelden mit SSO",
+    "login_successful": "Anmeldung erfolgreich",
+    "login_failed": "Anmeldung fehlgeschlagen",
+    "google_login_failed": "Google-Anmeldung fehlgeschlagen",
+    "Add": "Hinzufügen",
+    "Close": "Schließen",
+    "Cancel": "Abbrechen",
+    "I acknowledge that my password will be stored encrypted in the database.": "Ich bestätige, dass mein Passwort verschlüsselt in der Datenbank gespeichert wird."
 };

@@ -77,11 +77,11 @@ const AppNavbar = () => {
             variant="ghost"
             size="icon"
             className="mr-2"
-            onClick={handleOnClick("/app")}
+            onClick={handleOnClick("/")}
           >
-            <Calendar className="h-6 w-6" />
+            <img src="/logo_no_text.svg" alt="Logo" className="h-8 w-8" />
           </Button>
-          <h1 className="text-xl font-bold">BookMe</h1>
+          <h1 className="text-xl font-bold">{t("application_title")}</h1>
         </div>
 
         <div className="flex items-center gap-2">

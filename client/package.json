@@ -71,6 +71,7 @@
   "scripts": {
     "start": "vite --force",
     "build": "vite build",
+    "build:icons": "node scripts/generate-icons.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
@@ -113,6 +114,7 @@
     "jsdom": "^27.2.0",
     "nyc": "^17.1.0",
     "playwright-ctrf-json-reporter": "^0.0.27",
+    "sharp-cli": "^5.2.0",
     "start-server-and-test": "^1.13.1",
     "typescript-eslint": "^8.48.1",
     "vite": "^5.4.7",

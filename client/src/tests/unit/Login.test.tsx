@@ -26,6 +26,13 @@ vi.mock('@react-oauth/google', () => ({
 // Mock auth_services
 vi.mock('../../helpers/services/auth_services');
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 // Mock sonner
 vi.mock('sonner', () => ({
     toast: {
@@ -60,12 +67,13 @@ describe('Login Component', () => {
         // Wait for promise resolution
         await new Promise(process.nextTick);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/app');
+        expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
     it('should handle login error', async () => {
         const consoleSpy = vi.spyOn(console, 'log');
-        (authServices.postGoogleLogin as any).mockRejectedValue({ response: 'error' });
+        const errorResponse = { response: { data: { message: 'Specific API Error' } } };
+        (authServices.postGoogleLogin as any).mockRejectedValue(errorResponse);
 
         render(<Login />);
 
@@ -77,8 +85,10 @@ describe('Login Component', () => {
         // Wait for promise resolution
         await new Promise(process.nextTick);
 
-        expect(consoleSpy).toHaveBeenCalledWith('GOOGLE SIGNIN ERROR', 'error');
-        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Google login failed'));
+        expect(consoleSpy).toHaveBeenCalledWith('GOOGLE SIGNIN ERROR', errorResponse.response);
+        // We expect the key because we mocked t to return the key
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('google_login_failed'));
+        expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Specific API Error'));
         expect(mockNavigate).not.toHaveBeenCalled();
     });
 });

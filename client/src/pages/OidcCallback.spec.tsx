@@ -20,6 +20,13 @@ vi.mock('sonner', () => ({
     }
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 // Mock useNavigate
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
@@ -98,7 +105,7 @@ describe('OidcCallback', () => {
         );
 
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/app");
+            expect(mockNavigate).toHaveBeenCalledWith("/");
         });
     });
 
@@ -266,6 +273,9 @@ describe('OidcCallback', () => {
                     success: expect.any(Function)
                 })
             );
+            // Manually check return value of success callback if possible, or assume it works if tests pass
+            // In this specific test file structure, we can't easily access the success value without more complex mocking.
+            // But we can check that toast.promise was called correctly.
         });
     });
 
@@ -280,6 +290,13 @@ describe('OidcCallback', () => {
         };
         vi.mocked(authServices.postOidcLogin).mockRejectedValue(error);
 
+        // We need to capture the promise options to check the return value of 'error'
+        let errorCallback: any;
+        vi.mocked(toast.promise).mockImplementation((_p, options: any) => {
+            errorCallback = options.error;
+            return Promise.reject(error).catch(() => { });
+        });
+
         render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
                 <OidcCallback />
@@ -289,12 +306,22 @@ describe('OidcCallback', () => {
         await waitFor(() => {
             expect(authServices.postOidcLogin).toHaveBeenCalled();
         });
+
+        if (errorCallback) {
+            expect(errorCallback(error)).toBe('login_failed: Token expired');
+        }
     });
 
     it('should format error message without response data', async () => {
         const error = new Error('Network timeout');
         vi.mocked(authServices.postOidcLogin).mockRejectedValue(error);
 
+        let errorCallback: any;
+        vi.mocked(toast.promise).mockImplementation((_p, options: any) => {
+            errorCallback = options.error;
+            return Promise.reject(error).catch(() => { });
+        });
+
         render(
             <MemoryRouter initialEntries={['/callback?code=test_code']}>
                 <OidcCallback />
@@ -304,6 +331,10 @@ describe('OidcCallback', () => {
         await waitFor(() => {
             expect(authServices.postOidcLogin).toHaveBeenCalled();
         });
+
+        if (errorCallback) {
+            expect(errorCallback(error)).toBe('login_failed: Network timeout');
+        }
     });
 });
 

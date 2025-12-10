@@ -44,9 +44,11 @@ export const ko = {
     "extra_misty_panda_grip": "사용자는 이 링크를 사용하여 약속을 예약할 수 있습니다.",
     "sunny_great_halibut_empower": "첫 번째 만들기",
     "create_first_event_type_button": "이벤트 유형",
-    "orange_grand_racoon_fall": "Appoint 작동 방식",
-    "male_patient_hedgehog_ask": "Appoint는 간단하고 사용하기 쉬운 약속 예약 시스템입니다. 이벤트를 만들고 링크를 공유하여 사용자가 귀하와 약속을 예약할 수 있습니다.",
-    "factual_moving_hawk_belong": "Appoint가 약속을 추가하는 곳과 바쁜지 확인하는 곳을 지정하십시오.",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "{{app_title}} 작동 방식",
+    "male_patient_hedgehog_ask": "{{app_title}}는 간단하고 사용하기 쉬운 약속 예약 시스템입니다. 이벤트를 만들고 링크를 공유하여 사용자가 귀하와 약속을 예약할 수 있습니다.",
+    "factual_moving_hawk_belong": "{{app_title}}가 약속을 추가하는 곳과 바쁜지 확인하는 곳을 지정하십시오.",
+    "step_1_configure_calendars": "단계 1: 캘린더 구성",
     "pink_polite_racoon_earn": "단계 2: 이벤트 만들기",
     "happy_wise_mantis_laugh": "\"사용 가능한 시간을 추가하면 준비가 완료됩니다!\"",
     "careful_misty_bullock_splash": "단계 3: 링크 공유",
@@ -103,6 +105,9 @@ export const ko = {
     "Server URL": "서버 URL",
     "Username": "사용자 이름",
     "label_password": "비밀번호",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "초대: {{summary}}",
@@ -117,5 +122,13 @@ export const ko = {
     "user_menu_my_account": "My account",
     "user_menu_calendar_integration": "Calendar Integration",
     "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile",
+    "login_with_sso": "SSO로 로그인",
+    "login_successful": "로그인 성공",
+    "login_failed": "로그인 실패",
+    "google_login_failed": "Google 로그인 실패",
+    "Add": "추가",
+    "Close": "닫기",
+    "Cancel": "취소",
+    "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다."
 };

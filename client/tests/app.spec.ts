@@ -21,7 +21,7 @@ test.describe('User not logged in', () => {
         });
 
         test('Should redirect to landing', async ({ page }) => {
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await expect(page).toHaveURL(/\/landing/);
         });
@@ -33,7 +33,7 @@ test.describe('User not logged in', () => {
                     body: JSON.stringify({ "success": false, "message": "Unauthorized! Sign in again!" })
                 });
             });
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await expect(page).toHaveURL(/\/landing/);
         });
@@ -42,13 +42,13 @@ test.describe('User not logged in', () => {
             await page.route('**/user/user', async route => {
                 await route.fulfill({ status: 500 });
             });
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await expect(page).toHaveURL(/\/landing/);
         });
 
         test('should show login button', async ({ page }) => {
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await expect(page).toHaveURL(/\/landing/);
             await page.getByTestId('profile-menu').click();
@@ -96,7 +96,7 @@ test.describe('Main page', () => {
         });
 
         test('Check add/delete event type', async ({ page }) => {
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
@@ -148,7 +148,7 @@ test.describe('Main page', () => {
                 }
             });
 
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
@@ -183,7 +183,7 @@ test.describe('Main page', () => {
             const userPromise = page.waitForResponse(resp => resp.url().includes('/user/user'));
             const eventPromise = page.waitForResponse(resp => resp.url().includes('/api/v1/event') && resp.request().method() === 'GET');
 
-            await page.goto('/app');
+            await page.goto('/');
             await userPromise;
             await eventPromise;
 
@@ -215,7 +215,7 @@ test.describe('Main page', () => {
         });
 
         test('Check edit event type', async ({ page }) => {
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
@@ -234,7 +234,7 @@ test.describe('Main page', () => {
         });
 
         test('Check log out', async ({ page }) => {
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 
@@ -258,7 +258,7 @@ test.describe('Main page', () => {
             await page.route(url => url.pathname.includes('/google/calendarList'), async route => await route.fulfill({ path: './tests/fixtures/calendarList.json' }));
             await page.route(url => url.pathname.includes('/google/generateUrl'), async route => await route.fulfill({ path: './tests/fixtures/generateUrl.json' }));
 
-            await page.goto('/app');
+            await page.goto('/');
             await page.waitForResponse(resp => resp.url().includes('/user/user'));
             await page.waitForResponse(resp => resp.url().includes('/event'));
 

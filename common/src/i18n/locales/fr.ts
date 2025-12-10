@@ -44,9 +44,11 @@ export const fr = {
     "extra_misty_panda_grip": "Les utilisateurs peuvent utiliser ce lien pour réserver des rendez-vous.",
     "sunny_great_halibut_empower": "Créer le premier",
     "create_first_event_type_button": "Type d'événement",
-    "orange_grand_racoon_fall": "Comment fonctionne Appoint",
-    "male_patient_hedgehog_ask": "Appoint est un système de prise de rendez-vous simple et facile à utiliser. Il vous permet de créer des événements, de partager votre lien et de permettre aux utilisateurs de prendre rendez-vous avec vous.",
-    "factual_moving_hawk_belong": "Précisez où Appoint ajoute vos rendez-vous et où il vérifie si vous êtes occupé.",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "Comment fonctionne {{app_title}}",
+    "male_patient_hedgehog_ask": "{{app_title}} est un système de prise de rendez-vous simple et facile à utiliser. Il vous permet de créer des événements, de partager votre lien et de permettre aux utilisateurs de prendre rendez-vous avec vous.",
+    "factual_moving_hawk_belong": "Précisez où {{app_title}} ajoute vos rendez-vous et où il vérifie si vous êtes occupé.",
+    "step_1_configure_calendars": "Étape 1 : Configurer les calendriers",
     "pink_polite_racoon_earn": "Étape 2 : Créer des événements",
     "happy_wise_mantis_laugh": "\"Ajoutez vos disponibilités et c'est parti !\"",
     "careful_misty_bullock_splash": "Étape 3 : Partager votre lien",
@@ -103,6 +105,9 @@ export const fr = {
     "Server URL": "URL du serveur",
     "Username": "Nom d'utilisateur",
     "label_password": "Mot de passe",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "Invitation : {{summary}}",
@@ -125,5 +130,13 @@ export const fr = {
     "profile_updated": "Profil mis à jour avec succès",
     "error_saving_profile": "Erreur lors de l'enregistrement du profil",
     "user_url_taken": "URL utilisateur déjà prise",
-    "error_loading_profile": "Erreur lors du chargement du profil"
+    "error_loading_profile": "Erreur lors du chargement du profil",
+    "login_with_sso": "Se connecter avec SSO",
+    "login_successful": "Connexion réussie",
+    "login_failed": "Échec de la connexion",
+    "google_login_failed": "Échec de la connexion Google",
+    "Add": "Ajouter",
+    "Close": "Fermer",
+    "Cancel": "Annuler",
+    "I acknowledge that my password will be stored encrypted in the database.": "Je reconnais que mon mot de passe sera stocké chiffré dans la base de données."
 };

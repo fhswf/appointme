@@ -44,9 +44,11 @@ export const ja = {
     "extra_misty_panda_grip": "ユーザーはこのリンクを使用して予定を予約できます。",
     "sunny_great_halibut_empower": "最初の作成",
     "create_first_event_type_button": "イベントタイプ",
-    "orange_grand_racoon_fall": "Appointの仕組み",
-    "male_patient_hedgehog_ask": "Appointはシンプルで使いやすい予約システムです。イベントを作成し、リンクを共有して、ユーザーがあなたと予定を予約できるようにします。",
-    "factual_moving_hawk_belong": "Appointがあなたの予定を追加する場所と、忙しいかどうかを確認する場所を指定します。",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "{{app_title}}の仕組み",
+    "male_patient_hedgehog_ask": "{{app_title}}はシンプルで使いやすい予約システムです。イベントを作成し、リンクを共有して、ユーザーがあなたと予定を予約できるようにします。",
+    "factual_moving_hawk_belong": "{{app_title}}があなたの予定を追加する場所と、忙しいかどうかを確認する場所を指定します。",
+    "step_1_configure_calendars": "ステップ1：カレンダーを設定",
     "pink_polite_racoon_earn": "ステップ2：イベントの作成",
     "happy_wise_mantis_laugh": "「利用可能な時間を追加すれば、準備完了です！」",
     "careful_misty_bullock_splash": "ステップ3：リンクを共有",
@@ -103,6 +105,9 @@ export const ja = {
     "Server URL": "サーバーURL",
     "Username": "ユーザー名",
     "label_password": "パスワード",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "招待：{{summary}}",
@@ -117,5 +122,13 @@ export const ja = {
     "user_menu_my_account": "My account",
     "user_menu_calendar_integration": "Calendar Integration",
     "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile",
+    "login_with_sso": "SSOでログイン",
+    "login_successful": "ログイン成功",
+    "login_failed": "ログイン失敗",
+    "google_login_failed": "Googleログイン失敗",
+    "Add": "追加",
+    "Close": "閉じる",
+    "Cancel": "キャンセル",
+    "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。"
 };

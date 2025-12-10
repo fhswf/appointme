@@ -1,4 +1,5 @@
 export const en = {
+    "application_title": "Appoint Me",
     "these_zesty_duck_nudge": "Basic Information",
     "north_least_gopher_burn": "What is the purpose of this appointment type?",
     "lazy_just_duck_spin": "Event title",
@@ -44,9 +45,10 @@ export const en = {
     "extra_misty_panda_grip": "Users can use this link to book appointments.",
     "sunny_great_halibut_empower": "Create the first",
     "create_first_event_type_button": "Event Type",
-    "orange_grand_racoon_fall": "How Appoint works",
-    "male_patient_hedgehog_ask": "Appoint is a simple, easy to use, appointment booking system. It            allows you to create events, share your link and let users book            appointments with you.",
-    "factual_moving_hawk_belong": "Specify where Appoint adds your appointments and where it checks whether you are busy.",
+    "orange_grand_racoon_fall": "How {{app_title}} works",
+    "male_patient_hedgehog_ask": "{{app_title}} is a simple, easy to use, appointment booking system. It            allows you to create events, share your link and let users book            appointments with you.",
+    "factual_moving_hawk_belong": "Specify where {{app_title}} adds your appointments and where it checks whether you are busy.",
+    "step_1_configure_calendars": "Step 1: Configure calendars",
     "pink_polite_racoon_earn": "Step 2: Create events",
     "happy_wise_mantis_laugh": "\"Add your available times and you're\n                good to go!\"",
     "careful_misty_bullock_splash": "Step 3: Share your link",
@@ -103,6 +105,9 @@ export const en = {
     "Server URL": "Server URL",
     "Username": "Username",
     "label_password": "Password",
+    "send_invitation_email": "Send invitation email",
+    "send_invitation_email_notice": "Only needed if your CalDAV server does not send invitations automatically.",
+
 
     // Backend specific
     "invitationSubject": "Invitation: {{summary}}",
@@ -125,5 +130,13 @@ export const en = {
     "profile_updated": "Profile updated successfully",
     "error_saving_profile": "Error saving profile",
     "user_url_taken": "User URL already taken",
-    "error_loading_profile": "Error loading profile"
+    "error_loading_profile": "Error loading profile",
+    "login_with_sso": "Login with SSO",
+    "login_successful": "Login successful",
+    "login_failed": "Login failed",
+    "google_login_failed": "Google login failed",
+    "Add": "Add",
+    "Close": "Close",
+    "Cancel": "Cancel",
+    "I acknowledge that my password will be stored encrypted in the database.": "I acknowledge that my password will be stored encrypted in the database."
 };

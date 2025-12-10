@@ -2,11 +2,13 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { postOidcLogin } from "../helpers/services/auth_services";
+import { useTranslation } from "react-i18next";
 
 const OidcCallback = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const processedRef = useRef(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (processedRef.current) return;
@@ -23,13 +25,13 @@ const OidcCallback = () => {
             loading: 'Authenticating...',
             success: (res) => {
                 console.log("OIDC Login Success", res);
-                navigate("/app");
-                return "Successfully logged in";
+                navigate("/");
+                return t("login_successful");
             },
             error: (err: any) => {
                 console.error("OIDC Login Error", err);
                 setTimeout(() => navigate("/login"), 2000);
-                return "Login failed: " + (err.response?.data?.error || err.message);
+                return t("login_failed") + ": " + (err.response?.data?.error || err.message);
             }
         });
 

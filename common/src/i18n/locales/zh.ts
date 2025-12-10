@@ -44,9 +44,11 @@ export const zh = {
     "extra_misty_panda_grip": "用户可以使用此链接预订预约。",
     "sunny_great_halibut_empower": "创建第一个",
     "create_first_event_type_button": "事件类型",
-    "orange_grand_racoon_fall": "Appoint 如何工作",
-    "male_patient_hedgehog_ask": "Appoint 一个简单易用的预约预订系统。它允许您创建事件，分享您的链接并让用户与您预约。",
-    "factual_moving_hawk_belong": "指定 Appoint 在哪里添加您的预约以及在哪里检查您是否忙碌。",
+    "application_title": "Appoint Me",
+    "orange_grand_racoon_fall": "{{app_title}} 如何工作",
+    "male_patient_hedgehog_ask": "{{app_title}} 一个简单易用的预约预订系统。它允许您创建事件，分享您的链接并让用户与您预约。",
+    "factual_moving_hawk_belong": "指定 {{app_title}} 在哪里添加您的预约以及在哪里检查您是否忙碌。",
+    "step_1_configure_calendars": "步骤 1：配置日历",
     "pink_polite_racoon_earn": "步骤 2：创建事件",
     "happy_wise_mantis_laugh": "“添加您的可用时间，就可以了！”",
     "careful_misty_bullock_splash": "步骤 3：分享您的链接",
@@ -103,6 +105,9 @@ export const zh = {
     "Server URL": "服务器 URL",
     "Username": "用户名",
     "label_password": "密码",
+    "send_invitation_email": "发送邀请邮件",
+    "send_invitation_email_notice": "仅当您的 CalDAV 服务器不自动发送邀请时需要。",
+
 
     // Backend specific
     "invitationSubject": "邀请：{{summary}}",
@@ -111,11 +116,19 @@ export const zh = {
     "dateFormat": "zh-CN",
 
     // User Menu
-    "user_menu_log_out": "Log out",
-    "user_menu_log_in": "Log in",
-    "user_menu_profile": "Profile",
-    "user_menu_my_account": "My account",
-    "user_menu_calendar_integration": "Calendar Integration",
-    "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
+    "user_menu_log_out": "登出",
+    "user_menu_log_in": "登录",
+    "user_menu_profile": "个人资料",
+    "user_menu_my_account": "我的账户",
+    "user_menu_calendar_integration": "日历集成",
+    "user_menu_copy_link": "复制链接",
+    "user_menu_link_copied": "链接已复制", "name": "姓名", "user_url": "用户链接", "use_gravatar": "使用 Gravatar", "save": "保存", "profile_updated": "个人资料已更新", "error_saving_profile": "保存个人资料时出错", "user_url_taken": "用户链接已被占用", "error_loading_profile": "加载个人资料时出错",
+    "login_with_sso": "使用 SSO 登录",
+    "login_successful": "登录成功",
+    "login_failed": "登录失败",
+    "google_login_failed": "Google 登录失败",
+    "Add": "添加",
+    "Close": "关闭",
+    "Cancel": "取消",
+    "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。"
 };
