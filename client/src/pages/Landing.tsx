@@ -15,14 +15,14 @@ const Landing = (props: any) => {
       <div className="bg-background min-h-screen">
         <div className="container mx-auto p-8">
 
-          <h3 className="text-3xl font-bold mb-4">{t("orange_grand_racoon_fall")}</h3>
+          <h3 className="text-3xl font-bold mb-4">{t("orange_grand_racoon_fall", { app_title: "Appoint Me" })}</h3>
           <p className="text-lg mb-6">
-            {t("male_patient_hedgehog_ask")}
+            {t("male_patient_hedgehog_ask", { app_title: "Appoint Me" })}
           </p>
           <ul className="space-y-4">
             <li className="border-b pb-2">
-              <div className="font-semibold">Step 1: Configure your calendars</div>
-              <div className="text-muted-foreground">{t("factual_moving_hawk_belong")}</div>
+              <div className="font-semibold">{t("step_1_configure_calendars")}</div>
+              <div className="text-muted-foreground">{t("factual_moving_hawk_belong", { app_title: "Appoint Me" })}</div>
             </li>
             <li className="border-b pb-2">
               <div className="font-semibold">{t("pink_polite_racoon_earn")}</div>
