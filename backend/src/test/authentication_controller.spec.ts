@@ -46,6 +46,9 @@ vi.mock("../models/User.js", () => {
     });
 
     (UserModelMock as any).findOne = vi.fn();
+    (UserModelMock as any).findById = vi.fn().mockReturnValue({
+        exec: vi.fn().mockResolvedValue(USER)
+    });
     (UserModelMock as any).findOneAndUpdate = vi.fn();
 
     return {

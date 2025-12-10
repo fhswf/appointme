@@ -77,8 +77,6 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
     try {
         // Exchange code for tokens
         // We must pass the same redirect_uri that was used in the authorization request
-        // Exchange code for tokens
-        // We must pass the same redirect_uri that was used in the authorization request
         const tokenSet = await oidcClient.callback(
             `${process.env.CLIENT_URL}/oidc-callback`,
             { code }
@@ -92,20 +90,58 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
             return;
         }
 
-        const user_url = validateUrl(email);
-        const picture_url = picture || "";
+        // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
+        let user = await UserModel.findOne({ email }).exec();
 
-        const userName = name || email.split('@')[0];
+        // If user doesn't exist, create it
+        if (!user) {
+            let user_url = validateUrl(email);
+            const picture_url = picture || "";
+            const userName = name || email.split('@')[0];
 
-        const user = await UserModel.findOneAndUpdate(
-            { _id: sub },
-            { name: userName, email, picture_url, user_url },
-            { upsert: true, new: true }
-        ).exec();
+            // 2. Retry loop for user_url uniqueness
+            let retry = 0;
+            const maxRetries = 5;
+
+            while (retry < maxRetries) {
+                try {
+                    // Try to upsert/create user
+                    // Note: We use findOneAndUpdate with upsert: true. 
+                    // However, we are searching by _id (sub). 
+                    // If the ID is new but email exists (which we checked above, but race condition possible),
+                    // or if user_url exists, it might fail.
+                    // We already checked email above, so main concern is user_url collision 
+                    // or concurrent email registration.
+
+                    user = await UserModel.findOneAndUpdate(
+                        { _id: sub },
+                        { name: userName, email, picture_url, user_url },
+                        { upsert: true, new: true, runValidators: true }
+                    ).exec();
+
+                    break; // Success
+                } catch (err: any) {
+                    if (err.code === 11000) {
+                        // Check which key violated uniqueness
+                        if (err.keyPattern && err.keyPattern.user_url) {
+                            // User URL collision, append suffix and retry
+                            user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
+                            retry++;
+                            continue;
+                        }
+                        // If it's email collision (rare race condition if we checked above), likely unrecoverable here
+                        // or other constraint.
+                        throw err;
+                    }
+                    throw err;
+                }
+            }
+        }
 
         if (!user) {
-            throw new Error("User creation failed");
+            throw new Error("User creation failed after retries");
         }
+
 
         const access_token = sign(
             { _id: user._id, name: user.name, email: user.email },

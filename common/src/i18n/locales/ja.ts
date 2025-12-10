@@ -102,11 +102,20 @@ export const ja = {
     "CalDav Accounts": "CalDavアカウント",
     "Server URL": "サーバーURL",
     "Username": "ユーザー名",
-    "Password": "パスワード",
+    "label_password": "パスワード",
 
     // Backend specific
     "invitationSubject": "招待：{{summary}}",
     "invitationBody": "<p>こんにちは {{attendeeName}}、</p><p>次のイベントに招待されました：</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>時間：</strong> {{time}}</p><p>イベントの詳細を添付します。</p>",
     "icsDescription": "イベントの説明：\n{{description}}",
-    "dateFormat": "ja-JP"
+    "dateFormat": "ja-JP",
+
+    // User Menu
+    "user_menu_log_out": "Log out",
+    "user_menu_log_in": "Log in",
+    "user_menu_profile": "Profile",
+    "user_menu_my_account": "My account",
+    "user_menu_calendar_integration": "Calendar Integration",
+    "user_menu_copy_link": "Copy your link",
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
 };

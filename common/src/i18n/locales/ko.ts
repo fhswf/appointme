@@ -102,11 +102,20 @@ export const ko = {
     "CalDav Accounts": "CalDav 계정",
     "Server URL": "서버 URL",
     "Username": "사용자 이름",
-    "Password": "비밀번호",
+    "label_password": "비밀번호",
 
     // Backend specific
     "invitationSubject": "초대: {{summary}}",
     "invitationBody": "<p>안녕하세요 {{attendeeName}} 님,</p><p>다음 이벤트에 초대되었습니다:</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>시간:</strong> {{time}}</p><p>첨부된 이벤트 세부 정보를 확인하십시오.</p>",
     "icsDescription": "이벤트 설명:\n{{description}}",
-    "dateFormat": "ko-KR"
+    "dateFormat": "ko-KR",
+
+    // User Menu
+    "user_menu_log_out": "Log out",
+    "user_menu_log_in": "Log in",
+    "user_menu_profile": "Profile",
+    "user_menu_my_account": "My account",
+    "user_menu_calendar_integration": "Calendar Integration",
+    "user_menu_copy_link": "Copy your link",
+    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile"
 };

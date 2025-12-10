@@ -102,11 +102,28 @@ export const de = {
     "CalDav Accounts": "CalDav Konten",
     "Server URL": "Server URL",
     "Username": "Benutzername",
-    "Password": "Passwort",
+    "label_password": "Passwort",
 
     // Backend specific
     "invitationSubject": "Einladung: {{summary}}",
     "invitationBody": "<p>Hallo {{attendeeName}},</p><p>Du wurdest zu folgendem Termin eingeladen:</p><h3>{{summary}}</h3><p>{{description}}</p><p><strong>Zeit:</strong> {{time}}</p><p>Anbei findest du die Termindetails.</p>",
     "icsDescription": "Terminbeschreibung:\n{{description}}",
-    "dateFormat": "de-DE"
+    "dateFormat": "de-DE",
+
+    // User Menu
+    "user_menu_log_out": "Abmelden",
+    "user_menu_log_in": "Anmelden",
+    "user_menu_profile": "Profil",
+    "user_menu_my_account": "Mein Konto",
+    "user_menu_calendar_integration": "Kalenderintegration",
+    "user_menu_copy_link": "Link kopieren",
+    "user_menu_link_copied": "Link kopiert",
+    "name": "Name",
+    "user_url": "Benutzer-URL",
+    "use_gravatar": "Gravatar verwenden",
+    "save": "Speichern",
+    "profile_updated": "Profil erfolgreich aktualisiert",
+    "error_saving_profile": "Fehler beim Speichern des Profils",
+    "user_url_taken": "Benutzer-URL bereits vergeben",
+    "error_loading_profile": "Fehler beim Laden des Profils"
 };

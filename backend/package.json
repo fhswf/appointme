@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
-    "ci": "vitest run src/**/*.spec.ts --coverage; yarn dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml",
+    "ci": "vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; yarn dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml",
     "start": "node build/server.js",
     "server": "node --import tsx --watch src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

@@ -202,8 +202,35 @@ export const googleLoginController = (req: Request, res: Response): void => {
         const user = new UserModel({ name, email, picture_url: picture, user_url });
         user._id = sub;
         logger.debug('user: %o', user);
-        UserModel.findOneAndUpdate({ _id: sub }, { name, email, picture_url: picture, user_url }, { upsert: true, new: true })
-          .exec()
+
+        // Find existing user first to check gravatar preference
+        UserModel.findById(sub).exec().then(existingUser => {
+          let updateData: any = {
+            name,
+            email,
+            google_picture_url: picture
+          };
+
+          if (!existingUser) {
+            // New user: set user_url and picture_url
+            updateData.user_url = user_url;
+            updateData.picture_url = picture;
+          } else {
+            // Existing user: only update picture_url if NOT using gravatar
+            if (!existingUser.use_gravatar) {
+              updateData.picture_url = picture;
+            }
+          }
+
+          return UserModel.findOneAndUpdate(
+            { _id: sub },
+            {
+              $set: updateData,
+              $setOnInsert: { user_url: user_url } // Fallback if race condition (though findById handles most)
+            },
+            { upsert: true, new: true }
+          ).exec();
+        })
           .then(user => {
             if (!user) {
               throw new Error("User creation failed");
@@ -227,7 +254,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
                 access_token, { maxAge: 60 * 60 * 24 * 1000, httpOnly: true, secure: true, sameSite, domain })
               .status(200)
               .json({
-                user: { _id, email, name, picture_url: picture },
+                user: { _id, email, name, picture_url: user.picture_url },
               });
           })
           .catch(error => {

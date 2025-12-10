@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthenticated, signout } from "../helpers/helpers";
 import { UserContext } from "./PrivateRoute";
@@ -34,6 +35,7 @@ declare global {
 
 const AppNavbar = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const user = useContext(UserContext).user;
 
   const link = user ? import.meta.env.REACT_APP_URL + "/users/" + user.user_url : "";
@@ -50,7 +52,7 @@ const AppNavbar = () => {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(link).then(() => toast.success("Link copied"));
+    navigator.clipboard.writeText(link).then(() => toast.success(t("user_menu_link_copied")));
   };
 
   const handleOnClick = (target: string) => () => navigate(target);
@@ -58,12 +60,12 @@ const AppNavbar = () => {
   const loginOut = useAuthenticated() ? (
     <DropdownMenuItem onClick={handleLogout} data-testid="logout-button">
       <LogOut className="mr-2 h-4 w-4" />
-      <span>Log out</span>
+      <span>{t("user_menu_log_out")}</span>
     </DropdownMenuItem>
   ) : (
     <DropdownMenuItem onClick={handleLogin} data-testid="login-button">
       <LogIn className="mr-2 h-4 w-4" />
-      <span>Log in</span>
+      <span>{t("user_menu_log_in")}</span>
     </DropdownMenuItem>
   );
 
@@ -94,20 +96,21 @@ const AppNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem disabled={!user}>
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+              <DropdownMenuItem asChild disabled={!user}>
+                <Link to="/profile" className="flex items-center w-full">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>{t("user_menu_profile")}</span>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem disabled={!user}>My account</DropdownMenuItem>
               <DropdownMenuItem asChild disabled={!user}>
                 <Link to="/integration" data-testid="calendar-button" className="flex items-center w-full">
                   <Calendar className="mr-2 h-4 w-4" />
-                  <span>Calendar Integration</span>
+                  <span>{t("user_menu_calendar_integration")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={copyToClipboard} disabled={!user}>
                 <LinkIcon className="mr-2 h-4 w-4" />
-                <span>Copy your link</span>
+                <span>{t("user_menu_copy_link")}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {loginOut}

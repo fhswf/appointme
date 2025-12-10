@@ -42,9 +42,8 @@ app.use(
   })
 );
 
-app.use(cookieParser());
+app.use(cookieParser(process.env.CSRF_SECRET));
 
-//Connecting to the database
 //Connecting to the database
 dataBaseConn();
 

@@ -2,7 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import CalendarIntegration from './CalendarInt';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import CalendarIntegration from './CalendarInt';
 import { MemoryRouter } from 'react-router-dom';
+import * as router from 'react-router-dom';
+import { UserContext } from '../components/PrivateRoute';
 import { UserContext } from '../components/PrivateRoute';
 import * as googleServices from '../helpers/services/google_services';
 import * as caldavServices from '../helpers/services/caldav_services';
@@ -62,6 +66,15 @@ vi.mock('@/components/ui/checkbox', () => ({
         />
     )
 }));
+
+const navigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => navigate,
+    };
+});
 
 describe('CalendarIntegration Page', () => {
     const mockUser = {
@@ -264,5 +277,81 @@ describe('CalendarIntegration Page', () => {
             expect(screen.getByText('Broken Account')).toBeInTheDocument();
             expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
         });
+    });
+    it('should handle multiple calendars, save without redirect, and close', async () => {
+        navigate.mockClear();
+
+        const googleCals = {
+            data: {
+                data: {
+                    items: [
+                        { id: 'google1', summary: 'Google', primary: true }
+                    ]
+                }
+            }
+        };
+        (googleServices.getCalendarList as any).mockResolvedValue(googleCals);
+
+        const accounts = [{ _id: 'acc1', name: 'CalDAV Account' }];
+        (caldavServices.listAccounts as any).mockResolvedValue({ data: accounts });
+
+        // Mock listCalendars for the account
+        (caldavServices.listCalendars as any).mockResolvedValue({
+            data: [{ id: 'caldav1', summary: 'CalDAV' }]
+        });
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarIntegration />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        // Wait for both calendars to be loaded
+        await waitFor(() => {
+            // Google calendar title
+            // Note: icons are alt text or src, simpler to check for presence of calendar names in DOM if rendered?
+            // They are rendered inside Dialogs usually, or initially? 
+            // Wait, renderCalendarList is used in Dialogs. The main view only shows Accounts and Titles.
+            // But we want to test selecting them in the Pull/Push dialogs.
+            expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
+        });
+
+        // Open Pull Calendars dialog
+        fireEvent.click(screen.getByTestId('edit-pull-calendar'));
+
+        // Check if both calendars are listed
+        await waitFor(() => {
+            expect(screen.getByText('Google')).toBeInTheDocument();
+            expect(screen.getByText('CalDAV')).toBeInTheDocument();
+        });
+
+        // Select both
+        const googleCheckbox = screen.getByLabelText('Google');
+        const caldavCheckbox = screen.getByLabelText('CalDAV');
+
+        // Assuming undefined start state or empty
+        if (!(googleCheckbox as HTMLInputElement).checked) fireEvent.click(googleCheckbox);
+        if (!(caldavCheckbox as HTMLInputElement).checked) fireEvent.click(caldavCheckbox);
+
+        // Click Save
+        const saveBtn = screen.getByText('factual_nimble_snail_clap'); // "Save" key
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
+                pull_calendars: expect.arrayContaining(['google1', 'caldav1'])
+            }));
+        });
+
+        // Verify navigate was NOT called (no redirect on save)
+        expect(navigate).not.toHaveBeenCalled();
+
+        // Click Close
+        const closeBtn = screen.getByTestId('close-button');
+        fireEvent.click(closeBtn);
+
+        expect(navigate).toHaveBeenCalledWith('/');
     });
 });

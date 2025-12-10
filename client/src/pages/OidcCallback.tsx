@@ -28,6 +28,7 @@ const OidcCallback = () => {
             },
             error: (err: any) => {
                 console.error("OIDC Login Error", err);
+                setTimeout(() => navigate("/login"), 2000);
                 return "Login failed: " + (err.response?.data?.error || err.message);
             }
         });

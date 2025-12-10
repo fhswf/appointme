@@ -4,6 +4,12 @@ import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
 import { User } from "common/src/types";
 
+export interface UserDocument extends Document, User {
+  google_picture_url?: string;
+  use_gravatar?: boolean;
+}
+
+
 export interface GoogleTokens extends Document {
   access_token?: string;
   refresh_token?: string;
@@ -14,8 +20,7 @@ export interface GoogleTokens extends Document {
 interface GoogleTokensDocument extends GoogleTokens, Document {
 }
 
-export interface UserDocument extends Document, User {
-}
+
 
 // User schema for the Database
 const tokenSchema = new Schema<GoogleTokensDocument>({
