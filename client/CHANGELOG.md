@@ -1,3 +1,22 @@
+# client [1.17.0](https://github.com/fhswf/book_me/compare/client@1.16.1...client@1.17.0) (2025-12-10)
+
+
+### Features
+
+* Add user welcome field, update i18n password key, enhance user update security, and integrate new client icons. ([ac5aac0](https://github.com/fhswf/book_me/commit/ac5aac038d07ad84f167c787c47d062c47ddc7e8))
+* Add utility to patch JUnit XML timestamps and integrate into client unit and backend CI workflows. ([e3640ad](https://github.com/fhswf/book_me/commit/e3640ad57e01012412de1c5bff259be3350e644f))
+* Display calendar type icons, provide toast feedback on save, and improve multi-calendar selection logic and tests. ([3d3e572](https://github.com/fhswf/book_me/commit/3d3e572a9a7be30287fb293bc86cd0dec7738735))
+* Implement user profile page with Gravatar support, user URL updates, and i18n for navigation. ([1bfa2d6](https://github.com/fhswf/book_me/commit/1bfa2d64c04897dba6a99e6391cec0a5a51270d2))
+* improve OIDC user creation with email check and `user_url` collision retry, and redirect to login on client-side errors ([1daf9ae](https://github.com/fhswf/book_me/commit/1daf9aeb7a50837cc936f6f8acc3104425bf9fb2))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.7.0
+
 ## client [1.16.1](https://github.com/fhswf/book_me/compare/client@1.16.0...client@1.16.1) (2025-12-09)
 
 
