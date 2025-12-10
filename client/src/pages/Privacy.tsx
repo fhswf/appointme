@@ -34,8 +34,8 @@ const Privacy: React.FC = () => {
                 <div className="max-w-3xl mx-auto">
                     <ReactMarkdown components={markdownComponents}>{privacyContent}</ReactMarkdown>
                     <ContactInfo />
-                </div >
-            </div >
+                </div>
+            </div>
             <Footer />
         </div >
     );
