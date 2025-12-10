@@ -28,7 +28,9 @@ spec:
       initContainers:
         - name: migrations
           image: ghcr.io/fhswf/book_me/backend:1.25.1
-          command: ["yarn", "migrate"]
+          command:
+            - yarn
+            - migrate
           env:
             - name: MONGO_URI
               valueFrom:
@@ -104,7 +106,7 @@ spec:
                 secretKeyRef:
                   key: ENCRYPTION_KEY
                   name: bookme-secret
-          image: ghcr.io/fhswf/book_me/backend:1.25.2
+          image: ghcr.io/fhswf/book_me/backend:1.26.0
           name: bookme
           ports:
             - containerPort: 5000

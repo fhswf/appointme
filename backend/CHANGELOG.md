@@ -1,3 +1,18 @@
+# backend [1.26.0](https://github.com/fhswf/book_me/compare/backend@1.25.2...backend@1.26.0) (2025-12-10)
+
+
+### Features
+
+* database migration ([c326a4c](https://github.com/fhswf/book_me/commit/c326a4c456a369bd45fe25f6c8f933b5c817dfd5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.10.0
+
 ## backend [1.25.2](https://github.com/fhswf/book_me/compare/backend@1.25.1...backend@1.25.2) (2025-12-10)
 
 
