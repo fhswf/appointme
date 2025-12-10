@@ -4,6 +4,7 @@ import { useAuthenticated } from "../helpers/helpers";
 import { Navigate } from "react-router-dom";
 
 import AppNavbar from "../components/AppNavbar";
+import Footer from "../components/Footer";
 import { useTranslation } from "react-i18next";
 
 const Landing = (props: any) => {
@@ -12,8 +13,8 @@ const Landing = (props: any) => {
     <>
       {useAuthenticated() ? <Navigate to="/" /> : null}
       <AppNavbar />
-      <div className="bg-background min-h-screen">
-        <div className="container mx-auto p-8">
+      <div className="bg-background min-h-screen flex flex-col">
+        <div className="container mx-auto p-8 flex-grow">
 
           <h3 className="text-3xl font-bold mb-4">{t("orange_grand_racoon_fall", { app_title: "Appoint Me" })}</h3>
           <p className="text-lg mb-6">
@@ -38,7 +39,7 @@ const Landing = (props: any) => {
             </li>
           </ul>
         </div>
-
+        <Footer />
       </div>
     </>
   );
