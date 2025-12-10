@@ -96,6 +96,21 @@ router.use("/oidc/", oidcRouter);
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
+
+app.get("/healthz", async (req, res) => {
+  try {
+    const mongoose = await import("mongoose");
+    if (mongoose.connection.readyState === 1) {
+      res.status(200).send("OK: Database connected");
+    } else {
+      res.status(503).send("Service Unavailable: Database not connected");
+    }
+  } catch (error) {
+    logger.error("Error checking database connection status: %o", error);
+    res.status(500).send("Internal Server Error: Could not check database status");
+  }
+});
+
 app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;

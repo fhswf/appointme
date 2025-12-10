@@ -15,7 +15,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
 import OidcCallback from "./pages/OidcCallback";
-import Profile from "./pages/Profile";
+import Impressum from "./pages/Impressum";
+import Privacy from "./pages/Privacy";
 import { AuthProvider } from "./components/AuthProvider";
 
 import { useAuthenticated } from "./helpers/helpers";
@@ -44,11 +45,7 @@ const Main = () => {
                 </PrivateRoute>
               } />
 
-              <Route path="/profile" element={
-                <PrivateRoute>
-                  <Profile />
-                </PrivateRoute>
-              } />
+
 
               <Route path="/addevent" element={
                 <PrivateRoute>
@@ -92,10 +89,9 @@ const Main = () => {
                 path="/users/:user_url"
                 element={<Planning />}
               />
-              <Route
-                path="/users/:user_url/:url"
-                element={<Booking />}
-              />
+              <Route path="/users/:user_url/:url" element={<Booking />} />
+              <Route path="/impressum" element={<Impressum />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="*" element={<NotFound />} />
               <Route path="/notfound" element={<NotFound />} />
             </Routes>

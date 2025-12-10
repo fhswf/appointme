@@ -31,7 +31,7 @@ describe('user_services', () => {
             const result = await getUser();
 
             expect(axios.get).toHaveBeenCalledWith(
-                'http://localhost:3001/user/user',
+                'http://localhost:3001/user/me',
                 {
                     withCredentials: true
                 }
@@ -68,7 +68,7 @@ describe('user_services', () => {
 
             expect(csrfService.getCsrfToken).toHaveBeenCalled();
             expect(axios.put).toHaveBeenCalledWith(
-                'http://localhost:3001/user/',
+                'http://localhost:3001/user/me',
                 { data: userData },
                 {
                     headers: {
@@ -112,6 +112,39 @@ describe('user_services', () => {
                 expect.any(Object)
             );
             expect(result.data).toEqual(complexUserData);
+        });
+
+        it('should handle network errors during update', async () => {
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
+            vi.mocked(axios.put).mockRejectedValue(new Error('Network error'));
+
+            await expect(updateUser({ name: 'Test' })).rejects.toThrow('Network error');
+        });
+
+        it('should handle 409 conflict errors', async () => {
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
+            const error: any = {
+                response: {
+                    status: 409,
+                    data: { error: 'URL already taken' }
+                }
+            };
+            vi.mocked(axios.put).mockRejectedValue(error);
+
+            await expect(updateUser({ url: 'taken-url' })).rejects.toThrow();
+        });
+
+        it('should handle 401 unauthorized errors', async () => {
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
+            const error: any = {
+                response: {
+                    status: 401,
+                    data: { error: 'Unauthorized' }
+                }
+            };
+            vi.mocked(axios.put).mockRejectedValue(error);
+
+            await expect(updateUser({ name: 'Test' })).rejects.toThrow();
         });
     });
 

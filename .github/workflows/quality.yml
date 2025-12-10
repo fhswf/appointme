@@ -65,6 +65,13 @@ jobs:
       - name: Install Playwright Browsers
         run: cd client && npx playwright install --with-deps chromium
 
+      # Clean old coverage data to ensure fresh reports
+      - name: Clean Coverage Data
+        run: |
+          rm -rf client/.nyc_output
+          rm -rf client/coverage
+          mkdir -p client/.nyc_output
+
       # Run Common tests
       - name: Test Common
         run: yarn workspace common ci
@@ -78,6 +85,7 @@ jobs:
         run: |
           cd client
           npm run test:unit
+          npm run coverage:copy-unit
           npm run test:ci
         env:
           CI: true
@@ -88,7 +96,7 @@ jobs:
           VITE_COVERAGE: true
 
       - name: Generate Coverage Report
-        run: cd client && npm run coverage:report
+        run: cd client && npm run coverage:merge
 
       - name: Publish Test Report with Pull Request Comment
         uses: ctrf-io/github-test-reporter@v1

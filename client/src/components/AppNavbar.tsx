@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { ThemeToggle } from "./ThemeToggle";
+import { ProfileDialog } from "./ProfileDialog";
 
 interface ImportMetaEnv {
   REACT_APP_API_URL: any;
@@ -37,6 +38,7 @@ const AppNavbar = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const user = useContext(UserContext).user;
+  const [profileOpen, setProfileOpen] = React.useState(false);
 
   const link = user ? import.meta.env.REACT_APP_URL + "/users/" + user.user_url : "";
 
@@ -96,11 +98,9 @@ const AppNavbar = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild disabled={!user}>
-                <Link to="/profile" className="flex items-center w-full">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>{t("user_menu_profile")}</span>
-                </Link>
+              <DropdownMenuItem onClick={() => setProfileOpen(true)} disabled={!user}>
+                <User className="mr-2 h-4 w-4" />
+                <span>{t("user_menu_profile")}</span>
               </DropdownMenuItem>
               <DropdownMenuItem asChild disabled={!user}>
                 <Link to="/integration" data-testid="calendar-button" className="flex items-center w-full">
@@ -118,6 +118,7 @@ const AppNavbar = () => {
           </DropdownMenu>
         </div>
       </div>
+      <ProfileDialog open={profileOpen} onOpenChange={setProfileOpen} />
     </header>
   );
 };

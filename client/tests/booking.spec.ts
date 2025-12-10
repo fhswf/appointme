@@ -35,7 +35,7 @@ test.describe('Scheduling page', () => {
         });
 
         // Catch-all for API requests - defined first so it can be overridden
-        await page.route("**/api/v1/user/user", async (route) => {
+        await page.route("**/api/v1/user/me", async (route) => {
             if (route.request().method() === 'POST') {
                 await route.fulfill({ body: JSON.stringify({ error: 'not possible' }) }); // Default mock
             } else {

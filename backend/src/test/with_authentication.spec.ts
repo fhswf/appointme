@@ -89,14 +89,14 @@ describe("Server Start", () => {
 
     it("should return unauthorized", async () => {
         status = 401;
-        const res = await request(app).get("/api/v1/user/user");
+        const res = await request(app).get("/api/v1/user/me");
         expect(res.status).toEqual(401);
     })
 
     it("should return unauthorized", async () => {
         status = 401;
         const res = await request(app)
-            .get("/api/v1/user/user")
+            .get("/api/v1/user/me")
             .set({ "Authorization": "Bearer" })
         expect(res.status).toEqual(401);
     })
@@ -104,14 +104,14 @@ describe("Server Start", () => {
     it("should return unauthorized", async () => {
         status = 401;
         const res = await request(app)
-            .get("/api/v1/user/user")
+            .get("/api/v1/user/me")
             .set({ "Authorization": "Bearer invalid" })
         expect(res.status).toEqual(401);
     })
 
     it("should return the user", async () => {
         const res = await request(app)
-            .get("/api/v1/user/user")
+            .get("/api/v1/user/me")
             .set({ "Cookie": `access_token=${jwt}` })
         expect(res.status).toEqual(200);
         expect(res.body.name).toEqual("Christian Gawron");
@@ -131,7 +131,7 @@ describe("Server Start", () => {
             name: "updated",
         }
         const res = await request(app)
-            .put("/api/v1/user/")
+            .put("/api/v1/user/me")
             .set({ "Cookie": [`access_token=${jwt}`, csrfCookie] })
             .set({ "x-csrf-token": csrfToken })
             .send({ data: newUser })

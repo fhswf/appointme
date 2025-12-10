@@ -3,7 +3,7 @@ import { test, expect } from './fixtures/base';
 test.describe('CalDAV Integration', () => {
     test.beforeEach(async ({ page }) => {
         // Mock user
-        await page.route('**/user/user', async route => {
+        await page.route('**/user/me', async route => {
             if (route.request().method() === 'PUT') {
                 await route.fulfill({ status: 200 });
             } else {
@@ -47,7 +47,7 @@ test.describe('CalDAV Integration', () => {
         });
 
         await page.goto('/');
-        await page.waitForResponse(resp => resp.url().includes('/user/user'));
+        await page.waitForResponse(resp => resp.url().includes('/user/me'));
     });
 
     test('Add CalDAV account', async ({ page }) => {

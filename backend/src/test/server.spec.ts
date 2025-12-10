@@ -208,14 +208,14 @@ describe("Server routes", () => {
 
   it("should return unauthorized", async () => {
     status = 401;
-    const res = await request(app).get("/api/v1/user/user");
+    const res = await request(app).get("/api/v1/user/me");
     expect(res.status).toEqual(401);
     expect(middleware.requireAuth).toHaveBeenCalled();
     console.log(res.body);
   })
 
   it("should return the user", async () => {
-    const res = await request(app).get("/api/v1/user/user");
+    const res = await request(app).get("/api/v1/user/me");
     expect(res.status).toEqual(200);
     expect(middleware.requireAuth).toHaveBeenCalled();
     console.log(res.body);

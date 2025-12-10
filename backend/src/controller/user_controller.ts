@@ -21,6 +21,7 @@ export const getUser = (req: Request, res: Response): void => {
     res.status(400).json({ error: "Invalid user id" });
     return;
   }
+  res.set("Cache-Control", "no-store");
   void UserModel.findOne({ _id: userid },
     {
       "_id": 1,
@@ -33,10 +34,15 @@ export const getUser = (req: Request, res: Response): void => {
       "welcome": 1,
       "updatedAt": 1,
       "send_invitation_email": 1,
-      "google_tokens.access_token": 1
+      "google_tokens.access_token": 1,
+      "use_gravatar": 1
     })
     .exec()
     .then(user => {
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
       res.status(200).json(user);
     })
     .catch(err => {

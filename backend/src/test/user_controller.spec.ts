@@ -55,7 +55,7 @@ describe("User Controller", () => {
         if (app?.close) await app.close();
     });
 
-    describe("PUT /api/v1/user", () => {
+    describe("PUT /api/v1/user/me", () => {
         it("should successfully update user URL", async () => {
             (UserModel.findById as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue(USER)
@@ -65,7 +65,7 @@ describe("User Controller", () => {
             });
 
             const res = await request(app)
-                .put("/api/v1/user")
+                .put("/api/v1/user/me")
                 .send({ data: { user_url: "new-unique-url" } });
 
             expect(res.status).toBe(200);
@@ -88,7 +88,7 @@ describe("User Controller", () => {
             });
 
             const res = await request(app)
-                .put("/api/v1/user")
+                .put("/api/v1/user/me")
                 .send({ data: { user_url: "existing-url" } });
 
             expect(res.status).toBe(409);
@@ -105,7 +105,7 @@ describe("User Controller", () => {
             }));
 
             const res = await request(app)
-                .put("/api/v1/user")
+                .put("/api/v1/user/me")
                 .send({ data: { use_gravatar: true } });
 
             expect(res.status).toBe(200);
@@ -124,7 +124,7 @@ describe("User Controller", () => {
             }));
 
             const res = await request(app)
-                .put("/api/v1/user")
+                .put("/api/v1/user/me")
                 .send({ data: { use_gravatar: false } });
 
             expect(res.status).toBe(200);

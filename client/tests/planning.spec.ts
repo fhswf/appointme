@@ -43,7 +43,7 @@ test.describe('Planning page success', () => {
 
         await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
         await page.route('**/event/active/*', async route => await route.fulfill({ path: './tests/fixtures/activeEvents.json' }));
-        await page.route("**/api/v1/user/user", async (route) => {
+        await page.route("**/api/v1/user/me", async (route) => {
             await route.fulfill({ path: './tests/fixtures/available.json' });
         });
     });
