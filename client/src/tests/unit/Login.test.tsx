@@ -60,7 +60,7 @@ describe('Login Component', () => {
         // Wait for promise resolution
         await new Promise(process.nextTick);
 
-        expect(mockNavigate).toHaveBeenCalledWith('/app');
+        expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
     it('should handle login error', async () => {

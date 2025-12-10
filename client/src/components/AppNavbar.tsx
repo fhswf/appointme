@@ -77,7 +77,7 @@ const AppNavbar = () => {
             variant="ghost"
             size="icon"
             className="mr-2"
-            onClick={handleOnClick("/app")}
+            onClick={handleOnClick("/")}
           >
             <img src="/logo_no_text.svg" alt="Logo" className="h-8 w-8" />
           </Button>

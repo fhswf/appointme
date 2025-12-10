@@ -23,7 +23,7 @@ const OidcCallback = () => {
             loading: 'Authenticating...',
             success: (res) => {
                 console.log("OIDC Login Success", res);
-                navigate("/app");
+                navigate("/");
                 return "Successfully logged in";
             },
             error: (err: any) => {

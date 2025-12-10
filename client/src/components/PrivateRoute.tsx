@@ -1,59 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate, RouteProps, useLocation } from "react-router-dom";
-import { getUser } from "../helpers/services/user_services";
+
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 import { UserDocument } from "../helpers/UserDocument";
 
 /**
  * Context containing the currently logged in user
+ * Keeping this for backward compatibility
  */
 export const UserContext = React.createContext<{ user: UserDocument | null }>({
   user: null,
 });
 
-export type PrivateRouteProps<P> = RouteProps & {
-  component: React.FunctionComponent<P>;
-};
-
-
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const [user, setUser] = useState<UserDocument>();
-  const [authenticated, setAuthenticated] = useState(undefined);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    getUser()
-      .then((res) => {
-        if (res.data.success === false || res.status === 401) {
-          console.log("getUser: not authenticated");
-          setAuthenticated(false);
-          navigate("/landing");
-        } else {
-          console.log("getUser: %o", res);
-          setAuthenticated(true);
-          setUser(res.data);
-          console.log("user set to %o", res.data);
-        }
-      })
-      .catch((res) => {
-        console.log("getUser: error: %d", res.status);
-        setAuthenticated(false);
-        navigate("/landing");
-        // TODO: Add SnackBar
-        //toast.error(err);
-      });
-  }, []);
-
+  const { user, isAuthenticated } = useAuth();
   const location = useLocation();
-  const userContextValue = React.useMemo(() => ({ user }), [user]);
 
-  if (authenticated === undefined) {
-    console.log("PrivateRoute: authenticated is undefined");
-    return null;
-  } else if (!authenticated) {
+  if (isAuthenticated === undefined) {
+    // console.log("PrivateRoute: authenticated is undefined");
+    return null; // Or a loading spinner
+  } else if (!isAuthenticated) {
     console.log("PrivateRoute: not authenticated, redirecting to /landing");
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }
-  return <UserContext.Provider value={userContextValue}>{children}</UserContext.Provider>;
+
+  // We can still provide the UserContext here for children that might be consuming it directly
+  // from this file's export, but better to rely on AuthProvider's context if possible.
+  // However, since we kept UserContext export, let's provider it to be safe for now,
+  // matching the old behavior where PrivateRoute provided it.
+  // Although AuthProvider also provides it, nesting providers is fine or we can just forward it.
+  // Actually, wait. AuthProvider provides AuthContext, not UserContext.
+  // The old code had: export const UserContext = React.createContext
+  // So existing components likely import UserContext from "./PrivateRoute".
+
+  // Let's forward the user to the old UserContext provider to minimize refactoring elsewhere.
+  const userContextValue = React.useMemo(() => ({ user }), [user]);
+
+  return (
+    <UserContext.Provider value={userContextValue}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export default PrivateRoute;
+

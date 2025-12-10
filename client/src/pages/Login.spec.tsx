@@ -141,7 +141,7 @@ describe('Login Component', () => {
 
         await waitFor(() => {
             expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-credential');
-            expect(mockNavigate).toHaveBeenCalledWith('/app');
+            expect(mockNavigate).toHaveBeenCalledWith('/');
         });
     });
 

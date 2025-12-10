@@ -16,6 +16,7 @@ import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
 import OidcCallback from "./pages/OidcCallback";
 import Profile from "./pages/Profile";
+import { AuthProvider } from "./components/AuthProvider";
 
 import { useAuthenticated } from "./helpers/helpers";
 
@@ -34,79 +35,75 @@ const Main = () => {
   return (<StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <BrowserRouter basename={BASE_PATH}>
-          <Routes>
-            <Route path="/" element={isAuthenticated ? (
-              <Navigate to="/app" />
-            ) : (
-              <Navigate to="/landing" />
-            )} />
-
-            <Route path="/app" element={
-              <PrivateRoute>
-                <App />
-              </PrivateRoute>
-            } />
-
-            <Route path="/profile" element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            } />
-
-            <Route path="/addevent" element={
-              <PrivateRoute>
-                <AddEvent />
-              </PrivateRoute>
-            } />
-
-            <Route path="/editevent/:id" element={
-              <PrivateRoute>
-                <EditEvent />
-              </PrivateRoute>
-            } />
-
-            <Route
-              path="/integration/*"
-              element={
+        <AuthProvider>
+          <BrowserRouter basename={BASE_PATH}>
+            <Routes>
+              <Route path="/" element={
                 <PrivateRoute>
-                  <Calendarintegration />
+                  <App />
                 </PrivateRoute>
-              }
-            />
+              } />
 
-            <Route
-              path="/booked"
-              element={<Finished />}
-            />
+              <Route path="/profile" element={
+                <PrivateRoute>
+                  <Profile />
+                </PrivateRoute>
+              } />
 
-            <Route
-              path="/oidc-callback"
-              element={<OidcCallback />}
-            />
-            <Route
-              path="/login"
-              element={<Login />}
-            />
-            <Route
-              path="/landing"
-              element={<Landing />}
-            />
-            <Route
-              path="/users/:user_url"
-              element={<Planning />}
-            />
-            <Route
-              path="/users/:user_url/:url"
-              element={<Booking />}
-            />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/notfound" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-        </BrowserRouter>
+              <Route path="/addevent" element={
+                <PrivateRoute>
+                  <AddEvent />
+                </PrivateRoute>
+              } />
+
+              <Route path="/editevent/:id" element={
+                <PrivateRoute>
+                  <EditEvent />
+                </PrivateRoute>
+              } />
+
+              <Route
+                path="/integration/*"
+                element={
+                  <PrivateRoute>
+                    <Calendarintegration />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/booked"
+                element={<Finished />}
+              />
+
+              <Route
+                path="/oidc-callback"
+                element={<OidcCallback />}
+              />
+              <Route
+                path="/login"
+                element={<Login />}
+              />
+              <Route
+                path="/landing"
+                element={<Landing />}
+              />
+              <Route
+                path="/users/:user_url"
+                element={<Planning />}
+              />
+              <Route
+                path="/users/:user_url/:url"
+                element={<Booking />}
+              />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/notfound" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+          </BrowserRouter>
+        </AuthProvider>
       </GoogleOAuthProvider>
-    </Suspense>
+    </Suspense >
   </StrictMode >
   );
 }

@@ -24,7 +24,7 @@ const Login = (props: any) => {
     postGoogleLogin(credential)
       .then((res) => {
         console.log("postGoogleLogin: %o", res);
-        navigate("/app");
+        navigate("/");
       })
       .catch((error) => {
         console.log("GOOGLE SIGNIN ERROR", error.response);

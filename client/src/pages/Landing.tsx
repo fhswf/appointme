@@ -10,7 +10,7 @@ const Landing = (props: any) => {
   const { t } = useTranslation();
   return (
     <>
-      {useAuthenticated() ? <Navigate to="/app" /> : null}
+      {useAuthenticated() ? <Navigate to="/" /> : null}
       <AppNavbar />
       <div className="bg-background min-h-screen">
         <div className="container mx-auto p-8">

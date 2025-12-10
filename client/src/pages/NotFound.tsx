@@ -9,7 +9,7 @@ const NotFound = () => {
       <h1 className="text-6xl font-bold">404</h1>
       <h3 className="text-2xl">page not found</h3>
       <Button asChild>
-        <RouterLink to="/app">
+        <RouterLink to="/">
           GO HOME
         </RouterLink>
       </Button>

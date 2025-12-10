@@ -98,7 +98,7 @@ describe('OidcCallback', () => {
         );
 
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/app");
+            expect(mockNavigate).toHaveBeenCalledWith("/");
         });
     });
 
