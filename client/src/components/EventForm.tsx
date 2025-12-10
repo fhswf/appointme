@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash } from "lucide-react";
+import { LocalizedTimeInput } from "./LocalizedTimeInput";
+
 import { EventFormProps } from "../pages/EditEvent";
 import { Day, Event, Slot } from "common";
 import { t } from "i18next";
@@ -67,13 +69,15 @@ const EditSlot = (props: EditSlotProps) => {
 
   const changeTime =
     (key: keyof Slot, index: number) =>
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("ChangeTime: %s %d %o", key, index, event.target.value);
+      (val: string) => {
+        console.log("ChangeTime: %s %d %o", key, index, val);
         const _slots = slots.slice();
-        _slots[index][key] = event.target.value;
+        _slots[index][key] = val;
         setSlots(_slots);
         props.onChange(_slots);
       };
+
+
 
   console.log("EditSlot: %o", slots);
 
@@ -99,8 +103,8 @@ const EditSlot = (props: EditSlotProps) => {
         {slots.map((slot, index) => (
           <div key={`${slot.start}-${index}`} className="flex items-center gap-2">
             <div className="w-1/3">
-              <Input
-                type="time"
+
+              <LocalizedTimeInput
                 placeholder={t("Starttime")}
                 onChange={changeTime("start", index)}
                 value={slot.start}
@@ -108,13 +112,13 @@ const EditSlot = (props: EditSlotProps) => {
             </div>
             <span className="text-muted-foreground">–</span>
             <div className="w-1/3">
-              <Input
-                type="time"
+              <LocalizedTimeInput
                 placeholder={t("Endtime")}
                 onChange={changeTime("end", index)}
                 value={slot.end}
               />
             </div>
+
             <Button
               variant="ghost"
               size="icon"

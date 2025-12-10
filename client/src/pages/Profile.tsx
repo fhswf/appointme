@@ -3,7 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthenticated } from "../helpers/helpers";
 import { getUser, updateUser } from "../helpers/services/user_services";
-import { User, LogIn } from "lucide-react";
+import { User } from "lucide-react";
+import { LanguageSelector } from "../components/LanguageSelector";
+
+
 import { toast } from "sonner";
 
 export default function Profile() {
@@ -54,8 +57,9 @@ export default function Profile() {
         // For now, simpler to just update local state
       })
       .catch((err) => {
-        if (err.response && err.response.status === 409) {
+        if (err.response?.status === 409) {
           toast.error(t("user_url_taken"));
+
         } else {
           toast.error(t("error_saving_profile"));
         }
@@ -63,7 +67,7 @@ export default function Profile() {
   };
 
   if (!isAuthenticated) {
-     return <div className="p-4">Please log in.</div>;
+    return <div className="p-4">Please log in.</div>;
   }
 
   if (loading) {
@@ -74,16 +78,16 @@ export default function Profile() {
     <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <div className="flex items-center justify-center mb-6">
-            {user.picture_url ? (
-                <img src={user.picture_url} alt="Profile" className="w-24 h-24 rounded-full" />
-            ) : (
-                <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-                    <User className="w-12 h-12 text-gray-500" />
-                </div>
-            )}
+          {user.picture_url ? (
+            <img src={user.picture_url} alt="Profile" className="w-24 h-24 rounded-full" />
+          ) : (
+            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+              <User className="w-12 h-12 text-gray-500" />
+            </div>
+          )}
         </div>
         <h1 className="text-2xl font-bold mb-4 text-center">{t("user_menu_profile")}</h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">{t("name")}</label>
@@ -132,6 +136,12 @@ export default function Profile() {
           >
             {t("save")}
           </button>
+
+          <div className="border-t pt-4 mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t("Language")}</label>
+            <LanguageSelector />
+          </div>
+
         </form>
       </div>
     </div>
