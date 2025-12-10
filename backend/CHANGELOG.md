@@ -1,3 +1,28 @@
+# backend [1.23.0](https://github.com/fhswf/book_me/compare/backend@1.22.2...backend@1.23.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* Add input type validation for user identifiers to prevent NoSQL injection and include a test for `getUserByUrl`. ([2920162](https://github.com/fhswf/book_me/commit/2920162b4bed72f12d2f03c77f065b2751328d1c))
+* nosql injection ([3837f60](https://github.com/fhswf/book_me/commit/3837f6052d5bca5081071eec1a7f6580b2d55a70))
+
+
+### Features
+
+* Add rate limiting to user update route and enhance `updateUser` controller with ID validation, field lookup optimization, and improved error handling. ([065344f](https://github.com/fhswf/book_me/commit/065344f55d6493b7dc25284dfd68e8d0a260cf7d))
+* Add user welcome field, update i18n password key, enhance user update security, and integrate new client icons. ([ac5aac0](https://github.com/fhswf/book_me/commit/ac5aac038d07ad84f167c787c47d062c47ddc7e8))
+* Add utility to patch JUnit XML timestamps and integrate into client unit and backend CI workflows. ([e3640ad](https://github.com/fhswf/book_me/commit/e3640ad57e01012412de1c5bff259be3350e644f))
+* Implement user profile page with Gravatar support, user URL updates, and i18n for navigation. ([1bfa2d6](https://github.com/fhswf/book_me/commit/1bfa2d64c04897dba6a99e6391cec0a5a51270d2))
+* improve OIDC user creation with email check and `user_url` collision retry, and redirect to login on client-side errors ([1daf9ae](https://github.com/fhswf/book_me/commit/1daf9aeb7a50837cc936f6f8acc3104425bf9fb2))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.7.0
+
 ## backend [1.22.2](https://github.com/fhswf/book_me/compare/backend@1.22.1...backend@1.22.2) (2025-12-09)
 
 
