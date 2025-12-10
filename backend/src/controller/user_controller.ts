@@ -70,7 +70,7 @@ export const updateUser = (req: Request, res: Response): void => {
   if (Array.isArray(userData.pull_calendars)) {
     // Ensure all elements are strings
     if (userData.pull_calendars.every(c => typeof c === 'string')) {
-      update.pull_calendars = userData.pull_calendars;
+      update.pull_calendars = userData.pull_calendars.map(c => String(c));
     }
   }
 
@@ -106,7 +106,7 @@ export const updateUser = (req: Request, res: Response): void => {
         }
       }
 
-      return UserModel.findByIdAndUpdate(userid, update,
+      return UserModel.findByIdAndUpdate(userid, { $set: update },
         {
           new: true,
           projection: {

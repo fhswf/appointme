@@ -111,8 +111,8 @@ describe("User Controller", () => {
             expect(res.status).toBe(200);
             const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
             const updateArg = updateCall[1];
-            expect(updateArg.use_gravatar).toBe(true);
-            expect(updateArg.picture_url).toMatch(/gravatar\.com\/avatar\//);
+            expect(updateArg.$set.use_gravatar).toBe(true);
+            expect(updateArg.$set.picture_url).toMatch(/gravatar\.com\/avatar\//);
         });
 
         it("should switch back to google picture when gravatar disabled", async () => {
@@ -120,7 +120,7 @@ describe("User Controller", () => {
                 exec: vi.fn().mockResolvedValue({ ...USER, use_gravatar: true, google_picture_url: "google_pic_url" })
             });
             (UserModel.findByIdAndUpdate as any).mockImplementation((id, update, options) => ({
-                exec: vi.fn().mockResolvedValue({ ...USER, ...update, use_gravatar: false })
+                exec: vi.fn().mockResolvedValue({ ...USER, ...update.$set, use_gravatar: false })
             }));
 
             const res = await request(app)
@@ -130,8 +130,8 @@ describe("User Controller", () => {
             expect(res.status).toBe(200);
             const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
             const updateArg = updateCall[1];
-            expect(updateArg.use_gravatar).toBe(false);
-            expect(updateArg.picture_url).toBe("google_pic_url");
+            expect(updateArg.$set.use_gravatar).toBe(false);
+            expect(updateArg.$set.picture_url).toBe("google_pic_url");
         });
     });
 
