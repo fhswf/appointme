@@ -31,7 +31,7 @@ describe('user_services', () => {
             const result = await getUser();
 
             expect(axios.get).toHaveBeenCalledWith(
-                'http://localhost:3001/user/user',
+                'http://localhost:3001/user/me',
                 {
                     withCredentials: true
                 }
@@ -68,7 +68,7 @@ describe('user_services', () => {
 
             expect(csrfService.getCsrfToken).toHaveBeenCalled();
             expect(axios.put).toHaveBeenCalledWith(
-                'http://localhost:3001/user/',
+                'http://localhost:3001/user/me',
                 { data: userData },
                 {
                     headers: {

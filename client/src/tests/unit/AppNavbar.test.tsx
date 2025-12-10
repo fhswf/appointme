@@ -24,11 +24,18 @@ vi.mock('../../components/ProfileDialog', () => ({
         open ? <div data-testid="profile-dialog" onClick={() => onOpenChange(false)}>Profile Dialog</div> : null
     )
 }));
+vi.mock('@/components/ui/dropdown-menu', () => ({
+    DropdownMenu: ({ children }: any) => <div>{children}</div>,
+    DropdownMenuTrigger: ({ children, asChild }: any) => <div onClick={(children as any).props.onClick}>{children}</div>,
+    DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
+    DropdownMenuItem: ({ children, onClick, asChild, ...props }: any) => <div onClick={onClick} {...props}>{children}</div>,
+    DropdownMenuSeparator: () => <hr />,
+}));
 
 // Helper to render with UserContext
 const renderWithUser = (user: any) => {
     return render(
-        <UserContext.Provider value={{ user, setUser: vi.fn(), loading: false }}>
+        <UserContext.Provider value={{ user }}>
             <BrowserRouter>
                 <AppNavbar />
             </BrowserRouter>
