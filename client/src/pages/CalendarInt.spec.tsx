@@ -1,12 +1,8 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import CalendarIntegration from './CalendarInt';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import CalendarIntegration from './CalendarInt';
 import { MemoryRouter } from 'react-router-dom';
 import * as router from 'react-router-dom';
-import { UserContext } from '../components/PrivateRoute';
 import { UserContext } from '../components/PrivateRoute';
 import * as googleServices from '../helpers/services/google_services';
 import * as caldavServices from '../helpers/services/caldav_services';
@@ -224,7 +220,7 @@ describe('CalendarIntegration Page', () => {
         fireEvent.click(screen.getByTestId('edit-push-calendar'));
 
         // Dialog opens
-        expect(screen.getAllByText('Calendar')).toHaveLength(2); // Dialog title and label
+        expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only (Label removed in checkbox mode)
 
         const saveBtn = screen.getByTestId('button-save');
         fireEvent.click(saveBtn);

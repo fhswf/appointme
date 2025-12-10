@@ -255,12 +255,13 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string): Promise<any> => {
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string): Promise<any> => {
+    const calendarUrl = targetCalendarUrl || user.push_calendar;
     // Find the account that owns the push_calendar URL
-    const account = findAccountForCalendar(user, user.push_calendar);
+    const account = findAccountForCalendar(user, calendarUrl);
 
     if (!account) {
-        logger.error('CalDav account not found for push calendar: %s', user.push_calendar);
+        logger.error('CalDav account not found for push calendar: %s', calendarUrl);
         throw new Error('CalDav account not found for push calendar');
     }
     logger.info('Found CalDAV account for push calendar: %s', account.name);
@@ -286,10 +287,10 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
     // Optimization: We could cache this or construct a minimal object if tsdav allows
     const calendars = await client.fetchCalendars();
     logger.debug('Fetched %d calendars', calendars.length);
-    const targetCalendar = calendars.find(c => c.url === user.push_calendar);
+    const targetCalendar = calendars.find(c => c.url === calendarUrl);
 
     if (!targetCalendar) {
-        logger.error('Target calendar not found: %s', user.push_calendar);
+        logger.error('Target calendar not found: %s', calendarUrl);
         throw new Error('Target calendar not found');
     }
     logger.info('Found target calendar: %s', targetCalendar.url);

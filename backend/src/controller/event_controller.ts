@@ -366,106 +366,166 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
         }
       ],
       source: {
-        title: "Appointment",
+        title: "Appoint Me",
         url: "https://appoint.gawron.cloud",
       },
       guestsCanModify: true,
       guestsCanInviteOthers: true,
     };
 
-    // Check if push_calendar is a CalDav URL (heuristic: starts with http/https) 
-    if (user.push_calendar && (user.push_calendar.startsWith('http') || user.push_calendar.startsWith('/'))) {
-      await handleCalDavBooking(user, eventDoc, req, res, userComment, event);
+    // Determine target calendars
+    let targetCalendars = user.push_calendars;
+    if (!targetCalendars || targetCalendars.length === 0) {
+      if (user.push_calendar) {
+        targetCalendars = [user.push_calendar];
+      } else {
+        targetCalendars = [];
+      }
+    }
+
+    const results = [];
+    let successCount = 0;
+
+    for (const calendar of targetCalendars) {
+      try {
+        // Check if calendar is a CalDav URL (heuristic: starts with http/https) 
+        if (calendar.startsWith('http') || calendar.startsWith('/')) {
+          await handleCalDavBooking(user, eventDoc, req, res, userComment, event, calendar);
+          successCount++;
+          results.push({ calendar, success: true, type: 'caldav' });
+        } else {
+          await handleGoogleBooking(user, eventDoc, res, userComment, event, calendar);
+          successCount++;
+          results.push({ calendar, success: true, type: 'google' });
+        }
+      } catch (err) {
+        logger.error(`Failed to push to calendar ${calendar}:`, err);
+        results.push({ calendar, success: false, error: err });
+      }
+    }
+
+    if (successCount > 0) {
+      // If at least one succeeded, we return success.
+      // We return the result of the first successful one for backward compatibility with simple clients,
+      // but also include full results.
+      const firstSuccess = results.find(r => r.success);
+      res.json({ ...firstSuccess, results });
+    } else if (targetCalendars.length > 0) {
+      // All attempted failed
+      const firstError = results[0]?.error || "Failed to create event on any calendar";
+      // Extract message if it's an error object
+      const errorMsg = firstError instanceof Error ? firstError.message : String(firstError);
+      res.status(400).json({ error: errorMsg, results });
     } else {
-      await handleGoogleBooking(user, eventDoc, res, userComment, event);
+      // No calendars configured.
+      // If no push calendars, we might default to Google Primary if that was the old behavior?
+      // Old behavior: if (push_calendar set) { try caldav } else { try google }.
+      // If push_calendar was null, it tried google.
+      // So if list is empty, we should fallback to Google Primary.
+      logger.info("No push calendars configured, falling back to Google Primary");
+      try {
+        const result = await handleGoogleBooking(user, eventDoc, res, userComment, event, 'primary');
+        res.json(result);
+      } catch (err) {
+        res.status(400).json({ error: err });
+      }
     }
   } catch (err) {
     res.status(400).json({ error: err });
   }
-};
 
-const handleCalDavBooking = async (user: any, eventDoc: any, req: Request, res: Response, userComment: string, event: Schema$Event) => {
-  const calDavAccount = findAccountForCalendar(user, user.push_calendar);
-  if (calDavAccount) {
-    if (validator.isEmail(calDavAccount.username)) {
-      logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
-      event.organizer.email = calDavAccount.username;
-    } else {
-      logger.warn('CalDAV account username is not an email, keeping default: %s', calDavAccount.username);
+  async function handleCalDavBooking(user: any, eventDoc: any, req: Request, res: Response, userComment: string, event: Schema$Event, calendarUrl: string) {
+    const calDavAccount = findAccountForCalendar(user, calendarUrl);
+    if (calDavAccount) {
+      if (validator.isEmail(calDavAccount.username)) {
+        logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
+        event.organizer.email = calDavAccount.username;
+      } else {
+        logger.warn('CalDAV account username is not an email, keeping default: %s', calDavAccount.username);
+      }
+    }
+
+    try {
+      const locale = getLocale(req.headers['accept-language']);
+      // Pass userComment and calendarUrl to CalDAV interaction
+      const evt = await createCalDavEvent(user, event, userComment, calendarUrl);
+      logger.debug('CalDav insert returned %j', evt);
+
+      const randomStr = crypto.randomBytes(8).toString('hex');
+      const uid = `${Date.now()}-${randomStr}`;
+
+      const icsContent = generateIcsContent({
+        uid,
+        start: new Date(event.start.dateTime),
+        end: new Date(event.end.dateTime),
+        summary: event.summary,
+        description: event.description,
+        location: event.location,
+        organizer: {
+          displayName: event.organizer.displayName,
+          email: event.organizer.email
+        },
+        attendees: event.attendees.map(a => ({
+          displayName: a.displayName,
+          email: a.email,
+          partstat: 'NEEDS-ACTION',
+          rsvp: true
+        }))
+      }, { comment: userComment });
+
+      const attendeeEmail = req.body.email as string;
+      const attendeeName = validator.escape(req.body.name as string);
+      const subject = t(locale, 'invitationSubject', { summary: event.summary });
+
+      // Escape description for HTML email, preserving newlines as <br>
+      const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
+      const escapedComment = validator.escape(userComment || '').replaceAll('\n', '<br>');
+
+      const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
+
+      const html = t(locale, 'invitationBody', {
+        attendeeName,
+        summary: validator.escape(event.summary),
+        description: escapedDescription + (escapedComment ? '<br><br>Kommentar:<br>' + escapedComment : ''),
+        time: timeStr
+      });
+
+      if (user.send_invitation_email) {
+        sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
+          .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
+          .catch(err => logger.error('Failed to send invitation email', err));
+      } else {
+        logger.info('Invitation email skipped for %s (user setting)', attendeeEmail);
+      }
+
+      return { success: true, message: "Event wurde gebucht (CalDav)", event: evt };
+    } catch (error) {
+      logger.error('CalDav insert failed', error);
+      throw error;
     }
   }
 
-  try {
-    const locale = getLocale(req.headers['accept-language']);
-    // Pass userComment separately to CalDAV interaction
-    const evt = await createCalDavEvent(user, event, userComment);
-    logger.debug('CalDav insert returned %j', evt);
+  async function handleGoogleBooking(user: any, eventDoc: any, res: Response, userComment: string, event: Schema$Event, calendarUrl: string) {
+    // Fallback to Google Calendar
+    try {
+      const googleEvent = { ...event };
+      if (userComment) {
+        googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
+      }
+      // Note: insertGoogleEvent currently pushes to primary calendar. 
+      // If we want to support pushing to a specific google calendar ID (which calendarUrl would be), 
+      // we need to update insertGoogleEvent or pass the ID.
+      // For now, assuming standard google integration pushes to 'primary', but if calendarUrl is a google calendar ID, we might need to use it.
+      // However, the current google_controller.ts/insertGoogleEvent might not accept a calendar ID.
+      // Checking types: insertGoogleEvent(user, event).
+      // If we want to support non-primary Google calendars, that would be another task.
+      // For now, consistent signature.
 
-    const randomStr = crypto.randomBytes(8).toString('hex');
-    const uid = `${Date.now()}-${randomStr}`;
-
-    const icsContent = generateIcsContent({
-      uid,
-      start: new Date(event.start.dateTime),
-      end: new Date(event.end.dateTime),
-      summary: event.summary,
-      description: event.description,
-      location: event.location,
-      organizer: {
-        displayName: event.organizer.displayName,
-        email: event.organizer.email
-      },
-      attendees: event.attendees.map(a => ({
-        displayName: a.displayName,
-        email: a.email,
-        partstat: 'NEEDS-ACTION',
-        rsvp: true
-      }))
-    }, { comment: userComment });
-
-    const attendeeEmail = req.body.email as string;
-    const attendeeName = validator.escape(req.body.name as string);
-    const subject = t(locale, 'invitationSubject', { summary: event.summary });
-
-    // Escape description for HTML email, preserving newlines as <br>
-    const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
-    const escapedComment = validator.escape(userComment || '').replaceAll('\n', '<br>');
-
-    const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
-
-    const html = t(locale, 'invitationBody', {
-      attendeeName,
-      summary: validator.escape(event.summary),
-      description: escapedDescription + (escapedComment ? '<br><br>Kommentar:<br>' + escapedComment : ''),
-      time: timeStr
-    });
-
-    if (user.send_invitation_email) {
-      sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
-        .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
-        .catch(err => logger.error('Failed to send invitation email', err));
-    } else {
-      logger.info('Invitation email skipped for %s (user setting)', attendeeEmail);
+      const evt = await insertGoogleEvent(user, googleEvent);
+      logger.debug('insert returned %j', evt)
+      return { success: true, message: "Event wurde gebucht", event: evt };
+    } catch (error) {
+      throw error;
     }
-
-    res.json({ success: true, message: "Event wurde gebucht (CalDav)", event: evt });
-  } catch (error) {
-    logger.error('CalDav insert failed', error);
-    res.status(400).json({ error: error instanceof Error ? error.message : 'Failed to create event on CalDav server' });
-  }
-}
-
-const handleGoogleBooking = async (user: any, eventDoc: any, res: Response, userComment: string, event: Schema$Event) => {
-  // Fallback to Google Calendar
-  try {
-    const googleEvent = { ...event };
-    if (userComment) {
-      googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
-    }
-    const evt = await insertGoogleEvent(user, googleEvent);
-    logger.debug('insert returned %j', evt)
-    res.json({ success: true, message: "Event wurde gebucht", event: evt });
-  } catch (error) {
-    res.status(400).json({ error });
   }
 }

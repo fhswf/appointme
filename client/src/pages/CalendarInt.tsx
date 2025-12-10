@@ -108,19 +108,57 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
 };
 
 const PushCalendar = ({ user, calendarList }) => {
-  const pushCal = calendarList
-    ? calendarList.items.find((item) => item.id === user.push_calendar)
+  // Support legacy push_calendar by ensuring it's in the list if not already
+  const currentPushCalendars = user.push_calendars && user.push_calendars.length > 0
+    ? user.push_calendars
+    : (user.push_calendar ? [user.push_calendar] : []);
+
+  const pushCals = calendarList
+    ? calendarList.items
+      .filter((item) => currentPushCalendars.includes(item.id))
+      .map((cal) => (
+        <li key={cal.id} className="flex items-center gap-2">
+           <img src={cal.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg"} alt="icon" className="w-4 h-4" />
+           {cal.summaryOverride ? cal.summaryOverride : cal.summary}
+        </li>
+      ))
     : undefined;
+  
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(user.push_calendar ? { [user.push_calendar]: true } : {});
+  const [selected, setSelected] = useState({});
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  
+  // Initialize selected state from user's current push calendars
+  useEffect(() => {
+    if (open) {
+      const initialSelected = {};
+      currentPushCalendars.forEach(id => {
+        initialSelected[id] = true;
+      });
+      setSelected(initialSelected);
+    }
+  }, [open, user]);
+
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
+  
   const save = () => {
     console.log("save: selected: %o", selected);
-    user.push_calendar = Object.keys(selected).find((item) => selected[item]);
+    user.push_calendars = [];
+    user.push_calendar = null; // Clear legacy field
+    
+    const newSelection = [];
+    for (const item of Object.keys(selected)) {
+      if (selected[item]) {
+        newSelection.push(item);
+      }
+    }
+    
+    user.push_calendars = newSelection;
+    // For backward compatibility, valid single push_calendar logic could be: 
+    // user.push_calendar = newSelection.length > 0 ? newSelection[0] : null;
+    // But we deprecated it, so cleaner to rely on the array.
 
     updateUser(user)
       .then((user) => {
@@ -138,8 +176,6 @@ const PushCalendar = ({ user, calendarList }) => {
     return <div></div>;
   }
 
-  console.log("pushCalendar: %o %o", pushCal, calendarList);
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -151,9 +187,11 @@ const PushCalendar = ({ user, calendarList }) => {
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
-          {pushCal ? (pushCal.summaryOverride || pushCal.summary) : "No calendar selected"}
-        </div>
+        {pushCals && pushCals.length > 0 ? (
+            <ul className="list-disc pl-4 space-y-1">{pushCals}</ul>
+        ) : (
+            <div className="text-sm text-muted-foreground">No calendar selected</div>
+        )}
       </CardContent>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -161,15 +199,15 @@ const PushCalendar = ({ user, calendarList }) => {
           <DialogHeader>
             <DialogTitle>Calendar</DialogTitle>
             <DialogDescription>
-              Choose a calendar in which appointments are created.
+              Choose calendars in which appointments are created.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             {renderCalendarList(
               calendarList,
-              selected || (user.push_calendar ? { [user.push_calendar]: true } : {}),
+              selected,
               setSelected,
-              true
+              false // Allow multiple selection now!
             )}
           </div>
           <DialogFooter>
@@ -484,8 +522,8 @@ const Calendarintegration = () => {
           user.pull_calendars.push(primary[0].id);
           update = true;
         }
-        if (!user.push_calendar && primary.length > 0) {
-          user.push_calendar = primary[0].id;
+        if ((!user.push_calendars || user.push_calendars.length === 0) && (!user.push_calendar) && primary.length > 0) {
+          user.push_calendars = [primary[0].id];
           update = true;
         }
 

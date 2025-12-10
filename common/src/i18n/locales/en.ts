@@ -1,4 +1,5 @@
 export const en = {
+    "application_title": "Appoint Me",
     "these_zesty_duck_nudge": "Basic Information",
     "north_least_gopher_burn": "What is the purpose of this appointment type?",
     "lazy_just_duck_spin": "Event title",
@@ -44,9 +45,9 @@ export const en = {
     "extra_misty_panda_grip": "Users can use this link to book appointments.",
     "sunny_great_halibut_empower": "Create the first",
     "create_first_event_type_button": "Event Type",
-    "orange_grand_racoon_fall": "How Appoint works",
-    "male_patient_hedgehog_ask": "Appoint is a simple, easy to use, appointment booking system. It            allows you to create events, share your link and let users book            appointments with you.",
-    "factual_moving_hawk_belong": "Specify where Appoint adds your appointments and where it checks whether you are busy.",
+    "orange_grand_racoon_fall": "How Appoint Me works",
+    "male_patient_hedgehog_ask": "Appoint Me is a simple, easy to use, appointment booking system. It            allows you to create events, share your link and let users book            appointments with you.",
+    "factual_moving_hawk_belong": "Specify where Appoint Me adds your appointments and where it checks whether you are busy.",
     "pink_polite_racoon_earn": "Step 2: Create events",
     "happy_wise_mantis_laugh": "\"Add your available times and you're\n                good to go!\"",
     "careful_misty_bullock_splash": "Step 3: Share your link",
