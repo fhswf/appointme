@@ -1,3 +1,10 @@
+# client [1.18.0](https://github.com/fhswf/book_me/compare/client@1.17.0...client@1.18.0) (2025-12-10)
+
+
+### Features
+
+* implement language selection and localized date/time display across the application ([b97609d](https://github.com/fhswf/book_me/commit/b97609d6c6c45da33a4d60d9191c947d00e78fd4))
+
 # client [1.17.0](https://github.com/fhswf/book_me/compare/client@1.16.1...client@1.17.0) (2025-12-10)
 
 
