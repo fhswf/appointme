@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import AppNavbar from '../components/AppNavbar';
@@ -24,6 +23,7 @@ Diese Anwendung speichert und verarbeitet folgende personenbezogene Daten, die f
 Die Anwendung verwendet Cookies zur Sitzungsverwaltung.
 
 Teilweise verwenden die Anwendungen Komponenten, die auf Content-Delivery-Networks wie Cloudflare gehostet werden, und/oder Webdienste von Drittanbietern wie Mapbox oder Google Calendar API. Bei der Verwendung der Anwendungen greift Ihr Browser bzw. der Server auf diese Komponenten und Dienste zu, wodurch Ihre IP-Adresse und ggf. auch weitere Daten an die jeweiligen Anbieter übertragen werden.
+
 `;
 
 const Privacy: React.FC = () => {
@@ -34,10 +34,10 @@ const Privacy: React.FC = () => {
                 <div className="max-w-3xl mx-auto">
                     <ReactMarkdown components={markdownComponents}>{privacyContent}</ReactMarkdown>
                     <ContactInfo />
-                </div>
-            </div>
+                </div >
+            </div >
             <Footer />
-        </div>
+        </div >
     );
 };
 

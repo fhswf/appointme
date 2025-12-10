@@ -6,6 +6,8 @@ test.describe('Legal Pages', () => {
     test('should render Impressum page', async ({ page }) => {
         await page.goto('/impressum');
         await expect(page.getByRole('heading', { name: 'Impressum' })).toBeVisible();
+        await expect(page.locator('body')).toContainText('Prof. Dr. Christian Gawron');
+        await expect(page.locator('body')).toContainText('Fachhochschule Südwestfalen');
     });
 
     test('should render Privacy Policy page', async ({ page }) => {
