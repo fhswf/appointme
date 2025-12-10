@@ -10,6 +10,8 @@ import ContactInfo from '../components/ContactInfo';
 const impressumContent = `
 # Impressum
 
+
+## Disclaimer
 Die Inhalte auf diesem Server gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.
 `;
 
