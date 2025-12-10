@@ -17,6 +17,10 @@ import crypto from 'node:crypto';
  */
 export const getUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
+  if (typeof userid !== 'string') {
+    res.status(400).json({ error: "Invalid user id" });
+    return;
+  }
   void UserModel.findOne({ _id: userid },
     {
       "_id": 1,
@@ -140,13 +144,19 @@ export const updateUser = (req: Request, res: Response): void => {
  */
 export const getUserByUrl = (req: Request, res: Response): void => {
   const user_url = req.params.url || req.query.url;
-  UserModel.findOne({ user_url: <string>user_url })
+
+  if (typeof user_url !== 'string') {
+    res.status(400).json({ error: "Invalid user_url" });
+    return;
+  }
+
+  UserModel.findOne({ user_url: user_url })
     .select("_id email name picture_url user_url welcome")
     .exec()
     .then(user => {
       res.status(200).json(user);
     })
     .catch(error => {
-      res.status(400).json({ error, query: { user_url: <string>user_url } });
+      res.status(400).json({ error, query: { user_url: user_url } });
     })
 };

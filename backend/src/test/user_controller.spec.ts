@@ -134,4 +134,24 @@ describe("User Controller", () => {
             expect(updateArg.picture_url).toBe("google_pic_url");
         });
     });
+
+    describe("getUserByUrl (Unit)", () => {
+        it("should return 400 if user_url is not a string (prevent NoSQL injection)", async () => {
+            const req = {
+                params: {},
+                query: { url: { $ne: null } }
+            } as unknown as request.Request;
+
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn()
+            } as unknown as request.Response;
+
+            const { getUserByUrl } = await import("../controller/user_controller.js");
+            getUserByUrl(req as any, res as any);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: "Invalid user_url" });
+        });
+    });
 });
