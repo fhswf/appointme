@@ -129,7 +129,8 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     })
     .catch((err: unknown) => {
       logger.error('getAvailableTime: event not found or freeBusy failed: %j', err);
-      res.status(400).json({ error: err, message: "event not found or freeBusy failed: " + err.message });
+      const msg = err instanceof Error ? err.message : String(err);
+      res.status(400).json({ error: err, message: "event not found or freeBusy failed: " + msg });
     });
 };
 
