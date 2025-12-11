@@ -1,3 +1,15 @@
+# client [1.24.0](https://github.com/fhswf/book_me/compare/client@1.23.0...client@1.24.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* remove unused code ([0b3ea53](https://github.com/fhswf/book_me/commit/0b3ea53a70f7d65b083416ebc3fe728ce3286250))
+
+
+### Features
+
+* refactor api & swagger docs ([01efa3e](https://github.com/fhswf/book_me/commit/01efa3eef808b40f6d649122990bf55f1c68f441))
+
 # client [1.23.0](https://github.com/fhswf/book_me/compare/client@1.22.0...client@1.23.0) (2025-12-11)
 
 
