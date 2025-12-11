@@ -1,3 +1,10 @@
+## backend [1.29.1](https://github.com/fhswf/book_me/compare/backend@1.29.0...backend@1.29.1) (2025-12-11)
+
+
+### Bug Fixes
+
+* separate Swagger server configurations for production and development environments ([cbb46bd](https://github.com/fhswf/book_me/commit/cbb46bd7372ecaf1e2b1d0cc08aacac357617809))
+
 # backend [1.29.0](https://github.com/fhswf/book_me/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
 
 
