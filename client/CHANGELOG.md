@@ -1,3 +1,15 @@
+# client [1.23.0](https://github.com/fhswf/book_me/compare/client@1.22.0...client@1.23.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* application name & path ([ecf44ca](https://github.com/fhswf/book_me/commit/ecf44cac26ab6baaed1144675db49f8e8eb762fd))
+
+
+### Features
+
+* Refactor event booking logic into modular functions and introduce client-side configuration for environment variables. ([75c3380](https://github.com/fhswf/book_me/commit/75c33807d401dc6537cf0cde5cd1df4c0c7aadc0))
+
 # client [1.22.0](https://github.com/fhswf/book_me/compare/client@1.21.0...client@1.22.0) (2025-12-11)
 
 
