@@ -108,7 +108,7 @@ describe('EventType', () => {
         render(<EventType event={mockEvent} user={mockUser} time={time} />);
 
         // Time should be formatted and displayed (format varies by locale)
-        expect(screen.getByText(/15\.01\.2024/i)).toBeInTheDocument();
+        expect(screen.getByText(/01\/15\/2024/i)).toBeInTheDocument();
     });
 
     it('should not render time section when time is undefined', () => {
@@ -169,11 +169,11 @@ describe('EventType', () => {
 
             const time = new Date('2024-01-15T10:00:00');
             render(<EventType event={mockEvent} user={mockUser} time={time} />);
-            
+
             // Just verifying it renders without error and calls format with something.
             // Since we can't easily assert the exact output string for every locale without duplicating logic,
             // we check if the CardContent contains some date-like structure or just that it rendered.
-             expect(screen.getByTestId('card')).toBeInTheDocument();
+            expect(screen.getByTestId('card')).toBeInTheDocument();
         });
     });
 
