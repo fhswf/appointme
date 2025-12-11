@@ -1,3 +1,16 @@
+# backend [1.29.0](https://github.com/fhswf/book_me/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* remove unused code ([0b3ea53](https://github.com/fhswf/book_me/commit/0b3ea53a70f7d65b083416ebc3fe728ce3286250))
+
+
+### Features
+
+* add swagger ui ([3d96b76](https://github.com/fhswf/book_me/commit/3d96b7655d9c350196fbbbb5777ffdef0c75e9fb))
+* refactor api & swagger docs ([01efa3e](https://github.com/fhswf/book_me/commit/01efa3eef808b40f6d649122990bf55f1c68f441))
+
 # backend [1.28.0](https://github.com/fhswf/book_me/compare/backend@1.27.0...backend@1.28.0) (2025-12-11)
 
 
