@@ -293,8 +293,12 @@ describe('OidcCallback', () => {
         // We need to capture the promise options to check the return value of 'error'
         let errorCallback: any;
         vi.mocked(toast.promise).mockImplementation((_p, options: any) => {
+            // Handle if _p is a promise
+            if (_p && typeof (_p as any).catch === 'function') {
+                (_p as Promise<any>).catch(() => { });
+            }
             errorCallback = options.error;
-            return Promise.reject(error).catch(() => { });
+            return 'toast-id' as any;
         });
 
         render(
@@ -318,8 +322,12 @@ describe('OidcCallback', () => {
 
         let errorCallback: any;
         vi.mocked(toast.promise).mockImplementation((_p, options: any) => {
+            // Handle if _p is a promise
+            if (_p && typeof (_p as any).catch === 'function') {
+                (_p as Promise<any>).catch(() => { });
+            }
             errorCallback = options.error;
-            return Promise.reject(error).catch(() => { });
+            return 'toast-id' as any;
         });
 
         render(

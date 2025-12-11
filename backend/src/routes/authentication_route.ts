@@ -5,10 +5,7 @@
 import { Router } from "express";
 export const authenticationRouter = Router();
 
-import { loginController, googleLoginController, getConfig } from "../controller/authentication_controller.js";
-
-import { validateRegister, validateLogin } from "../handlers/validation.js";
-
+import { googleLoginController, getConfig } from "../controller/authentication_controller.js";
 
 /**
  * @openapi

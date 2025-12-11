@@ -7,8 +7,8 @@ declare global {
 }
 
 export const getConfig = (key: string, defaultValue?: string): string => {
-    if (window.ENV && window.ENV[key]) {
-        return window.ENV[key];
+    if (globalThis.ENV?.[key]) {
+        return globalThis.ENV[key];
     }
 
     // Also check without REACT_APP_ prefix if it's not found with it (in window.ENV)

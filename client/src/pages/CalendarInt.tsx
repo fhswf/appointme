@@ -130,9 +130,9 @@ const PushCalendar = ({ user, calendarList }) => {
   useEffect(() => {
     if (open) {
       const initialSelected = {};
-      currentPushCalendars.forEach(id => {
+      for (const id of currentPushCalendars) {
         initialSelected[id] = true;
-      });
+      }
       setSelected(initialSelected);
     }
   }, [open, user]);
