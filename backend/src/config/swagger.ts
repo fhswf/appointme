@@ -18,10 +18,12 @@ const options: swaggerJsdoc.Options = {
         },
         servers: [
             {
-                url: process.env.NODE_ENV === 'production'
-                    ? 'https://appoint.gawron.cloud'
-                    : 'http://localhost:5000',
-                description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server'
+                url: 'https://appoint.gawron.cloud',
+                description: 'Production server'
+            },
+            {
+                url: 'http://localhost:5000',
+                description: 'Development server'
             }
         ],
         components: {
