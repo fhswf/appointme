@@ -1,3 +1,15 @@
+# backend [1.27.0](https://github.com/fhswf/book_me/compare/backend@1.26.0...backend@1.27.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* OIDC login ([59c8431](https://github.com/fhswf/book_me/commit/59c843193b10ef19ea608578739b58725b64b373))
+
+
+### Features
+
+* improve Google Calendar integration ([bbb5031](https://github.com/fhswf/book_me/commit/bbb5031acc50d41e2aa7a3fe1549d1a8db269cb6))
+
 # backend [1.26.0](https://github.com/fhswf/book_me/compare/backend@1.25.2...backend@1.26.0) (2025-12-10)
 
 
