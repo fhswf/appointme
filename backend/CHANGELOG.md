@@ -1,3 +1,15 @@
+# backend [1.28.0](https://github.com/fhswf/book_me/compare/backend@1.27.0...backend@1.28.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* use top-level await & try/catch ([7b925ee](https://github.com/fhswf/book_me/commit/7b925eeaa82b3c849f5f3c03d1e1c2ba5531aab7))
+
+
+### Features
+
+* Refactor event booking logic into modular functions and introduce client-side configuration for environment variables. ([75c3380](https://github.com/fhswf/book_me/commit/75c33807d401dc6537cf0cde5cd1df4c0c7aadc0))
+
 # backend [1.27.0](https://github.com/fhswf/book_me/compare/backend@1.26.0...backend@1.27.0) (2025-12-11)
 
 
