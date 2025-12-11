@@ -401,7 +401,7 @@ END:VCALENDAR` }
             };
 
             // @ts-ignore
-            const result = await caldavController.createCalDavEvent(user as any, eventDetails);
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
 
             expect(result).toBeDefined();
             expect(result.ok).toBe(true);
@@ -452,7 +452,7 @@ END:VCALENDAR` }
             };
 
             // @ts-ignore
-            await caldavController.createCalDavEvent(user as any, eventDetails);
+            await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
 
             // Check if the generated ICS content in the call includes the custom email
             const createCall = createObjectMock.mock.calls[0][0];
@@ -467,8 +467,8 @@ END:VCALENDAR` }
             const eventDetails = {};
 
             // @ts-ignore
-            await expect(caldavController.createCalDavEvent(user as any, eventDetails))
-                .rejects.toThrow('CalDav account not found for push calendar');
+            await expect(caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1"))
+                .rejects.toThrow('CalDav account not found for calendar');
         });
 
         it("should throw error if target calendar not found", async () => {
@@ -493,7 +493,7 @@ END:VCALENDAR` }
                 push_calendar: "https://caldav.example.com/calendar-1"
             };
             // @ts-ignore
-            await expect(caldavController.createCalDavEvent(user as any, {}))
+            await expect(caldavController.createCalDavEvent(user as any, {}, undefined, "https://caldav.example.com/calendar-1"))
                 .rejects.toThrow('Target calendar not found');
         });
     });
