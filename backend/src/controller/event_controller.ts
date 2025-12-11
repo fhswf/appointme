@@ -376,8 +376,8 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     // Determine target calendars
     const targetCalendars = user.push_calendars || [];
     const locale = getLocale(req.headers['accept-language']);
-    const attendeeName = validator.escape(req.body.name as string);
-    const attendeeEmail = req.body.email as string;
+    const attendeeName = validator.escape(req.body.attendeeName as string);
+    const attendeeEmail = req.body.attendeeEmail as string;
 
     const { results, successCount } = await pushEventToCalendars({
       user,
