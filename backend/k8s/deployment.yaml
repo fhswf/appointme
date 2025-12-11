@@ -30,6 +30,8 @@ spec:
           image: ghcr.io/fhswf/book_me/backend:1.25.1
           command:
             - yarn
+            - workspace
+            - backend
             - migrate
           env:
             - name: MONGO_URI
