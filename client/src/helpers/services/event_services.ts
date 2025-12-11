@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Event, IntervalSet } from "common";
 import { getCsrfToken } from "./csrf_service";
+import { CONFIG } from "../config";
 
 export async function saveUserEvent(
   event: Event,
@@ -8,7 +9,7 @@ export async function saveUserEvent(
 ) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/event`,
+    `${CONFIG.API_URL}/event`,
     { ...event, user: userid },
     {
       headers: {
@@ -23,7 +24,7 @@ export async function saveUserEvent(
 export async function deleteEvent(id: string) {
   const csrfToken = await getCsrfToken();
   const response = await axios.delete(
-    `${import.meta.env.REACT_APP_API_URL}/event/${id}`,
+    `${CONFIG.API_URL}/event/${id}`,
     {
       headers: {
         "x-csrf-token": csrfToken,
@@ -37,7 +38,7 @@ export async function deleteEvent(id: string) {
 
 export async function getEventByID(id: string) {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/event/${id}`,
+    `${CONFIG.API_URL}/event/${id}`,
     {
       withCredentials: true,
     }
@@ -53,7 +54,7 @@ export async function updateEvent(
   console.log('available: %o', event.available);
   const csrfToken = await getCsrfToken();
   const response = await axios.put(
-    `${import.meta.env.REACT_APP_API_URL}/event/${id}`,
+    `${CONFIG.API_URL}/event/${id}`,
     {
       data: event
     },
@@ -69,14 +70,14 @@ export async function updateEvent(
 
 export async function getActiveEvents(user_id: string) {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/event/active/${user_id}`
+    `${CONFIG.API_URL}/event/active/${user_id}`
   );
   return response;
 }
 
 export function getAvailableTimes(timeMin: Date, timeMax: Date, eventId: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/event/${eventId}/slot`,
+    `${CONFIG.API_URL}/event/${eventId}/slot`,
     {
       params: {
         timeMin,
@@ -89,7 +90,7 @@ export function getAvailableTimes(timeMin: Date, timeMax: Date, eventId: string)
 
 export async function getUsersEvents() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/event`,
+    `${CONFIG.API_URL}/event`,
     {
       withCredentials: true,
     }
@@ -99,6 +100,6 @@ export async function getUsersEvents() {
 
 export async function getEventByUrlAndUser(user_id: string, event_url: string) {
   return axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/event/${user_id}/${event_url}`
+    `${CONFIG.API_URL}/event/${user_id}/${event_url}`
   );
 }

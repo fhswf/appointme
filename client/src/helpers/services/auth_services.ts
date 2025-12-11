@@ -1,10 +1,11 @@
 import axios from "axios";
 import { getCsrfToken } from "./csrf_service";
+import { CONFIG } from "../config";
 
 export async function postToRegister(name, email, password) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/auth/register`,
+    `${CONFIG.API_URL}/auth/register`,
     {
       name,
       email,
@@ -22,7 +23,7 @@ export async function postToRegister(name, email, password) {
 export async function postToActivate(token) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/auth/activate`,
+    `${CONFIG.API_URL}/auth/activate`,
     {},
     {
       headers: {
@@ -38,10 +39,10 @@ export async function postToActivate(token) {
 
 
 export async function postGoogleLogin(code) {
-  console.log("postGoogleLogin: %s", `${import.meta.env.REACT_APP_API_URL}/auth/google_oauth2_code`);
+  console.log("postGoogleLogin: %s", `${CONFIG.API_URL}/auth/google_oauth2_code`);
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/auth/google_oauth2_code`,
+    `${CONFIG.API_URL}/auth/google_oauth2_code`,
     {
       code,
     },
@@ -59,7 +60,7 @@ export async function postGoogleLogin(code) {
 export async function postLogin(email, password) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/auth/login`,
+    `${CONFIG.API_URL}/auth/login`,
     {
       email,
       password: password,
@@ -77,14 +78,14 @@ export async function postLogin(email, password) {
 
 export async function getOidcConfig() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/oidc/config`
+    `${CONFIG.API_URL}/oidc/config`
   );
   return response.data;
 }
 
 export async function getOidcAuthUrl() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/oidc/url`
+    `${CONFIG.API_URL}/oidc/url`
   );
   return response.data;
 }
@@ -92,7 +93,7 @@ export async function getOidcAuthUrl() {
 export async function postOidcLogin(code: string) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/oidc/login`,
+    `${CONFIG.API_URL}/oidc/login`,
     {
       code,
     },
@@ -109,7 +110,7 @@ export async function postOidcLogin(code: string) {
 // ...
 export async function getAuthConfig() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/auth/config`
+    `${CONFIG.API_URL}/auth/config`
   );
   return response.data;
 }

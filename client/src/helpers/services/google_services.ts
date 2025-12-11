@@ -1,10 +1,11 @@
 import axios from "axios";
 import { getCsrfToken } from "./csrf_service";
+import { CONFIG } from "../config";
 
 export async function deleteAccess(token) {
   const csrfToken = await getCsrfToken();
   const response = await axios.delete(
-    `${import.meta.env.REACT_APP_API_URL}/google/revoke`,
+    `${CONFIG.API_URL}/google/revoke`,
     {
       data: null,
       headers: {
@@ -18,7 +19,7 @@ export async function deleteAccess(token) {
 
 export async function getAuthUrl() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/google/generateUrl`,
+    `${CONFIG.API_URL}/google/generateUrl`,
     {
       withCredentials: true
     }
@@ -28,7 +29,7 @@ export async function getAuthUrl() {
 
 export async function getCalendarList() {
   const response = await axios.get(
-    `${import.meta.env.REACT_APP_API_URL}/google/calendarList`,
+    `${CONFIG.API_URL}/google/calendarList`,
     {
       withCredentials: true,
     }
@@ -45,7 +46,7 @@ export async function insertEvent(
 ) {
   const starttime = time.valueOf();
   const response = axios.post(
-    `${import.meta.env.REACT_APP_API_URL}/event/${event_id}/slot`,
+    `${CONFIG.API_URL}/event/${event_id}/slot`,
     {
       starttime,
       name,

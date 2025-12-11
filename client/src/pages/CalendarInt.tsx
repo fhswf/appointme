@@ -233,7 +233,6 @@ const PullCalendars = ({ user, calendarList }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(pullCals);
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);

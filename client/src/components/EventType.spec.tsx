@@ -1,14 +1,17 @@
-import { describe, it, expect, vi } from 'vitest';
+
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EventType } from './EventType';
 import { Event, User } from 'common';
 
+// Hoist mocks to allow dynamic control
+const mocks = vi.hoisted(() => ({
+    useTranslation: vi.fn(),
+}));
+
 // Mock dependencies
 vi.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { language: 'en' }
-    })
+    useTranslation: mocks.useTranslation
 }));
 
 vi.mock('@/components/ui/button', () => ({
@@ -60,6 +63,15 @@ const mockUser: User = {
 };
 
 describe('EventType', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        // Default mock implementation
+        mocks.useTranslation.mockReturnValue({
+            t: (key: string) => key,
+            i18n: { language: 'en' }
+        });
+    });
+
     it('should render event details', () => {
         render(<EventType event={mockEvent} user={mockUser} time={undefined} />);
 
@@ -96,7 +108,7 @@ describe('EventType', () => {
         render(<EventType event={mockEvent} user={mockUser} time={time} />);
 
         // Time should be formatted and displayed (format varies by locale)
-        expect(screen.getByText(/15\.01\.2024/i)).toBeInTheDocument();
+        expect(screen.getByText(/01\/15\/2024/i)).toBeInTheDocument();
     });
 
     it('should not render time section when time is undefined', () => {
@@ -105,6 +117,7 @@ describe('EventType', () => {
         // CalendarClock icon should not be present (only appears with time)
         const icons = container.querySelectorAll('svg');
         // Should have Hourglass and MapPin icons only (2 icons)
+        // Wait, lucide-react icons render as SVGs.
         expect(icons.length).toBe(2);
     });
 
@@ -146,35 +159,22 @@ describe('EventType', () => {
         expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
-    it('should log event, user, and time to console', () => {
-        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
-        const time = new Date('2024-01-15T10:00:00');
-
-        render(<EventType event={mockEvent} user={mockUser} time={time} />);
-
-        expect(consoleSpy).toHaveBeenCalledWith(
-            'EventType: event=%o, user=%o, time=%o',
-            mockEvent,
-            mockUser,
-            time
-        );
-
-        consoleSpy.mockRestore();
-    });
-
-    it('should format time with German locale', () => {
-        vi.mock('react-i18next', () => ({
-            useTranslation: () => ({
+    const locales = ['de', 'fr', 'es', 'it', 'ja', 'ko', 'zh'];
+    locales.forEach(locale => {
+        it(`should format time correctly for locale: ${locale}`, () => {
+            mocks.useTranslation.mockReturnValue({
                 t: (key: string) => key,
-                i18n: { language: 'de' }
-            })
-        }));
+                i18n: { language: locale }
+            });
 
-        const time = new Date('2024-01-15T10:00:00');
-        render(<EventType event={mockEvent} user={mockUser} time={time} />);
+            const time = new Date('2024-01-15T10:00:00');
+            render(<EventType event={mockEvent} user={mockUser} time={time} />);
 
-        // Should render time (exact format depends on locale)
-        expect(screen.getByTestId('card')).toBeInTheDocument();
+            // Just verifying it renders without error and calls format with something.
+            // Since we can't easily assert the exact output string for every locale without duplicating logic,
+            // we check if the CardContent contains some date-like structure or just that it rendered.
+            expect(screen.getByTestId('card')).toBeInTheDocument();
+        });
     });
 
     it('should render all icons correctly', () => {

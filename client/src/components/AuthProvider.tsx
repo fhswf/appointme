@@ -23,21 +23,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const res = await getUser();
             console.log("AuthProvider: getUser response status=%d data=%o", res.status, res.data);
-            
+
             if (res.data?.success === false || res.status === 401) {
                 console.log("AuthProvider: not authenticated (logic/401)");
                 setIsAuthenticated(false);
                 setUser(null);
+            } else if (res.data) {
+                console.log("AuthProvider: authenticated user %o", res.data);
+                setIsAuthenticated(true);
+                setUser(res.data);
             } else {
-                if (!res.data) {
-                     console.log("AuthProvider: response 200 OK but no user data found (null/empty)");
-                     setIsAuthenticated(false);
-                     setUser(null);
-                } else {
-                     console.log("AuthProvider: authenticated user %o", res.data);
-                     setIsAuthenticated(true);
-                     setUser(res.data);
-                }
+                console.log("AuthProvider: response 200 OK but no user data found (null/empty)");
+                setIsAuthenticated(false);
+                setUser(null);
             }
         } catch (error: any) {
             // Axios wraps the response in error.response for HTTP errors

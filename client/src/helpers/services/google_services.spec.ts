@@ -6,6 +6,13 @@ import * as csrfService from './csrf_service';
 // Mock axios
 vi.mock('axios');
 
+// Mock config
+vi.mock('../config', () => ({
+    CONFIG: {
+        API_URL: 'http://localhost:3001'
+    }
+}));
+
 // Mock csrf service
 vi.mock('./csrf_service', () => ({
     getCsrfToken: vi.fn()
@@ -14,8 +21,6 @@ vi.mock('./csrf_service', () => ({
 describe('google_services', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        // Set default env
-        import.meta.env.REACT_APP_API_URL = 'http://localhost:3001';
     });
 
     describe('deleteAccess', () => {
