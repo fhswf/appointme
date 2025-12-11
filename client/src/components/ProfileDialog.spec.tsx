@@ -99,6 +99,14 @@ describe('ProfileDialog', () => {
         const checkbox = screen.getByLabelText('use_gravatar');
         fireEvent.click(checkbox);
         expect(checkbox).not.toBeChecked();
+
+        const urlInput = screen.getByDisplayValue('test-user');
+        fireEvent.change(urlInput, { target: { value: 'new-url' } });
+        expect(urlInput).toHaveValue('new-url');
+
+        const emailCheckbox = screen.getByLabelText('send_invitation_email');
+        fireEvent.click(emailCheckbox);
+        expect(emailCheckbox).toBeChecked();
     });
 
     it('should submit updated data', async () => {
