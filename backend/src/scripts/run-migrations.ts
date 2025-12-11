@@ -29,4 +29,9 @@ async function runMigrations() {
     }
 }
 
-await runMigrations();
+try {
+    await runMigrations();
+} catch (error) {
+    console.error('Migration failed', error);
+    process.exit(1);
+}
