@@ -28,15 +28,7 @@ try {
             // Wait, if start:0, maybe it needs epoch.
             const date = new Date(timestamp);
             if (!isNaN(date.getTime())) {
-                jsonObj.testsuites['@_timestamp'] = timestamp; // Keep ISO for XML compliance
-                // But wait, if junit-to-ctrf reads this attribute, and it failed before...
-                // Maybe it handles numbers better?
-                // Let's try forcing epoch? No, XML standard is ISO.
-                // But maybe the issue is WHERE it looks.
-                // Wait, if I provided timestamp="...", and it failed.
-                // Maybe I should try epoch.
-                jsonObj.testsuites['@_timestamp'] = timestamp; // Keep ISO string
-
+                jsonObj.testsuites['@_timestamp'] = date.getTime(); // Convert to Epoch for junit-to-ctrf
             } else {
                 jsonObj.testsuites['@_timestamp'] = timestamp;
             }
