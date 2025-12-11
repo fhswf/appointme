@@ -375,40 +375,19 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 
     // Determine target calendars
     const targetCalendars = user.push_calendars || [];
-
-    const results = [];
-    let successCount = 0;
-
     const locale = getLocale(req.headers['accept-language']);
     const attendeeName = validator.escape(req.body.name as string);
     const attendeeEmail = req.body.email as string;
 
-    for (const calendar of targetCalendars) {
-      try {
-        // Check if calendar is a CalDav URL (heuristic: starts with http/https) 
-        if (calendar.startsWith('http') || calendar.startsWith('/')) {
-          await processCalDavBooking({
-            user,
-            event,
-            userComment,
-            calendarUrl: calendar,
-            locale,
-            attendeeName,
-            attendeeEmail,
-            sendInvitation: user.send_invitation_email
-          });
-          successCount++;
-          results.push({ calendar, success: true, type: 'caldav' });
-        } else {
-          await processGoogleBooking(user, userComment, event, calendar);
-          successCount++;
-          results.push({ calendar, success: true, type: 'google' });
-        }
-      } catch (err) {
-        logger.error(`Failed to push to calendar ${calendar}:`, err);
-        results.push({ calendar, success: false, error: err });
-      }
-    }
+    const { results, successCount } = await pushEventToCalendars({
+      user,
+      event,
+      userComment,
+      targetCalendars,
+      locale,
+      attendeeName,
+      attendeeEmail
+    });
 
     if (successCount > 0) {
       // If at least one succeeded, we return success.
@@ -439,6 +418,48 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
   } catch (err) {
     res.status(400).json({ error: err });
   }
+}
+
+async function pushEventToCalendars(params: {
+  user: any;
+  event: Schema$Event;
+  userComment: string;
+  targetCalendars: string[];
+  locale: Locale;
+  attendeeName: string;
+  attendeeEmail: string;
+}) {
+  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail } = params;
+  const results = [];
+  let successCount = 0;
+
+  for (const calendar of targetCalendars) {
+    try {
+      // Check if calendar is a CalDav URL (heuristic: starts with http/https) 
+      if (calendar.startsWith('http') || calendar.startsWith('/')) {
+        await processCalDavBooking({
+          user,
+          event,
+          userComment,
+          calendarUrl: calendar,
+          locale,
+          attendeeName,
+          attendeeEmail,
+          sendInvitation: user.send_invitation_email
+        });
+        successCount++;
+        results.push({ calendar, success: true, type: 'caldav' });
+      } else {
+        await processGoogleBooking(user, userComment, event, calendar);
+        successCount++;
+        results.push({ calendar, success: true, type: 'google' });
+      }
+    } catch (err) {
+      logger.error(`Failed to push to calendar ${calendar}:`, err);
+      results.push({ calendar, success: false, error: err });
+    }
+  }
+  return { results, successCount };
 }
 
 async function processCalDavBooking(
