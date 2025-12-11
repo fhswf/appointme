@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.20.0",
+  "version": "1.22.0",
   "homepage": "https://jupiter.fh-swf.de/meeting",
   "contributors": [
     {
@@ -77,7 +77,7 @@
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
-    "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml",
+    "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
     "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:merge",
     "coverage:clean": "rm -rf .nyc_output coverage",
     "coverage:copy-unit": "mkdir -p .nyc_output && cp coverage/coverage-final.json .nyc_output/unit-coverage.json",

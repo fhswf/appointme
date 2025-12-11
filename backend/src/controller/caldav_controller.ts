@@ -249,20 +249,23 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
                 return true;
             }
         } catch (e) {
-            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, push_calendar: ${calendarUrl}`);
+            logger.warn(`Error parsing URL during account matching: ${e}. serverUrl: ${acc.serverUrl}, calendarUrl: ${calendarUrl}`);
         }
         return false;
     });
 };
 
 export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string): Promise<any> => {
-    const calendarUrl = targetCalendarUrl || user.push_calendar;
-    // Find the account that owns the push_calendar URL
+    const calendarUrl = targetCalendarUrl;
+    if (!calendarUrl) {
+        throw new Error('Target calendar URL is required');
+    }
+    // Find the account that owns the calendar URL
     const account = findAccountForCalendar(user, calendarUrl);
 
     if (!account) {
-        logger.error('CalDav account not found for push calendar: %s', calendarUrl);
-        throw new Error('CalDav account not found for push calendar');
+        logger.error('CalDav account not found for calendar: %s', calendarUrl);
+        throw new Error('CalDav account not found for calendar');
     }
     logger.info('Found CalDAV account for push calendar: %s', account.name);
 
@@ -283,7 +286,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
 
     await client.login();
 
-    // We need to fetch calendars to get the full calendar object for the push_calendar URL
+    // We need to fetch calendars to get the full calendar object for the target calendar URL
     // Optimization: We could cache this or construct a minimal object if tsdav allows
     const calendars = await client.fetchCalendars();
     logger.debug('Fetched %d calendars', calendars.length);

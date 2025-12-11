@@ -445,7 +445,7 @@ describe("Event Controller", () => {
 
             (UserModel.findOne as any).mockImplementation(() => mockQuery({
                 ...USER,
-                push_calendar: "https://caldav.example.com/cal",
+                push_calendars: ["https://caldav.example.com/cal"],
                 send_invitation_email: true
             }));
 

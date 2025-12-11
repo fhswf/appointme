@@ -6,14 +6,19 @@ import * as csrfService from './csrf_service';
 
 vi.mock('axios');
 
+// Mock config
+vi.mock('../config', () => ({
+  CONFIG: {
+    API_URL: 'http://localhost:3001'
+  }
+}));
+
 describe('CalDAV Services', () => {
   const MOCK_CSRF = 'mock-csrf-token';
-  const API_URL = import.meta.env.REACT_APP_API_URL; // This might be undefined in test env if not set
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(csrfService, 'getCsrfToken').mockResolvedValue(MOCK_CSRF);
-    // Mock import.meta.env manually if needed, or rely on vitest environment setup
   });
 
   it('addAccount should post to /caldav/account with correct data and headers', async () => {

@@ -31,6 +31,6 @@ export const USER = {
         'gawron.christian@fh-swf.de'
     ],
     user_url: 'christian-gawron',
-    push_calendar: 't6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com',
+    push_calendars: ['t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com'],
     google_tokens
 }

@@ -1,3 +1,56 @@
+# backend [1.28.0](https://github.com/fhswf/book_me/compare/backend@1.27.0...backend@1.28.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* use top-level await & try/catch ([7b925ee](https://github.com/fhswf/book_me/commit/7b925eeaa82b3c849f5f3c03d1e1c2ba5531aab7))
+
+
+### Features
+
+* Refactor event booking logic into modular functions and introduce client-side configuration for environment variables. ([75c3380](https://github.com/fhswf/book_me/commit/75c33807d401dc6537cf0cde5cd1df4c0c7aadc0))
+
+# backend [1.27.0](https://github.com/fhswf/book_me/compare/backend@1.26.0...backend@1.27.0) (2025-12-11)
+
+
+### Bug Fixes
+
+* OIDC login ([59c8431](https://github.com/fhswf/book_me/commit/59c843193b10ef19ea608578739b58725b64b373))
+
+
+### Features
+
+* improve Google Calendar integration ([bbb5031](https://github.com/fhswf/book_me/commit/bbb5031acc50d41e2aa7a3fe1549d1a8db269cb6))
+
+# backend [1.26.0](https://github.com/fhswf/book_me/compare/backend@1.25.2...backend@1.26.0) (2025-12-10)
+
+
+### Features
+
+* database migration ([c326a4c](https://github.com/fhswf/book_me/commit/c326a4c456a369bd45fe25f6c8f933b5c817dfd5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.10.0
+
+## backend [1.25.2](https://github.com/fhswf/book_me/compare/backend@1.25.1...backend@1.25.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* handle multiple push calendars ([c33f087](https://github.com/fhswf/book_me/commit/c33f08716eb1eff9eda8e4b9401196670dae2ff3))
+
+## backend [1.25.1](https://github.com/fhswf/book_me/compare/backend@1.25.0...backend@1.25.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* simplify health check endpoint ([0e6b02a](https://github.com/fhswf/book_me/commit/0e6b02a793932ea021c02b34fd1ce5de7fe0ac5c))
+
 # backend [1.25.0](https://github.com/fhswf/book_me/compare/backend@1.24.0...backend@1.25.0) (2025-12-10)
 
 

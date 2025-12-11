@@ -58,6 +58,77 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
     res.json({ url });
 };
 
+const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
+    // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
+    let user = await UserModel.findOne({ email }).exec();
+
+    // If user doesn't exist, create it
+    if (!user) {
+        let user_url = validateUrl(email);
+        const picture_url = picture || "";
+        const userName = name || email.split('@')[0];
+
+        // 2. Retry loop for user_url uniqueness
+        let retry = 0;
+        const maxRetries = 5;
+
+        while (retry < maxRetries) {
+            try {
+                // Try to upsert/create user
+                user = await UserModel.findOneAndUpdate(
+                    { _id: sub },
+                    { name: userName, email, picture_url, user_url },
+                    { upsert: true, new: true, runValidators: true }
+                ).exec();
+
+                break; // Success
+            } catch (err: any) {
+                if (err.code === 11000) {
+                    // Check which key violated uniqueness
+                    if (err.keyPattern?.user_url) {
+                        // User URL collision, append suffix and retry
+                        user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
+                        retry++;
+                        continue;
+                    }
+                    // If it's email collision (rare race condition if we checked above), likely unrecoverable here
+                    throw err;
+                }
+                throw err;
+            }
+        }
+    }
+    return user;
+};
+
+const setAuthCookie = (res: Response, user: any) => {
+    const access_token = sign(
+        { _id: user._id, name: user.name, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+    );
+
+    const isDev = process.env.NODE_ENV === 'development';
+    const domain = process.env.DOMAIN;
+    const sameSite = isDev ? 'lax' : 'strict';
+
+    const cookieOptions: any = {
+        maxAge: 60 * 60 * 24 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite
+    };
+    if (domain) {
+        cookieOptions.domain = domain;
+    }
+
+    res.cookie('access_token', access_token, cookieOptions)
+        .status(200)
+        .json({
+            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url },
+        });
+};
+
 export const oidcLoginController = async (req: Request, res: Response): Promise<void> => {
     // Frontend sends the code it received
     const { code } = req.body;
@@ -90,80 +161,13 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
             return;
         }
 
-        // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
-        let user = await UserModel.findOne({ email }).exec();
-
-        // If user doesn't exist, create it
-        if (!user) {
-            let user_url = validateUrl(email);
-            const picture_url = picture || "";
-            const userName = name || email.split('@')[0];
-
-            // 2. Retry loop for user_url uniqueness
-            let retry = 0;
-            const maxRetries = 5;
-
-            while (retry < maxRetries) {
-                try {
-                    // Try to upsert/create user
-                    // Note: We use findOneAndUpdate with upsert: true. 
-                    // However, we are searching by _id (sub). 
-                    // If the ID is new but email exists (which we checked above, but race condition possible),
-                    // or if user_url exists, it might fail.
-                    // We already checked email above, so main concern is user_url collision 
-                    // or concurrent email registration.
-
-                    user = await UserModel.findOneAndUpdate(
-                        { _id: sub },
-                        { name: userName, email, picture_url, user_url },
-                        { upsert: true, new: true, runValidators: true }
-                    ).exec();
-
-                    break; // Success
-                } catch (err: any) {
-                    if (err.code === 11000) {
-                        // Check which key violated uniqueness
-                        if (err.keyPattern && err.keyPattern.user_url) {
-                            // User URL collision, append suffix and retry
-                            user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
-                            retry++;
-                            continue;
-                        }
-                        // If it's email collision (rare race condition if we checked above), likely unrecoverable here
-                        // or other constraint.
-                        throw err;
-                    }
-                    throw err;
-                }
-            }
-        }
+        const user = await findOrCreateUser(sub, email, name, picture);
 
         if (!user) {
             throw new Error("User creation failed after retries");
         }
 
-
-        const access_token = sign(
-            { _id: user._id, name: user.name, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
-
-        const isDev = process.env.NODE_ENV === 'development';
-        const domain = process.env.DOMAIN;
-        const sameSite = isDev ? 'lax' : 'strict';
-
-        res.cookie('access_token', access_token, {
-            maxAge: 60 * 60 * 24 * 1000,
-            httpOnly: true,
-            secure: true,
-            sameSite,
-            domain
-        })
-            .status(200)
-            .json({
-                user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url },
-            });
+        setAuthCookie(res, user);
 
     } catch (err: any) {
         logger.error("OIDC Login failed: %o", err);

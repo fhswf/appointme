@@ -16,8 +16,10 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
 
+  // Let's forward the user to the old UserContext provider to minimize refactoring elsewhere.
+  const userContextValue = React.useMemo(() => ({ user }), [user]);
+
   if (isAuthenticated === undefined) {
-    // console.log("PrivateRoute: authenticated is undefined");
     return null; // Or a loading spinner
   } else if (!isAuthenticated) {
     console.log("PrivateRoute: not authenticated, redirecting to /landing");
@@ -32,9 +34,6 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   // Actually, wait. AuthProvider provides AuthContext, not UserContext.
   // The old code had: export const UserContext = React.createContext
   // So existing components likely import UserContext from "./PrivateRoute".
-
-  // Let's forward the user to the old UserContext provider to minimize refactoring elsewhere.
-  const userContextValue = React.useMemo(() => ({ user }), [user]);
 
   return (
     <UserContext.Provider value={userContextValue}>

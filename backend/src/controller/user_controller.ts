@@ -29,7 +29,7 @@ export const getUser = (req: Request, res: Response): void => {
       "name": 1,
       "picture_url": 1,
       "pull_calendars": 1,
-      "push_calendar": 1,
+      "push_calendars": 1,
       "user_url": 1,
       "welcome": 1,
       "updatedAt": 1,
@@ -77,15 +77,16 @@ export const updateUser = (req: Request, res: Response): void => {
   if (Array.isArray(userData.pull_calendars)) {
     // Ensure all elements are strings
     if (userData.pull_calendars.every(c => typeof c === 'string')) {
-      update.pull_calendars = userData.pull_calendars.map(c => String(c));
+      update.pull_calendars = userData.pull_calendars.map(String);
     }
   }
 
-  if (typeof userData.push_calendar === 'string') {
-    update.push_calendar = userData.push_calendar;
-  } else if (userData.push_calendar === null || userData.push_calendar === undefined) {
-    // Allow clearing it if needed, or just ignore. 
-    // Based on original code, it seems we might just want to set it if it's a string.
+  // Validate arrays and specific types
+  if (Array.isArray(userData.push_calendars)) {
+    // Ensure all elements are strings
+    if (userData.push_calendars.every(c => typeof c === 'string')) {
+      update.push_calendars = userData.push_calendars.map(String);
+    }
   }
 
   // Handle User URL
@@ -126,7 +127,7 @@ export const updateUser = (req: Request, res: Response): void => {
             "name": 1,
             "picture_url": 1,
             "pull_calendars": 1,
-            "push_calendar": 1,
+            "push_calendars": 1,
             "user_url": 1,
             "welcome": 1,
             "updatedAt": 1,

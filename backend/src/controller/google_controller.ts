@@ -162,7 +162,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function insertGoogleEvent(user: UserDocument, event: Schema$Event): Promise<GaxiosResponse<Schema$Event>> {
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary'): Promise<GaxiosResponse<Schema$Event>> {
   if (!user.google_tokens?.access_token) {
     throw new Error("No Google account connected");
   }
@@ -173,7 +173,7 @@ export async function insertGoogleEvent(user: UserDocument, event: Schema$Event)
 
   return google.calendar({ version: "v3" }).events.insert({
     auth: oAuth2Client,
-    calendarId: user.push_calendar,
+    calendarId,
     sendUpdates: "all",
     requestBody: event,
   });
@@ -249,14 +249,15 @@ export function getCalendarList(req: Request, res: Response): void {
     })
     .catch(error => {
       logger.error("getAuth failed: %o", error);
-      res.status(400).json({ error: "Failed to authenticate with Google" });
+      // Return 401 to indicate Google authentication is needed
+      res.status(401).json({ error: "Google authentication required", message: "Please connect your Google Calendar" });
     });
 }
 
 
 
 
-export const events = (user_id: string, timeMin: string, timeMax: string): Promise<calendar_v3.Schema$Event[]> => {
+export const events = (user_id: string, timeMin: string, timeMax: string, calendarId: string = 'primary'): Promise<calendar_v3.Schema$Event[]> => {
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
@@ -266,7 +267,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string): Promi
       oAuth2Client.setCredentials(google_tokens);
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
       return calendar.events.list({
-        calendarId: user.push_calendar,
+        calendarId,
         timeMin,
         timeMax,
         singleEvents: true
