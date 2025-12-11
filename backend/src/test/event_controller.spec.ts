@@ -370,7 +370,7 @@ describe("Event Controller", () => {
 
             (UserModel.findOne as any).mockImplementation(() => mockQuery({
                 ...USER,
-                push_calendar: "google_calendar_id"
+                push_calendars: ["google_calendar_id"]
             }));
 
             const res = await request(app)
@@ -395,7 +395,7 @@ describe("Event Controller", () => {
 
             (UserModel.findOne as any).mockImplementation(() => mockQuery({
                 ...USER,
-                push_calendar: "https://caldav.example.com/cal"
+                push_calendars: ["https://caldav.example.com/cal"]
             }));
 
             const res = await request(app)
