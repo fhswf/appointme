@@ -27,7 +27,7 @@ spec:
     spec:
       initContainers:
         - name: migrations
-          image: ghcr.io/fhswf/book_me/backend:1.25.1
+          image: ghcr.io/fhswf/book_me/backend:1.26.0
           command:
             - yarn
             - workspace
