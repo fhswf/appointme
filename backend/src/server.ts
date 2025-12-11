@@ -99,10 +99,10 @@ app.get("/api/v1/csrf-token", (req, res) => {
 });
 
 // Swagger UI - must be before CSRF protection
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+app.use('/api/docs', swaggerUi.serve as any, swaggerUi.setup(swaggerSpec, {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Appoint Me API Documentation'
-}));
+}) as any);
 
 const csrfProtection = (req, res, next) => {
   // Exclude POST /api/v1/events/:id/slot from CSRF protection

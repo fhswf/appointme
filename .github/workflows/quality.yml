@@ -58,8 +58,11 @@ jobs:
           mkdir -p client/ctrf
 
       # Build
-      - name: Build
+      - name: Build Common
         run: yarn workspace common build
+
+      - name: Build Backend
+        run: yarn workspace backend build
 
       # Install Playwright browsers
       - name: Install Playwright Browsers
