@@ -211,15 +211,15 @@ export const googleLoginController = (req: Request, res: Response): void => {
             google_picture_url: picture
           };
 
-          if (!existingUser) {
-            // New user: set user_url and picture_url
-            updateData.user_url = user_url;
-            updateData.picture_url = picture;
-          } else {
+          if (existingUser) {
             // Existing user: only update picture_url if NOT using gravatar
             if (!existingUser.use_gravatar) {
               updateData.picture_url = picture;
             }
+          } else {
+            // New user: set user_url and picture_url
+            updateData.user_url = user_url;
+            updateData.picture_url = picture;
           }
 
           return UserModel.findOneAndUpdate(

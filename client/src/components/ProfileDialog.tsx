@@ -18,7 +18,7 @@ interface ProfileDialogProps {
     onOpenChange: (open: boolean) => void;
 }
 
-export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
+export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProps>) {
     const { t } = useTranslation();
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);

@@ -1,0 +1,31 @@
+declare global {
+    interface Window {
+        ENV?: {
+            [key: string]: string;
+        };
+    }
+}
+
+export const getConfig = (key: string, defaultValue?: string): string => {
+    if (window.ENV && window.ENV[key]) {
+        return window.ENV[key];
+    }
+
+    // Also check without REACT_APP_ prefix if it's not found with it (in window.ENV)
+    // But strictly speaking we plan to inject REACT_APP_ vars.
+
+    // Fallback to build-time env
+    const val = import.meta.env[key];
+    if (val !== undefined) {
+        return val;
+    }
+
+    return defaultValue || "";
+};
+
+export const CONFIG = {
+    CLIENT_ID: getConfig("REACT_APP_CLIENT_ID"),
+    BASE_PATH: getConfig("REACT_APP_BASE_PATH", "/"),
+    API_URL: getConfig("REACT_APP_API_URL"),
+    APP_URL: getConfig("REACT_APP_URL"),
+};

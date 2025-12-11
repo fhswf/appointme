@@ -1,7 +1,7 @@
 import React, { Suspense, StrictMode } from "react";
 import { createRoot } from 'react-dom/client';
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import App from "./pages/App";
 import Login from "./pages/Login";
@@ -26,13 +26,15 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from "sonner";
 import "./index.css";
 
-const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
-const BASE_PATH = import.meta.env.REACT_APP_BASE_PATH || "/";
+import { CONFIG } from "./helpers/config";
 
-console.log("base url: %s %s", BASE_PATH, import.meta.env.REACT_APP_API_URL, CLIENT_ID);
+const CLIENT_ID = CONFIG.CLIENT_ID;
+const BASE_PATH = CONFIG.BASE_PATH;
+
+console.log("base url: %s %s", BASE_PATH, CONFIG.API_URL, CLIENT_ID);
 
 const Main = () => {
-  const isAuthenticated = useAuthenticated();
+
   return (<StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>

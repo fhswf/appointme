@@ -1,10 +1,11 @@
 import axios from "axios";
 import { getCsrfToken } from "./csrf_service";
+import { CONFIG } from "../config";
 
 export async function addAccount(serverUrl, username, password, name, email) {
     const csrfToken = await getCsrfToken();
     const response = await axios.post(
-        `${import.meta.env.REACT_APP_API_URL}/caldav/account`,
+        `${CONFIG.API_URL}/caldav/account`,
         {
             serverUrl,
             username,
@@ -25,7 +26,7 @@ export async function addAccount(serverUrl, username, password, name, email) {
 export async function removeAccount(id) {
     const csrfToken = await getCsrfToken();
     const response = await axios.delete(
-        `${import.meta.env.REACT_APP_API_URL}/caldav/account/${id}`,
+        `${CONFIG.API_URL}/caldav/account/${id}`,
         {
             headers: {
                 "x-csrf-token": csrfToken,
@@ -38,7 +39,7 @@ export async function removeAccount(id) {
 
 export async function listAccounts() {
     const response = await axios.get(
-        `${import.meta.env.REACT_APP_API_URL}/caldav/account`,
+        `${CONFIG.API_URL}/caldav/account`,
         {
             withCredentials: true
         }
@@ -48,7 +49,7 @@ export async function listAccounts() {
 
 export async function listCalendars(accountId) {
     const response = await axios.get(
-        `${import.meta.env.REACT_APP_API_URL}/caldav/account/${accountId}/calendars`,
+        `${CONFIG.API_URL}/caldav/account/${accountId}/calendars`,
         {
             withCredentials: true
         }

@@ -46,41 +46,39 @@ const App = () => {
 
   console.log("App: user=%o", user);
   return (
-    <>
-      <div className="flex flex-col min-h-screen">
-        <AppNavbar />
-        <div className="container mx-auto p-4 flex-grow">
-          <div className="p-4">
-            <h1 className="text-3xl font-bold mb-4">
-              {t("low_clean_haddock_bubble")}
-            </h1>
-            <div className="flex justify-between items-center">
-              {user ? (
-                <>
-                  <div>
-                    <h2 className="text-xl font-semibold">
-                      {user.name}
-                    </h2>
-                    <br />
-                    <Button asChild variant="link" className="p-0 h-auto">
-                      <RouterLink to={"/users/" + user.user_url}>
-                        {user.user_url}
-                      </RouterLink>
-                    </Button>
-                  </div>
-                  <div>{addEventButton()}</div>
-                </>
-              ) : (
-                <span>{t("deft_suave_bear_pause")}</span>
-              )}
-            </div>
+    <div className="flex flex-col min-h-screen">
+      <AppNavbar />
+      <div className="container mx-auto p-4 flex-grow">
+        <div className="p-4">
+          <h1 className="text-3xl font-bold mb-4">
+            {t("low_clean_haddock_bubble")}
+          </h1>
+          <div className="flex justify-between items-center">
+            {user ? (
+              <>
+                <div>
+                  <h2 className="text-xl font-semibold">
+                    {user.name}
+                  </h2>
+                  <br />
+                  <Button asChild variant="link" className="p-0 h-auto">
+                    <RouterLink to={"/users/" + user.user_url}>
+                      {user.user_url}
+                    </RouterLink>
+                  </Button>
+                </div>
+                <div>{addEventButton()}</div>
+              </>
+            ) : (
+              <span>{t("deft_suave_bear_pause")}</span>
+            )}
           </div>
-
-          {renderList()}
         </div>
-        <Footer />
+
+        {renderList()}
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 

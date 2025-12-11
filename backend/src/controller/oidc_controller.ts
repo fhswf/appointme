@@ -123,7 +123,7 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
                 } catch (err: any) {
                     if (err.code === 11000) {
                         // Check which key violated uniqueness
-                        if (err.keyPattern && err.keyPattern.user_url) {
+                        if (err.keyPattern?.user_url) {
                             // User URL collision, append suffix and retry
                             user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
                             retry++;
