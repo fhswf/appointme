@@ -39,13 +39,17 @@ export const getUser = (req: Request, res: Response): void => {
     })
     .exec()
     .then(user => {
+      console.log("getUser: found user for id %s: %s", userid, user);
       if (!user) {
+        console.log("getUser: user not found");
         res.status(404).json({ error: "User not found" });
         return;
       }
+      console.log("getUser: returning 200 OK");
       res.status(200).json(user);
     })
     .catch(err => {
+      console.log("getUser: error %s", err);
       res.status(400).json({ error: err });
     });
 };

@@ -153,13 +153,18 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         const domain = process.env.DOMAIN;
         const sameSite = isDev ? 'lax' : 'strict';
 
-        res.cookie('access_token', access_token, {
+        // Only set domain if explicitly configured to avoid undefined domain breaking cookies
+        const cookieOptions: any = {
             maxAge: 60 * 60 * 24 * 1000,
             httpOnly: true,
             secure: true,
-            sameSite,
-            domain
-        })
+            sameSite
+        };
+        if (domain) {
+            cookieOptions.domain = domain;
+        }
+
+        res.cookie('access_token', access_token, cookieOptions)
             .status(200)
             .json({
                 user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url },

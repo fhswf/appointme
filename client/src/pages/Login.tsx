@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { postGoogleLogin, getAuthConfig, getOidcAuthUrl } from "../helpers/services/auth_services";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../components/AuthProvider";
 
 const Login = (props: any) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { refreshAuth } = useAuth();
   const [oidcEnabled, setOidcEnabled] = useState(false);
   const [googleEnabled, setGoogleEnabled] = useState(false);
 
@@ -21,17 +23,18 @@ const Login = (props: any) => {
       .catch(console.error);
   }, []);
 
-  const sendGoogleToken = (credential) => {
+  const sendGoogleToken = async (credential) => {
     console.log("postGoogleLogin: code=%s", credential)
-    postGoogleLogin(credential)
-      .then((res) => {
-        console.log("postGoogleLogin: %o", res);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log("GOOGLE SIGNIN ERROR", error.response);
-        toast.error(t("google_login_failed") + ": " + (error.response?.data?.message || error.message));
-      });
+    try {
+      const res = await postGoogleLogin(credential);
+      console.log("postGoogleLogin: %o", res);
+      // Refresh auth state before navigating to ensure PrivateRoute sees authenticated user
+      await refreshAuth();
+      navigate("/");
+    } catch (error: any) {
+      console.log("GOOGLE SIGNIN ERROR", error.response);
+      toast.error(t("google_login_failed") + ": " + (error.response?.data?.message || error.message));
+    }
   };
 
   const handleOidcLogin = () => {
