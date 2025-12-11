@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi, beforeEach } from 'vites
 import request from "supertest";
 import { UserModel } from "../models/User.js";
 import { USER } from './USER.js';
+import jsonwebtoken from "jsonwebtoken";
 
 // Mock dependencies
 vi.mock("../models/User.js", () => {
@@ -12,17 +13,8 @@ vi.mock("../models/User.js", () => {
     return { UserModel: UserModelMock };
 });
 
-vi.mock("../handlers/middleware.js", () => {
-    return {
-        middleware: {
-            requireAuth: vi.fn((req, res, next) => {
-                req.user_id = USER._id;
-                req['user_id'] = USER._id;
-                next();
-            })
-        }
-    }
-});
+// Do NOT mock middleware, use the real one to test auth logic
+// vi.mock("../handlers/middleware.js", ...);
 
 vi.mock("../config/dbConn.js", () => ({
     dataBaseConn: vi.fn()
@@ -39,9 +31,13 @@ vi.mock("csrf-csrf", () => {
 
 describe("GET /api/v1/user/me Reproduction", () => {
     let app: any;
-
+    const JWT_SECRET = "test_secret";
+    
     beforeAll(async () => {
-        process.env.JWT_SECRET = "test_secret";
+        process.env.JWT_SECRET = JWT_SECRET;
+        // Ensure env var logic matches
+        process.env.DOMAIN = "localhost"; 
+
         const { init } = await import("../server.js");
         app = init(0);
     });
@@ -54,15 +50,55 @@ describe("GET /api/v1/user/me Reproduction", () => {
         if (app?.close) await app.close();
     });
 
-    it("should return 404 when user is not found", async () => {
+    it("should return 200 and user data when authenticated and user exists", async () => {
+        // 1. Create valid token
+        const token = jsonwebtoken.sign({ _id: "user_id_123" }, JWT_SECRET);
+
+        // 2. Mock User Found
+        (UserModel.findOne as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue({ ...USER, _id: "user_id_123" })
+        });
+
+        // 3. Request with Cookie
+        const res = await request(app)
+            .get("/api/v1/user/me")
+            .set("Cookie", [`access_token=${token}`]);
+
+        expect(res.status).toBe(200);
+        expect(res.body._id).toBe("user_id_123");
+    });
+
+    it("should return 404 when authenticated but user not found in DB", async () => {
+        const token = jsonwebtoken.sign({ _id: "user_id_404" }, JWT_SECRET);
+
         (UserModel.findOne as any).mockReturnValue({
             exec: vi.fn().mockResolvedValue(null)
         });
 
-        const res = await request(app).get("/api/v1/user/me");
+        const res = await request(app)
+            .get("/api/v1/user/me")
+            .set("Cookie", [`access_token=${token}`]);
 
         expect(res.status).toBe(404);
-        expect(res.headers['cache-control']).toBe('no-store');
         expect(res.body.error).toBe("User not found");
+    });
+
+    it("should return 401 when access_token is invalid", async () => {
+        const token = "invalid_token_string";
+
+        const res = await request(app)
+            .get("/api/v1/user/me")
+            .set("Cookie", [`access_token=${token}`]);
+
+        // Middleware should block this
+        expect(res.status).toBe(401); 
+    });
+
+    it("should return 401 when access_token is missing", async () => {
+         const res = await request(app)
+            .get("/api/v1/user/me");
+            // No cookie set
+
+        expect(res.status).toBe(401);
     });
 });

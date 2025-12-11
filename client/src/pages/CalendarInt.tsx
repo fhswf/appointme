@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { signout } from "../helpers/helpers";
 import AppNavbar from "../components/AppNavbar";
 
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,7 @@ import { updateUser } from "../helpers/services/user_services";
 import {
   getAuthUrl,
   getCalendarList,
+  deleteAccess,
 } from "../helpers/services/google_services";
 
 import { Edit, Trash2 } from "lucide-react";
@@ -116,16 +116,16 @@ const PushCalendar = ({ user, calendarList }) => {
       .filter((item) => currentPushCalendars.includes(item.id))
       .map((cal) => (
         <li key={cal.id} className="flex items-center gap-2">
-           <img src={cal.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg"} alt="icon" className="w-4 h-4" />
-           {cal.summaryOverride ? cal.summaryOverride : cal.summary}
+          <img src={cal.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg"} alt="icon" className="w-4 h-4" />
+          {cal.summaryOverride ? cal.summaryOverride : cal.summary}
         </li>
       ))
     : undefined;
-  
+
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState({});
   const { t } = useTranslation();
-  
+
   // Initialize selected state from user's current push calendars
   useEffect(() => {
     if (open) {
@@ -140,18 +140,18 @@ const PushCalendar = ({ user, calendarList }) => {
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
-  
+
   const save = () => {
     console.log("save: selected: %o", selected);
     user.push_calendars = [];
-    
+
     const newSelection = [];
     for (const item of Object.keys(selected)) {
       if (selected[item]) {
         newSelection.push(item);
       }
     }
-    
+
     user.push_calendars = newSelection;
     // For backward compatibility, valid single push_calendar logic could be: 
     // user.push_calendar = newSelection.length > 0 ? newSelection[0] : null;
@@ -185,9 +185,9 @@ const PushCalendar = ({ user, calendarList }) => {
       </CardHeader>
       <CardContent>
         {pushCals && pushCals.length > 0 ? (
-            <ul className="list-disc pl-4 space-y-1">{pushCals}</ul>
+          <ul className="list-disc pl-4 space-y-1">{pushCals}</ul>
         ) : (
-            <div className="text-sm text-muted-foreground">No calendar selected</div>
+          <div className="text-sm text-muted-foreground">No calendar selected</div>
         )}
       </CardContent>
 
@@ -490,10 +490,18 @@ const Calendarintegration = () => {
   const user = useContext(UserContext).user;
   const { t } = useTranslation();
 
-  const revokeScopes = (event) => {
+  const revokeScopes = async (event) => {
     event.preventDefault();
-    signout();
-    navigate("/landing");
+    try {
+      await deleteAccess(null);
+      // Update local state to reflect disconnection
+      setConnected(false);
+      setGoogleCalendars([]);
+      toast.success(t("Google Calendar disconnected"));
+    } catch (err) {
+      console.error("Failed to revoke Google access:", err);
+      toast.error(t("Failed to disconnect Google Calendar"));
+    }
   }
 
 
@@ -536,18 +544,25 @@ const Calendarintegration = () => {
       })
       .catch((err) => {
         console.error("getCalendarList failed: %o", err);
-        setConnected(false);
+        // Check if this is a 401 (missing Google auth) vs other errors
+        if (err.response?.status === 401) {
+          console.log("Google Calendar not connected - this is OK");
+          setConnected(false);
+        } else {
+          console.error("Unexpected error loading Google calendars:", err);
+          setConnected(false);
+        }
       });
 
-    getAuthUrl().then((res) => {
-      if (res.data.success === false) {
-        signout();
-        navigate("/landing");
-      } else {
+    getAuthUrl()
+      .then((res) => {
         console.log("getAuthUrl: %o", res.data.url);
         setUrl(res.data.url as string);
-      }
-    });
+      })
+      .catch((err) => {
+        console.error("Failed to get Google auth URL:", err);
+        // Don't logout the user, just log the error
+      });
   }, [user]);
 
   const [calendarError, setCalendarError] = useState<string | null>(null);
@@ -584,16 +599,21 @@ const Calendarintegration = () => {
     setCalDavCalendars(newCalDavCalendars);
   };
 
-  const renderConnectButton = () =>
-    connected ? (
-      <Button onClick={revokeScopes}>
-        {t("lower_born_finch_dash")}
-      </Button>
-    ) : (
-      <Button asChild>
-        <a href={url}>{t("whole_formal_liger_rise")}</a>
-      </Button>
-    );
+  const renderConnectButton = () => {
+    if (connected) {
+      return (
+        <Button onClick={revokeScopes} variant="destructive" data-testid="disconnect-google-button">
+          {t("lower_born_finch_dash")}
+        </Button>
+      );
+    } else {
+      return (
+        <Button asChild data-testid="connect-google-button">
+          <a href={url}>{t("whole_formal_liger_rise")}</a>
+        </Button>
+      );
+    }
+  };
 
   return (
     <>
@@ -628,19 +648,31 @@ const Calendarintegration = () => {
           <CalDavAccounts user={user} onAccountsChange={handleAccountsChange} />
         </ErrorBoundary>
 
-        <h4 className="text-2xl font-bold mb-4">
-          {t("merry_north_meerkat_cuddle")}
-        </h4>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ErrorBoundary>
-              <PushCalendar user={user} calendarList={calendarList} />
-            </ErrorBoundary>
-            <ErrorBoundary>
-              <PullCalendars user={user} calendarList={calendarList} />
-            </ErrorBoundary>
+        {/* Only show calendar settings if there are calendars available */}
+        {calendarList && calendarList.items.length > 0 && (
+          <>
+            <h4 className="text-2xl font-bold mb-4">
+              {t("merry_north_meerkat_cuddle")}
+            </h4>
+            <div className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ErrorBoundary>
+                  <PushCalendar user={user} calendarList={calendarList} />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <PullCalendars user={user} calendarList={calendarList} />
+                </ErrorBoundary>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Show helpful message if no calendars are connected */}
+        {(!calendarList || calendarList.items.length === 0) && (
+          <div className="p-4 text-center text-muted-foreground">
+            <p>{t("Connect a calendar to get started")}</p>
           </div>
-        </div>
+        )}
 
         <div className="p-4 flex justify-end">
           <Button onClick={() => navigate("/")} data-testid="close-button">
