@@ -12,7 +12,7 @@ ENV APP_API_URL=${APP_API_URL}
 WORKDIR /base
 COPY .yarn .yarn
 COPY .yarnrc.yml .
-RUN yarn set version 4
+
 
 COPY package.json .
 COPY yarn.lock .
@@ -43,7 +43,7 @@ COPY --from=build /base/backend backend
 COPY --from=build /base/common common
 COPY --from=build /base/.yarn .yarn
 COPY --from=build /base/.yarnrc.yml .yarnrc.yml
-RUN yarn set version 4
+
 RUN yarn install
 EXPOSE 5000
 CMD [ "yarn", "workspace", "backend", "start"]
