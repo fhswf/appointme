@@ -20,10 +20,17 @@ vi.mock('./csrf_service', () => ({
     getCsrfToken: vi.fn()
 }));
 
+// Mock config
+vi.mock('../config', () => ({
+    CONFIG: {
+        API_URL: 'http://localhost:3001'
+    }
+}));
+
 describe('auth_services', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        import.meta.env.REACT_APP_API_URL = 'http://localhost:3001';
+
         // Suppress console.log for cleaner test output
         vi.spyOn(console, 'log').mockImplementation(() => { });
     });
