@@ -130,9 +130,9 @@ describe('google_services', () => {
             expect(axios.post).toHaveBeenCalledWith(
                 `http://localhost:3001/event/${eventId}/slot`,
                 {
-                    starttime: time.valueOf(),
-                    name,
-                    email,
+                    start: time.valueOf(),
+                    attendeeName: name,
+                    attendeeEmail: email,
                     description
                 }
             );
@@ -148,7 +148,7 @@ describe('google_services', () => {
             expect(axios.post).toHaveBeenCalledWith(
                 expect.any(String),
                 expect.objectContaining({
-                    starttime: time.valueOf()
+                    start: time.valueOf()
                 })
             );
         });

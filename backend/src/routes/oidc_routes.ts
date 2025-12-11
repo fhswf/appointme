@@ -17,11 +17,100 @@ const loginLimiter = rateLimit({
     message: "Too many login attempts from this IP, please try again after a minute"
 });
 
+/**
+ * @openapi
+ * /api/v1/oidc/config:
+ *   get:
+ *     summary: Get OIDC configuration
+ *     description: Check if OIDC authentication is enabled
+ *     tags:
+ *       - OIDC
+ *     responses:
+ *       200:
+ *         description: OIDC configuration retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 enabled:
+ *                   type: boolean
+ *                   description: Whether OIDC authentication is enabled
+ */
 oidcRouter.get("/config", (req, res) => {
     res.json({
         enabled: !!(process.env.OIDC_ISSUER && process.env.OIDC_CLIENT_ID)
     });
 });
 
+/**
+ * @openapi
+ * /api/v1/oidc/url:
+ *   get:
+ *     summary: Get OIDC authorization URL
+ *     description: Generate an OIDC authorization URL for authentication
+ *     tags:
+ *       - OIDC
+ *     responses:
+ *       200:
+ *         description: Authorization URL generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ *                   description: OIDC authorization URL
+ *       500:
+ *         description: OIDC not configured
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 oidcRouter.get("/url", oidcUrlRateLimiter, getAuthUrl);
+
+/**
+ * @openapi
+ * /api/v1/oidc/login:
+ *   post:
+ *     summary: OIDC login
+ *     description: Authenticate user using OIDC authorization code
+ *     tags:
+ *       - OIDC
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *             properties:
+ *               code:
+ *                 type: string
+ *                 description: OIDC authorization code
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT authentication token
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Authentication failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 oidcRouter.post("/login", loginLimiter, oidcLoginController);
+
+export default oidcRouter;

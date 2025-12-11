@@ -44,13 +44,13 @@ export async function insertEvent(
   email,
   description
 ) {
-  const starttime = time.valueOf();
+  const start = time.valueOf();
   const response = axios.post(
     `${CONFIG.API_URL}/event/${event_id}/slot`,
     {
-      starttime,
-      name,
-      email,
+      start,
+      attendeeName: name,
+      attendeeEmail: email,
       description,
     }
   );

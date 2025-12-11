@@ -94,6 +94,8 @@ describe('CalendarIntegration Page', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.spyOn(console, 'log').mockImplementation(() => { });
+        vi.spyOn(console, 'error').mockImplementation(() => { });
         (googleServices.getCalendarList as any).mockResolvedValue(mockCalendarList);
         (googleServices.getAuthUrl as any).mockResolvedValue({ data: { success: true, url: 'http://auth' } });
         (caldavServices.listAccounts as any).mockResolvedValue({ data: [] });

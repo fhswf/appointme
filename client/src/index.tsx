@@ -19,8 +19,6 @@ import Impressum from "./pages/Impressum";
 import Privacy from "./pages/Privacy";
 import { AuthProvider } from "./components/AuthProvider";
 
-import { useAuthenticated } from "./helpers/helpers";
-
 import "./i18n";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from "sonner";

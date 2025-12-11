@@ -13,6 +13,10 @@ import { userRouter } from "./routes/user_routes.js";
 import { caldavRouter } from "./routes/caldav_routes.js";
 import { oidcRouter } from "./routes/oidc_routes.js";
 
+// Swagger documentation
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger.js";
+
 // logger
 import { logger } from "./logging.js";
 
@@ -69,10 +73,36 @@ const {
   getSessionIdentifier: (req) => req.cookies['access_token'] || "",
 });
 
+/**
+ * @openapi
+ * /api/v1/csrf-token:
+ *   get:
+ *     summary: Get CSRF token
+ *     description: Retrieve a CSRF token for state-changing operations
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: CSRF token generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 csrfToken:
+ *                   type: string
+ *                   description: CSRF token to include in request headers
+ */
 app.get("/api/v1/csrf-token", (req, res) => {
   const csrfToken = generateCsrfToken(req, res);
   res.json({ csrfToken });
 });
+
+// Swagger UI - must be before CSRF protection
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Appoint Me API Documentation'
+}));
 
 const csrfProtection = (req, res, next) => {
   // Exclude POST /api/v1/events/:id/slot from CSRF protection
