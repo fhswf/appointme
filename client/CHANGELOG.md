@@ -1,3 +1,10 @@
+# client [1.27.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.1...client@1.27.0-rc.2) (2025-12-12)
+
+
+### Bug Fixes
+
+* runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
+
 # client [1.27.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.26.0...client@1.27.0-rc.1) (2025-12-12)
 
 
