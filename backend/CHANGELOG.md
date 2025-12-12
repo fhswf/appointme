@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
+
+
+### Bug Fixes
+
+* configuration ([cac0259](https://github.com/fhswf/appointme/commit/cac0259c5100802363f124153b463ba4f2258315))
+
 # backend [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.2...backend@1.32.0-rc.3) (2025-12-12)
 
 
