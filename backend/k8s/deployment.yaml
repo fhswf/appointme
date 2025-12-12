@@ -108,6 +108,11 @@ spec:
                 secretKeyRef:
                   key: ENCRYPTION_KEY
                   name: bookme-secret
+            - name: CONTACT_INFO
+              valueFrom:
+                configMapKeyRef:
+                  key: CONTACT_INFO
+                  name: bookme
           image: ghcr.io/fhswf/book_me/backend:1.29.1
           name: bookme
           ports:
