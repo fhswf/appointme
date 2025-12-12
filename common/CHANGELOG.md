@@ -1,3 +1,15 @@
+# common [1.11.0](https://github.com/fhswf/appointme/compare/common@1.10.0...common@1.11.0) (2025-12-12)
+
+
+### Bug Fixes
+
+* rebranding ([a7e4c43](https://github.com/fhswf/appointme/commit/a7e4c4359c4791a3163abcb2f3916a24048c545c))
+
+
+### Features
+
+* rebranding to "appointme" ([d73ce59](https://github.com/fhswf/appointme/commit/d73ce597bc90a896a6787ce8cb5f2415594063c5))
+
 # common [1.10.0](https://github.com/fhswf/appointme/compare/common@1.9.0...common@1.10.0) (2025-12-10)
 
 
