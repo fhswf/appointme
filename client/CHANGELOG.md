@@ -1,3 +1,10 @@
+# client [1.27.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.2...client@1.27.0-rc.3) (2025-12-12)
+
+
+### Bug Fixes
+
+* config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
+
 # client [1.27.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.1...client@1.27.0-rc.2) (2025-12-12)
 
 
