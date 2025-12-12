@@ -28,9 +28,9 @@ logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 const app = express();
 app.disable("x-powered-by");
 
-const ORIGINS = [process.env.CLIENT_URL, "https://appoint.gawron.cloud"];
+const ORIGINS = [process.env.CLIENT_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
-  ORIGINS.push("http://localhost:5173", "http://localhost:5174");
+  ORIGINS.push("http://localhost:5173");
 }
 if (process.env.CORS_ALLOWED_ORIGINS) {
   for (const origin of process.env.CORS_ALLOWED_ORIGINS.split(",")) {

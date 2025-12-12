@@ -1,8 +1,6 @@
-import React, { Suspense, StrictMode } from "react";
+import { Suspense, StrictMode } from "react";
 import { createRoot } from 'react-dom/client';
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import App from "./pages/App";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
