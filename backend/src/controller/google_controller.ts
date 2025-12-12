@@ -8,7 +8,6 @@ import { calendar_v3, google } from 'googleapis';
 import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
-import { User } from "common/src/types";
 import { UserModel, UserDocument } from "../models/User.js";
 import { Request, Response } from 'express';
 

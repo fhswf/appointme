@@ -21,6 +21,7 @@ import { generateIcsContent } from "../utility/ical.js";
 import { convertBusyToFree } from "../utility/scheduler.js";
 import { UserModel } from "../models/User.js";
 import { calendar_v3 } from 'googleapis';
+import "./config/env.js";
 import Schema$Event = calendar_v3.Schema$Event;
 
 //const DAYS = [Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT,]
@@ -368,7 +369,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       ],
       source: {
         title: "Appoint Me",
-        url: config.baseUrl,
+        url: process.env.BASE_URL,
       },
       guestsCanModify: true,
       guestsCanInviteOthers: true,
