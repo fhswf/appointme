@@ -1,3 +1,23 @@
+# backend [1.31.0](https://github.com/fhswf/appointme/compare/backend@1.30.0...backend@1.31.0) (2025-12-12)
+
+
+### Bug Fixes
+
+* moving images ([fd19d57](https://github.com/fhswf/appointme/commit/fd19d57644ec5c173d18b072f3e5b63ea5a56460))
+
+
+### Features
+
+* rebranding to "appointme" ([d73ce59](https://github.com/fhswf/appointme/commit/d73ce597bc90a896a6787ce8cb5f2415594063c5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.11.0
+
 # backend [1.30.0](https://github.com/fhswf/appointme/compare/backend@1.29.1...backend@1.30.0) (2025-12-12)
 
 
