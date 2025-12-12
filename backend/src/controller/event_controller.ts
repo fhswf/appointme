@@ -368,7 +368,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       ],
       source: {
         title: "Appoint Me",
-        url: "https://appoint.gawron.cloud",
+        url: config.baseUrl,
       },
       guestsCanModify: true,
       guestsCanInviteOthers: true,
