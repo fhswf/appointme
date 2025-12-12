@@ -31,6 +31,11 @@ COPY --from=build /base/client/build /usr/share/nginx/html/meeting
 COPY ./client/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY ./client/scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+RUN apk add --no-cache curl bash \
+    && curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin \
+    && syft . -o spdx-json=sbom.spdx.json
+
 EXPOSE 80
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

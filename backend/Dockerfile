@@ -45,5 +45,9 @@ COPY --from=build /base/.yarn .yarn
 COPY --from=build /base/.yarnrc.yml .yarnrc.yml
 
 RUN yarn install
+
+RUN curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin \
+    && syft . -o spdx-json=sbom.spdx.json
+
 EXPOSE 5000
 CMD [ "yarn", "workspace", "backend", "start"]
