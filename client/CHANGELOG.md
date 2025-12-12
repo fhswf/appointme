@@ -1,3 +1,23 @@
+# client [1.26.0](https://github.com/fhswf/appointme/compare/client@1.25.0...client@1.26.0) (2025-12-12)
+
+
+### Bug Fixes
+
+* moving images ([fd19d57](https://github.com/fhswf/appointme/commit/fd19d57644ec5c173d18b072f3e5b63ea5a56460))
+
+
+### Features
+
+* rebranding to "appointme" ([d73ce59](https://github.com/fhswf/appointme/commit/d73ce597bc90a896a6787ce8cb5f2415594063c5))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.11.0
+
 # client [1.25.0](https://github.com/fhswf/appointme/compare/client@1.24.0...client@1.25.0) (2025-12-12)
 
 
