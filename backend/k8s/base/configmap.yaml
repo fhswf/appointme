@@ -27,8 +27,8 @@ data:
   DISABLE_GOOGLE_LOGIN: "false"
   
   # OIDC Configuration
-  OIDC_ISSUER: "https://accounts.google.com"
-  OIDC_CLIENT_ID: "changeme"
+  OIDC_ISSUER: "https://keycloak.ki.fh-swf.de/realms/cluster"
+  OIDC_CLIENT_ID: "appointme"
   
   # Client Configuration (Build-time variables for the frontend)
   REACT_APP_API_URL: "https://appointme.gawron.cloud/api/v1"
