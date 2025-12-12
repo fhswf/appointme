@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getUser, updateUser } from "../helpers/services/user_services";
 import { User } from "lucide-react";
+import { useAuth } from "../components/AuthProvider";
 import { LanguageSelector } from "./LanguageSelector";
 import { toast } from "sonner";
 import {
@@ -20,6 +21,7 @@ interface ProfileDialogProps {
 
 export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProps>) {
     const { t } = useTranslation();
+    const { refreshAuth } = useAuth();
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -64,6 +66,7 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
             .then((res) => {
                 setUser(res.data);
                 toast.success(t("profile_updated"));
+                refreshAuth();
                 onOpenChange(false);
             })
             .catch((err) => {

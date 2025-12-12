@@ -28,6 +28,13 @@ vi.mock('./LanguageSelector', () => ({
     LanguageSelector: () => <div data-testid="language-selector">Language Selector</div>
 }));
 
+const mockRefreshAuth = vi.fn();
+vi.mock('../components/AuthProvider', () => ({
+    useAuth: () => ({
+        refreshAuth: mockRefreshAuth
+    })
+}));
+
 // Mock UI components
 vi.mock('@/components/ui/dialog', () => ({
     Dialog: ({ children, open }: any) => open ? <div>{children}</div> : null,
@@ -57,6 +64,7 @@ describe('ProfileDialog', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         vi.mocked(userServices.getUser).mockResolvedValue({ data: mockUser } as any);
+        mockRefreshAuth.mockResolvedValue(undefined);
     });
 
     it('should calculate initial state and render loading', async () => {
@@ -130,6 +138,7 @@ describe('ProfileDialog', () => {
                 use_gravatar: true
             }));
             expect(toast.success).toHaveBeenCalledWith('profile_updated');
+            expect(mockRefreshAuth).toHaveBeenCalled();
             expect(onOpenChange).toHaveBeenCalledWith(false);
         });
     });

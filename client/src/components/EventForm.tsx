@@ -30,12 +30,7 @@ const EditSlot = (props: EditSlotProps) => {
   const [slots, setSlots] = useState<Slot[]>([]);
 
   useEffect(() => {
-    setSlots(
-      props.slots.filter(
-        (slot) =>
-          (slot.start && slot.start.length > 0 && slot.end && slot.end.length > 0)
-      )
-    );
+    setSlots(props.slots);
   }, [props.slots]);
 
   const handleCheck = (checked: boolean) => {
@@ -53,7 +48,6 @@ const EditSlot = (props: EditSlotProps) => {
   };
 
   const addSlot = () => {
-    console.log("add slot");
     const _slots = slots.slice();
     _slots.push({ start: "", end: "" });
     setSlots(_slots);
