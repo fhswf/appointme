@@ -4,7 +4,7 @@ metadata:
   name: appointme-ingress
 spec:
   rules:
-    - host: appoint-staging.gawron.cloud
+    - host: appointme.gawron.cloud
       http:
         paths:
           - backend:
