@@ -138,16 +138,6 @@
       [
         "@codedependant/semantic-release-docker",
         {
-          "branches": [
-            "+([0-9])?(.{+([0-9]),x}).x",
-            "prod",
-            {
-              "name": "main",
-              "prerelease": "rc"
-            },
-            "next",
-            "next-major"
-          ],
           "dockerImage": "backend",
           "dockerRegistry": "ghcr.io",
           "dockerProject": "fhswf/appointme",

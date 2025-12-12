@@ -161,12 +161,6 @@
       [
         "@codedependant/semantic-release-docker",
         {
-          "dockerTags": [
-            "latest",
-            "{{major}}-latest",
-            "{{version}}",
-            "{{git_sha}}"
-          ],
           "dockerImage": "frontend",
           "dockerRegistry": "ghcr.io",
           "dockerProject": "fhswf/appointme",
