@@ -27,6 +27,12 @@ COPY ./client ./client
 RUN yarn workspace client build
 
 FROM nginx:1.21.3-alpine
+
+ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
+ENV REACT_APP_BASE_PATH=${BASE_PATH}
+ENV REACT_APP_URL=${APP_URL}
+ENV REACT_APP_API_URL=${API_URL}
+
 COPY --from=build /base/client/build /usr/share/nginx/html/meeting
 COPY ./client/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY ./client/scripts/entrypoint.sh /entrypoint.sh
