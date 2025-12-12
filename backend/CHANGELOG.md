@@ -1,3 +1,11 @@
+## backend [1.31.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.31.1-rc.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* image tagging ([95e03b0](https://github.com/fhswf/appointme/commit/95e03b0906d778dd0529b6746d009a82ab0c1308))
+* version bumps ([29c4d17](https://github.com/fhswf/appointme/commit/29c4d173a15de4207c6a4e1f8a76c885ff3ba210))
+
 # backend [1.31.0](https://github.com/fhswf/appointme/compare/backend@1.30.0...backend@1.31.0) (2025-12-12)
 
 
