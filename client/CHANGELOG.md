@@ -1,3 +1,11 @@
+## client [1.26.1-rc.1](https://github.com/fhswf/appointme/compare/client@1.26.0...client@1.26.1-rc.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* release strategy ([7cdd49c](https://github.com/fhswf/appointme/commit/7cdd49cf701624c985b7a89c4895b9fe36ead7e6))
+* release strategy ([a9f9a81](https://github.com/fhswf/appointme/commit/a9f9a81769726c054e4e8c8bce322a6cc7fcdb75))
+
 # client [1.26.0](https://github.com/fhswf/appointme/compare/client@1.25.0...client@1.26.0) (2025-12-12)
 
 
