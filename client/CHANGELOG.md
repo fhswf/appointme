@@ -1,3 +1,10 @@
+# client [1.27.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.3...client@1.27.0-rc.4) (2025-12-12)
+
+
+### Bug Fixes
+
+* environment variables ([a16167e](https://github.com/fhswf/appointme/commit/a16167eef811c480a31e48438048a8eddf713060))
+
 # client [1.27.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.2...client@1.27.0-rc.3) (2025-12-12)
 
 
