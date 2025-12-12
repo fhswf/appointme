@@ -27,25 +27,20 @@ spec:
     spec:
       containers:
         - env:
-            - name: CLIENT_ID
+            - name: REACT_APP_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   key: CLIENT_ID
                   name: appointme-secret
-            - name: API_URL
+            - name: REACT_APP_API_URL
               valueFrom:
                 configMapKeyRef:
                   key: API_URL
                   name: appointme
-            - name: CLIENT_URL
+            - name: REACT_APP_URL
               valueFrom:
                 configMapKeyRef:
                   key: CLIENT_URL
-                  name: appointme
-            - name: MONGO_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: MONGO_URI
                   name: appointme
             - name: TZ
               valueFrom:
