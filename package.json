@@ -92,7 +92,7 @@
         "prerelease": "rc"
       },
       "next",
-      "next-major",
+      "next-major"
     ],
     "noCi": true
   },
