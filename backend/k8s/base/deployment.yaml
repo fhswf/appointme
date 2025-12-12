@@ -113,7 +113,7 @@ spec:
                 configMapKeyRef:
                   key: CONTACT_INFO
                   name: bookme
-          image: ghcr.io/fhswf/book_me/backend:1.29.1
+          image: ghcr.io/fhswf/book_me/backend:latest
           name: bookme
           ports:
             - containerPort: 5000

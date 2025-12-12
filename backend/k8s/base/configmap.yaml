@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookme
+  labels:
+    app: bookme
+data:
+  # General
+  NODE_ENV: "production"
+  TZ: "Europe/Berlin"
+  
+  # Backend Configuration
+  # The public URL of the backend API
+  API_URL: "https://api.bookme.example.com/api/v1"
+  # The Base Path of the Application
+  BASE_PATH: "/"
+  # The URL of the client application (CORS)
+  CLIENT_URL: "https://bookme.example.com"
+  # MongoDB Connection String
+  MONGO_URI: "mongodb://mongodb:27017/bookme"
+  # Server Port
+  PORT: "5000"
+  # CORS allowed origins (comma separated)
+  CORS_ALLOWED_ORIGINS: "https://bookme.example.com"
+  
+  # Feature Flags
+  DISABLE_GOOGLE_LOGIN: "false"
+  
+  # OIDC Configuration
+  OIDC_ISSUER: "https://accounts.google.com"
+  OIDC_CLIENT_ID: "changeme"
+  
+  # Client Configuration (Build-time variables for the frontend)
+  REACT_APP_API_URL: "https://api.bookme.example.com/api/v1"
+  REACT_APP_URL: "https://bookme.example.com"
+  CONTACT_INFO: |
+    [Prof. Dr. Christian Gawron](https://jupiter.fh-swf.de/team/cgawron)
+    [gawron.christian@fh-swf.de](mailto:gawron.christian@fh-swf.de)
+    [+49 2371 566 1565](tel:+4923715661565)
+    [Raum P.103, Frauenstuhlweg 31, 58644 Iserlohn](geo:51.36785,7.68687)

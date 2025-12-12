@@ -4,7 +4,9 @@ name: release
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+      - prod
     #paths:
     #  - "common/**"
 
@@ -12,7 +14,7 @@ jobs:
 
   release:
     # Only release on push to master
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/prod')
     runs-on: ubuntu-latest
     #needs: [test]
     steps:

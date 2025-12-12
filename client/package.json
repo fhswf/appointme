@@ -88,12 +88,15 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "prod",
+      {
+        "name": "main",
+        "prerelease": "rc"
+      },
+      "next",
+      "next-major",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
@@ -150,7 +153,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "prepareCmd": "yarn exec node ../utility/patch-k8s.js k8s/deployment.yaml"
+          "prepareCmd": "node ../utility/update-kustomize.js client frontend"
         }
       ],
       [
@@ -159,7 +162,7 @@
           "assets": [
             "package.json",
             "CHANGELOG.md",
-            "k8s/deployment.yaml"
+            "k8s/overlays/**/kustomization.yaml"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
