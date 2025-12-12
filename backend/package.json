@@ -4,7 +4,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git@github.com:fhswf/book_me.git"
+    "url": "git@github.com:fhswf/appointme.git"
   },
   "main": "server.js",
   "type": "module",
@@ -150,7 +150,7 @@
           ],
           "dockerImage": "backend",
           "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/book_me",
+          "dockerProject": "fhswf/appointme",
           "dockerContext": ".."
         }
       ]

@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: mongo-bookme-claim0
-  name: mongo-bookme-claim0
-  namespace: bookme
+    io.kompose.service: mongo-appointme-claim0
+  name: mongo-appointme-claim0
+  namespace: appointme
 spec:
   accessModes:
     - ReadWriteOnce

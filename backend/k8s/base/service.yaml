@@ -5,19 +5,19 @@ metadata:
     kompose.cmd: /home/cgawron/bin/kompose convert
     kompose.version: 1.26.0 (40646f47)
     traefik.enable: "true"
-    traefik.http.routers.bookme_api.entrypoints: web,websecure
-    traefik.http.routers.bookme_api.rule: PathPrefix(`/bookme/api`)
+    traefik.http.routers.appointme_api.entrypoints: web,websecure
+    traefik.http.routers.appointme_api.rule: PathPrefix(`/appointme/api`)
   creationTimestamp: null
   labels:
-    io.kompose.service: bookme
-  name: bookme
-  namespace: bookme
+    io.kompose.service: appointme
+  name: appointme
+  namespace: appointme
 spec:
   ports:
     - name: "api"
       port: 5000
       targetPort: 5000
   selector:
-    io.kompose.service: bookme
+    io.kompose.service: appointme
 status:
   loadBalancer: {}

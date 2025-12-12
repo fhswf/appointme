@@ -1,5 +1,5 @@
 {
-  "name": "book_me",
+  "name": "appointme",
   "version": "1.0.0",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:fhswf/book_me.git"
+    "url": "git@github.com:fhswf/appointme.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
@@ -35,9 +35,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fhswf/book_me/issues"
+    "url": "https://github.com/fhswf/appointme/issues"
   },
-  "homepage": "https://github.com/fhswf/book_me#readme",
+  "homepage": "https://github.com/fhswf/appointme#readme",
   "workspaces": [
     "common",
     "backend",

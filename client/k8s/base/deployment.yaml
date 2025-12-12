@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: bookme
+    app.kubernetes.io/instance: appointme
     io.kompose.service: client
   name: client
-  namespace: bookme
+  namespace: appointme
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -31,28 +31,28 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: CLIENT_ID
-                  name: bookme-secret
+                  name: appointme-secret
             - name: API_URL
               valueFrom:
                 configMapKeyRef:
                   key: API_URL
-                  name: bookme
+                  name: appointme
             - name: CLIENT_URL
               valueFrom:
                 configMapKeyRef:
                   key: CLIENT_URL
-                  name: bookme
+                  name: appointme
             - name: MONGO_URI
               valueFrom:
                 configMapKeyRef:
                   key: MONGO_URI
-                  name: bookme
+                  name: appointme
             - name: TZ
               valueFrom:
                 configMapKeyRef:
                   key: TZ
-                  name: bookme
-          image: ghcr.io/fhswf/book_me/frontend:latest
+                  name: appointme
+          image: ghcr.io/fhswf/appointme/frontend:latest
           imagePullPolicy: Always
           name: client
           ports:

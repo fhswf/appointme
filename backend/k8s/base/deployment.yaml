@@ -6,14 +6,14 @@ metadata:
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
-    io.kompose.service: bookme
-  name: bookme
-  namespace: bookme
+    io.kompose.service: appointme
+  name: appointme
+  namespace: appointme
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: bookme
+      io.kompose.service: appointme
   strategy: {}
   template:
     metadata:
@@ -23,11 +23,11 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.network/traefik: 'true'
-        io.kompose.service: bookme
+        io.kompose.service: appointme
     spec:
       initContainers:
         - name: migrations
-          image: ghcr.io/fhswf/book_me/backend:1.26.0
+          image: ghcr.io/fhswf/appointme/backend:1.26.0
           command:
             - yarn
             - workspace
@@ -38,83 +38,83 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: MONGO_URI
-                  name: bookme
+                  name: appointme
       containers:
         - env:
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: JWT_SECRET
-                  name: bookme-secret
+                  name: appointme-secret
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   key: CLIENT_ID
-                  name: bookme-secret
+                  name: appointme-secret
             - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: CLIENT_SECRET
-                  name: bookme-secret
+                  name: appointme-secret
             - name: API_URL
               valueFrom:
                 configMapKeyRef:
                   key: API_URL
-                  name: bookme
+                  name: appointme
             - name: BASE_PATH
               valueFrom:
                 configMapKeyRef:
                   key: BASE_PATH
-                  name: bookme
+                  name: appointme
             - name: CLIENT_URL
               valueFrom:
                 configMapKeyRef:
                   key: CLIENT_URL
-                  name: bookme
+                  name: appointme
             - name: MONGO_URI
               valueFrom:
                 configMapKeyRef:
                   key: MONGO_URI
-                  name: bookme
+                  name: appointme
             - name: TZ
               valueFrom:
                 configMapKeyRef:
                   key: TZ
-                  name: bookme
+                  name: appointme
             - name: NODE_ENV
               value: development
             - name: DISABLE_GOOGLE_LOGIN
               valueFrom:
                 configMapKeyRef:
                   key: DISABLE_GOOGLE_LOGIN
-                  name: bookme
+                  name: appointme
             - name: OIDC_ISSUER
               valueFrom:
                 configMapKeyRef:
                   key: OIDC_ISSUER
-                  name: bookme
+                  name: appointme
             - name: OIDC_CLIENT_ID
               valueFrom:
                 configMapKeyRef:
                   key: OIDC_CLIENT_ID
-                  name: bookme
+                  name: appointme
             - name: OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: OIDC_CLIENT_SECRET
-                  name: bookme-secret
+                  name: appointme-secret
             - name: ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
                   key: ENCRYPTION_KEY
-                  name: bookme-secret
+                  name: appointme-secret
             - name: CONTACT_INFO
               valueFrom:
                 configMapKeyRef:
                   key: CONTACT_INFO
-                  name: bookme
-          image: ghcr.io/fhswf/book_me/backend:latest
-          name: bookme
+                  name: appointme
+          image: ghcr.io/fhswf/appointme/backend:latest
+          name: appointme
           ports:
             - containerPort: 5000
           resources:

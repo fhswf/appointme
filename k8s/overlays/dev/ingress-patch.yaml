@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: bookme-ingress
+  name: appointme-ingress
 spec:
   rules:
     - host: appoint-staging.gawron.cloud
@@ -16,7 +16,7 @@ spec:
             pathType: Prefix
           - backend:
               service:
-                name: bookme
+                name: appointme
                 port:
                   number: 5000
             path: /api

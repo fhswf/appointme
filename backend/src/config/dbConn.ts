@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 import { logger } from "../logging.js";
-const mongo_url = process.env.MONGO_URI || "mongodb://localhost:27017/bookme"
+const mongo_url = process.env.MONGO_URI || "mongodb://localhost:27017/appointme"
 
 /**
  * Function to async connect to the database

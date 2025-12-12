@@ -48,7 +48,7 @@ try {
         doc.images = [];
     }
 
-    const imageRef = `ghcr.io/fhswf/book_me/${imageName}`;
+    const imageRef = `ghcr.io/fhswf/appointme/${imageName}`;
     const newTag = version;
 
     const existingImage = doc.images.find(img => img.name === imageRef);

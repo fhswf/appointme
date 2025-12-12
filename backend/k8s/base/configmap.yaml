@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: bookme
+  name: appointme
   labels:
-    app: bookme
+    app: appointme
 data:
   # General
   NODE_ENV: "production"
@@ -11,17 +11,17 @@ data:
   
   # Backend Configuration
   # The public URL of the backend API
-  API_URL: "https://api.bookme.example.com/api/v1"
+  API_URL: "https://api.appointme.example.com/api/v1"
   # The Base Path of the Application
   BASE_PATH: "/"
   # The URL of the client application (CORS)
-  CLIENT_URL: "https://bookme.example.com"
+  CLIENT_URL: "https://appointme.example.com"
   # MongoDB Connection String
-  MONGO_URI: "mongodb://mongodb:27017/bookme"
+  MONGO_URI: "mongodb://mongodb:27017/appointme"
   # Server Port
   PORT: "5000"
   # CORS allowed origins (comma separated)
-  CORS_ALLOWED_ORIGINS: "https://bookme.example.com"
+  CORS_ALLOWED_ORIGINS: "https://appointme.example.com"
   
   # Feature Flags
   DISABLE_GOOGLE_LOGIN: "false"
@@ -31,8 +31,8 @@ data:
   OIDC_CLIENT_ID: "changeme"
   
   # Client Configuration (Build-time variables for the frontend)
-  REACT_APP_API_URL: "https://api.bookme.example.com/api/v1"
-  REACT_APP_URL: "https://bookme.example.com"
+  REACT_APP_API_URL: "https://api.appointme.example.com/api/v1"
+  REACT_APP_URL: "https://appointme.example.com"
   CONTACT_INFO: |
     [Prof. Dr. Christian Gawron](https://jupiter.fh-swf.de/team/cgawron)
     [gawron.christian@fh-swf.de](mailto:gawron.christian@fh-swf.de)

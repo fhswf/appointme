@@ -14,7 +14,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git@github.com:fhswf/book_me.git"
+    "url": "git@github.com:fhswf/appointme.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -179,7 +179,7 @@
           ],
           "dockerImage": "frontend",
           "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/book_me",
+          "dockerProject": "fhswf/appointme",
           "dockerContext": ".."
         }
       ]

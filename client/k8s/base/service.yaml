@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: /home/cgawron/bin/kompose convert
     kompose.version: 1.26.0 (40646f47)
     traefik.enable: "true"
-    traefik.http.routers.bookme_client.entrypoints: web,websecure
-    traefik.http.routers.bookme_client.rule: PathPrefix(`/bookme`)
+    traefik.http.routers.appointme_client.entrypoints: web,websecure
+    traefik.http.routers.appointme_client.rule: PathPrefix(`/appointme`)
   creationTimestamp: null
   labels:
     io.kompose.service: client
   name: client
-  namespace: bookme
+  namespace: appointme
 spec:
   ports:
     - name: "http"

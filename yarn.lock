@@ -9662,9 +9662,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"book_me@workspace:.":
+"appointme@workspace:.":
   version: 0.0.0-use.local
-  resolution: "book_me@workspace:."
+  resolution: "appointme@workspace:."
   dependencies:
     "@codedependant/semantic-release-docker": "npm:^5.0.3"
     "@dmeents/semantic-release-yarn": "npm:^1.1.13"

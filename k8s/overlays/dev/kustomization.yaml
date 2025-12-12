@@ -4,9 +4,9 @@ resources:
   - ../../base
   - ../../../backend/k8s/overlays/dev
   - ../../../client/k8s/overlays/dev
-namespace: bookme-dev
+namespace: appointme-dev
 patches:
   - path: ingress-patch.yaml
     target:
       kind: Ingress
-      name: bookme-ingress
+      name: appointme-ingress

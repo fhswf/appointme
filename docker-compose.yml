@@ -14,10 +14,10 @@ services:
       - "127.0.0.1:48002:80"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bookme_client.rule=PathPrefix(`/bookme`)"
-      - "traefik.http.routers.bookme_client.entrypoints=web,websecure"
-  bookme:
-    container_name: bookme
+      - "traefik.http.routers.appointme_client.rule=PathPrefix(`/appointme`)"
+      - "traefik.http.routers.appointme_client.entrypoints=web,websecure"
+  appointme:
+    container_name: appointme
     build:
       context: .
       dockerfile: Dockerfile
@@ -34,18 +34,18 @@ services:
     ports:
       - "127.0.0.1:48001:5000"
     links:
-      - mongo-bookme
+      - mongo-appointme
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bookme_api.rule=PathPrefix(`/bookme/api`)"
-      - "traefik.http.routers.bookme_api.entrypoints=web,websecure"
+      - "traefik.http.routers.appointme_api.rule=PathPrefix(`/appointme/api`)"
+      - "traefik.http.routers.appointme_api.entrypoints=web,websecure"
       
 
-  mongo-bookme:
-    container_name: mongo-bookme
+  mongo-appointme:
+    container_name: mongo-appointme
     image: mongo
     volumes:
-      - /opt/bookme/mongo:/data/db
+      - /opt/appointme/mongo:/data/db
 
 networks:
   default:

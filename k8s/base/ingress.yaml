@@ -5,8 +5,8 @@ metadata:
     traefik.frontend.passHostHeader: "true"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls.certresolver: myresolver
-  name: bookme-ingress
-  namespace: bookme
+  name: appointme-ingress
+  namespace: appointme
 spec:
   rules:
   - host: appoint.gawron.cloud
@@ -21,7 +21,7 @@ spec:
         pathType: Prefix
       - backend:
           service:
-            name: bookme
+            name: appointme
             port:
               number: 5000
         path: /api
