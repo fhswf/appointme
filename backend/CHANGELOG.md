@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.31.1-rc.1...backend@1.32.0-rc.1) (2025-12-12)
+
+
+### Features
+
+* add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
+
 ## backend [1.31.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.31.1-rc.1) (2025-12-12)
 
 
