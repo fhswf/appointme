@@ -120,7 +120,7 @@
         "@semantic-release/exec",
         {
           "execCwd": ".",
-          "prepareCmd": "node ../utility/update-kustomize.js backend backend"
+          "prepareCmd": "node ../utility/update-kustomize.js backend backend ${nextRelease.version}"
         }
       ],
       [

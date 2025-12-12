@@ -13,10 +13,10 @@ if (!component || !imageName) {
 }
 
 const branch = process.env.GITHUB_REF_NAME || process.env.CI_COMMIT_REF_NAME;
-const version = process.env.nextRelease_version;
+const version = process.argv[4]; // Passed as argument
 
 if (!version) {
-    console.error("nextRelease_version env var not found");
+    console.error("Version argument not found");
     process.exit(1);
 }
 
