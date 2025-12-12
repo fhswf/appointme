@@ -12,8 +12,8 @@ import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 
-import { de, enUS } from "date-fns/locale"
 import { format } from "date-fns"
+import { locales } from "@/lib/date-fns-locales"
 
 // ... existing imports
 
@@ -32,7 +32,7 @@ function Calendar({
   const defaultClassNames = getDefaultClassNames()
   const { i18n } = useTranslation()
 
-  const locale = i18n.language === 'de' ? de : enUS
+  const locale = locales[i18n.language] || locales["en"]
 
   return (
     <DayPicker
@@ -47,7 +47,16 @@ function Calendar({
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: (date) =>
-          date.toLocaleString(i18n.language, { month: "short" }),
+          date.toLocaleString(i18n.language, { month: "short" }).charAt(0).toUpperCase() +
+          date.toLocaleString(i18n.language, { month: "short" }).slice(1),
+        formatCaption: (date) => {
+          const formatted = format(date, "MMMM yyyy", { locale });
+          return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        },
+        formatWeekdayName: (date) => {
+          const formatted = format(date, "EEEEEE", { locale });
+          return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        },
         ...formatters,
       }}
       classNames={{
