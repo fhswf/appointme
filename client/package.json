@@ -87,21 +87,11 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": {
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "prod",
-      {
-        "name": "main",
-        "prerelease": "rc"
-      },
-      "next",
-      "next-major",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
+  ],
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@testing-library/jest-dom": "^6.9.1",
