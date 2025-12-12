@@ -1,3 +1,10 @@
+# client [1.27.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.4...client@1.27.0-rc.5) (2025-12-12)
+
+
+### Bug Fixes
+
+* state management in UI ([63809d7](https://github.com/fhswf/appointme/commit/63809d78f93787d0bb75b83814f0cdaaf2fb7e7a))
+
 # client [1.27.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.3...client@1.27.0-rc.4) (2025-12-12)
 
 
