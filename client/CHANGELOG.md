@@ -1,3 +1,15 @@
+# client [1.25.0](https://github.com/fhswf/book_me/compare/client@1.24.0...client@1.25.0) (2025-12-12)
+
+
+### Bug Fixes
+
+* update release build ([cf9910b](https://github.com/fhswf/book_me/commit/cf9910b310a6fdc8be43aa7dd502cb24dfe7a249))
+
+
+### Features
+
+* use kustomization for separate stagin/prod environments ([baa6227](https://github.com/fhswf/book_me/commit/baa6227f1dd1d595cc7db6873be55cace3d22c42))
+
 # client [1.24.0](https://github.com/fhswf/book_me/compare/client@1.23.0...client@1.24.0) (2025-12-11)
 
 
