@@ -8864,6 +8864,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"appointme@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "appointme@workspace:."
+  dependencies:
+    "@codedependant/semantic-release-docker": "npm:^5.0.3"
+    "@dmeents/semantic-release-yarn": "npm:^1.1.13"
+    "@qiwi/multi-semantic-release": "npm:^7.1.2"
+    "@semantic-release/changelog": "npm:^6.0.3"
+    "@semantic-release/commit-analyzer": "npm:^13.0.0"
+    "@semantic-release/exec": "npm:^6.0.3"
+    "@semantic-release/git": "npm:^10.0.1"
+    "@semantic-release/github": "npm:^10.3.5"
+    "@semantic-release/npm": "npm:^12.0.1"
+    "@semantic-release/release-notes-generator": "npm:^14.0.1"
+    "@tailwindcss/postcss": "npm:^4.1.17"
+    dotenv-vault: "npm:^1.27.0"
+    jest-ctrf-json-reporter: "npm:^0.0.9"
+    semantic-release: "npm:^24.1.1"
+  languageName: unknown
+  linkType: soft
+
 "aproba@npm:^1.0.3 || ^2.0.0, aproba@npm:^2.0.0":
   version: 2.1.0
   resolution: "aproba@npm:2.1.0"
@@ -9661,27 +9682,6 @@ __metadata:
   checksum: 10/ff67e28d3f426707be8697a75fdf8d564dc50c341b41f054264d8ab6e2924e519c7ce8acc9d0de05328fdc41e1d9f3f200aec9c1cfb1867d6b676a410d97c689
   languageName: node
   linkType: hard
-
-"appointme@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "appointme@workspace:."
-  dependencies:
-    "@codedependant/semantic-release-docker": "npm:^5.0.3"
-    "@dmeents/semantic-release-yarn": "npm:^1.1.13"
-    "@qiwi/multi-semantic-release": "npm:^7.1.2"
-    "@semantic-release/changelog": "npm:^6.0.3"
-    "@semantic-release/commit-analyzer": "npm:^13.0.0"
-    "@semantic-release/exec": "npm:^6.0.3"
-    "@semantic-release/git": "npm:^10.0.1"
-    "@semantic-release/github": "npm:^10.3.5"
-    "@semantic-release/npm": "npm:^12.0.1"
-    "@semantic-release/release-notes-generator": "npm:^14.0.1"
-    "@tailwindcss/postcss": "npm:^4.1.17"
-    dotenv-vault: "npm:^1.27.0"
-    jest-ctrf-json-reporter: "npm:^0.0.9"
-    semantic-release: "npm:^24.1.1"
-  languageName: unknown
-  linkType: soft
 
 "boolbase@npm:^1.0.0":
   version: 1.0.0
