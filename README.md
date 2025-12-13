@@ -1,7 +1,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 ![GitHub issues](https://img.shields.io/github/issues/fhswf/appointme)
 ![GitHub pull request check state](https://img.shields.io/github/status/s/pulls/fhswf/appointme/10)
-[![Quality Gate Status](https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=appointme&metric=alert_status&token=sqb_d1319c733ee4864d70e12aad8102c5501fe54b09)](https://sonarqube.fh-swf.cloud/dashboard?id=appointme)
+[![Quality Gate Status](https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3&metric=alert_status&token=sqb_5deb3d670ea0a882f6563a07b9bea9dee035bcb6)](https://sonarqube.fh-swf.cloud/dashboard?id=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3)
 
 # APPointment
 
