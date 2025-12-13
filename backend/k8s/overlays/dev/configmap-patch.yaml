@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appointme
+data:
+  API_URL: "https://appointme.gawron.cloud/api/v1"
+  CLIENT_URL: "https://appointme.gawron.cloud"
+  REACT_APP_API_URL: "https://appointme.gawron.cloud/api/v1"
+  REACT_APP_URL: "https://appointme.gawron.cloud"
