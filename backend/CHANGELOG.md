@@ -1,3 +1,20 @@
+# backend [1.32.0](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.32.0) (2025-12-13)
+
+
+### Bug Fixes
+
+* config update ([bff42e3](https://github.com/fhswf/appointme/commit/bff42e3e0b116b4e70771f58de022a16b007cf75))
+* config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
+* configuration ([cac0259](https://github.com/fhswf/appointme/commit/cac0259c5100802363f124153b463ba4f2258315))
+* image tagging ([95e03b0](https://github.com/fhswf/appointme/commit/95e03b0906d778dd0529b6746d009a82ab0c1308))
+* runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
+* version bumps ([29c4d17](https://github.com/fhswf/appointme/commit/29c4d173a15de4207c6a4e1f8a76c885ff3ba210))
+
+
+### Features
+
+* add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
+
 # backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
 
 
