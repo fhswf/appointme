@@ -1,3 +1,10 @@
+# client [1.27.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.5...client@1.27.0-rc.6) (2025-12-13)
+
+
+### Bug Fixes
+
+* use apsoluter path for runtime configuration ([9563fe7](https://github.com/fhswf/appointme/commit/9563fe70b6c16829eccd22e42edd5e8c2f08e289))
+
 # client [1.27.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.4...client@1.27.0-rc.5) (2025-12-12)
 
 
