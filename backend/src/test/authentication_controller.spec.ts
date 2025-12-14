@@ -45,7 +45,9 @@ vi.mock("../models/User.js", () => {
         });
     });
 
-    (UserModelMock as any).findOne = vi.fn();
+    (UserModelMock as any).findOne = vi.fn().mockReturnValue({
+        exec: vi.fn().mockResolvedValue(null)
+    });
     (UserModelMock as any).findById = vi.fn().mockReturnValue({
         exec: vi.fn().mockResolvedValue(USER)
     });
@@ -114,6 +116,9 @@ describe("Authentication Controller", () => {
 
         it("should handle user creation failure", async () => {
             await getCsrfToken();
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
             (UserModel.findOneAndUpdate as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue(null)
             });

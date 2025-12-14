@@ -60,7 +60,8 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
 
 const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
     // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
-    let user = await UserModel.findOne({ email }).exec();
+    // Also check by _id to support legacy users or same provider
+    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
 
     // If user doesn't exist, create it
     if (!user) {
@@ -97,6 +98,17 @@ const findOrCreateUser = async (sub: string, email: string, name?: string, pictu
                 throw err;
             }
         }
+    } else {
+        // User exists - update details if needed (e.g. name, picture)
+        // We do not change _id here, even if it doesn't match `sub`.
+        if (!user.use_gravatar && picture) {
+            user.picture_url = picture;
+        }
+        if (name) {
+            user.name = name;
+        }
+        // Save updates
+        await user.save();
     }
     return user;
 };

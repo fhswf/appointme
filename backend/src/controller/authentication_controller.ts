@@ -45,8 +45,8 @@ export const googleLoginController = (req: Request, res: Response): void => {
         user._id = sub;
         logger.debug('user: %o', user);
 
-        // Find existing user first to check gravatar preference
-        UserModel.findById(sub).exec().then(existingUser => {
+        // Find existing user by email or _id
+        UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec().then(existingUser => {
           let updateData: any = {
             name,
             email,
@@ -58,20 +58,30 @@ export const googleLoginController = (req: Request, res: Response): void => {
             if (!existingUser.use_gravatar) {
               updateData.picture_url = picture;
             }
+            logger.debug('Found existing user: %s', existingUser._id);
+
+            // Update the existing user
+            return UserModel.findOneAndUpdate(
+              { _id: existingUser._id },
+              { $set: updateData },
+              { new: true }
+            ).exec();
+
           } else {
             // New user: set user_url and picture_url
             updateData.user_url = user_url;
             updateData.picture_url = picture;
-          }
 
-          return UserModel.findOneAndUpdate(
-            { _id: sub },
-            {
-              $set: updateData,
-              $setOnInsert: { user_url: user_url } // Fallback if race condition (though findById handles most)
-            },
-            { upsert: true, new: true }
-          ).exec();
+            // Create new user with sub as _id
+            return UserModel.findOneAndUpdate(
+              { _id: sub },
+              {
+                $set: updateData,
+                $setOnInsert: { user_url: user_url }
+              },
+              { upsert: true, new: true }
+            ).exec();
+          }
         })
           .then(user => {
             if (!user) {
