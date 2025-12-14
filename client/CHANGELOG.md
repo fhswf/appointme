@@ -1,3 +1,10 @@
+# client [1.27.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.6...client@1.27.0-rc.7) (2025-12-14)
+
+
+### Features
+
+* localization of date picker ([b575f45](https://github.com/fhswf/appointme/commit/b575f45019fc025642e2d86bd6c5a713f1dad355))
+
 # client [1.27.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.5...client@1.27.0-rc.6) (2025-12-13)
 
 
