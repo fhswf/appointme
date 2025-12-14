@@ -51,7 +51,7 @@ vi.mock("openid-client", () => {
                 return Promise.resolve(new this() as any);
             }
             constructor() {
-                this.Client = class {
+                (this as any).Client = class {
                     constructor() { return mockClient; }
                 }
             }
