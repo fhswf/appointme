@@ -31,10 +31,17 @@ const oAuth2Client = new OAuth2Client({
 
 export const googleLoginController = (req: Request, res: Response): void => {
   // Get authorization code from request
-  const idToken = req.body.code;
+  const code = req.body.code;
 
   oAuth2Client
-    .verifyIdToken({ idToken, audience: process.env.CLIENT_ID })
+    .getToken(code)
+    .then(({ tokens }) => {
+      logger.debug("Tokens received: %o", tokens);
+      return oAuth2Client.verifyIdToken({
+        idToken: tokens.id_token!,
+        audience: process.env.CLIENT_ID
+      });
+    })
     .then(response => {
       const { email_verified, name, email, picture, sub } = response.getAttributes().payload;
       logger.debug('picture: %s', picture);
@@ -155,6 +162,8 @@ export const getConfig = (req: Request, res: Response): void => {
   res.json({
     googleEnabled: process.env.DISABLE_GOOGLE_LOGIN !== "true" && !!process.env.CLIENT_ID,
     oidcEnabled: !!(process.env.OIDC_ISSUER && process.env.OIDC_CLIENT_ID),
+    oidcName: process.env.OIDC_NAME,
+    oidcIcon: process.env.OIDC_ICON,
     contactInfo: process.env.CONTACT_INFO,
   });
 };

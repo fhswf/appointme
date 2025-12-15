@@ -53,7 +53,7 @@ test.describe('User not logged in', () => {
             await expect(page).toHaveURL(/\/landing/);
             await page.getByTestId('profile-menu').click();
             await page.getByTestId('login-button').click();
-            await expect(page.locator('iframe')).toBeAttached();
+            await expect(page.getByTestId('login-google')).toBeVisible();
         });
     });
 });

@@ -28,14 +28,16 @@ vi.mock('react-i18next', () => ({
 
 // Mock Google OAuth
 vi.mock('@react-oauth/google', () => ({
-    GoogleLogin: ({ onSuccess, onError }: any) => (
-        <div data-testid="google-login">
-            <button onClick={() => onSuccess({ credential: 'mock-credential' })}>
-                Sign in with Google
-            </button>
-            <button onClick={() => onError()}>Trigger Error</button>
-        </div>
-    )
+    GoogleLogin: vi.fn(), // Unused but kept for safety
+    useGoogleLogin: (options: any) => {
+        return () => {
+            if ((globalThis as any).mockGoogleError) {
+                options.onError((globalThis as any).mockGoogleError);
+            } else {
+                options.onSuccess({ code: 'mock-credential' });
+            }
+        };
+    }
 }));
 
 // Mock useNavigate
@@ -54,6 +56,7 @@ describe('Login Component', () => {
         // Suppress console.log for cleaner test output
         vi.spyOn(console, 'log').mockImplementation(() => { });
         vi.spyOn(console, 'error').mockImplementation(() => { });
+        (globalThis as any).mockGoogleError = null;
     });
 
     it('should render with Google login when enabled', async () => {
@@ -69,7 +72,7 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
     });
 
@@ -103,7 +106,7 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
             expect(screen.getByTestId('login-sso')).toBeInTheDocument();
         });
     });
@@ -121,7 +124,7 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.queryByTestId('google-login')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('login-google')).not.toBeInTheDocument();
             expect(screen.queryByTestId('login-sso')).not.toBeInTheDocument();
         });
     });
@@ -140,10 +143,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {
@@ -174,10 +177,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {
@@ -200,10 +203,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {
@@ -302,14 +305,14 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {
-            expect(consoleSpy).toHaveBeenCalledWith({ credential: 'mock-credential' });
+            expect(consoleSpy).toHaveBeenCalledWith('postGoogleLogin: code=%s', 'mock-credential');
         });
     });
 
@@ -320,6 +323,9 @@ describe('Login Component', () => {
             oidcEnabled: false
         });
 
+        // Mock error in Google Login
+        (globalThis as any).mockGoogleError = 'Login Failed';
+
         render(
             <BrowserRouter>
                 <Login />
@@ -327,13 +333,13 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const errorButton = screen.getByText('Trigger Error');
-        fireEvent.click(errorButton);
+        const googleButton = screen.getByTestId('login-google');
+        fireEvent.click(googleButton);
 
-        expect(consoleSpy).toHaveBeenCalledWith('Login Failed');
+        expect(consoleSpy).toHaveBeenCalledWith('Login Failed:', 'Login Failed');
     });
 
     it('should log postGoogleLogin response', async () => {
@@ -352,14 +358,18 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {
             // The third call is the response logging
+            // consoleSpy calls: 
+            // 1. fetch error (maybe? no)
+            // 2. postGoogleLogin: code=%s
+            // 3. postGoogleLogin: %o
             expect(consoleSpy).toHaveBeenCalledWith('postGoogleLogin: %o', expect.objectContaining({
                 data: { user: { id: '123' } }
             }));
@@ -415,10 +425,10 @@ describe('Login Component', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByTestId('google-login')).toBeInTheDocument();
+            expect(screen.getByTestId('login-google')).toBeInTheDocument();
         });
 
-        const googleButton = screen.getByText('Sign in with Google');
+        const googleButton = screen.getByTestId('login-google');
         fireEvent.click(googleButton);
 
         await waitFor(() => {

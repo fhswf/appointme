@@ -132,6 +132,7 @@ export const en = {
     "user_url_taken": "User URL already taken",
     "error_loading_profile": "Error loading profile",
     "login_with_sso": "Login with SSO",
+    "login_with": "Log in with",
     "login_successful": "Login successful",
     "login_failed": "Login failed",
     "google_login_failed": "Google login failed",

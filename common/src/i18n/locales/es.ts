@@ -132,6 +132,7 @@ export const es = {
     "user_url_taken": "URL de usuario ya en uso",
     "error_loading_profile": "Error al cargar el perfil",
     "login_with_sso": "Iniciar sesión con SSO",
+    "login_with": "Iniciar sesión con",
     "login_successful": "Inicio de sesión exitoso",
     "login_failed": "Inicio de sesión fallido",
     "google_login_failed": "Fallo en el inicio de sesión con Google",

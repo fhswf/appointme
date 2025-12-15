@@ -13,14 +13,12 @@ vi.mock('react-router-dom', () => ({
 
 // Mock @react-oauth/google
 vi.mock('@react-oauth/google', () => ({
-    GoogleLogin: ({ onSuccess, onError }) => (
-        <button
-            data-testid="google-login-button"
-            onClick={() => onSuccess({ credential: 'mock-google-token' })}
-        >
-            Google Login
-        </button>
-    ),
+    useGoogleLogin: (options: any) => {
+        return () => {
+            // Simulate success immediately when the login function is called
+            options.onSuccess({ code: 'mock-google-token' });
+        };
+    },
 }));
 
 // Mock auth_services
@@ -39,6 +37,7 @@ vi.mock('sonner', () => ({
         error: vi.fn(),
     },
 }));
+
 describe('Login Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -50,8 +49,9 @@ describe('Login Component', () => {
 
     it('should render Google Login button', async () => {
         render(<Login />);
-        const button = await screen.findByTestId('google-login-button');
+        const button = await screen.findByTestId('login-google');
         expect(button).toBeInTheDocument();
+        expect(button).toHaveTextContent('login_with Google');
     });
 
     it('should call postGoogleLogin and navigate on success', async () => {
@@ -59,14 +59,13 @@ describe('Login Component', () => {
 
         render(<Login />);
 
-        const button = await screen.findByTestId('google-login-button');
+        const button = await screen.findByTestId('login-google');
         fireEvent.click(button);
 
-        expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-google-token');
-
-        // Wait for promise resolution
+        // Wait for usage of the mock
         await new Promise(process.nextTick);
 
+        expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-google-token');
         expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 
@@ -77,7 +76,7 @@ describe('Login Component', () => {
 
         render(<Login />);
 
-        const button = await screen.findByTestId('google-login-button');
+        const button = await screen.findByTestId('login-google');
         fireEvent.click(button);
 
         expect(authServices.postGoogleLogin).toHaveBeenCalledWith('mock-google-token');
@@ -90,5 +89,20 @@ describe('Login Component', () => {
         expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('google_login_failed'));
         expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Specific API Error'));
         expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
+    it('should render SSO button with localized name', async () => {
+        (authServices.getAuthConfig as any).mockResolvedValue({
+            oidcEnabled: true,
+            oidcName: 'MyProvider',
+            googleEnabled: false
+        });
+
+        render(<Login />);
+        const button = await screen.findByTestId('login-sso');
+        expect(button).toBeInTheDocument();
+        // Mock t returns the key, so we expect 'login_with MyProvider' if 'MyProvider' is passed to t
+        // Logic: t("login_with") + " " + t("MyProvider") -> "login_with MyProvider"
+        expect(button).toHaveTextContent('login_with MyProvider');
     });
 });

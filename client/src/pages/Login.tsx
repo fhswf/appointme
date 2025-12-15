@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { postGoogleLogin, getAuthConfig, getOidcAuthUrl } from "../helpers/services/auth_services";
@@ -11,22 +11,30 @@ const Login = (props: any) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { refreshAuth } = useAuth();
-  const [oidcEnabled, setOidcEnabled] = useState(false);
-  const [googleEnabled, setGoogleEnabled] = useState(false);
+  const [config, setConfig] = useState<any>({});
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: (codeResponse) => sendGoogleToken(codeResponse.code),
+    onError: (error) => console.log('Login Failed:', error),
+    flow: 'auth-code',
+  });
 
   useEffect(() => {
-    getAuthConfig()
-      .then((res: any) => {
-        setOidcEnabled(res.oidcEnabled);
-        setGoogleEnabled(res.googleEnabled);
-      })
-      .catch(console.error);
+    const fetchConfig = async () => {
+      try {
+        const res: any = await getAuthConfig();
+        setConfig(res);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchConfig();
   }, []);
 
-  const sendGoogleToken = async (credential) => {
-    console.log("postGoogleLogin: code=%s", credential)
+  const sendGoogleToken = async (code) => {
+    console.log("postGoogleLogin: code=%s", code)
     try {
-      const res = await postGoogleLogin(credential);
+      const res = await postGoogleLogin(code);
       console.log("postGoogleLogin: %o", res);
       // Refresh auth state before navigating to ensure PrivateRoute sees authenticated user
       await refreshAuth();
@@ -50,21 +58,20 @@ const Login = (props: any) => {
 
   return (
     <div className="container mx-auto p-4 flex flex-col justify-center items-center min-h-screen gap-4">
-      {googleEnabled && (
-        <GoogleLogin
-          onSuccess={credentialResponse => {
-            console.log(credentialResponse);
-            sendGoogleToken(credentialResponse.credential);
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-          useOneTap
-        />
+      {config.oidcEnabled && (
+        <Button onClick={handleOidcLogin} variant="outline" className="w-64 justify-start pl-4" data-testid="login-sso">
+          {config.oidcIcon && (
+            <img src={config.oidcIcon} alt="SSO Icon" className="mr-2 h-4 w-4" />
+          )}
+          {t("login_with")} {t(config.oidcName || "SSO")}
+        </Button>
       )}
-      {oidcEnabled && (
-        <Button onClick={handleOidcLogin} variant="outline" data-testid="login-sso">
-          {t("login_with_sso")}
+      {config.googleEnabled && (
+        <Button onClick={() => loginWithGoogle()} variant="outline" className="w-64 justify-start pl-4" data-testid="login-google">
+          <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+            <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+          </svg>
+          {t("login_with")} Google
         </Button>
       )}
     </div>

@@ -4,24 +4,37 @@
       --color-white: hsl(0, 0%, 100%);
       --color-light-blue: hsl(215, 100%, 97%);
       --color-medium-blue: hsl(215, 90%, 60%);
-      --color-dark-blue: hsl(215, 40%, 11%);
-      --color-text-blue-dark: hsl(215, 90%, 30%);
-      --color-text-blue-medium: hsl(215, 90%, 60%);
-      --color-text-blue-light: hsl(215, 90%, 70%);
+      --color-dark-blue: hsl(215, 90%, 20%);
+      --color-text-blue-dark: hsl(215, 90%, 20%);
+      --color-text-blue-medium: hsl(215, 90%, 40%);
+      --color-text-blue-light: hsl(215, 90%, 60%);
     }
   </style>
   <circle cx="256" cy="256" r="256" fill="var(--color-white)"/>
   <!-- Graphic Element: Stylized Calendar -->
   <g transform="translate(156, 70) scale(0.8)">
-    <rect x="20" y="40" width="210" height="180" rx="20" fill="var(--color-light-blue)" stroke="var(--color-medium-blue)" stroke-width="12"/>
+    <rect x="20" y="40" width="210" height="180" rx="25" 
+          fill="var(--color-light-blue)" 
+          stroke="var(--color-medium-blue)" 
+          stroke-width="12"/>
     <path d="M70 20 v40 M180 20 v40" stroke="var(--color-dark-blue)" stroke-width="12" stroke-linecap="round"/>
     <rect x="20" y="80" width="210" height="2" fill="var(--color-medium-blue)"/>
     <!-- Checkmark -->
-    <path d="M80 140 l30 30 l60 -60" stroke="var(--color-dark-blue)" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M80 140 l30 30 l60 -60" 
+          stroke="var(--color-dark-blue)" 
+          stroke-width="16" fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
   </g>
   
   <!-- Text -->
-  <text x="50%" y="300" dominant-baseline="middle" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="80">
-    <tspan fill="var(--color-text-blue-dark)">App</tspan><tspan fill="var(--color-text-blue-medium)">oint</tspan><tspan fill="var(--color-text-blue-light)">Me</tspan>
+  <text x="50%" 
+        y="320" 
+        dominant-baseline="middle" 
+        text-anchor="middle" font-family="Gill Sans MT, sans-serif" 
+        font-weight="bold" 
+        font-size="80">
+    <tspan fill="var(--color-dark-blue)">App</tspan><tspan fill="var(--color-text-blue-medium)">oint</tspan>
+    <tspan fill="var(--color-medium-blue)">Me</tspan>
   </text>
 </svg>
