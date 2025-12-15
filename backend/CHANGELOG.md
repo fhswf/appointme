@@ -1,3 +1,24 @@
+# backend [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.4...backend@1.32.0-rc.5) (2025-12-15)
+
+
+### Bug Fixes
+
+* Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
+
+
+### Features
+
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+* Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.1
+
 # backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
 
 
