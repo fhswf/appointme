@@ -1,3 +1,10 @@
+# common [1.12.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0-rc.1) (2025-12-15)
+
+
+### Features
+
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+
 # common [1.11.0](https://github.com/fhswf/appointme/compare/common@1.10.0...common@1.11.0) (2025-12-12)
 
 
