@@ -1,3 +1,18 @@
+# client [1.27.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.7...client@1.27.0-rc.8) (2025-12-15)
+
+
+### Features
+
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.1
+
 # client [1.27.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.6...client@1.27.0-rc.7) (2025-12-14)
 
 
