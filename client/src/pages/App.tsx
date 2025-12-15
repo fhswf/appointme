@@ -17,26 +17,7 @@ const App = () => {
     setConnected(!!user);
   }, [user]);
 
-  const addEventButton = () => {
-    if (connected) {
-      return (
-        <Button asChild className="rounded-full" data-testid="add-event-button">
-          <RouterLink to="/addevent">
-            <Plus className="mr-2 h-4 w-4" />
-            {t("early_sweet_mantis_peek")}
-          </RouterLink>
-        </Button>
-      );
-    } else {
-      return (
-        <Button asChild variant="link" className="calcon">
-          <RouterLink to="/integration">
-            {t("pink_trite_ocelot_enrich")}
-          </RouterLink>
-        </Button>
-      );
-    }
-  };
+
 
   const renderList = () => {
     if (user && connected) {
@@ -67,7 +48,15 @@ const App = () => {
                     </RouterLink>
                   </Button>
                 </div>
-                <div>{addEventButton()}</div>
+                <div>
+                  {!connected && (
+                    <Button asChild variant="link" className="calcon">
+                      <RouterLink to="/integration">
+                        {t("pink_trite_ocelot_enrich")}
+                      </RouterLink>
+                    </Button>
+                  )}
+                </div>
               </>
             ) : (
               <span>{t("deft_suave_bear_pause")}</span>
@@ -76,6 +65,17 @@ const App = () => {
         </div>
 
         {renderList()}
+        {connected && (
+          <Button
+            asChild
+            className="fixed bottom-8 right-8 rounded-full shadow-lg z-50 p-4 h-14 w-14"
+            data-testid="add-event-button"
+          >
+            <RouterLink to="/addevent">
+              <Plus className="h-6 w-6" />
+            </RouterLink>
+          </Button>
+        )}
       </div>
       <Footer />
     </div>
