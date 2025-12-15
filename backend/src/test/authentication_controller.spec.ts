@@ -30,6 +30,11 @@ vi.mock("google-auth-library", () => {
                             sub: "google_id_123"
                         }
                     })
+                }),
+                getToken: vi.fn().mockResolvedValue({
+                    tokens: {
+                        id_token: "mock_id_token"
+                    }
                 })
             });
         })

@@ -52,7 +52,9 @@ test.describe('User not logged in', () => {
             await page.waitForResponse(resp => resp.url().includes('/user/me'));
             await expect(page).toHaveURL(/\/landing/);
             await page.getByTestId('profile-menu').click();
+            const configPromise = page.waitForResponse(resp => resp.url().includes('/auth/config'));
             await page.getByTestId('login-button').click();
+            await configPromise;
             await expect(page.getByTestId('login-google')).toBeVisible();
         });
     });
