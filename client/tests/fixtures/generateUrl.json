@@ -1,3 +1,1 @@
-{
-  "url": "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&state=109150731150582581691&response_type=code&client_id=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fappoint.gawron.cloud%2Fapi%2Fv1%2Fgoogle%2Foauthcallback"
-}
+  "url": "https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&state=109150731150582581691&response_type=code&client_id=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fappointme.example.com%2Fapi%2Fv1%2Fgoogle%2Foauthcallback"

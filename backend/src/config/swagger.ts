@@ -18,7 +18,7 @@ const options: swaggerJsdoc.Options = {
         },
         servers: [
             {
-                url: 'https://appoint.gawron.cloud',
+                url: 'https://appointme.example.com',
                 description: 'Production server'
             },
             {
