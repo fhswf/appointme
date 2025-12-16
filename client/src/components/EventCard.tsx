@@ -44,10 +44,10 @@ export const EventCard = (props: EventCardProps) => {
 
     navigator.clipboard
       .writeText(url)
-      .then(() => toast.success("Link copied to clipboard!"))
+      .then(() => toast.success(t("link_copied_to_clipboard")))
       .catch((err) => {
         console.log("err: %o", err);
-        toast.error("Could not copy link to clipboard!");
+        toast.error(t("link_copy_failed"));
       });
   };
 
@@ -102,11 +102,11 @@ export const EventCard = (props: EventCardProps) => {
             variant="outline"
             size="sm"
             data-testid="copy-link-button"
-            aria-label={t("large_suave_gull_hush")}
+            aria-label={t("event_copy_link")}
             onClick={handleCopy}
           >
             <Share className="mr-2 h-4 w-4" />
-            {t("misty_proud_mallard_assure")}
+            {t("event_copy_link")}
           </Button>
           <Button
             variant="ghost"

@@ -132,5 +132,9 @@ export const ko = {
     "Close": "닫기",
     "Cancel": "취소",
     "Contact": "연락처",
-    "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다."
+    "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다.",
+    "event_copy_link": "링크 복사",
+    "link_copied_to_clipboard": "링크가 클립보드에 복사되었습니다!",
+    "link_copy_failed": "클립보드에 링크를 복사할 수 없습니다!"
+
 };

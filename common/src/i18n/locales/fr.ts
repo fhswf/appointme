@@ -140,5 +140,9 @@ export const fr = {
     "Close": "Fermer",
     "Cancel": "Annuler",
     "Contact": "Contact",
-    "I acknowledge that my password will be stored encrypted in the database.": "Je reconnais que mon mot de passe sera stocké chiffré dans la base de données."
+    "I acknowledge that my password will be stored encrypted in the database.": "Je reconnais que mon mot de passe sera stocké chiffré dans la base de données.",
+    "event_copy_link": "Copier le lien",
+    "link_copied_to_clipboard": "Lien copié dans le presse-papiers !",
+    "link_copy_failed": "Impossible de copier le lien dans le presse-papiers !"
+
 };

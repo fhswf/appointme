@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { EventCard } from './EventCard';
 import { BrowserRouter } from 'react-router-dom';
 import { toast } from 'sonner';
+import { EMPTY_EVENT } from 'common';
 
 // Mock clipboard
 Object.assign(navigator, {
@@ -24,6 +25,7 @@ vi.mock('sonner', () => ({
 }));
 
 const mockEvent = {
+    ...EMPTY_EVENT,
     _id: '1',
     name: 'Test Event',
     duration: 30,
@@ -31,7 +33,7 @@ const mockEvent = {
     url: 'test-event',
     description: 'Test Description',
     location: 'Test Location',
-    available: {},
+
     bufferbefore: 0,
     bufferafter: 0,
     user: 'user1',
@@ -97,7 +99,7 @@ describe('EventCard Component', () => {
         expect(navigator.clipboard.writeText).toHaveBeenCalled();
         // Wait for promise resolution
         await new Promise(process.nextTick);
-        expect(toast.success).toHaveBeenCalledWith('Link copied to clipboard!');
+        expect(toast.success).toHaveBeenCalledWith('link_copied_to_clipboard');
     });
 
     it('should call onDelete when delete button clicked', () => {

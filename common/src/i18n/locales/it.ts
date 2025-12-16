@@ -140,5 +140,9 @@ export const it = {
     "Close": "Chiudi",
     "Cancel": "Annulla",
     "Contact": "Contatto",
-    "I acknowledge that my password will be stored encrypted in the database.": "Riconosco che la mia password verrà memorizzata crittografata nel database."
+    "I acknowledge that my password will be stored encrypted in the database.": "Riconosco che la mia password verrà memorizzata crittografata nel database.",
+    "event_copy_link": "Copia link",
+    "link_copied_to_clipboard": "Link copiato negli appunti!",
+    "link_copy_failed": "Impossibile copiare il link negli appunti!"
+
 };

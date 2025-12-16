@@ -132,5 +132,9 @@ export const zh = {
     "Close": "关闭",
     "Cancel": "取消",
     "Contact": "联系方式",
-    "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。"
+    "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。",
+    "event_copy_link": "复制链接",
+    "link_copied_to_clipboard": "链接已复制到剪贴板！",
+    "link_copy_failed": "无法将链接复制到剪贴板！"
+
 };

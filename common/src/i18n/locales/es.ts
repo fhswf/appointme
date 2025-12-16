@@ -140,5 +140,9 @@ export const es = {
     "Close": "Cerrar",
     "Cancel": "Cancelar",
     "Contact": "Contacto",
-    "I acknowledge that my password will be stored encrypted in the database.": "Reconozco que mi contraseña se almacenará cifrada en la base de datos."
+    "I acknowledge that my password will be stored encrypted in the database.": "Reconozco que mi contraseña se almacenará cifrada en la base de datos.",
+    "event_copy_link": "Copiar enlace",
+    "link_copied_to_clipboard": "¡Enlace copiado al portapapeles!",
+    "link_copy_failed": "¡No se pudo copiar el enlace al portapapeles!"
+
 };

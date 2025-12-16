@@ -132,5 +132,9 @@ export const ja = {
     "Close": "閉じる",
     "Cancel": "キャンセル",
     "Contact": "お問い合わせ",
-    "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。"
+    "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。",
+    "event_copy_link": "リンクをコピー",
+    "link_copied_to_clipboard": "リンクがクリップボードにコピーされました！",
+    "link_copy_failed": "リンクをクリップボードにコピーできませんでした！"
+
 };

@@ -29,7 +29,7 @@ const App = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <AppNavbar />
-      <div className="container mx-auto p-4 flex-grow">
+      <div className="container mx-auto p-4 pb-24 flex-grow">
         <div className="p-4">
           <h1 className="text-3xl font-bold mb-4">
             {t("low_clean_haddock_bubble")}
@@ -68,11 +68,12 @@ const App = () => {
         {connected && (
           <Button
             asChild
-            className="fixed bottom-8 right-8 rounded-full shadow-lg z-50 p-4 h-14 w-14"
+            className="fixed bottom-8 right-8 rounded-full shadow-lg z-50 h-14 px-6 gap-2"
             data-testid="add-event-button"
           >
             <RouterLink to="/addevent">
               <Plus className="h-6 w-6" />
+              <span className="font-semibold text-lg">Add Event Type</span>
             </RouterLink>
           </Button>
         )}
