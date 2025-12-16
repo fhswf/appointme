@@ -52,6 +52,7 @@ describe('EventCard Component', () => {
                 <EventCard
                     event={mockEvent}
                     url="test-user"
+                    hasCalendar={true}
                     setActive={mockSetActive}
                     onDelete={mockOnDelete}
                 />
@@ -69,6 +70,7 @@ describe('EventCard Component', () => {
                 <EventCard
                     event={mockEvent}
                     url="test-user"
+                    hasCalendar={true}
                     setActive={mockSetActive}
                     onDelete={mockOnDelete}
                 />
@@ -87,6 +89,7 @@ describe('EventCard Component', () => {
                 <EventCard
                     event={mockEvent}
                     url="test-user"
+                    hasCalendar={true}
                     setActive={mockSetActive}
                     onDelete={mockOnDelete}
                 />
@@ -108,6 +111,7 @@ describe('EventCard Component', () => {
                 <EventCard
                     event={mockEvent}
                     url="test-user"
+                    hasCalendar={true}
                     setActive={mockSetActive}
                     onDelete={mockOnDelete}
                 />

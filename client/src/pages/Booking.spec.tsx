@@ -90,6 +90,9 @@ describe('Booking Page', () => {
         (eventServices.getEventByUrlAndUser as any).mockResolvedValue({ data: mockEvent });
         // @ts-ignore
         (eventServices.getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+        
+        // Mock scrollIntoView
+        Element.prototype.scrollIntoView = vi.fn();
     });
 
     it('should render and fetch user and event data', async () => {
@@ -105,11 +108,16 @@ describe('Booking Page', () => {
             expect(eventServices.getEventByUrlAndUser).toHaveBeenCalledWith('user1', 'test-event');
         });
 
-        expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
         // Check for step titles
-        expect(screen.getByText('Choose date')).toBeInTheDocument();
-        expect(screen.getByText('Choose time')).toBeInTheDocument();
+        expect(await screen.findByText('Schedule an appointment')).toBeInTheDocument();
+        // Check for step titles
+        expect(screen.getByText('Schedule Appointment')).toBeInTheDocument();
+        // expect(screen.getByText('Choose time')).toBeInTheDocument(); // Time step is merged
         expect(screen.getByText('Provide details')).toBeInTheDocument();
+
+        // Check for footer links
+        expect(screen.getByText('Impressum')).toBeInTheDocument();
+        expect(screen.getByText('Datenschutzhinweise')).toBeInTheDocument();
     });
 
     it('should allow changing language', async () => {

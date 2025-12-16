@@ -1,45 +1,37 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import AppNavbar from '../../components/AppNavbar';
 import * as helpers from '../../helpers/helpers';
 import { BrowserRouter } from 'react-router-dom';
-import { UserContext } from '../../components/PrivateRoute';
+import { useAuth } from '../../components/AuthProvider';
 
 // Mock dependencies
 vi.mock('../../helpers/helpers');
 vi.mock('sonner');
+vi.mock('../../components/AuthProvider', () => ({
+    useAuth: vi.fn(),
+}));
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({
-        t: (key: string) => key
+        t: (key: string) => key,
+        i18n: {
+            language: 'en',
+            changeLanguage: vi.fn()
+        }
     })
 }));
 
-// Mock sub-components
-vi.mock('../../components/ThemeToggle', () => ({
-    ThemeToggle: () => <div data-testid="theme-toggle">ThemeToggle</div>
-}));
-vi.mock('../../components/ProfileDialog', () => ({
-    ProfileDialog: ({ open, onOpenChange }: any) => (
-        open ? <div data-testid="profile-dialog" onClick={() => onOpenChange(false)}>Profile Dialog</div> : null
-    )
-}));
-vi.mock('@/components/ui/dropdown-menu', () => ({
-    DropdownMenu: ({ children }: any) => <div>{children}</div>,
-    DropdownMenuTrigger: ({ children, asChild }: any) => <div onClick={(children as any).props.onClick}>{children}</div>,
-    DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-    DropdownMenuItem: ({ children, onClick, asChild, ...props }: any) => <div onClick={onClick} {...props}>{children}</div>,
-    DropdownMenuSeparator: () => <hr />,
-}));
+// ... (other mocks)
 
-// Helper to render with UserContext
+// Helper to render with Auth
 const renderWithUser = (user: any) => {
+    (useAuth as any).mockReturnValue({ user });
     return render(
-        <UserContext.Provider value={{ user }}>
-            <BrowserRouter>
-                <AppNavbar />
-            </BrowserRouter>
-        </UserContext.Provider>
+        <BrowserRouter>
+            <AppNavbar />
+        </BrowserRouter>
     );
 };
 
@@ -85,12 +77,21 @@ describe('AppNavbar', () => {
     });
 
     it('opens profile dialog', async () => {
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
         const user = { name: 'Test', picture_url: 'pic.jpg', user_url: 'test' };
-        renderWithUser(user);
+        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
+        (useAuth as any).mockReturnValue({ user });
 
-        fireEvent.click(screen.getByTestId('profile-menu'));
-        fireEvent.click(screen.getByText('user_menu_profile'));
+        render(
+            <BrowserRouter>
+                <AppNavbar />
+            </BrowserRouter>
+        );
+
+        const profileMenu = screen.getByTestId('profile-menu');
+        userEvent.click(profileMenu);
+
+        const profileItem = await screen.findByText('user_menu_profile');
+        userEvent.click(profileItem);
 
         await waitFor(() => {
             expect(screen.getByTestId('profile-dialog')).toBeInTheDocument();

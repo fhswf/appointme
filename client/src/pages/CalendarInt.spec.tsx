@@ -276,6 +276,20 @@ describe('CalendarIntegration Page', () => {
             expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
         });
     });
+
+    vi.mock('../components/AuthProvider', () => ({
+        useAuth: () => ({
+            user: {
+                _id: 'user1',
+                email: 'test@example.com',
+                google_tokens: {},
+                pull_calendars: [],
+                push_calendars: []
+            },
+            refreshAuth: vi.fn()
+        })
+    }));
+
     it('should handle multiple calendars, save without redirect, and close', async () => {
         navigate.mockClear();
 

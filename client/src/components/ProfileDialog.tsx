@@ -86,7 +86,7 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
                 </DialogHeader>
 
                 {loading ? (
-                    <div className="p-4 text-center">Loading...</div>
+                    <div className="p-4 text-center">{t("loading")}</div>
                 ) : (
                     <form id="profile-form" onSubmit={handleSubmit} className="space-y-4 py-4">
                         <div className="flex items-center justify-center mb-6">

@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthenticated, signout } from "../helpers/helpers";
-import { UserContext } from "./PrivateRoute";
+import { useAuth } from "./AuthProvider";
 import {
   Calendar,
   Link as LinkIcon,
   LogIn,
   LogOut,
-  User
+  User,
+  Scale
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +38,7 @@ declare global {
 const AppNavbar = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const user = useContext(UserContext).user;
+  const { user } = useAuth();
   const [profileOpen, setProfileOpen] = React.useState(false);
 
   const link = user ? import.meta.env.REACT_APP_URL + "/users/" + user.user_url : "";
@@ -72,28 +73,37 @@ const AppNavbar = () => {
   );
 
   return (
-    <header className="bg-background border-b shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center">
+    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/80 backdrop-blur-md px-6 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="mr-2"
+            className="h-10 w-10 md:hidden pb-1"
             onClick={handleOnClick("/")}
           >
-            <img src="/logo_no_text.svg" alt="Logo" className="h-8 w-8" />
+            <img src="/logo_no_text.svg" alt="Logo" className="h-full w-full" />
           </Button>
-          <h1 className="text-xl font-bold">{t("application_title")}</h1>
+
+          {/* Desktop Logo / Title Area matching template */}
+          <div className="hidden md:flex items-center gap-2">
+            <div className="w-8 h-8 flex items-center justify-center">
+              <img src="/logo_no_text.svg" alt="Appoint Me" className="h-8 w-8" />
+            </div>
+            <span className="font-bold text-lg tracking-tight">{t("application_title")}</span>
+          </div>
+          {/* Fallback for mobile title if needed, or just keep the simplified one */}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <ThemeToggle />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full" data-testid="profile-menu">
-                <Avatar>
-                  <AvatarImage src={user ? user.picture_url : ""} alt={user?.name} />
-                  <AvatarFallback><User /></AvatarFallback>
+              <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 border border-border p-0 overflow-hidden" data-testid="profile-menu">
+                <Avatar className="h-full w-full">
+                  <AvatarImage src={user ? user.picture_url : ""} alt={user?.name} className="object-cover" />
+                  <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -111,6 +121,12 @@ const AppNavbar = () => {
               <DropdownMenuItem onClick={copyToClipboard} disabled={!user}>
                 <LinkIcon className="mr-2 h-4 w-4" />
                 <span>{t("user_menu_copy_link")}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/legal" className="flex items-center w-full">
+                  <Scale className="mr-2 h-4 w-4" />
+                  <span>{t("legal")}</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {loginOut}

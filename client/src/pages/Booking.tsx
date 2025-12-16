@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useTransition, useEffect, FormEvent } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useNavigate, useParams } from "react-router-dom";
 import { defineStepper } from "@stepperize/react";
 
 import { getUserByUrl } from "../helpers/services/user_services";
 import { getEventByUrlAndUser, getAvailableTimes } from "../helpers/services/event_services";
 import { Day, addMonths, addDays, addMinutes, format, startOfDay, endOfDay } from "date-fns";
-import { enUS, de, fr, es, it, ja, ko, zhCN } from 'date-fns/locale';
+import { getLocale } from "../helpers/date_locales";
 
 import BookDetails from "../components/BookDetails";
 import { insertEvent } from "../helpers/services/google_services";
@@ -19,26 +25,17 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSelector } from "../components/LanguageSelector";
+import Footer from "../components/Footer";
+import HorizontalWeekCalendar from "../components/HorizontalWeekCalendar";
+import { ChevronLeft, Globe, Clock, MapPin, Video, Monitor } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 
 const { useStepper, steps } = defineStepper(
-  { id: "date", title: "Choose date" },
-  { id: "time", title: "Choose time" },
+  { id: "schedule", title: "Schedule Appointment" },
   { id: "details", title: "Provide details" }
 );
-
-const getLocale = (lang: string) => {
-  switch (lang) {
-    case 'de': return de;
-    case 'fr': return fr;
-    case 'es': return es;
-    case 'it': return it;
-    case 'ja': return ja;
-    case 'ko': return ko;
-    case 'zh': return zhCN;
-    default: return enUS;
-  }
-};
 
 
 type Details = { name: string; email: string; description: string };
@@ -66,6 +63,28 @@ const Booking = () => {
     )
       .then((slots) => {
         setSlots(slots);
+
+        // Auto-select first available date
+        if (event.available && !selectedDate) {
+          // Look for first date with slots starting from today
+          let iterator = startOfDay(new Date());
+          const end = addMonths(iterator, 6);
+
+          // Simple loop to find first day with availability
+          while (iterator < end) {
+            // Re-using check logic similar to checkDay but we need to check if slots actually exist for this day
+            const dayOfWeek = iterator.getDay() as Day;
+            if (
+              event.available[dayOfWeek] &&
+              event.available[dayOfWeek].length > 0 &&
+              slots.overlapping({ start: startOfDay(iterator), end: endOfDay(iterator) }).length > 0
+            ) {
+              setSelectedDate(new Date(iterator));
+              break;
+            }
+            iterator = addDays(iterator, 1);
+          }
+        }
       })
       .catch((err) => {
         toast.error("Could not get available time slots");
@@ -114,9 +133,7 @@ const Booking = () => {
     if (!newValue) return;
     console.log("change date: %o", startOfDay(newValue));
     setSelectedDate(newValue);
-    if (stepper.current.id === "date") {
-      stepper.next();
-    }
+    // No stepper navigation needed on date change anymore as it is same step
   };
 
   const checkDay = (date: Date) => {
@@ -154,26 +171,44 @@ const Booking = () => {
   const handleTime = (time: Date) => () => {
     console.log("time: %o", time);
     setSelectedTime(time);
-    if (stepper.current.id === "time") {
+
+    // Auto-advance to details when time is selected on desktop
+    if (stepper.current.id === "schedule") {
       stepper.next();
     }
   };
 
-  const renderSlots = () => {
+  const handleMobileTimeSelect = (time: Date) => {
+    setSelectedTime(time);
+    // Don't auto-advance stepper on mobile immediate click, waiting for 'Next' button or if date/time are merged step.
+    // Actually, our stepper has separated steps. If we merge them in UI, we need to handle stepper state carefully.
+    // For mobile, we can treat "Date" and "Time" as one visual phase.
+    if (stepper.current.id === "schedule") stepper.next();
+  };
+
+
+  const renderSlots = (isMobile = false) => {
     if (!selectedDate) return null;
     const times = getTimes(selectedDate);
+
+    if (times.length === 0) {
+      return <div className="text-muted-foreground text-sm p-4 text-center">{t("No slots available")}</div>
+    }
+
     return (
       <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium">
-          {i18n.t('clear_close_racoon_pat', { value: selectedDate })}
-        </h2>
-        <div className="grid grid-cols-3 gap-2">
+        {!isMobile && (
+          <h2 className="text-lg font-medium">
+            {i18n.t('clear_close_racoon_pat', { value: format(selectedDate, "P", { locale: getLocale(i18n.language) }) })}
+          </h2>
+        )}
+        <div className={isMobile ? "grid grid-cols-3 gap-3" : "grid grid-cols-3 gap-2"}>
           {times.map((time) => (
             <Button
               key={time.toISOString()}
               variant={selectedTime && time.getTime() === selectedTime.getTime() ? "default" : "outline"}
-              onClick={handleTime(time)}
-              className="w-full"
+              onClick={isMobile ? () => handleMobileTimeSelect(time) : handleTime(time)}
+              className={isMobile ? "h-12 w-full rounded-lg text-sm font-semibold shadow-sm" : "w-full"}
               data-testid={time.toISOString()}
             >
               {format(time, "p", { locale: getLocale(i18n.language) })}
@@ -207,115 +242,252 @@ const Booking = () => {
           });
         })
         .catch((err) => {
-          toast.error("Could not book event");
+          toast.error(t("Could not book event"));
         });
     }
   };
 
   const currentStepIndex = stepper.all.findIndex(s => s.id === stepper.current.id);
 
+  // New helper for cn import if not present
+  const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
+
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
-          {t("Schedule an appointment")}
-        </h1>
-        <LanguageSelector />
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden w-full">
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center bg-background p-4 justify-between sticky top-0 z-20 shadow-sm border-b">
+        <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigate(-1)}>
+          <ChevronLeft className="w-6 h-6" />
+        </Button>
+        <h2 className="text-base font-bold leading-tight tracking-tight flex-1 text-center truncate px-2">
+          {event?.name || t("Schedule Appointment")}
+        </h2>
+        <div className="w-10">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Globe className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => i18n.changeLanguage('en')}>
+                English
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => i18n.changeLanguage('de')}>
+                Deutsch
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
+      <div className="container mx-auto p-4 max-w-4xl flex-grow flex flex-col">
+        {/* Desktop Header */}
+        <div className="hidden md:flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">
+            {t("Schedule an appointment")}
+          </h1>
+          <LanguageSelector />
+        </div>
 
-      <EventType event={event} user={user} time={selectedTime} />
 
-      <div className="mt-8 border rounded-lg p-6 bg-card text-card-foreground shadow-sm">
-        <nav aria-label="Checkout Steps" className="group my-4">
-          <ol className="flex items-center justify-between gap-2">
-            {stepper.all.map((step, index, steps) => (
-              <React.Fragment key={step.id}>
-                <li className="flex items-center gap-4 flex-shrink-0">
-                  <Button
-                    type="button"
-                    role="tab"
-                    variant={index <= currentStepIndex ? "default" : "secondary"}
-                    aria-current={stepper.current.id === step.id ? "step" : undefined}
-                    aria-posinset={index + 1}
-                    aria-setsize={steps.length}
-                    aria-selected={stepper.current.id === step.id}
-                    className="rounded-full w-10 h-10 p-0"
-                    onClick={() => stepper.goTo(step.id)}
-                  >
-                    {index + 1}
-                  </Button>
-                  <span className="text-sm font-medium">{t(step.title)}</span>
-                </li>
-                {index < steps.length - 1 && (
-                  <Separator className="flex-1" orientation="horizontal" />
-                )}
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
+        <div className="hidden md:block">
+          <EventType event={event} user={user} time={selectedTime} />
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-8">
-          {stepper.switch({
-            date: () => (
-              <div className="flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={handleDateChange}
-                  disabled={(date) => !checkDay(date)}
-                  className="rounded-md border"
-                  modifiers={{
-                    highlight: (date) => checkDay(date),
-                  }}
-                  modifiersClassNames={{
-                    highlight: "font-bold text-primary",
-                  }}
-                />
-              </div>
-            ),
-            time: () => (
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="hidden md:block">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={handleDateChange}
-                    disabled={(date) => !checkDay(date)}
-                    className="rounded-md border"
-                  />
+        {/* Mobile Compact Event Card */}
+        <div className="md:hidden mb-6">
+          <div className="flex items-center gap-4 rounded-xl bg-card p-4 shadow-sm border">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted flex items-center justify-center text-primary/80">
+              <Video className="w-8 h-8" />
+            </div>
+            <div className="flex flex-col gap-1 flex-1">
+              <p className="text-foreground text-base font-bold leading-tight line-clamp-1">{event?.name}</p>
+              <div className="flex items-center gap-3 text-muted-foreground text-sm">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{event?.duration} Min</span>
                 </div>
-                <div>{renderSlots()}</div>
-              </div>
-            ),
-            details: () => (
-              <div className="flex flex-col gap-6">
-                {user && (
-                  <BookDetails
-                    errors={{}}
-                    onChange={handleDetailChange}
-                  />
-                )}
-                <div className="flex justify-end">
-                  <Button type="submit" size="lg">
-                    {t("whole_acidic_parrot_promise")}
-                  </Button>
+                {/* Location placeholder - add to Event type later if needed */}
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>Online</span>
                 </div>
               </div>
-            ),
-          })}
-
-          <div className="mt-8 flex justify-between">
-            <Button
-              variant="outline"
-              onClick={stepper.prev}
-              disabled={stepper.isFirst}
-              type="button"
-            >
-              {t("heroic_kind_llama_zip")}
-            </Button>
+            </div>
           </div>
-        </form>
+        </div>
+
+        <div className="md:mt-8 md:border md:rounded-lg md:p-6 md:bg-card md:text-card-foreground md:shadow-sm flex-grow">
+          {/* Desktop Stepper */}
+          <nav aria-label="Checkout Steps" className="group my-4 hidden md:block">
+            <ol className="flex items-center justify-between gap-2">
+              {stepper.all.map((step, index, steps) => (
+                <React.Fragment key={step.id}>
+                  <li className="flex items-center gap-4 flex-shrink-0">
+                    <Button
+                      type="button"
+                      role="tab"
+                      variant={index <= currentStepIndex ? "default" : "secondary"}
+                      aria-current={stepper.current.id === step.id ? "step" : undefined}
+                      aria-posinset={index + 1}
+                      aria-setsize={steps.length}
+                      aria-selected={stepper.current.id === step.id}
+                      className="rounded-full w-10 h-10 p-0"
+                      onClick={() => stepper.goTo(step.id)}
+                    >
+                      {index + 1}
+                    </Button>
+                    <span className="text-sm font-medium hidden sm:block">{t(step.title)}</span>
+                  </li>
+                  {index < steps.length - 1 && (
+                    <Separator className="flex-1" orientation="horizontal" />
+                  )}
+                </React.Fragment>
+              ))}
+            </ol>
+          </nav>
+
+          {/* Mobile Steps Indicator */}
+          <form onSubmit={handleSubmit} className="mt-4 md:mt-8 flex flex-col flex-grow">
+            <div className="flex w-full flex-col items-center justify-center py-4 md:hidden">
+              <div className="flex flex-row gap-2">
+                {/* Simplified visual indicator for mobile */}
+                <div className={cn("h-1.5 rounded-full transition-all", stepper.current.id === 'schedule' ? "w-8 bg-primary" : "w-2 bg-muted")}></div>
+                <div className={cn("h-1.5 rounded-full transition-all", stepper.current.id === 'details' ? "w-8 bg-primary" : "w-2 bg-muted")}></div>
+              </div>
+            </div>
+
+            {stepper.switch({
+              schedule: () => (
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-8">
+                  {/* Desktop Calendar */}
+                  <div className="hidden md:block">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={handleDateChange}
+                      disabled={(date) => !checkDay(date)}
+                      className="rounded-md border"
+                    />
+                  </div>
+
+                  {/* Desktop Slots - Only show if date selected */}
+                  <div className="hidden md:block">
+                    {selectedDate ? renderSlots() : (
+                      <div className="h-full flex items-center justify-center text-muted-foreground border rounded-md bg-muted/10 p-8">
+                        {t("Please select a date")}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Mobile View - Horizontal Calendar */}
+                  <div className="md:hidden flex flex-col gap-6">
+                    <HorizontalWeekCalendar
+                      selectedDate={selectedDate}
+                      onSelect={handleDateChange}
+                      isDayAvailable={checkDay}
+                    />
+                    {/* Show slots immediately below calendar on mobile if date selected */}
+                    {selectedDate && (
+                      <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4">
+                        <h3 className="tracking-tight text-lg font-bold leading-tight text-left">
+                          {t("Available Times")}
+                          <span className="block text-sm font-normal text-muted-foreground mt-1">
+                            {format(selectedDate, "EEEE, d. MMMM", { locale: getLocale(i18n.language) })}
+                          </span>
+                        </h3>
+                        {renderSlots(true)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ),
+              details: () => (
+                <div className="flex flex-col gap-6">
+                  {selectedDate && selectedTime && (
+                    <div className="bg-muted/30 p-4 rounded-lg border border-border flex flex-col gap-2">
+                      <h3 className="font-semibold text-sm uppercase text-muted-foreground tracking-wider">
+                        {t("Appointment Summary")}
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm md:text-lg font-medium">
+                        <Clock className="w-5 h-5 text-primary" />
+                        <span>
+                          {format(selectedDate, "EEEE, d. MMMM yyyy", { locale: getLocale(i18n.language) })}
+                        </span>
+                        <span className="text-muted-foreground">•</span>
+                        <span>{format(selectedTime, "p", { locale: getLocale(i18n.language) })}</span>
+                      </div>
+                    </div>
+                  )}
+                  {user && (
+                    <BookDetails
+                      errors={{}}
+                      onChange={handleDetailChange}
+                    />
+                  )}
+                  {/* Desktop Submit Button Position */}
+                  <div className="hidden md:flex justify-end">
+                    <Button type="submit" size="lg">
+                      {t("whole_acidic_parrot_promise")}
+                    </Button>
+                  </div>
+                </div>
+              ),
+            })}
+
+            {/* Desktop Navigation Buttons */}
+            {stepper.current.id === 'details' && (
+              <div className="mt-8 hidden md:flex justify-between">
+                <Button
+                  variant="outline"
+                  onClick={stepper.prev}
+                  disabled={stepper.isFirst}
+                  type="button"
+                >
+                  {t("heroic_kind_llama_zip")}
+                </Button>
+              </div>
+            )}
+
+            {/* Mobile Sticky Footer */}
+            {stepper.current.id !== 'details' && selectedTime && (
+              <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-md border-t z-30">
+                <Button
+                  type="button"
+                  onClick={() => stepper.goTo('details')}
+                  className="w-full h-12 text-base font-bold shadow-lg flex items-center justify-center gap-2"
+                >
+                  {t("Continue")}
+                  <ChevronLeft className="w-5 h-5 rotate-180" />
+                </Button>
+              </div>
+            )}
+            {stepper.current.id === 'details' && (
+              <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-md border-t z-30">
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={stepper.prev}
+                    className="h-12 w-12 shrink-0 p-0 rounded-lg border-2"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 h-12 text-base font-bold shadow-lg"
+                  >
+                    {t("Book Appointment")}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
+      </div>
+      <div className="hidden md:block">
+        <Footer />
       </div>
     </div>
   );

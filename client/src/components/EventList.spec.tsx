@@ -77,9 +77,20 @@ describe('EventList Component', () => {
     });
 
     const renderEventList = (url = 'test-user') => {
+        const mockUser = {
+            _id: 'user1',
+            email: 'test@example.com',
+            name: 'Test User',
+            user_url: 'test-user',
+            picture_url: 'pic.jpg',
+            google_tokens: {},
+            push_calendars: [],
+            pull_calendars: [],
+            caldav_accounts: []
+        };
         return render(
             <BrowserRouter>
-                <EventList url={url} />
+                <EventList url={url} user={mockUser as any} />
             </BrowserRouter>
         );
     };
@@ -109,8 +120,8 @@ describe('EventList Component', () => {
         renderEventList();
 
         await waitFor(() => {
-            expect(screen.getByText(/sunny_great_halibut_empower/i)).toBeInTheDocument();
-            expect(screen.getByText(/create_first_event_type_button/i)).toBeInTheDocument();
+            // content text removed in new design, only button remains
+            expect(screen.getByText(/new_event_type/i)).toBeInTheDocument();
         });
     });
 
@@ -204,10 +215,10 @@ describe('EventList Component', () => {
         renderEventList();
 
         await waitFor(() => {
-            expect(screen.getByText(/create_first_event_type_button/i)).toBeInTheDocument();
+            expect(screen.getByText(/new_event_type/i)).toBeInTheDocument();
         });
 
-        const createButton = screen.getByText(/create_first_event_type_button/i);
+        const createButton = screen.getByText(/new_event_type/i);
         fireEvent.click(createButton);
 
         expect(mockNavigate).toHaveBeenCalledWith('/addevent');
