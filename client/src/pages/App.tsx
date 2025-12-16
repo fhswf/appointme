@@ -73,7 +73,7 @@ const App = () => {
           >
             <RouterLink to="/addevent">
               <Plus className="h-6 w-6" />
-              <span className="font-semibold text-lg">Add Event Type</span>
+              {t("Add Event Type")}
             </RouterLink>
           </Button>
         )}
