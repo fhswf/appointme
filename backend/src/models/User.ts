@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
-import { User, Day } from "common/src/types";
+import { User, Day } from "common";
 
 export interface UserDocument extends Document, User {
   google_picture_url?: string;

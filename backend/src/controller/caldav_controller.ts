@@ -1,5 +1,5 @@
 import { DAVClient } from 'tsdav';
-import { User, CalDavAccount } from "common/src/types";
+import { User, CalDavAccount } from "common";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
 import crypto from 'node:crypto';
