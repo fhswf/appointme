@@ -1,11 +1,11 @@
 import { Event, User } from "common";
 import { useTranslation } from "react-i18next";
-import { Clock, MapPin, Calendar, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Clock, MapPin, Calendar } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface PublicEventCardProps {
     event: Event;
-    user: User;
     onClick: (event: Event) => void;
     index?: number;
 }
@@ -41,8 +41,9 @@ export const PublicEventCard = ({ event, onClick, index = 0 }: PublicEventCardPr
     const colorIndex = index % GRADIENTS.length;
 
     return (
-        <div
-            className="group relative flex flex-col bg-card rounded-xl shadow-sm hover:shadow-md border border-border transition-all duration-300 hover:-translate-y-1 overflow-hidden h-full"
+        <button
+            type="button"
+            className="group relative flex flex-col w-full text-left bg-card rounded-xl shadow-sm hover:shadow-md border border-border transition-all duration-300 hover:-translate-y-1 overflow-hidden h-full cursor-pointer"
             onClick={() => onClick(event)}
         >
             {/* Top Gradient Border */}
@@ -88,17 +89,13 @@ export const PublicEventCard = ({ event, onClick, index = 0 }: PublicEventCardPr
             </div>
 
             <div className="p-6 pt-0 mt-auto">
-                <Button
-                    className="w-full justify-center group-hover:bg-primary/90"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onClick(event);
-                    }}
+                <div
+                    className={cn(buttonVariants({ variant: "default" }), "w-full justify-center group-hover:bg-primary/90")}
                 >
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>{t("Book Appointment")}</span>
-                </Button>
+                </div>
             </div>
-        </div>
+        </button>
     );
 };
