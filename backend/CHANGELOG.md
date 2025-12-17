@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.10...backend@1.32.0-rc.11) (2025-12-17)
+
+
+### Bug Fixes
+
+* update Swagger server URL environment variable from `REACT_APP_URL` to `CLIENT_URL` ([851218e](https://github.com/fhswf/appointme/commit/851218e6ab75340a60fb51a3384e5e90cc354f8a))
+
 # backend [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.9...backend@1.32.0-rc.10) (2025-12-17)
 
 
