@@ -68,9 +68,9 @@ const renderCalendarList = (calendarList, state, setState, t, single = false) =>
         <div className="flex items-center gap-2" key={item.id}>
           <Checkbox
             id={item.id}
-            checked={state[item.id]}
+            checked={!!state[item.id]}
             onCheckedChange={(checked) => {
-              setState({ ...state, [item.id]: checked });
+              setState((prev) => ({ ...prev, [item.id]: checked }));
             }}
             name={item.id}
           />
@@ -108,7 +108,7 @@ const renderCalendarList = (calendarList, state, setState, t, single = false) =>
   }
 };
 
-const PushCalendar = ({ user, calendarList }) => {
+export const PushCalendar = ({ user, calendarList }) => {
   // Get current push calendars
   const currentPushCalendars = user.push_calendars || [];
 
@@ -136,7 +136,8 @@ const PushCalendar = ({ user, calendarList }) => {
       }
       setSelected(initialSelected);
     }
-  }, [open, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
 
   const handleClose = () => setOpen(false);
@@ -226,7 +227,7 @@ const PushCalendar = ({ user, calendarList }) => {
   );
 };
 
-const PullCalendars = ({ user, calendarList }) => {
+export const PullCalendars = ({ user, calendarList }) => {
   const pullCals = calendarList
     ? calendarList.items
       .filter((item) => user.pull_calendars.includes(item.id))
@@ -236,8 +237,20 @@ const PullCalendars = ({ user, calendarList }) => {
     : undefined;
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(pullCals);
+  const [selected, setSelected] = useState({});
   const { t } = useTranslation();
+
+  // Initialize selected state from user's current pull calendars
+  useEffect(() => {
+    if (open) {
+      const initialSelected = {};
+      for (const id of user.pull_calendars) {
+        initialSelected[id] = true;
+      }
+      setSelected(initialSelected);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);

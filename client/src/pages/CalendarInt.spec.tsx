@@ -94,8 +94,8 @@ describe('CalendarIntegration Page', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.spyOn(console, 'log').mockImplementation(() => { });
-        vi.spyOn(console, 'error').mockImplementation(() => { });
+        // vi.spyOn(console, 'log').mockImplementation(() => { });
+        // vi.spyOn(console, 'error').mockImplementation(() => { });
         (googleServices.getCalendarList as any).mockResolvedValue(mockCalendarList);
         (googleServices.getAuthUrl as any).mockResolvedValue({ data: { success: true, url: 'http://auth' } });
         (caldavServices.listAccounts as any).mockResolvedValue({ data: [] });
@@ -207,11 +207,16 @@ describe('CalendarIntegration Page', () => {
     });
 
     it('should update push calendar', async () => {
+        const user = userEvent.setup();
+        const { userServices } = await import('../helpers/services/user_services');
+        const { googleServices } = await import('../helpers/services/google_services');
+        const { caldavServices } = await import('../helpers/services/caldav_services');
+
         render(
             <MemoryRouter>
-                <UserContext.Provider value={{ user: mockUser } as any}>
+                <div id="root">
                     <CalendarIntegration />
-                </UserContext.Provider>
+                </div>
             </MemoryRouter>
         );
 
@@ -219,16 +224,25 @@ describe('CalendarIntegration Page', () => {
             expect(screen.getByTestId('edit-push-calendar')).toBeInTheDocument();
         });
 
-        fireEvent.click(screen.getByTestId('edit-push-calendar'));
+        // Open Dialog
+        const editBtn = screen.getByTestId('edit-push-calendar');
+        await user.click(editBtn);
 
         // Dialog opens
-        expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only (Label removed in checkbox mode)
+        expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only
+
+        // Select a calendar (assuming mocked list has items)
+        // Mock list has 'Google Calendar 1' (id: cal1)
+        const checkbox = screen.getByLabelText('Google Calendar 1');
+        await user.click(checkbox);
 
         const saveBtn = screen.getByTestId('button-save');
-        fireEvent.click(saveBtn);
+        await user.click(saveBtn);
 
         await waitFor(() => {
-            expect(userServices.updateUser).toHaveBeenCalled();
+            expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
+                push_calendars: ['cal1']
+            }));
         });
     });
 
@@ -329,6 +343,12 @@ describe('CalendarIntegration Page', () => {
             // But we want to test selecting them in the Pull/Push dialogs.
             expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
         });
+
+        // Check for step titles
+        const titles = await screen.findAllByText(/Schedule Appointment|Test Event/i);
+        expect(titles.length).toBeGreaterThan(0);
+        // expect(screen.getByText('Choose time')).toBeInTheDocument(); // Time step is merged
+        expect(await screen.findByText('Provide details')).toBeInTheDocument();
 
         // Open Pull Calendars dialog
         fireEvent.click(screen.getByTestId('edit-pull-calendar'));

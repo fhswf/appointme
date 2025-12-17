@@ -53,8 +53,7 @@ const EventList = (props: EventListProps) => {
           event={event}
           url={props.url}
           hasCalendar={
-            !!(props.user.google_tokens ||
-              (props.user.caldav_accounts && props.user.caldav_accounts.length > 0))
+            !!(props.user.push_calendars && props.user.push_calendars.length > 0)
           }
           setActive={updateEventStatus}
           onDelete={onDelete}

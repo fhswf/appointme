@@ -55,7 +55,7 @@ describe('Booking Page', () => {
     const mockEvent = {
         _id: 'event1',
         url: 'test-event',
-        title: 'Test Event',
+        name: 'Test Event',
         duration: 30,
         isActive: true,
         available: [
@@ -90,7 +90,7 @@ describe('Booking Page', () => {
         (eventServices.getEventByUrlAndUser as any).mockResolvedValue({ data: mockEvent });
         // @ts-ignore
         (eventServices.getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
-        
+
         // Mock scrollIntoView
         Element.prototype.scrollIntoView = vi.fn();
     });
@@ -110,10 +110,9 @@ describe('Booking Page', () => {
 
         // Check for step titles
         expect(await screen.findByText('Schedule an appointment')).toBeInTheDocument();
-        // Check for step titles
-        expect(screen.getByText('Schedule Appointment')).toBeInTheDocument();
+        expect(await screen.findByText('Test Event')).toBeInTheDocument();
         // expect(screen.getByText('Choose time')).toBeInTheDocument(); // Time step is merged
-        expect(screen.getByText('Provide details')).toBeInTheDocument();
+        expect(await screen.findByText('Provide details')).toBeInTheDocument();
 
         // Check for footer links
         expect(screen.getByText('Impressum')).toBeInTheDocument();
@@ -197,6 +196,7 @@ describe('Booking Page', () => {
         // 1. Initial State
         await waitFor(() => {
             expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
+            expect(screen.getByText('Test Event')).toBeInTheDocument();
         });
 
         // 2. Select Date
@@ -262,6 +262,9 @@ describe('Booking Page', () => {
                 <Booking />
             </MemoryRouter>
         );
+
+        // Wait for event to load to avoid 0 duration infinite loop
+        await waitFor(() => expect(screen.getByText('Test Event')).toBeInTheDocument());
 
         // 1. Select Date
         await userEvent.click(screen.getByTestId('select-date-btn'));

@@ -166,11 +166,11 @@
   -ms-overflow-style: none;
   /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
-}
 
-@utility no-scrollbar::-webkit-scrollbar {
-  display: none;
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer base {
