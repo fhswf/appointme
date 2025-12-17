@@ -122,7 +122,15 @@ export const ja = {
     "user_menu_my_account": "My account",
     "user_menu_calendar_integration": "Calendar Integration",
     "user_menu_copy_link": "Copy your link",
-    "user_menu_link_copied": "Link copied", "name": "Name", "user_url": "User URL", "use_gravatar": "Use Gravatar", "save": "Save", "profile_updated": "Profile updated successfully", "error_saving_profile": "Error saving profile", "user_url_taken": "User URL already taken", "error_loading_profile": "Error loading profile",
+    "user_menu_link_copied": "Link copied",
+    "name": "名前",
+    "user_url": "ユーザーURL",
+    "use_gravatar": "Gravatarを使用",
+    "save": "保存",
+    "profile_updated": "プロファイルが正常に更新されました",
+    "error_saving_profile": "プロファイルの保存エラー",
+    "user_url_taken": "ユーザーURLは既に使用されています",
+    "error_loading_profile": "プロファイルの読み込みエラー",
     "login_with_sso": "SSO でログイン",
     "login_with": "でログイン",
     "login_successful": "ログイン成功",
@@ -131,6 +139,10 @@ export const ja = {
     "Add": "追加",
     "Close": "閉じる",
     "Cancel": "キャンセル",
+    "Choose calendars in which appointments are created.": "予定が作成されるカレンダーを選択します。",
+    "Email (Optional)": "メール（オプション）",
+    "Enter your CalDav server details to connect your calendar.": "カレンダーを接続するには、CalDavサーバーの詳細を入力してください。",
+    "Failed to add account. Please check your credentials and server URL.": "アカウントを追加できませんでした。資格情報とサーバーURLを確認してください。",
     "Contact": "お問い合わせ",
     "I acknowledge that my password will be stored encrypted in the database.": "私のパスワードがデータベースに暗号化されて保存されることを認めます。",
     "event_copy_link": "リンクをコピー",
@@ -177,17 +189,5 @@ export const ja = {
     "Available Times": "利用可能な時間",
     "No slots available": "利用可能な枠がありません",
     "Schedule Appointment": "予約をスケジュールする"
-
-    ,
-
-    // Missing keys added by script
-    "name": "名前",
-    "user_url": "ユーザーURL",
-    "use_gravatar": "Gravatarを使用",
-    "save": "保存",
-    "profile_updated": "プロファイルが正常に更新されました",
-    "error_saving_profile": "プロファイルの保存エラー",
-    "user_url_taken": "ユーザーURLは既に使用されています",
-    "error_loading_profile": "プロファイルの読み込みエラー",
 
 };
