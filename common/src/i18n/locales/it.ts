@@ -211,5 +211,7 @@ export const it = {
     "Consulting": "Consulenza",
     "Tags": "Etichette",
     "Type a tag and press Enter": "Scrivi un'etichetta e premi Invio",
-    "Press Enter to add a tag": "Premi Invio per aggiungere un'etichetta"
+    "Press Enter to add a tag": "Premi Invio per aggiungere un'etichetta",
+    "Cancel": "Annulla",
+    "Contact": "Contatto"
 };

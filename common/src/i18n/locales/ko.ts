@@ -211,5 +211,7 @@ export const ko = {
     "Consulting": "상담",
     "Tags": "태그",
     "Type a tag and press Enter": "태그를 입력하고 Enter를 누르세요",
-    "Press Enter to add a tag": "Enter를 눌러 태그 추가"
+    "Press Enter to add a tag": "Enter를 눌러 태그 추가",
+    "Cancel": "취소",
+    "Contact": "연락처"
 };

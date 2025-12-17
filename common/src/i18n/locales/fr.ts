@@ -47,6 +47,8 @@ export const fr = {
     "Tags": "Étiquettes",
     "Type a tag and press Enter": "Tapez une étiquette et appuyez sur Entrée",
     "Press Enter to add a tag": "Appuyez sur Entrée pour ajouter une étiquette",
+    "Cancel": "Annuler",
+    "Contact": "Contact",
     "heroic_kind_llama_zip": "Retour",
     "awake_jolly_gazelle_lock": "Passer",
     "whole_acidic_parrot_promise": "Réserver un rendez-vous",

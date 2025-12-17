@@ -18,12 +18,12 @@ const options: swaggerJsdoc.Options = {
         },
         servers: [
             {
-                url: 'https://appointme.example.com',
-                description: 'Production server'
+                url: process.env.REACT_APP_URL,
+                description: 'This server'
             },
             {
                 url: 'http://localhost:5000',
-                description: 'Development server'
+                description: 'Development server (local)'
             }
         ],
         components: {

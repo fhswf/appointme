@@ -24,14 +24,14 @@ const EditSlot = (props: EditSlotProps) => {
     React.useEffect(() => {
         // Create a content-only version of current state for comparison
         const currentContent = slots.map(({ _id, ...rest }) => rest);
-        
+
         // Only update from props if the content is actually different
         // This prevents regenerating IDs (and losing focus/state) when the parent
         // echoes back the same data we just sent.
         if (JSON.stringify(currentContent) !== JSON.stringify(props.slots || [])) {
             setSlots((props.slots || []).map(s => ({
                 ...s,
-                _id: Math.random().toString(36).substring(2, 9)
+                _id: crypto.randomUUID()
             })));
         }
         // We purposefully omit 'slots' from dependencies to avoid reverting 
@@ -46,7 +46,7 @@ const EditSlot = (props: EditSlotProps) => {
             // ensure at least one entry
             if (slots.length === 0) {
                 const newSlot = { start: "09:00", end: "17:00" };
-                const _slots = [{ ...newSlot, _id: Math.random().toString(36).substring(2, 9) }];
+                const _slots = [{ ...newSlot, _id: crypto.randomUUID() }];
                 setSlots(_slots);
                 props.onChange([newSlot]);
             }
@@ -58,7 +58,7 @@ const EditSlot = (props: EditSlotProps) => {
 
     const addSlot = () => {
         const newSlot = { start: "", end: "" };
-        const _slots = [...slots, { ...newSlot, _id: Math.random().toString(36).substring(2, 9) }];
+        const _slots = [...slots, { ...newSlot, _id: crypto.randomUUID() }];
         setSlots(_slots);
         props.onChange(_slots.map(({ _id, ...rest }) => rest));
     };

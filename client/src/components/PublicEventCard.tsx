@@ -1,4 +1,4 @@
-import { Event, User } from "common";
+import { Event } from "common";
 import { useTranslation } from "react-i18next";
 import { Clock, MapPin, Calendar } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";

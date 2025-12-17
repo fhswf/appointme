@@ -69,7 +69,7 @@ const Planning = () => {
 
   const filteredEvents = useMemo(() => {
     if (selectedTag === "all") return events;
-    return events.filter(event => event.tags && event.tags.includes(selectedTag));
+    return events.filter(event => event.tags?.includes(selectedTag));
   }, [events, selectedTag]);
 
   return (

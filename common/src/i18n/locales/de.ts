@@ -217,5 +217,7 @@ Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
     "Consulting": "Beratung",
     "Tags": "Tags",
     "Type a tag and press Enter": "Tag eingeben und Enter drücken",
-    "Press Enter to add a tag": "Drücken Sie Enter, um einen Tag hinzuzufügen"
+    "Press Enter to add a tag": "Drücken Sie Enter, um einen Tag hinzuzufügen",
+    "Cancel": "Abbrechen",
+    "Contact": "Kontakt"
 };
