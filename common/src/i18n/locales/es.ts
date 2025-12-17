@@ -151,6 +151,8 @@ export const es = {
 
     // Missing keys added by script
     "copy": "Copiar",
+    "about": "Acerca de",
+    "about_content": "# Acerca de AppointMe\n\nAppointMe es una herramienta sencilla para la programación de citas.\nConfigura tus calendarios, establece tu disponibilidad y permite que otros reserven citas contigo.\n\n## Github\n[Mira el código en Github](https://github.com/fhswf/appointme)\n\n## Créditos\nImplementado con ❤️ en la Universidad de Ciencias Aplicadas de South Westphalia",
     "legal": "Aviso legal",
     "Calendar": "Calendario",
     "Select a calendar": "Seleccionar un calendario",

@@ -54,6 +54,20 @@ describe('AppNavbar', () => {
         expect(screen.getByText('user_menu_log_in')).toBeInTheDocument();
     });
 
+    it('renders About link in user menu', async () => {
+        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
+        const user = { name: 'Test User', picture_url: 'pic.jpg', user_url: 'test' };
+        renderWithUser(user);
+
+        // Open menu
+        fireEvent.pointerDown(screen.getByTestId('profile-menu'));
+        fireEvent.click(screen.getByTestId('profile-menu'));
+
+        const aboutLink = screen.getByText('about');
+        expect(aboutLink).toBeInTheDocument();
+        expect(aboutLink.closest('a')).toHaveAttribute('href', '/about');
+    });
+
     it('renders logout button when authenticated', () => {
         vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
         const user = { name: 'Test User', picture_url: 'pic.jpg', user_url: 'test' };

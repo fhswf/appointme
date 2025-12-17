@@ -151,6 +151,8 @@ export const zh = {
 
     // Missing keys added by script
     "copy": "复制",
+    "about": "关于",
+    "about_content": "# 关于 AppointMe\n\nAppointMe 是一个简单的预约安排工具。\n配置您的日历，设置您的空闲时间，让其他人与您预约。\n\n## Github\n[在 Github 上查看代码](https://github.com/fhswf/appointme)\n\n## 致谢\n由 South Westphalia University of Applied Sciences ❤️ 实现",
     "legal": "法律声明",
     "Calendar": "日历",
     "Select a calendar": "选择日历",

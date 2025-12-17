@@ -9,7 +9,8 @@ import {
   LogIn,
   LogOut,
   User,
-  Scale
+  Scale,
+  HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -126,6 +127,12 @@ const AppNavbar = () => {
                 <Link to="/legal" className="flex items-center w-full">
                   <Scale className="mr-2 h-4 w-4" />
                   <span>{t("legal")}</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/about" className="flex items-center w-full">
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  <span>{t("about")}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

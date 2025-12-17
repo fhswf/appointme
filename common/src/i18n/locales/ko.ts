@@ -151,6 +151,8 @@ export const ko = {
 
     // Missing keys added by script
     "copy": "복사",
+    "about": "소개",
+    "about_content": "# AppointMe 소개\n\nAppointMe는 일정을 예약하기 위한 간단한 도구입니다.\n달력을 구성하고 가용성을 설정하여 다른 사람들이 귀하와 약속을 예약할 수 있도록 하세요.\n\n## Github\n[Github에서 코드 확인하기](https://github.com/fhswf/appointme)\n\n## 크레딧\nSouth Westphalia University of Applied Sciences에서 ❤️로 구현됨",
     "legal": "법적 고지",
     "Calendar": "캘린더",
     "Select a calendar": "캘린더 선택",

@@ -143,6 +143,8 @@ export const en = {
     "link_copied_to_clipboard": "Link copied to clipboard!",
     "link_copy_failed": "Could not copy link to clipboard!",
     "copy": "Copy",
+    "about": "About",
+    "about_content": "# About AppointMe\n\nAppointMe is a simple tool for scheduling appointments.\nConfigure your calendars, set your availability, and let others book appointments with you.\n\n## Github\n[Check out the code on Github](https://github.com/fhswf/appointme)\n\n## Credits\nImplemented with ❤️ at the South Westphalia University of Applied Sciences",
     "legal": "Legal",
     "Calendar": "Calendar",
     "Select a calendar": "Select a calendar",

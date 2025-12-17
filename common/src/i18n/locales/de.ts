@@ -143,6 +143,18 @@ export const de = {
     "link_copied_to_clipboard": "Link in die Zwischenablage kopiert!",
     "link_copy_failed": "Link konnte nicht in die Zwischenablage kopiert werden!",
     "copy": "Kopieren",
+    "about": "Über",
+    "about_content": `
+# Über AppointMe
+
+AppointMe ist ein einfaches Tool zur Terminvereinbarung.
+Konfiguriere Deine Kalender, lege Deine Verfügbarkeit fest und lass andere Termine mit Dir vereinbaren.
+
+## Github
+[Schau dir den Code auf Github an](https://github.com/fhswf/appointme)
+
+## Credits
+Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
     "legal": "Rechtliches",
     "Calendar": "Kalender",
     "Select a calendar": "Kalender auswählen",

@@ -14,6 +14,7 @@ import Calendarintegration from "./pages/CalendarInt";
 import Finished from "./pages/Finished";
 import OidcCallback from "./pages/OidcCallback";
 import Legal from "./pages/Legal";
+import About from "./pages/About";
 import { AuthProvider } from "./components/AuthProvider";
 
 import "./i18n";
@@ -86,8 +87,10 @@ const Main = () => {
                 path="/users/:user_url"
                 element={<Planning />}
               />
+              <Route path="/users/:user_url" element={<Planning />} />
               <Route path="/users/:user_url/:url" element={<Booking />} />
               <Route path="/legal" element={<Legal />} />
+              <Route path="/about" element={<About />} />
               <Route path="*" element={<NotFound />} />
               <Route path="/notfound" element={<NotFound />} />
             </Routes>

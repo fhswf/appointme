@@ -151,6 +151,8 @@ export const ja = {
 
     // Missing keys added by script
     "copy": "コピー",
+    "about": "について",
+    "about_content": "# AppointMeについて\n\nAppointMeは、予約スケジュールのためのシンプルなツールです。\nカレンダーを設定し、空き状況を決めれば、他の人があなたとの予約を取れるようになります。\n\n## Github\n[Githubでコードを確認する](https://github.com/fhswf/appointme)\n\n## クレジット\n南ヴェストファーレン応用科学大学で❤️を込めて実装されました",
     "legal": "法的通知",
     "Calendar": "カレンダー",
     "Select a calendar": "カレンダーを選択",
