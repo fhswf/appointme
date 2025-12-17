@@ -4,10 +4,7 @@ import { deleteEvent } from "../helpers/services/event_services";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription
+  CardFooter
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -84,15 +81,14 @@ export const EventCard = (props: EventCardProps) => {
   };
 
   return (
-    <div
-      className={`group bg-card text-card-foreground rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full relative overflow-hidden ${active ? "ring-1 ring-primary/5 border-primary/20 md:shadow-lg md:shadow-blue-500/10 active" : "inactive"}`}
+    <Card
+      className={`group rounded-xl hover:shadow-md transition-all duration-200 flex flex-col h-full relative overflow-hidden ${active ? "ring-1 ring-primary/5 border-primary/20 md:shadow-lg md:shadow-blue-500/10 active" : "inactive"}`}
       data-testid="event-card"
     >
       {/* Left border strip - hidden on mobile */}
-      {/* Left border strip - hidden on mobile */}
       <div className={`hidden sm:block absolute top-0 left-0 w-0.5 h-full transition-colors ${active ? "bg-blue-500" : "bg-muted-foreground/20 group-hover:bg-blue-500/50"}`}></div>
 
-      <div className="p-5 flex-grow">
+      <CardContent className="p-5 flex-grow">
         <div className="flex justify-between items-start mb-3">
           <h3 className="text-lg font-semibold truncate pr-4">{props.event.name}</h3>
           <Button
@@ -117,9 +113,9 @@ export const EventCard = (props: EventCardProps) => {
         <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
           {props.event.description}
         </p>
-      </div>
+      </CardContent>
 
-      <div className="px-5 py-4 border-t border-border bg-muted/30 flex items-center justify-between">
+      <CardFooter className="px-5 py-4 border-t border-border bg-muted/30 justify-between">
         <label className="flex items-center cursor-pointer gap-2">
           <Switch
             checked={active}
@@ -155,7 +151,7 @@ export const EventCard = (props: EventCardProps) => {
             <Trash className="h-4 w-4" />
           </Button>
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };

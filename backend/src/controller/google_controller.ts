@@ -91,7 +91,7 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     .then((user: UserDocument | null) => {
       if (!user) throw new Error("User not found");
       const google_tokens = user.google_tokens;
-      if (!google_tokens || !google_tokens.access_token) {
+      if (!google_tokens?.access_token) {
         // @ts-ignore
         return { data: { calendars: {} } } as any;
       }
@@ -266,7 +266,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string, calend
     .exec()
     .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
-      if (!google_tokens || !google_tokens.access_token) {
+      if (!google_tokens?.access_token) {
         return [];
       }
       const oAuth2Client = createOAuthClient(user_id);

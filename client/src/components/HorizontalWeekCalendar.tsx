@@ -19,7 +19,7 @@ const HorizontalWeekCalendar: React.FC<HorizontalWeekCalendarProps> = ({
     className,
     isDayAvailable,
 }) => {
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
     const [currentWeekStart, setCurrentWeekStart] = React.useState(() =>
         startOfWeek(selectedDate || new Date(), { weekStartsOn: 1 })
     );

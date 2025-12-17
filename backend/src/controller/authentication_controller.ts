@@ -38,7 +38,7 @@ export const googleLoginController = (req: Request, res: Response): void => {
     .then(({ tokens }) => {
       logger.debug("Tokens received: %o", tokens);
       return oAuth2Client.verifyIdToken({
-        idToken: tokens.id_token!,
+        idToken: tokens.id_token,
         audience: process.env.CLIENT_ID
       });
     })
