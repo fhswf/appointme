@@ -138,8 +138,6 @@ export const en = {
     "google_login_failed": "Google login failed",
     "Add": "Add",
     "Close": "Close",
-    "Cancel": "Cancel",
-    "Contact": "Contact",
     "I acknowledge that my password will be stored encrypted in the database.": "I acknowledge that my password will be stored encrypted in the database.",
     "event_copy_link": "Copy link",
     "link_copied_to_clipboard": "Link copied to clipboard!",

@@ -138,8 +138,6 @@ export const de = {
     "google_login_failed": "Google-Anmeldung fehlgeschlagen",
     "Add": "Hinzufügen",
     "Close": "Schließen",
-    "Cancel": "Abbrechen",
-    "Contact": "Kontakt",
     "I acknowledge that my password will be stored encrypted in the database.": "Ich bestätige, dass mein Passwort verschlüsselt in der Datenbank gespeichert wird.",
     "event_copy_link": "Link kopieren",
     "link_copied_to_clipboard": "Link in die Zwischenablage kopiert!",
