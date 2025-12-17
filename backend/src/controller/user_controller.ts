@@ -2,7 +2,7 @@
  * @module user_controller
  */
 import { UserModel } from "../models/User.js";
-import { User } from "common/src/types";
+import { User } from "common";
 import { Request, Response } from 'express';
 import crypto from 'node:crypto';
 // ...
