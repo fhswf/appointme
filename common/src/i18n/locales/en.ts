@@ -94,6 +94,7 @@ export const en = {
     "Maximum days in advance": "Maximum days in advance",
     "event_advance_availability_description": "How many days in advance is this event type available?",
     "none": "None",
+    "edit": "Edit",
     "Select buffer": "Select buffer",
     "Save": "Save",
     "Select duration": "Select duration",

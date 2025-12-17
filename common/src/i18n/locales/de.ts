@@ -90,6 +90,7 @@ export const de = {
     "Days": "Tage",
     "Maximum days in advance": "Maximaler Vorlauf (Tage)",
     "event_advance_availability_description": "Wie viele Tage im Voraus ist diese Terminart verfügbar?",
+    "none": "Keiner",
     "edit": "Bearbeiten",
     "Select buffer": "Puffer wählen",
     "Save": "Speichern",

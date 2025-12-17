@@ -136,6 +136,7 @@ export const ko = {
     "login_successful": "로그인 성공",
     "login_failed": "로그인 실패",
     "google_login_failed": "Google 로그인 실패",
+    "Add": "추가",
     "edit": "편집",
     "Close": "닫기",
     "Choose calendars in which appointments are created.": "약속이 생성될 캘린더를 선택하십시오.",

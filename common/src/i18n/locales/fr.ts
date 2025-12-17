@@ -95,6 +95,7 @@ export const fr = {
     "Information": "Information",
     "You will receive a confirmation email": "Vous recevrez un e-mail de confirmation",
     "Meeting with": "Réunion avec",
+    "Change": "Modifier",
     "Schedule an appointment": "Prendre un rendez-vous",
     "edit": "Modifier",
     "Back": "Retour",
