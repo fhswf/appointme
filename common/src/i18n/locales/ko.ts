@@ -140,15 +140,6 @@ export const ko = {
     ,
 
     // Missing keys added by script
-    "name": "Name",
-    "name": "이름",
-    "user_url": "사용자 URL",
-    "use_gravatar": "Gravatar 사용",
-    "save": "저장",
-    "profile_updated": "프로필이 성공적으로 업데이트되었습니다",
-    "error_saving_profile": "프로필 저장 오류",
-    "user_url_taken": "사용자 URL이 이미 사용 중입니다",
-    "error_loading_profile": "프로필 로드 오류",
     "copy": "복사",
     "legal": "법적 고지",
     "Calendar": "캘린더",

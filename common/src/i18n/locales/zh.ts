@@ -140,7 +140,6 @@ export const zh = {
     ,
 
     // Missing keys added by script
-    "name": "Name",
     "copy": "复制",
     "legal": "法律声明",
     "Calendar": "日历",
