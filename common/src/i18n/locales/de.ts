@@ -143,6 +143,15 @@ export const de = {
     "link_copied_to_clipboard": "Link in die Zwischenablage kopiert!",
     "link_copy_failed": "Link konnte nicht in die Zwischenablage kopiert werden!",
     "copy": "Kopieren",
+    "Availability Mode": "Verfügbarkeitsmodus",
+    "Define Custom": "Benutzerdefiniert",
+    "Use Standard": "Standard verwenden",
+    "Standard + Extra": "Standard + Extras",
+    "Standard + Constraints": "Standard + Einschränkungen",
+    "Standard Availability": "Standardverfügbarkeit",
+    "Using Standard Availability defined in Profile settings.": "Verwendet die in den Profileinstellungen definierte Standardverfügbarkeit.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "Definieren Sie hier Ihre standardmäßige wöchentliche Verfügbarkeit. Sie können diese in Ihren Terminarten verwenden.",
+    "Profile": "Profil",
     "about": "Über",
     "about_content": `
 # Über AppointMe

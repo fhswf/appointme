@@ -151,6 +151,15 @@ export const ko = {
 
     // Missing keys added by script
     "copy": "복사",
+    "Availability Mode": "가용성 모드",
+    "Define Custom": "사용자 정의",
+    "Use Standard": "표준 사용",
+    "Standard + Extra": "표준 + 추가",
+    "Standard + Constraints": "표준 + 제한",
+    "Standard Availability": "표준 가용성",
+    "Using Standard Availability defined in Profile settings.": "프로필 설정에 정의된 표준 가용성을 사용합니다.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "여기서 표준 주간 가용성을 정의하세요. 이 가용성을 이벤트 유형에서 사용할 수 있습니다.",
+    "Profile": "프로필",
     "about": "소개",
     "about_content": "# AppointMe 소개\n\nAppointMe는 일정을 예약하기 위한 간단한 도구입니다.\n달력을 구성하고 가용성을 설정하여 다른 사람들이 귀하와 약속을 예약할 수 있도록 하세요.\n\n## Github\n[Github에서 코드 확인하기](https://github.com/fhswf/appointme)\n\n## 크레딧\nSouth Westphalia University of Applied Sciences에서 ❤️로 구현됨",
     "legal": "법적 고지",

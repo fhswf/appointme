@@ -151,6 +151,15 @@ export const es = {
 
     // Missing keys added by script
     "copy": "Copiar",
+    "Availability Mode": "Modo de disponibilidad",
+    "Define Custom": "Definir personalizado",
+    "Use Standard": "Usar estándar",
+    "Standard + Extra": "Estándar + Extra",
+    "Standard + Constraints": "Estándar + Restricciones",
+    "Standard Availability": "Disponibilidad estándar",
+    "Using Standard Availability defined in Profile settings.": "Usando la disponibilidad estándar definida en la configuración del perfil.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "Defina aquí su disponibilidad semanal estándar. Puede utilizar esta disponibilidad en sus tipos de eventos.",
+    "Profile": "Perfil",
     "about": "Acerca de",
     "about_content": "# Acerca de AppointMe\n\nAppointMe es una herramienta sencilla para la programación de citas.\nConfigura tus calendarios, establece tu disponibilidad y permite que otros reserven citas contigo.\n\n## Github\n[Mira el código en Github](https://github.com/fhswf/appointme)\n\n## Créditos\nImplementado con ❤️ en la Universidad de Ciencias Aplicadas de South Westphalia",
     "legal": "Aviso legal",
