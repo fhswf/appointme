@@ -195,5 +195,16 @@ export const en = {
     "Book Appointment": "Book Appointment",
     "Available Times": "Available Times",
     "No slots available": "No slots available",
-    "Schedule Appointment": "Schedule Appointment"
+    "Schedule Appointment": "Schedule Appointment",
+    "Available Meeting Types": "Available Meeting Types",
+    "Please select a meeting type to view availability.": "Please select a meeting type to view availability.",
+    "All": "All",
+    "No public events found.": "No public events found.",
+    "Timezone": "Timezone",
+    "Privacy & Terms": "Privacy & Terms",
+    "Quick": "Quick",
+    "Consulting": "Consulting",
+    "Tags": "Tags",
+    "Type a tag and press Enter": "Type a tag and press Enter",
+    "Press Enter to add a tag": "Press Enter to add a tag"
 };

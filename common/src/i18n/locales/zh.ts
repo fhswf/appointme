@@ -199,5 +199,16 @@ export const zh = {
     "Book Appointment": "预订预约",
     "Available Times": "可用时间",
     "No slots available": "无可用时间段",
-    "Schedule Appointment": "安排预约"
-};
+    "Schedule Appointment": "预约",
+    "Available Meeting Types": "可用的会议类型",
+    "Please select a meeting type to view availability.": "请选择会议类型以查看可用性。",
+    "All": "全部",
+    "No public events found.": "未找到公共事件。",
+    "Timezone": "时区",
+    "Privacy & Terms": "隐私与条款",
+    "Quick": "快速",
+    "Consulting": "咨询",
+    "Tags": "标签",
+    "Type a tag and press Enter": "输入标签并按回车",
+    "Press Enter to add a tag": "按回车添加标签"
+}

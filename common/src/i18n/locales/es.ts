@@ -199,5 +199,16 @@ export const es = {
     "Book Appointment": "Reservar cita",
     "Available Times": "Horarios disponibles",
     "No slots available": "No hay horarios disponibles",
-    "Schedule Appointment": "Programar cita"
+    "Schedule Appointment": "Programar cita",
+    "Available Meeting Types": "Tipos de reunión disponibles",
+    "Please select a meeting type to view availability.": "Seleccione un tipo de reunión para ver la disponibilidad.",
+    "All": "Todos",
+    "No public events found.": "No se encontraron eventos públicos.",
+    "Timezone": "Zona horaria",
+    "Privacy & Terms": "Privacidad y Términos",
+    "Quick": "Rápida",
+    "Consulting": "Consultoría",
+    "Tags": "Etiquetas",
+    "Type a tag and press Enter": "Escribe una etiqueta y presiona Enter",
+    "Press Enter to add a tag": "Presiona Enter para agregar una etiqueta"
 };

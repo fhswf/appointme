@@ -205,5 +205,16 @@ Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
     "Book Appointment": "Termin buchen",
     "Available Times": "Verfügbare Zeiten",
     "No slots available": "Keine Zeiten verfügbar",
-    "Schedule Appointment": "Termin vereinbaren"
+    "Schedule Appointment": "Termin vereinbaren",
+    "Available Meeting Types": "Verfügbare Terminarten",
+    "Please select a meeting type to view availability.": "Bitte wählen Sie eine Terminart aus, um die Verfügbarkeit anzuzeigen.",
+    "All": "Alle",
+    "No public events found.": "Keine öffentlichen Termine gefunden.",
+    "Timezone": "Zeitzone",
+    "Privacy & Terms": "Datenschutz",
+    "Quick": "Schnell",
+    "Consulting": "Beratung",
+    "Tags": "Tags",
+    "Type a tag and press Enter": "Tag eingeben und Enter drücken",
+    "Press Enter to add a tag": "Drücken Sie Enter, um einen Tag hinzuzufügen"
 };

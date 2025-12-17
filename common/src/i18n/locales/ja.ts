@@ -199,6 +199,16 @@ export const ja = {
     "Book Appointment": "予約する",
     "Available Times": "利用可能な時間",
     "No slots available": "利用可能な枠がありません",
-    "Schedule Appointment": "予約をスケジュールする"
-
+    "Schedule Appointment": "予約をスケジュールする",
+    "Available Meeting Types": "利用可能な会議タイプ",
+    "Please select a meeting type to view availability.": "空き状況を確認するには、会議タイプを選択してください。",
+    "All": "すべて",
+    "No public events found.": "公開イベントが見つかりません。",
+    "Timezone": "タイムゾーン",
+    "Privacy & Terms": "プライバシーと利用規約",
+    "Quick": "クイック",
+    "Consulting": "コンサルティング",
+    "Tags": "タグ",
+    "Type a tag and press Enter": "タグを入力してEnterキーを押してください",
+    "Press Enter to add a tag": "Enterキーを押してタグを追加"
 };

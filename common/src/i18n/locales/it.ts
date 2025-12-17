@@ -199,5 +199,16 @@ export const it = {
     "Book Appointment": "Prenota appuntamento",
     "Available Times": "Orari disponibili",
     "No slots available": "Nessuno slot disponibile",
-    "Schedule Appointment": "Programma appuntamento"
+    "Schedule Appointment": "Programma appuntamento",
+    "Available Meeting Types": "Tipi di riunione disponibili",
+    "Please select a meeting type to view availability.": "Seleziona un tipo di riunione per visualizzare la disponibilità.",
+    "All": "Tutti",
+    "No public events found.": "Nessun evento pubblico trovato.",
+    "Timezone": "Fuso orario",
+    "Privacy & Terms": "Privacy e Termini",
+    "Quick": "Veloce",
+    "Consulting": "Consulenza",
+    "Tags": "Etichette",
+    "Type a tag and press Enter": "Scrivi un'etichetta e premi Invio",
+    "Press Enter to add a tag": "Premi Invio per aggiungere un'etichetta"
 };
