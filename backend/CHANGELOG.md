@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.9...backend@1.32.0-rc.10) (2025-12-17)
+
+
+### Bug Fixes
+
+* trust proxy ([8839dc6](https://github.com/fhswf/appointme/commit/8839dc69a852db1859e7130b42a891a1b8cc9552))
+
 # backend [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.8...backend@1.32.0-rc.9) (2025-12-17)
 
 
