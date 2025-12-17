@@ -74,21 +74,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
 
   const onAvailabilityModeChange = (val: string) => {
     setChanged(true);
-    let newAvailable = formData.available;
-    const userHasDefault = user?.defaultAvailable && Object.keys(user.defaultAvailable).length > 0;
-
-    if (val === 'restrict' && userHasDefault) {
-      // ALWAYS pre-fill with standard availability when switching to restrict
-      newAvailable = JSON.parse(JSON.stringify(user?.defaultAvailable));
-    } else if (val === 'extend') {
-      // ALWAYS clear slots when switching to extend
-      // User wants to start with nothing (standard) and add extras.
-      newAvailable = {
-        [0]: [], [1]: [], [2]: [], [3]: [], [4]: [], [5]: [], [6]: []
-      };
-    }
-
-    setFormData({ ...formData, availabilityMode: val as any, available: newAvailable });
+    setFormData({ ...formData, availabilityMode: val as any });
   }
 
   return (
@@ -125,7 +111,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           <Input
             id="location"
             placeholder={t("tired_whole_bumblebee_type")}
-            defaultValue={t("Online via Zoom")}
             onChange={handleOnChange("location")}
             value={formData.location}
           />
@@ -276,16 +261,33 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="define">{t("Define Custom")}</SelectItem>
-                <SelectItem value="default">{t("Use Standard")}</SelectItem>
-                <SelectItem value="extend">{t("Standard + Extra")}</SelectItem>
-                <SelectItem value="restrict">{t("Standard + Constraints")}</SelectItem>
+                <SelectItem value="define">{t('Define Custom')}</SelectItem>
+                <SelectItem value="default">{t('Use Standard')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          {formData.availabilityMode === 'define' && user?.defaultAvailable && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (confirm(t("Overwrite current availability with standard?"))) {
+                  setFormData({ ...formData, available: structuredClone(user.defaultAvailable!) });
+                  setChanged(true);
+                }
+              }}
+            >
+              {t("Copy Standard Availability")}
+            </Button>
+          )}
         </div>
-
-        {formData.availabilityMode !== 'default' && (
+        {formData.availabilityMode === 'default' && (
+          <div className="text-sm text-muted-foreground mb-4">
+            {t("Using Standard Availability defined in Profile settings.")}
+          </div>
+        )}
+        {formData.availabilityMode === 'define' && (
           <AvailabilityEditor
             available={formData.available}
             onChange={onChangeAvailability}

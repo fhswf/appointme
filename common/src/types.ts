@@ -55,7 +55,7 @@ export type Event = {
   maxPerDay: number;
 
   /** How compilation of availability slots is handled */
-  availabilityMode?: 'define' | 'default' | 'extend' | 'restrict';
+  availabilityMode?: 'define' | 'default';
 };
 
 export const EMPTY_EVENT: Event = {

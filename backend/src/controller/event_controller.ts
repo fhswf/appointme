@@ -65,12 +65,6 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
   if (user && user.defaultAvailable) {
     if (event.availabilityMode === 'default') {
       freeSlots = new IntervalSet(timeMin, timeMax, user.defaultAvailable, "Europe/Berlin");
-    } else if (event.availabilityMode === 'extend') {
-      const standard = new IntervalSet(timeMin, timeMax, user.defaultAvailable, "Europe/Berlin");
-      freeSlots = standard.add(freeSlots);
-    } else if (event.availabilityMode === 'restrict') {
-      const standard = new IntervalSet(timeMin, timeMax, user.defaultAvailable, "Europe/Berlin");
-      freeSlots = standard.intersect(freeSlots);
     }
   }
 

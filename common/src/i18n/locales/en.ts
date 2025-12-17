@@ -151,6 +151,8 @@ export const en = {
     "Standard Availability": "Standard Availability",
     "Using Standard Availability defined in Profile settings.": "Using Standard Availability defined in Profile settings.",
     "Define your standard weekly availability here. You can use this availability in your Event Types.": "Define your standard weekly availability here. You can use this availability in your Event Types.",
+    "Copy Standard Availability": "Copy Standard Availability",
+    "Overwrite current availability with standard?": "Overwrite current availability with standard?",
     "Profile": "Profile",
     "about": "About",
     "about_content": "# About AppointMe\n\nAppointMe is a simple tool for scheduling appointments.\nConfigure your calendars, set your availability, and let others book appointments with you.\n\n## Github\n[Check out the code on Github](https://github.com/fhswf/appointme)\n\n## Credits\nImplemented with ❤️ at the South Westphalia University of Applied Sciences",

@@ -22,6 +22,9 @@ const EditSlot = (props: EditSlotProps) => {
         setSlots(props.slots || []);
     }, [props.slots]);
 
+    const hasActiveSlots = slots.length > 0;
+
+
     const handleCheck = (checked: boolean) => {
         if (checked) {
             // ensure at least one entry
@@ -71,7 +74,7 @@ const EditSlot = (props: EditSlotProps) => {
             <div className="col-span-2 flex items-center space-x-2 pt-2">
                 <Checkbox
                     id={`day-${props.day}`}
-                    checked={slots.length > 0}
+                    checked={hasActiveSlots}
                     onCheckedChange={handleCheck}
                 />
                 <Label htmlFor={`day-${props.day}`} className="font-medium">
@@ -109,7 +112,7 @@ const EditSlot = (props: EditSlotProps) => {
                 ))}
             </div>
             <div className="col-span-1 pt-1">
-                {slots.length > 0 && (
+                {hasActiveSlots && (
                     <Button variant="ghost" size="icon" onClick={addSlot} type="button">
                         <Plus className="h-4 w-4" />
                     </Button>

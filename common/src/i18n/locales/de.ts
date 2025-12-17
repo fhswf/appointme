@@ -150,7 +150,9 @@ export const de = {
     "Standard + Constraints": "Standard + Einschränkungen",
     "Standard Availability": "Standardverfügbarkeit",
     "Using Standard Availability defined in Profile settings.": "Verwendet die in den Profileinstellungen definierte Standardverfügbarkeit.",
-    "Define your standard weekly availability here. You can use this availability in your Event Types.": "Definieren Sie hier Ihre standardmäßige wöchentliche Verfügbarkeit. Sie können diese in Ihren Terminarten verwenden.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "Definieren Sie hier Ihre standardmäßige wöchentliche Verfügbarkeit. Sie können diese Verfügbarkeit in Ihren Ereignistypen verwenden.",
+    "Copy Standard Availability": "Standardverfügbarkeit kopieren",
+    "Overwrite current availability with standard?": "Aktuelle Verfügbarkeit mit Standard überschreiben?",
     "Profile": "Profil",
     "about": "Über",
     "about_content": `

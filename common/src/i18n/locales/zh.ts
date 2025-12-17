@@ -159,6 +159,8 @@ export const zh = {
     "Standard Availability": "标准可用性",
     "Using Standard Availability defined in Profile settings.": "使用配置资料设置中定义的标准可用性。",
     "Define your standard weekly availability here. You can use this availability in your Event Types.": "在此处定义您的标准每周可用性。您可以在事件类型中使用此可用性。",
+    "Copy Standard Availability": "复制标准可用性",
+    "Overwrite current availability with standard?": "用标准覆盖当前的可用性？",
     "Profile": "个人资料",
     "about": "关于",
     "about_content": "# 关于 AppointMe\n\nAppointMe 是一个简单的预约安排工具。\n配置您的日历，设置您的空闲时间，让其他人与您预约。\n\n## Github\n[在 Github 上查看代码](https://github.com/fhswf/appointme)\n\n## 致谢\n由 South Westphalia University of Applied Sciences ❤️ 实现",

@@ -159,6 +159,8 @@ export const ja = {
     "Standard Availability": "標準の可用性",
     "Using Standard Availability defined in Profile settings.": "プロファイル設定で定義された標準の可用性を使用しています。",
     "Define your standard weekly availability here. You can use this availability in your Event Types.": "ここで標準の週次可用性を定義します。この可用性はイベントタイプで使用できます。",
+    "Copy Standard Availability": "標準の可用性をコピー",
+    "Overwrite current availability with standard?": "現在の可用性を標準で上書きしますか？",
     "Profile": "プロフィール",
     "about": "について",
     "about_content": "# AppointMeについて\n\nAppointMeは、予約スケジュールのためのシンプルなツールです。\nカレンダーを設定し、空き状況を決めれば、他の人があなたとの予約を取れるようになります。\n\n## Github\n[Githubでコードを確認する](https://github.com/fhswf/appointme)\n\n## クレジット\n南ヴェストファーレン応用科学大学で❤️を込めて実装されました",

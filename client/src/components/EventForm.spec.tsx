@@ -217,49 +217,24 @@ describe('EventForm Component', () => {
         const submitButton = screen.getByTestId('event-form-submit');
         expect(submitButton).toBeEnabled();
     });
-    it('should pre-fill availability with standard when switching to restrict mode', () => {
+    it('should copy standard availability when copy button is clicked', () => {
         render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
 
-        // Find the Select that contains the "restrict" option (Standard + Constraints)
-        const restrictOption = screen.getByText('Standard + Constraints');
-        const select = restrictOption.closest('select');
+        // Mock window.confirm
+        const confirmSpy = vi.spyOn(window, 'confirm');
+        confirmSpy.mockImplementation(() => true);
 
-        if (!select) throw new Error("Select not found");
-
-        fireEvent.change(select, { target: { value: 'restrict' } });
+        const copyButton = screen.getByText('Copy Standard Availability');
+        fireEvent.click(copyButton);
 
         const submitButton = screen.getByTestId('event-form-submit');
         fireEvent.click(submitButton);
 
         const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
-        expect(submittedEvent.availabilityMode).toBe('restrict');
+        // Expect availability to match mocked default (Monday 9-17)
+        // 1: [{ start: "09:00", end: "17:00" }]
         expect(submittedEvent.available[1]).toEqual([{ start: "09:00", end: "17:00" }]);
-    });
 
-    it('should clear availability when switching to extend mode', () => {
-        // Create event with some existing slots
-        const eventWithSlots = {
-            ...mockEvent,
-            available: {
-                0: [], 1: [{ start: "10:00", end: "11:00" }], 2: [], 3: [], 4: [], 5: [], 6: []
-            }
-        };
-
-        render(<EventForm event={eventWithSlots} handleOnSubmit={mockSubmit} />);
-
-        const extendOption = screen.getByText('Standard + Extra');
-        const select = extendOption.closest('select');
-
-        if (!select) throw new Error("Select not found");
-
-        fireEvent.change(select, { target: { value: 'extend' } });
-
-        const submitButton = screen.getByTestId('event-form-submit');
-        fireEvent.click(submitButton);
-
-        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
-        expect(submittedEvent.availabilityMode).toBe('extend');
-        expect(submittedEvent.available[1]).toEqual([]);
+        confirmSpy.mockRestore();
     });
 });
-
