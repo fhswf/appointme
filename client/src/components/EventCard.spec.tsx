@@ -39,7 +39,8 @@ const mockEvent = {
     user: 'user1',
     minFuture: 0,
     maxFuture: 0,
-    maxPerDay: 0
+    maxPerDay: 0,
+    tags: ['Tag1', 'Tag2']
 };
 
 describe('EventCard Component', () => {
@@ -62,6 +63,8 @@ describe('EventCard Component', () => {
         expect(screen.getByText('Test Event')).toBeInTheDocument();
         expect(screen.getByText('30 min')).toBeInTheDocument();
         expect(screen.getByText('Test Description')).toBeInTheDocument();
+        expect(screen.getByText('Tag1')).toBeInTheDocument();
+        expect(screen.getByText('Tag2')).toBeInTheDocument();
     });
 
     it('should toggle active state', () => {

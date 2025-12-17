@@ -113,6 +113,16 @@ export const EventCard = (props: EventCardProps) => {
         <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
           {props.event.description}
         </p>
+
+        {props.event.tags && props.event.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {props.event.tags.map((tag) => (
+              <span key={tag} className="bg-muted text-muted-foreground px-2 py-1 rounded-md text-xs font-medium border border-border">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="px-5 py-4 border-t border-border bg-muted/30 justify-between">

@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash, Settings } from "lucide-react";
+import { Plus, Trash, Settings, X } from "lucide-react";
 import { LocalizedTimeInput } from "./LocalizedTimeInput";
 
 import { EventFormProps } from "../pages/EditEvent";
@@ -77,6 +77,31 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
     setFormData({ ...formData, availabilityMode: val as any });
   }
 
+  const [tagInput, setTagInput] = useState("");
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newTag = tagInput.trim();
+      if (newTag && !formData.tags?.includes(newTag)) {
+        setChanged(true);
+        setFormData({
+          ...formData,
+          tags: [...(formData.tags || []), newTag],
+        });
+        setTagInput("");
+      }
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setChanged(true);
+    setFormData({
+      ...formData,
+      tags: formData.tags?.filter((tag) => tag !== tagToRemove) || [],
+    });
+  };
+
   return (
     <form onSubmit={handleOnSubmit} className="space-y-8">
       <div className="space-y-4">
@@ -126,6 +151,32 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             value={formData.url}
           />
           <p className="text-sm text-muted-foreground">{t("less_equal_octopus_dine")}</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="tags">{t("Tags")}</Label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {formData.tags?.map((tag, index) => (
+              <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm flex items-center gap-1">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="hover:text-destructive focus:outline-none"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <Input
+            id="tags"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagKeyDown}
+            placeholder={t("Type a tag and press Enter")}
+          />
+          <p className="text-sm text-muted-foreground">{t("Press Enter to add a tag")}</p>
         </div>
       </div>
 

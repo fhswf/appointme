@@ -108,6 +108,11 @@ const eventSchema = new Schema<EventDocument>({
     default: 'define',
   },
 
+  tags: {
+    type: [String],
+    default: [],
+  },
+
 });
 
 eventSchema.index({ user: 1, url: 1 }, { unique: true });

@@ -331,7 +331,7 @@ describe("Event Controller", () => {
 
             (UserModel.findById as any).mockImplementation(() => mockQuery(USER));
 
-            const { addEventController, deleteEventController, updateEventController, getEventsController, getAvailableTimes, insertEvent, calculateFreeSlots } = await import("../controller/event_controller.js");
+            const { addEventController, deleteEventController, updateEventController, getAvailableTimes, insertEvent, calculateFreeSlots } = await import("../controller/event_controller.js");
             const { events, freeBusy } = await import("../controller/google_controller.js");
             const { getBusySlots } = await import("../controller/caldav_controller.js");
 

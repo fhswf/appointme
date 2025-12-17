@@ -40,6 +40,7 @@ export type Event = {
   duration: number;
   isActive: boolean;
   url: string;
+  tags?: string[];
 
   bufferafter: number;
   bufferbefore: number;
