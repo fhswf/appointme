@@ -1,3 +1,10 @@
+# client [1.27.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.10...client@1.27.0-rc.11) (2025-12-17)
+
+
+### Bug Fixes
+
+* use cryptographic secure random numbers ([26de930](https://github.com/fhswf/appointme/commit/26de930a3e7b9899b62bb47690bb70a1b102dd7e))
+
 # client [1.27.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.9...client@1.27.0-rc.10) (2025-12-17)
 
 
