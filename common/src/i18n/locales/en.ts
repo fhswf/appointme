@@ -207,5 +207,7 @@ export const en = {
     "Consulting": "Consulting",
     "Tags": "Tags",
     "Type a tag and press Enter": "Type a tag and press Enter",
-    "Press Enter to add a tag": "Press Enter to add a tag"
+    "Press Enter to add a tag": "Press Enter to add a tag",
+    "Cancel": "Cancel",
+    "Contact": "Contact"
 };

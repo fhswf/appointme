@@ -211,5 +211,7 @@ export const ja = {
     "Consulting": "コンサルティング",
     "Tags": "タグ",
     "Type a tag and press Enter": "タグを入力してEnterキーを押してください",
-    "Press Enter to add a tag": "Enterキーを押してタグを追加"
+    "Press Enter to add a tag": "Enterキーを押してタグを追加",
+    "Cancel": "キャンセル",
+    "Contact": "連絡先"
 };

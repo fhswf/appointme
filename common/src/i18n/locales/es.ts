@@ -211,5 +211,7 @@ export const es = {
     "Consulting": "Consultoría",
     "Tags": "Etiquetas",
     "Type a tag and press Enter": "Escribe una etiqueta y presiona Enter",
-    "Press Enter to add a tag": "Presiona Enter para agregar una etiqueta"
+    "Press Enter to add a tag": "Presiona Enter para agregar una etiqueta",
+    "Cancel": "Cancelar",
+    "Contact": "Contacto"
 };

@@ -211,5 +211,7 @@ export const zh = {
     "Consulting": "咨询",
     "Tags": "标签",
     "Type a tag and press Enter": "输入标签并按回车",
-    "Press Enter to add a tag": "按回车添加标签"
+    "Press Enter to add a tag": "按回车添加标签",
+    "Cancel": "取消",
+    "Contact": "联系方式"
 }
