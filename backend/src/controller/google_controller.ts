@@ -91,7 +91,7 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
     .then((user: UserDocument | null) => {
       if (!user) throw new Error("User not found");
       const google_tokens = user.google_tokens;
-      if (!google_tokens?.access_token) {
+      if (!google_tokens || !google_tokens.access_token) {
         // @ts-ignore
         return { data: { calendars: {} } } as any;
       }
@@ -115,6 +115,10 @@ export const freeBusy = (user_id: string, timeMin: string, timeMax: string): Gax
         }
       })
         .catch(err => {
+          logger.error('freeBusy failed inside: %o', err);
+          if (err instanceof Error) {
+            logger.error(err.stack);
+          }
           throw err;
         })
     })
@@ -166,7 +170,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
  * Helper to insert event into Google Calendar
  */
 export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary'): Promise<GaxiosResponse<Schema$Event>> {
-  if (!user.google_tokens?.access_token) {
+  if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
   }
 
@@ -266,7 +270,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string, calend
     .exec()
     .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
-      if (!google_tokens?.access_token) {
+      if (!google_tokens || !google_tokens.access_token) {
         return [];
       }
       const oAuth2Client = createOAuthClient(user_id);
@@ -282,7 +286,10 @@ export const events = (user_id: string, timeMin: string, timeMax: string, calend
           return response.data.items
         })
         .catch(err => {
-          logger.debug('error in calendar.events.list: %o', err)
+          logger.debug('error in calendar.events.list: %o', err);
+          if (err instanceof Error) {
+            logger.debug(err.stack);
+          }
           return []
         })
     })
