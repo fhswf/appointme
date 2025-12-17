@@ -58,47 +58,66 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
     res.json({ url });
 };
 
-const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
-    // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
-    let user = await UserModel.findOne({ email }).exec();
+const updateExistingUser = async (user: any, name?: string, picture?: string) => {
+    // User exists - update details if needed (e.g. name, picture)
+    // We do not change _id here, even if it doesn't match `sub`.
+    if (!user.use_gravatar && picture) {
+        user.picture_url = picture;
+    }
+    if (name) {
+        user.name = name;
+    }
+    // Save updates
+    await user.save();
+    return user;
+};
 
-    // If user doesn't exist, create it
-    if (!user) {
-        let user_url = validateUrl(email);
-        const picture_url = picture || "";
-        const userName = name || email.split('@')[0];
+const createNewUser = async (sub: string, email: string, name?: string, picture?: string) => {
+    let user_url = validateUrl(email);
+    const picture_url = picture || "";
+    const userName = name || email.split('@')[0];
 
-        // 2. Retry loop for user_url uniqueness
-        let retry = 0;
-        const maxRetries = 5;
+    // 2. Retry loop for user_url uniqueness
+    let retry = 0;
+    const maxRetries = 5;
 
-        while (retry < maxRetries) {
-            try {
-                // Try to upsert/create user
-                user = await UserModel.findOneAndUpdate(
-                    { _id: sub },
-                    { name: userName, email, picture_url, user_url },
-                    { upsert: true, new: true, runValidators: true }
-                ).exec();
-
-                break; // Success
-            } catch (err: any) {
-                if (err.code === 11000) {
-                    // Check which key violated uniqueness
-                    if (err.keyPattern?.user_url) {
-                        // User URL collision, append suffix and retry
-                        user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
-                        retry++;
-                        continue;
-                    }
-                    // If it's email collision (rare race condition if we checked above), likely unrecoverable here
-                    throw err;
+    while (retry < maxRetries) {
+        try {
+            // Try to upsert/create user
+            return await UserModel.findOneAndUpdate(
+                { _id: sub },
+                { name: userName, email, picture_url, user_url },
+                { upsert: true, new: true, runValidators: true }
+            ).exec();
+        } catch (err: any) {
+            if (err.code === 11000) {
+                // Check which key violated uniqueness
+                if (err.keyPattern?.user_url) {
+                    // User URL collision, append suffix and retry
+                    user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
+                    retry++;
+                    continue;
                 }
+                // If it's email collision (rare race condition if we checked above), likely unrecoverable here
                 throw err;
             }
+            throw err;
         }
     }
-    return user;
+    throw new Error("User creation failed after retries");
+};
+
+const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
+    // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
+    // Also check by _id to support legacy users or same provider
+    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
+
+    // If user doesn't exist, create it
+    if (user) {
+        return await updateExistingUser(user, name, picture);
+    } else {
+        return await createNewUser(sub, email, name, picture);
+    }
 };
 
 const setAuthCookie = (res: Response, user: any) => {

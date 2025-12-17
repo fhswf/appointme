@@ -29,6 +29,12 @@ import { googleLoginController, getConfig } from "../controller/authentication_c
  *                 oidcEnabled:
  *                   type: boolean
  *                   description: Whether OIDC authentication is enabled
+ *                 oidcName:
+ *                   type: string
+ *                   description: Name of the OIDC provider
+ *                 oidcIcon:
+ *                   type: string
+ *                   description: URL of the OIDC provider icon
  */
 authenticationRouter.get("/config", getConfig);
 

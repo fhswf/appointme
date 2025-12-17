@@ -35,12 +35,17 @@ spec:
             - name: REACT_APP_API_URL
               valueFrom:
                 configMapKeyRef:
-                  key: API_URL
+                  key: REACT_APP_API_URL
                   name: appointme
             - name: REACT_APP_URL
               valueFrom:
                 configMapKeyRef:
-                  key: CLIENT_URL
+                  key: REACT_APP_URL
+                  name: appointme
+            - name: REACT_APP_BASE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: BASE_PATH
                   name: appointme
             - name: TZ
               valueFrom:

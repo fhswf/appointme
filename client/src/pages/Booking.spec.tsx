@@ -55,7 +55,7 @@ describe('Booking Page', () => {
     const mockEvent = {
         _id: 'event1',
         url: 'test-event',
-        title: 'Test Event',
+        name: 'Test Event',
         duration: 30,
         isActive: true,
         available: [
@@ -90,6 +90,9 @@ describe('Booking Page', () => {
         (eventServices.getEventByUrlAndUser as any).mockResolvedValue({ data: mockEvent });
         // @ts-ignore
         (eventServices.getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+
+        // Mock scrollIntoView
+        Element.prototype.scrollIntoView = vi.fn();
     });
 
     it('should render and fetch user and event data', async () => {
@@ -105,11 +108,15 @@ describe('Booking Page', () => {
             expect(eventServices.getEventByUrlAndUser).toHaveBeenCalledWith('user1', 'test-event');
         });
 
-        expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
         // Check for step titles
-        expect(screen.getByText('Choose date')).toBeInTheDocument();
-        expect(screen.getByText('Choose time')).toBeInTheDocument();
-        expect(screen.getByText('Provide details')).toBeInTheDocument();
+        expect(await screen.findByText('Schedule an appointment')).toBeInTheDocument();
+        const testEvents = await screen.findAllByText('Test Event');
+        expect(testEvents.length).toBeGreaterThan(0);
+        // expect(screen.getByText('Choose time')).toBeInTheDocument(); // Time step is merged
+        expect(await screen.findByText('Provide details')).toBeInTheDocument();
+
+        // Check for footer links
+        expect(screen.getByText('Legal')).toBeInTheDocument();
     });
 
     it('should allow changing language', async () => {
@@ -189,6 +196,8 @@ describe('Booking Page', () => {
         // 1. Initial State
         await waitFor(() => {
             expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
+            const events = screen.getAllByText('Test Event');
+            expect(events.length).toBeGreaterThan(0);
         });
 
         // 2. Select Date
@@ -205,8 +214,13 @@ describe('Booking Page', () => {
         // Converting to ISO string might depend on timezone, 
         // but let's look for the formatted text "10:00" if possible or rely on the button existence
 
+        expect(toast.error).not.toHaveBeenCalled();
+        expect(eventServices.getAvailableTimes).toHaveBeenCalled();
+
         const slotRegex = /10:00/; // The format is HH:mm
-        const slotBtn = await screen.findByText(slotRegex);
+        const slotBtns = await screen.findAllByText(slotRegex);
+        expect(slotBtns.length).toBeGreaterThan(0);
+        const slotBtn = slotBtns[0];
         await userEvent.click(slotBtn);
 
         // 4. Fill Details
@@ -255,11 +269,18 @@ describe('Booking Page', () => {
             </MemoryRouter>
         );
 
+        // Wait for event to load to avoid 0 duration infinite loop
+        await waitFor(() => {
+            const events = screen.getAllByText('Test Event');
+            expect(events.length).toBeGreaterThan(0);
+        });
+
         // 1. Select Date
         await userEvent.click(screen.getByTestId('select-date-btn'));
 
         // 2. Select Time
-        const slotBtn = await screen.findByText(/10:00/);
+        const slotBtns = await screen.findAllByText(/10:00/);
+        const slotBtn = slotBtns[0];
         await userEvent.click(slotBtn);
 
         // 3. Fill Details

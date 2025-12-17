@@ -273,7 +273,8 @@ describe('OIDC Controller', () => {
                     _id: 'existing_user_id',
                     name: 'Existing User',
                     email: 'existing@example.com',
-                    picture_url: 'http://pic.com/existing.jpg'
+                    picture_url: 'http://pic.com/existing.jpg',
+                    save: vi.fn()
                 })
             });
 

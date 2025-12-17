@@ -11,11 +11,11 @@ data:
   
   # Backend Configuration
   # The public URL of the backend API
-  API_URL: "https://appointme.gawron.cloud/api/v1"
+  API_URL: "https://appointme.example.com/api/v1"
   # The Base Path of the Application
   BASE_PATH: "/"
   # The URL of the client application (CORS)
-  CLIENT_URL: "https://appointme.gawron.cloud"
+  CLIENT_URL: "https://appointme.example.com"
   # MongoDB Connection String
   MONGO_URI: "mongodb://mongo-appointme:27017/appointme"
   # Server Port
@@ -31,8 +31,8 @@ data:
   OIDC_CLIENT_ID: "appointme"
   
   # Client Configuration (Build-time variables for the frontend)
-  REACT_APP_API_URL: "https://appointme.gawron.cloud/api/v1"
-  REACT_APP_URL: "https://appointme.gawron.cloud"
+  REACT_APP_API_URL: "https://appointme.example.com/api/v1"
+  REACT_APP_URL: "https://appointme.example.com"
   CONTACT_INFO: |
     [Prof. Dr. Christian Gawron](https://jupiter.fh-swf.de/team/cgawron)
     [gawron.christian@fh-swf.de](mailto:gawron.christian@fh-swf.de)

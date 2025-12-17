@@ -9,7 +9,7 @@ metadata:
   namespace: appointme
 spec:
   rules:
-  - host: appoint.gawron.cloud
+  - host: appointme.example.com
     http:
       paths:
       - backend:

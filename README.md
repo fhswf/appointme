@@ -1,7 +1,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 ![GitHub issues](https://img.shields.io/github/issues/fhswf/appointme)
 ![GitHub pull request check state](https://img.shields.io/github/status/s/pulls/fhswf/appointme/10)
-[![Quality Gate Status](https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=appointme&metric=alert_status&token=sqb_d1319c733ee4864d70e12aad8102c5501fe54b09)](https://sonarqube.fh-swf.cloud/dashboard?id=appointme)
+[![Quality Gate Status](https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3&metric=alert_status&token=sqb_5deb3d670ea0a882f6563a07b9bea9dee035bcb6)](https://sonarqube.fh-swf.cloud/dashboard?id=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3)
 
 # APPointment
 
@@ -20,7 +20,10 @@ To deploy the application on Kubernetes, you need to create the necessary Config
 
 1.  **Prepare Configuration:**
     Detailed configuration templates are provided in `backend/k8s/`.
-    *   `backend/k8s/configmap.yaml.example`: Use this as a template. Rename it to `configmap.yaml` (or create a new one) and set non-sensitive environment variables such as URLs (`API_URL`, `CLIENT_URL`), `MONGO_URI`, and `CORS_ALLOWED_ORIGINS`.
+    *   `backend/k8s/configmap.yaml.example`: Use this as a template. Rename it to `configmap.yaml` (or create a new one). **This is the central configuration for both backend and client.**
+        *   Updates to `API_URL` and `CLIENT_URL` here will configure the Backend.
+        *   Updates to `REACT_APP_API_URL` and `REACT_APP_URL` here will be injected into the Client.
+        *   Set `MONGO_URI` and `CORS_ALLOWED_ORIGINS` as needed.
     *   `backend/k8s/secret.yaml.example`: Use this as a template. Rename it to `secret.yaml` (or create a new one) and set sensitive secrets. **Important:** Replace the placeholder values (e.g., `changeme`) with your actual secrets before applying.
 
 2.  **Apply Resources:**
@@ -32,7 +35,40 @@ To deploy the application on Kubernetes, you need to create the necessary Config
 
 3.  **Deploy Application:**
     ```bash
+    ```bash
     kubectl apply -f backend/k8s/deployment.yaml
+    ```
+
+### Environment Overlays (Staging/Production)
+
+You can manage multiple environments (e.g., Staging, Production) using Kustomize overlays located in `k8s/overlays/`.
+
+1.  **Create an Overlay:**
+    Copy an existing overlay (e.g., `k8s/overlays/dev`) to `k8s/overlays/staging` or `k8s/overlays/prod`.
+
+2.  **Customize `kustomization.yaml`:**
+    *   Set the `namespace` for the environment.
+    *   Reference the base resources.
+    *   Add patches for `Ingress` (to set the correct host) and `ConfigMap` (see below).
+
+3.  **Patch `ConfigMap`:**
+    Create a `configmap-patch.yaml` in your overlay directory to override environment-specific values like module URLs.
+    
+    ```yaml
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: appointme
+    data:
+      API_URL: "https://staging.example.com/api/v1"
+      CLIENT_URL: "https://staging.example.com"
+      REACT_APP_API_URL: "https://staging.example.com/api/v1"
+      REACT_APP_URL: "https://staging.example.com"
+    ```
+
+4.  **Deploy:**
+    ```bash
+    kubectl apply -k k8s/overlays/staging
     ```
 
 ### Configuration

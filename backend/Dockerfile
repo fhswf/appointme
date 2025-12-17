@@ -1,7 +1,7 @@
 FROM node:22-bullseye as build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
 ARG APP_URL=/
-ARG APP_API_URL=https://argocd.gawron.cloud/api/v1
+ARG APP_API_URL=https://appointme.example.com/api/v1
 
 ENV CLIENT_ID=${CLIENT_ID}
 # Not set via ARG to prevent it from being stored in the image!

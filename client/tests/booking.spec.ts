@@ -57,7 +57,6 @@ test.describe('Scheduling page', () => {
         });
 
         test('Check simple schedule flow', async ({ page }) => {
-            page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
 
             // Setup wait for getAvailable BEFORE navigation to avoid race condition
             const getAvailablePromise = page.waitForResponse(resp => resp.url().includes('/slot'));
@@ -82,7 +81,7 @@ test.describe('Scheduling page', () => {
 
             // Click time
             // 11:00 Berlin time is 09:00 UTC
-            await page.locator('[data-testid="2024-10-08T09:00:00.000Z"]').click();
+            await page.locator('[data-testid="2024-10-08T09:00:00.000Z"]').first().click();
 
             // Click Next (stepper)
             // await page.getByRole('button', { name: 'Next' }).click(); // If stepper requires explicit next
@@ -94,7 +93,7 @@ test.describe('Scheduling page', () => {
 
             // Submit
             const bookPromise = page.waitForRequest(req => req.url().includes('/event/') && req.method() === 'POST');
-            await page.getByRole('button', { name: 'Book Appointment' }).click(); // Adjust text
+            await page.getByRole('button', { name: /Book Appointment|Termin buchen|Confirm & Book/i }).click();
 
             // Check request
             await bookPromise;

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CalendarIntegration from './CalendarInt';
 import { MemoryRouter } from 'react-router-dom';
 import * as router from 'react-router-dom';
@@ -7,8 +8,10 @@ import { UserContext } from '../components/PrivateRoute';
 import * as googleServices from '../helpers/services/google_services';
 import * as caldavServices from '../helpers/services/caldav_services';
 import * as userServices from '../helpers/services/user_services';
+import { useAuth } from '../components/AuthProvider';
 
 // Mock dependencies
+vi.mock('../components/AuthProvider');
 vi.mock('../components/AppNavbar', () => ({ default: () => <div data-testid="app-navbar" /> }));
 vi.mock('../components/ErrorBoundary', () => ({ default: ({ children }) => <div>{children}</div> }));
 
@@ -24,16 +27,7 @@ vi.mock('../helpers/services/user_services');
 vi.mock('../helpers/helpers', () => ({
     signout: vi.fn()
 }));
-vi.mock('@/components/ui/checkbox', () => ({
-    Checkbox: ({ checked, onCheckedChange, ...props }) => (
-        <input
-            type="checkbox"
-            checked={checked}
-            onChange={(e) => onCheckedChange(e.target.checked)}
-            {...props}
-        />
-    )
-}));
+
 
 vi.mock('@radix-ui/react-checkbox', () => ({
     Root: vi.fn(),
@@ -41,17 +35,6 @@ vi.mock('@radix-ui/react-checkbox', () => ({
 }));
 
 // Mock both relative and alias imports to be sure
-vi.mock('../components/ui/checkbox', () => ({
-    Checkbox: ({ checked, onCheckedChange, ...props }) => (
-        <input
-            type="checkbox"
-            checked={checked}
-            onChange={(e) => onCheckedChange(e.target.checked)}
-            {...props}
-        />
-    )
-}));
-
 vi.mock('@/components/ui/checkbox', () => ({
     Checkbox: ({ checked, onCheckedChange, ...props }) => (
         <input
@@ -78,6 +61,7 @@ describe('CalendarIntegration Page', () => {
         name: 'Test User',
         email: 'test@example.com',
         pull_calendars: [],
+        push_calendars: [],
         push_calendar: null,
         google_tokens: { access_token: 'token' }
     };
@@ -86,7 +70,7 @@ describe('CalendarIntegration Page', () => {
         data: {
             data: {
                 items: [
-                    { id: 'cal1', summary: 'Google Calendar 1', primary: true }
+                    { id: 'cal1', summary: 'Google Calendar 1', primary: false }
                 ]
             }
         }
@@ -94,12 +78,17 @@ describe('CalendarIntegration Page', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.spyOn(console, 'log').mockImplementation(() => { });
-        vi.spyOn(console, 'error').mockImplementation(() => { });
+        // vi.spyOn(console, 'log').mockImplementation(() => { });
+        // vi.spyOn(console, 'error').mockImplementation(() => { });
         (googleServices.getCalendarList as any).mockResolvedValue(mockCalendarList);
         (googleServices.getAuthUrl as any).mockResolvedValue({ data: { success: true, url: 'http://auth' } });
         (caldavServices.listAccounts as any).mockResolvedValue({ data: [] });
         (userServices.updateUser as any).mockResolvedValue({});
+        const currentMockUser = { ...mockUser, pull_calendars: [], push_calendars: [] };
+        (useAuth as any).mockImplementation(() => ({
+            user: currentMockUser,
+            refreshAuth: vi.fn()
+        }));
     });
 
     it('should render and fetch calendars', async () => {
@@ -207,11 +196,14 @@ describe('CalendarIntegration Page', () => {
     });
 
     it('should update push calendar', async () => {
+
+
+
         render(
             <MemoryRouter>
-                <UserContext.Provider value={{ user: mockUser } as any}>
+                <div id="root">
                     <CalendarIntegration />
-                </UserContext.Provider>
+                </div>
             </MemoryRouter>
         );
 
@@ -219,16 +211,28 @@ describe('CalendarIntegration Page', () => {
             expect(screen.getByTestId('edit-push-calendar')).toBeInTheDocument();
         });
 
-        fireEvent.click(screen.getByTestId('edit-push-calendar'));
+        // Open Dialog
+        const editBtn = screen.getByTestId('edit-push-calendar');
+        userEvent.click(editBtn);
 
         // Dialog opens
-        expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only (Label removed in checkbox mode)
+        expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only
+
+        // Select a calendar (assuming mocked list has items)
+        // Mock list has 'Google Calendar 1' (id: cal1)
+        const checkbox = screen.getByLabelText('Google Calendar 1');
+        userEvent.click(checkbox);
+        await waitFor(() => {
+            expect(checkbox).toBeChecked();
+        });
 
         const saveBtn = screen.getByTestId('button-save');
-        fireEvent.click(saveBtn);
+        userEvent.click(saveBtn);
 
         await waitFor(() => {
-            expect(userServices.updateUser).toHaveBeenCalled();
+            expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
+                push_calendars: ['cal1']
+            }));
         });
     });
 
@@ -276,6 +280,9 @@ describe('CalendarIntegration Page', () => {
             expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
         });
     });
+
+
+
     it('should handle multiple calendars, save without redirect, and close', async () => {
         navigate.mockClear();
 
@@ -283,7 +290,7 @@ describe('CalendarIntegration Page', () => {
             data: {
                 data: {
                     items: [
-                        { id: 'google1', summary: 'Google', primary: true }
+                        { id: 'google1', summary: 'Google', primary: false }
                     ]
                 }
             }
@@ -315,6 +322,9 @@ describe('CalendarIntegration Page', () => {
             // But we want to test selecting them in the Pull/Push dialogs.
             expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
         });
+
+        // Check for step titles
+
 
         // Open Pull Calendars dialog
         fireEvent.click(screen.getByTestId('edit-pull-calendar'));

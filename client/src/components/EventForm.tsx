@@ -223,7 +223,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           <Input
             id="location"
             placeholder={t("tired_whole_bumblebee_type")}
-            defaultValue="Online via Zoom"
+            defaultValue={t("Online via Zoom")}
             onChange={handleOnChange("location")}
             value={formData.location}
           />

@@ -1,3 +1,20 @@
+# common [1.12.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.12.0-rc.1...common@1.12.0-rc.2) (2025-12-17)
+
+
+### Features
+
+* add about page ([3e40a69](https://github.com/fhswf/appointme/commit/3e40a69ab0d7c92f0be0bf3d51e94d131b4b51aa))
+* impove main ui ([c0eda64](https://github.com/fhswf/appointme/commit/c0eda649695ac8ddc19f2ff258d0bd3fa695039b))
+* ui improvements ([f7e88df](https://github.com/fhswf/appointme/commit/f7e88dfeb8b7341723a0e7718b89d094c847c015))
+* ui improvements ([1e4f048](https://github.com/fhswf/appointme/commit/1e4f0484eeca7c5865af9bc45b941f611bf9bc7a))
+
+# common [1.12.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0-rc.1) (2025-12-15)
+
+
+### Features
+
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+
 # common [1.11.0](https://github.com/fhswf/appointme/compare/common@1.10.0...common@1.11.0) (2025-12-12)
 
 

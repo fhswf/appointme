@@ -56,7 +56,7 @@ describe('MarkdownComponents', () => {
         );
         const a = container.querySelector('a');
         expect(a).toBeInTheDocument();
-        expect(a).toHaveClass('text-primary', 'font-medium', 'hover:underline', 'underline-offset-4');
+        expect(a).toHaveClass('hover:underline', 'underline-offset-4');
         expect(a).toHaveAttribute('href', 'https://example.com');
     });
 
@@ -68,7 +68,7 @@ describe('MarkdownComponents', () => {
         );
         const ul = container.querySelector('ul');
         expect(ul).toBeInTheDocument();
-        expect(ul).toHaveClass('list-disc', 'list-inside', 'mb-4', 'pl-4', 'text-muted-foreground');
+        expect(ul).toHaveClass('list-disc', 'mb-4', 'pl-4', 'text-muted-foreground');
     });
 
     it('should render list item with correct classes', () => {

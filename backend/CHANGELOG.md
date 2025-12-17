@@ -3,6 +3,29 @@
 
 ### Bug Fixes
 
+* regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
+
+# backend [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.5...backend@1.32.0-rc.6) (2025-12-17)
+
+
+### Features
+
+* gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.2
+
+# backend [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.4...backend@1.32.0-rc.5) (2025-12-15)
+
+
+### Bug Fixes
+
+* Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
 * config update ([bff42e3](https://github.com/fhswf/appointme/commit/bff42e3e0b116b4e70771f58de022a16b007cf75))
 * config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
 * configuration ([cac0259](https://github.com/fhswf/appointme/commit/cac0259c5100802363f124153b463ba4f2258315))
@@ -13,6 +36,16 @@
 
 ### Features
 
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+* Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.1
 * add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
 
 # backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
