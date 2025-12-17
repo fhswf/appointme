@@ -1,7 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+
 import AppNavbar from '../../components/AppNavbar';
 import * as helpers from '../../helpers/helpers';
 import { BrowserRouter } from 'react-router-dom';
@@ -47,6 +47,7 @@ describe('AppNavbar', () => {
         renderWithUser(null);
 
         // Open menu
+        fireEvent.pointerDown(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('profile-menu'));
 
         expect(screen.getByTestId('login-button')).toBeInTheDocument();
@@ -59,6 +60,7 @@ describe('AppNavbar', () => {
         renderWithUser(user);
 
         // Open menu
+        fireEvent.pointerDown(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('profile-menu'));
 
         expect(screen.getByTestId('logout-button')).toBeInTheDocument();
@@ -70,6 +72,7 @@ describe('AppNavbar', () => {
         const user = { name: 'Test', picture_url: 'pic.jpg', user_url: 'test' };
         renderWithUser(user);
 
+        fireEvent.pointerDown(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('logout-button'));
 
@@ -88,10 +91,12 @@ describe('AppNavbar', () => {
         );
 
         const profileMenu = screen.getByTestId('profile-menu');
-        userEvent.click(profileMenu);
+        fireEvent.pointerDown(profileMenu);
+        fireEvent.click(profileMenu);
 
         const profileItem = await screen.findByText('user_menu_profile');
-        userEvent.click(profileItem);
+        fireEvent.pointerDown(profileItem);
+        fireEvent.click(profileItem);
 
         await waitFor(() => {
             expect(screen.getByTestId('profile-dialog')).toBeInTheDocument();

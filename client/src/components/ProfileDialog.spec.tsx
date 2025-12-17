@@ -69,9 +69,9 @@ describe('ProfileDialog', () => {
 
     it('should calculate initial state and render loading', async () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
-        expect(screen.getByText('Loading...')).toBeInTheDocument();
+        expect(screen.getByText('loading')).toBeInTheDocument();
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
     });
 
@@ -79,7 +79,7 @@ describe('ProfileDialog', () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
 
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
 
         await waitFor(() => {
@@ -93,7 +93,7 @@ describe('ProfileDialog', () => {
         render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
 
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
 
         await waitFor(() => {
@@ -124,7 +124,7 @@ describe('ProfileDialog', () => {
         render(<ProfileDialog open={true} onOpenChange={onOpenChange} />);
 
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
 
         // Submit the form directly
@@ -151,7 +151,7 @@ describe('ProfileDialog', () => {
 
         // Wait for loading to complete and form to be rendered
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
 
         // Ensure form is fully loaded
@@ -176,7 +176,7 @@ describe('ProfileDialog', () => {
 
         // Wait for loading to complete and form to be rendered
         await waitFor(() => {
-            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
         });
 
         // Ensure form is fully loaded

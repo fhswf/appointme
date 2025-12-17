@@ -8,8 +8,10 @@ import { UserContext } from '../components/PrivateRoute';
 import * as googleServices from '../helpers/services/google_services';
 import * as caldavServices from '../helpers/services/caldav_services';
 import * as userServices from '../helpers/services/user_services';
+import { useAuth } from '../components/AuthProvider';
 
 // Mock dependencies
+vi.mock('../components/AuthProvider');
 vi.mock('../components/AppNavbar', () => ({ default: () => <div data-testid="app-navbar" /> }));
 vi.mock('../components/ErrorBoundary', () => ({ default: ({ children }) => <div>{children}</div> }));
 
@@ -38,10 +40,7 @@ vi.mock('@/components/ui/checkbox', () => ({
         <input
             type="checkbox"
             checked={checked}
-            onChange={(e) => {
-                console.log('Checkbox mock onChange:', e.target.checked, 'id:', props.id);
-                onCheckedChange(e.target.checked);
-            }}
+            onChange={(e) => onCheckedChange(e.target.checked)}
             {...props}
         />
     )
@@ -71,7 +70,7 @@ describe('CalendarIntegration Page', () => {
         data: {
             data: {
                 items: [
-                    { id: 'cal1', summary: 'Google Calendar 1', primary: true }
+                    { id: 'cal1', summary: 'Google Calendar 1', primary: false }
                 ]
             }
         }
@@ -85,6 +84,11 @@ describe('CalendarIntegration Page', () => {
         (googleServices.getAuthUrl as any).mockResolvedValue({ data: { success: true, url: 'http://auth' } });
         (caldavServices.listAccounts as any).mockResolvedValue({ data: [] });
         (userServices.updateUser as any).mockResolvedValue({});
+        const currentMockUser = { ...mockUser, pull_calendars: [], push_calendars: [] };
+        (useAuth as any).mockImplementation(() => ({
+            user: currentMockUser,
+            refreshAuth: vi.fn()
+        }));
     });
 
     it('should render and fetch calendars', async () => {
@@ -277,21 +281,7 @@ describe('CalendarIntegration Page', () => {
         });
     });
 
-    vi.mock('../components/AuthProvider', () => {
-        const user = {
-            _id: 'user1',
-            email: 'test@example.com',
-            google_tokens: {},
-            pull_calendars: [],
-            push_calendars: []
-        };
-        return {
-            useAuth: () => ({
-                user,
-                refreshAuth: vi.fn()
-            })
-        };
-    });
+
 
     it('should handle multiple calendars, save without redirect, and close', async () => {
         navigate.mockClear();
@@ -300,7 +290,7 @@ describe('CalendarIntegration Page', () => {
             data: {
                 data: {
                     items: [
-                        { id: 'google1', summary: 'Google', primary: true }
+                        { id: 'google1', summary: 'Google', primary: false }
                     ]
                 }
             }
