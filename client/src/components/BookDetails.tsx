@@ -28,10 +28,7 @@ const BookDetails = (props: BookDetailsProps) => {
   const handleOnChange = (text: keyof BookingFormData) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newData = { ...formData, [text]: event.target.value };
     setFormData(newData);
-    console.log(
-      "BookDetails: formData=%o",
-      newData
-    );
+
     props.onChange(newData);
   };
 

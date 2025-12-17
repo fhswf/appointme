@@ -131,7 +131,7 @@ const Booking = () => {
 
   const handleDateChange = (newValue: Date | undefined) => {
     if (!newValue) return;
-    console.log("change date: %o", startOfDay(newValue));
+
     setSelectedDate(newValue);
     // No stepper navigation needed on date change anymore as it is same step
   };
@@ -169,7 +169,7 @@ const Booking = () => {
   };
 
   const handleTime = (time: Date) => () => {
-    console.log("time: %o", time);
+
     setSelectedTime(time);
 
     // Auto-advance to details when time is selected on desktop
@@ -221,7 +221,7 @@ const Booking = () => {
   };
 
   const handleDetailChange = (details: Details) => {
-    console.log("details: %o", details);
+
     setDetails(details);
   };
 

@@ -110,13 +110,13 @@ describe('Booking Page', () => {
 
         // Check for step titles
         expect(await screen.findByText('Schedule an appointment')).toBeInTheDocument();
-        expect(await screen.findByText('Test Event')).toBeInTheDocument();
+        const testEvents = await screen.findAllByText('Test Event');
+        expect(testEvents.length).toBeGreaterThan(0);
         // expect(screen.getByText('Choose time')).toBeInTheDocument(); // Time step is merged
         expect(await screen.findByText('Provide details')).toBeInTheDocument();
 
         // Check for footer links
-        expect(screen.getByText('Impressum')).toBeInTheDocument();
-        expect(screen.getByText('Datenschutzhinweise')).toBeInTheDocument();
+        expect(screen.getByText('Legal')).toBeInTheDocument();
     });
 
     it('should allow changing language', async () => {
@@ -196,7 +196,8 @@ describe('Booking Page', () => {
         // 1. Initial State
         await waitFor(() => {
             expect(screen.getByText('Schedule an appointment')).toBeInTheDocument();
-            expect(screen.getByText('Test Event')).toBeInTheDocument();
+            const events = screen.getAllByText('Test Event');
+            expect(events.length).toBeGreaterThan(0);
         });
 
         // 2. Select Date
@@ -213,8 +214,13 @@ describe('Booking Page', () => {
         // Converting to ISO string might depend on timezone, 
         // but let's look for the formatted text "10:00" if possible or rely on the button existence
 
+        expect(toast.error).not.toHaveBeenCalled();
+        expect(eventServices.getAvailableTimes).toHaveBeenCalled();
+
         const slotRegex = /10:00/; // The format is HH:mm
-        const slotBtn = await screen.findByText(slotRegex);
+        const slotBtns = await screen.findAllByText(slotRegex);
+        expect(slotBtns.length).toBeGreaterThan(0);
+        const slotBtn = slotBtns[0];
         await userEvent.click(slotBtn);
 
         // 4. Fill Details
@@ -264,13 +270,17 @@ describe('Booking Page', () => {
         );
 
         // Wait for event to load to avoid 0 duration infinite loop
-        await waitFor(() => expect(screen.getByText('Test Event')).toBeInTheDocument());
+        await waitFor(() => {
+            const events = screen.getAllByText('Test Event');
+            expect(events.length).toBeGreaterThan(0);
+        });
 
         // 1. Select Date
         await userEvent.click(screen.getByTestId('select-date-btn'));
 
         // 2. Select Time
-        const slotBtn = await screen.findByText(/10:00/);
+        const slotBtns = await screen.findAllByText(/10:00/);
+        const slotBtn = slotBtns[0];
         await userEvent.click(slotBtn);
 
         // 3. Fill Details

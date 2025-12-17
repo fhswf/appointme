@@ -163,7 +163,7 @@ export const PushCalendar = ({ user, calendarList }) => {
 
     updateUser(updatedUser)
       .then((user) => {
-        console.log("updated user: %o", user);
+
         toast.success(t("Calendar settings saved"));
         refreshAuth();
       })
@@ -256,7 +256,7 @@ export const PullCalendars = ({ user, calendarList }) => {
   const handleShow = () => setOpen(true);
   const { refreshAuth } = useAuth();
   const save = () => {
-    console.log("save: selected: %o", selected);
+
     const updatedUser = { ...user, pull_calendars: [] };
     for (const item of Object.keys(selected)) {
       if (selected[item]) {
@@ -526,7 +526,7 @@ const Calendarintegration = () => {
   }
 
 
-  console.log("user: %o", user);
+
 
   useEffect(() => {
     getCalendarList()
