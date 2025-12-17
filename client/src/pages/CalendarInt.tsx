@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppNavbar from "../components/AppNavbar";
+import { useAuth } from "../components/AuthProvider";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -37,14 +38,13 @@ import {
 
 import { Edit, Trash2 } from "lucide-react";
 
-import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { addAccount, removeAccount, listAccounts, listCalendars } from "../helpers/services/caldav_services";
 import { Input } from "@/components/ui/input";
 
 import ErrorBoundary from "../components/ErrorBoundary";
 
-const renderCalendarList = (calendarList, state, setState, single = false) => {
+const renderCalendarList = (calendarList, state, setState, t, single = false) => {
   // Merge google and caldav items for display if they are separate in the future, 
   // but for now we will pass a unified list or handle them inside the list.
   // Actually, the plan is to display them with icons.
@@ -67,9 +67,9 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
         <div className="flex items-center gap-2" key={item.id}>
           <Checkbox
             id={item.id}
-            checked={state[item.id]}
+            checked={!!state[item.id]}
             onCheckedChange={(checked) => {
-              setState({ ...state, [item.id]: checked });
+              setState((prev) => ({ ...prev, [item.id]: checked }));
             }}
             name={item.id}
           />
@@ -86,7 +86,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
     const selected = Object.keys(state)[0];
     return (
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="calendar-select">Calendar</Label>
+        <Label htmlFor="calendar-select">{t("Calendar")}</Label>
         <Select
           value={selected}
           onValueChange={(value) => {
@@ -94,7 +94,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
           }}
         >
           <SelectTrigger id="calendar-select" data-testid="calendar-select">
-            <SelectValue placeholder="Select a calendar" />
+            <SelectValue placeholder={t("Select a calendar")} />
           </SelectTrigger>
           <SelectContent>
             {items}
@@ -107,7 +107,7 @@ const renderCalendarList = (calendarList, state, setState, single = false) => {
   }
 };
 
-const PushCalendar = ({ user, calendarList }) => {
+export const PushCalendar = ({ user, calendarList }) => {
   // Get current push calendars
   const currentPushCalendars = user.push_calendars || [];
 
@@ -135,15 +135,16 @@ const PushCalendar = ({ user, calendarList }) => {
       }
       setSelected(initialSelected);
     }
-  }, [open, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
 
+  const { refreshAuth } = useAuth();
   const save = () => {
     console.log("save: selected: %o", selected);
-    user.push_calendars = [];
 
     const newSelection = [];
     for (const item of Object.keys(selected)) {
@@ -152,15 +153,18 @@ const PushCalendar = ({ user, calendarList }) => {
       }
     }
 
-    user.push_calendars = newSelection;
+    // Create a copy of the user to avoid mutating the prop/context directly
+    const updatedUser = { ...user, push_calendars: newSelection };
+
     // For backward compatibility, valid single push_calendar logic could be: 
     // user.push_calendar = newSelection.length > 0 ? newSelection[0] : null;
     // But we deprecated it, so cleaner to rely on the array.
 
-    updateUser(user)
+    updateUser(updatedUser)
       .then((user) => {
-        console.log("updated user: %o", user);
+
         toast.success(t("Calendar settings saved"));
+        refreshAuth();
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
@@ -187,16 +191,16 @@ const PushCalendar = ({ user, calendarList }) => {
         {pushCals && pushCals.length > 0 ? (
           <ul className="list-disc pl-4 space-y-1">{pushCals}</ul>
         ) : (
-          <div className="text-sm text-muted-foreground">No calendar selected</div>
+          <div className="text-sm text-muted-foreground">{t("No calendar selected")}</div>
         )}
       </CardContent>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Calendar</DialogTitle>
+            <DialogTitle>{t("Calendar")}</DialogTitle>
             <DialogDescription>
-              Choose calendars in which appointments are created.
+              {t("Choose calendars in which appointments are created.")}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
@@ -204,6 +208,7 @@ const PushCalendar = ({ user, calendarList }) => {
               calendarList,
               selected,
               setSelected,
+              t,
               false // Allow multiple selection now!
             )}
           </div>
@@ -221,7 +226,7 @@ const PushCalendar = ({ user, calendarList }) => {
   );
 };
 
-const PullCalendars = ({ user, calendarList }) => {
+export const PullCalendars = ({ user, calendarList }) => {
   const pullCals = calendarList
     ? calendarList.items
       .filter((item) => user.pull_calendars.includes(item.id))
@@ -231,23 +236,37 @@ const PullCalendars = ({ user, calendarList }) => {
     : undefined;
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(pullCals);
+  const [selected, setSelected] = useState({});
   const { t } = useTranslation();
+
+  // Initialize selected state from user's current pull calendars
+  useEffect(() => {
+    if (open) {
+      const initialSelected = {};
+      for (const id of user.pull_calendars) {
+        initialSelected[id] = true;
+      }
+      setSelected(initialSelected);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const handleClose = () => setOpen(false);
   const handleShow = () => setOpen(true);
+  const { refreshAuth } = useAuth();
   const save = () => {
-    console.log("save: selected: %o", selected);
-    user.pull_calendars = [];
+
+    const updatedUser = { ...user, pull_calendars: [] };
     for (const item of Object.keys(selected)) {
       if (selected[item]) {
-        user.pull_calendars.push(item);
+        updatedUser.pull_calendars.push(item);
       }
     }
-    updateUser(user)
+    updateUser(updatedUser)
       .then((user) => {
         console.log("updated user: %o", user);
         toast.success(t("Calendar settings saved"));
+        refreshAuth();
       })
       .catch((err) => {
         console.error("user update failed: %o", err);
@@ -282,7 +301,7 @@ const PullCalendars = ({ user, calendarList }) => {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Calendar</DialogTitle>
+              <DialogTitle>{t("Calendar")}</DialogTitle>
               <DialogDescription>
                 {t("big_known_loris_revive")}
               </DialogDescription>
@@ -291,7 +310,8 @@ const PullCalendars = ({ user, calendarList }) => {
               {renderCalendarList(
                 calendarList,
                 selected || _selected,
-                setSelected
+                setSelected,
+                t
               )}
             </div>
             <DialogFooter>
@@ -486,8 +506,8 @@ const Calendarintegration = () => {
   const [connected, setConnected] = useState(false);
   const [url, setUrl] = useState("");
   const [calendarList, setCalendarList] = useState(null);
-  const user = useContext(UserContext).user;
   const { t } = useTranslation();
+  const { user, refreshAuth } = useAuth();
 
   const revokeScopes = async (event) => {
     event.preventDefault();
@@ -497,6 +517,7 @@ const Calendarintegration = () => {
       setConnected(false);
       setGoogleCalendars([]);
       toast.success(t("Google Calendar disconnected"));
+      refreshAuth();
     } catch (err) {
       console.error("Failed to revoke Google access:", err);
       toast.error(t("Failed to disconnect Google Calendar"));
@@ -504,7 +525,7 @@ const Calendarintegration = () => {
   }
 
 
-  console.log("user: %o", user);
+
 
   useEffect(() => {
     getCalendarList()

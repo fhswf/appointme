@@ -1,3 +1,18 @@
+# backend [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.5...backend@1.32.0-rc.6) (2025-12-17)
+
+
+### Features
+
+* gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.2
+
 # backend [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.4...backend@1.32.0-rc.5) (2025-12-15)
 
 

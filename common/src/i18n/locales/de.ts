@@ -27,7 +27,7 @@ export const de = {
     "petty_swift_piranha_rise": "Termin vereinbaren",
     "broad_close_butterfly_drop": "Vereinbaren Sie einen Termin mit {{name}}",
     "weary_known_gazelle_file": "Bitte wählen Sie die gewünschte Terminart. Sie erhalten eine Liste der verfügbaren Termine in meinem Zeitplan.",
-    "low_clean_haddock_bubble": "Meine Veranstaltungen",
+    "low_clean_haddock_bubble": "Meine Terminarten",
     "pink_trite_ocelot_enrich": "Sie müssen zuerst Ihren Kalender verbinden, bevor Sie Ereignisse hinzufügen können!",
     "early_sweet_mantis_peek": "Veranstaltungstyp hinzufügen",
     "deft_suave_bear_pause": "Termine werden geladen ...",
@@ -138,7 +138,61 @@ export const de = {
     "google_login_failed": "Google-Anmeldung fehlgeschlagen",
     "Add": "Hinzufügen",
     "Close": "Schließen",
-    "Cancel": "Abbrechen",
-    "Contact": "Kontakt",
-    "I acknowledge that my password will be stored encrypted in the database.": "Ich bestätige, dass mein Passwort verschlüsselt in der Datenbank gespeichert wird."
+    "I acknowledge that my password will be stored encrypted in the database.": "Ich bestätige, dass mein Passwort verschlüsselt in der Datenbank gespeichert wird.",
+    "event_copy_link": "Link kopieren",
+    "link_copied_to_clipboard": "Link in die Zwischenablage kopiert!",
+    "link_copy_failed": "Link konnte nicht in die Zwischenablage kopiert werden!",
+    "copy": "Kopieren",
+    "about": "Über",
+    "about_content": `
+# Über AppointMe
+
+AppointMe ist ein einfaches Tool zur Terminvereinbarung.
+Konfiguriere Deine Kalender, lege Deine Verfügbarkeit fest und lass andere Termine mit Dir vereinbaren.
+
+## Github
+[Schau dir den Code auf Github an](https://github.com/fhswf/appointme)
+
+## Credits
+Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
+    "legal": "Rechtliches",
+    "Calendar": "Kalender",
+    "Select a calendar": "Kalender auswählen",
+    "No calendar selected": "Kein Kalender ausgewählt",
+    "Choose calendars in which appointments are created.": "Wählen Sie Kalender aus, in denen Termine erstellt werden.",
+    "Calendar settings saved": "Kalendereinstellungen gespeichert",
+    "Failed to save settings": "Einstellungen konnten nicht gespeichert werden",
+    "Failed to load calendars for": "Fehler beim Laden der Kalender für",
+    "Google Calendar disconnected": "Google Kalender getrennt",
+    "Failed to disconnect Google Calendar": "Google Kalender konnte nicht getrennt werden",
+    "Connect a calendar to get started": "Verbinden Sie einen Kalender, um zu beginnen",
+    "Enter your CalDav server details to connect your calendar.": "Geben Sie Ihre CalDAV-Serverdaten ein, um Ihren Kalender zu verbinden.",
+    "Failed to add account. Please check your credentials and server URL.": "Konto konnte nicht hinzugefügt werden. Bitte überprüfen Sie Ihre Zugangsdaten und die Server-URL.",
+    "Email (Optional)": "E-Mail (Optional)",
+    "Online via Zoom": "Online via Zoom",
+    "Language": "Sprache",
+    "page not found": "Seite nicht gefunden",
+    "GO HOME": "ZUR STARTSEITE",
+    "Impressum": "Impressum",
+    "Datenschutzhinweise": "Datenschutzhinweise",
+    "privacy_content": "# Datenschutzhinweise\n\n## Speicherung und Verarbeitung personenbezogener Daten\n\nDiese Anwendung speichert und verarbeitet folgende personenbezogene Daten, die für die Funktion der Anwendung notwendig sind:\n\n*   **Benutzerprofil:** Name, E-Mail-Adresse, Profilbild-URL.\n*   **Authentifizierungsdaten:** OAuth-Token (für Google Kalender Integration) und/oder Zugangsdaten für CalDAV-Kalender (Benutzername, Passwort).\n*   **Kalenderdaten:** Konfiguration der zu verknüpfenden Kalender, erstellte Ereignistypen (Name, Beschreibung, Ort) und Terminbuchungen.\n*   **Logdaten:** In den Logdateien des Servers wird Ihre IP-Adresse vorübergehend gespeichert.\n\n## Cookies und Drittanbieter\n\nDie Anwendung verwendet Cookies zur Sitzungsverwaltung.\n\nTeilweise verwenden die Anwendungen Komponenten, die auf Content-Delivery-Networks wie Cloudflare gehostet werden, und/oder Webdienste von Drittanbietern wie Mapbox oder Google Calendar API. Bei der Verwendung der Anwendungen greift Ihr Browser bzw. der Server auf diese Komponenten und Dienste zu, wodurch Ihre IP-Adresse und ggf. auch weitere Daten an die jeweiligen Anbieter übertragen werden.",
+    "privacy_content_public": "# Datenschutzhinweise\n\n## Datenverarbeitung\n\nZum Zwecke der Terminbuchung verarbeitet diese Anwendung die von Ihnen bereitgestellten Daten (Name, E-Mail-Adresse, Beschreibung, Datum und Uhrzeit des Termins). Diese Daten werden gespeichert, um den Termin zu verwalten, und können mit dem Kalender des Organisators synchronisiert werden.",
+    "impressum_content": "# Impressum\n\n## Disclaimer\nDie Inhalte auf diesem Server gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.",
+    "CalDav Calendar": "CalDav Kalender",
+    "loading": "Laden...",
+    "Legal": "Rechtliches",
+    "new_event_type": "Neuer Ereignistyp",
+    "Appointment Summary": "Terminzusammenfassung",
+    "Could not book event": "Termin konnte nicht gebucht werden",
+    "error_no_calendar": "Keine Kalenderintegration konfiguriert",
+    "error_no_duration": "Dauer muss größer als 0 sein",
+    "error_no_slots": "Keine Zeitfenster konfiguriert",
+    "Active": "Aktiv",
+    "Inactive": "Inaktiv",
+    "delete": "Löschen",
+    "Continue": "Weiter",
+    "Book Appointment": "Termin buchen",
+    "Available Times": "Verfügbare Zeiten",
+    "No slots available": "Keine Zeiten verfügbar",
+    "Schedule Appointment": "Termin vereinbaren"
 };

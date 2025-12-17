@@ -28,7 +28,7 @@ export const EventType = (props: EventTypeProps) => {
     const { t, i18n } = useTranslation();
 
 
-    console.log("EventType: event=%o, user=%o, time=%o", event, user, time);
+
     return (
         <Card>
             <CardHeader className="flex flex-row items-center gap-4">

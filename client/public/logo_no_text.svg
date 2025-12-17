@@ -4,19 +4,34 @@
       --color-white: hsl(0, 0%, 100%);
       --color-light-blue: hsl(215, 100%, 97%);
       --color-medium-blue: hsl(215, 90%, 60%);
-      --color-dark-blue: hsl(215, 40%, 11%);
-      --color-text-blue-dark: hsl(215, 90%, 30%);
-      --color-text-blue-medium: hsl(215, 90%, 60%);
-      --color-text-blue-light: hsl(215, 90%, 70%);
+      --color-dark-blue: hsl(215, 90%, 20%);
+      --color-text-blue-dark: hsl(215, 90%, 20%);
+      --color-text-blue-medium: hsl(215, 90%, 40%);
+      --color-text-blue-light: hsl(215, 90%, 60%);
+      --stroke-width-default: 14;
     }
   </style>
   <circle cx="256" cy="256" r="256" fill="var(--color-white)"/>
   <!-- Graphic Element: Stylized Calendar -->
   <g transform="translate(68.5, 76) scale(1.5)">
-    <rect x="20" y="40" width="210" height="180" rx="20" fill="var(--color-light-blue)" stroke="var(--color-medium-blue)" stroke-width="12"/>
-    <path d="M70 20 v40 M180 20 v40" stroke="var(--color-dark-blue)" stroke-width="12" stroke-linecap="round"/>
-    <rect x="20" y="80" width="210" height="2" fill="var(--color-medium-blue)"/>
+    <rect x="20" y="40" width="210" height="180" rx="25" 
+        fill="var(--color-light-blue)" 
+        stroke="var(--color-medium-blue)" 
+        stroke-width="var(--stroke-width-default)"/>
+    <path d="M70 20 v30 M180 20 v30"
+        z-index="-1"
+        stroke="var(--color-dark-blue)"
+        stroke-width="var(--stroke-width-default)"
+        stroke-linecap="round"/>
+    <rect x="20" y="80" width="210" 
+      height="10" 
+      fill="var(--color-medium-blue)"/>
     <!-- Checkmark -->
-    <path d="M80 140 l30 30 l60 -60" stroke="var(--color-dark-blue)" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M80 150 l30 45 l60 -80" 
+          stroke="var(--color-dark-blue)" 
+          stroke-width="var(--stroke-width-default)"
+          fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
   </g>
 </svg>
