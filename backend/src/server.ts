@@ -27,6 +27,7 @@ logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 
 const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 
 const ORIGINS = [process.env.CLIENT_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
