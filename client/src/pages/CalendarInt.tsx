@@ -38,7 +38,6 @@ import {
 
 import { Edit, Trash2 } from "lucide-react";
 
-import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { addAccount, removeAccount, listAccounts, listCalendars } from "../helpers/services/caldav_services";
 import { Input } from "@/components/ui/input";
