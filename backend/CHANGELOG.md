@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.8...backend@1.32.0-rc.9) (2025-12-17)
+
+
+### Bug Fixes
+
+* simplify common package import paths by removing `/src/types` suffix. ([4ea8a35](https://github.com/fhswf/appointme/commit/4ea8a3575eaa3d4b065ab38654f293a171042962))
+
 # backend [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.7...backend@1.32.0-rc.8) (2025-12-17)
 
 
