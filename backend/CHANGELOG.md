@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.6...backend@1.32.0-rc.7) (2025-12-17)
+
+
+### Bug Fixes
+
+* regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
+
 # backend [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.5...backend@1.32.0-rc.6) (2025-12-17)
 
 
