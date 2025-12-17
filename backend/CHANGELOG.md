@@ -1,3 +1,20 @@
+# backend [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.7...backend@1.32.0-rc.8) (2025-12-17)
+
+
+### Features
+
+* enhanced availability management ([7139d3d](https://github.com/fhswf/appointme/commit/7139d3ddc4035f14dcd9c728d96c6e02a2f1c656))
+* Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
+* simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.12.0-rc.3
+
 # backend [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.6...backend@1.32.0-rc.7) (2025-12-17)
 
 
