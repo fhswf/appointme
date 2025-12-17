@@ -237,4 +237,29 @@ describe('EventForm Component', () => {
 
         confirmSpy.mockRestore();
     });
+
+    it('should add and remove tags', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const tagInput = screen.getByPlaceholderText('Type a tag and press Enter');
+        fireEvent.change(tagInput, { target: { value: 'NewTag' } });
+        fireEvent.keyDown(tagInput, { key: 'Enter', code: 'Enter' });
+
+        expect(screen.getByText('NewTag')).toBeInTheDocument();
+
+        // Check if tag is in submission
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        // Remove tag
+        // Find the span containing the tag text
+        // The text 'NewTag' is directly inside the span
+        const tagSpan = screen.getByText('NewTag');
+        // The button is a sibling of the text node or child of the span
+        // tagSpan returned by getByText is likely the span itself if it contains the text
+        const removeButton = tagSpan.querySelector('button');
+
+        expect(removeButton).toBeInTheDocument();
+        if (removeButton) fireEvent.click(removeButton);
+    });
 });

@@ -100,4 +100,27 @@ describe('Legal Page', () => {
         renderWithContext();
         expect(screen.getByText('impressum_content')).toBeInTheDocument();
     });
+
+    it('should respect hash #impressum', () => {
+        mockLocation.hash = '#impressum';
+        renderWithContext();
+        expect(screen.getByText('impressum_content')).toBeInTheDocument();
+    });
+
+    it('should switch back to Impressum from Privacy', () => {
+        renderWithContext();
+        fireEvent.click(screen.getByText('Datenschutzhinweise'));
+        expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
+        
+        fireEvent.click(screen.getByText('Impressum'));
+        expect(screen.getByText('impressum_content')).toBeInTheDocument();
+        expect(screen.queryByText('privacy_content_public')).not.toBeInTheDocument();
+    });
+
+    it('should handle authenticated internal privacy content', () => {
+        const user = { name: 'User' };
+        renderWithContext(user);
+        fireEvent.click(screen.getByText('Datenschutzhinweise'));
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
+    });
 });

@@ -28,6 +28,14 @@ vi.mock('./LanguageSelector', () => ({
     LanguageSelector: () => <div data-testid="language-selector">Language Selector</div>
 }));
 
+vi.mock('./AvailabilityEditor', () => ({
+    AvailabilityEditor: ({ onChange }: any) => (
+        <div data-testid="availability-editor">
+            <button onClick={() => onChange({ 1: [] })}>Update Availability</button>
+        </div>
+    )
+}));
+
 const mockRefreshAuth = vi.fn();
 vi.mock('../components/AuthProvider', () => ({
     useAuth: () => ({
@@ -216,5 +224,22 @@ describe('ProfileDialog', () => {
             // simplified: checking that img is not present or checks for the fallback div logic
             expect(screen.queryByRole('img')).not.toBeInTheDocument();
         });
+    });
+
+    it('should switch to availability tab and render editor', async () => {
+        render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
+
+        await waitFor(() => {
+            expect(screen.queryByText('loading')).not.toBeInTheDocument();
+        });
+
+        const availabilityTab = screen.getByText('Standard Availability');
+        fireEvent.click(availabilityTab);
+
+        expect(screen.getByText('Define your standard weekly availability here. You can use this availability in your Event Types.')).toBeInTheDocument();
+
+        // Trigger onChange via mock button
+        const updateButton = screen.getByText('Update Availability');
+        fireEvent.click(updateButton);
     });
 });
