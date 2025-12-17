@@ -308,6 +308,26 @@ describe('google_controller', () => {
         expect(result).toEqual([]);
     });
 
+    it('should return empty list from events if user has no google tokens', async () => {
+        // @ts-ignore
+        UserModel.findOne.mockReturnValue({
+            exec: vi.fn().mockResolvedValue({
+                google_tokens: undefined
+            })
+        });
+
+        const mockList = vi.fn();
+        // @ts-ignore
+        vi.mocked(google.calendar).mockReturnValue({
+            // @ts-ignore
+            events: { list: mockList }
+        });
+
+        const result = await events('user_id', '2023-01-01', '2023-01-02');
+        expect(result).toEqual([]);
+        expect(mockList).not.toHaveBeenCalled();
+    });
+
     it('should check free busy', async () => {
         const mockUser = {
             google_tokens: {
@@ -489,6 +509,26 @@ describe('google_controller', () => {
             });
 
             await expect(freeBusy('user-id', '2025-01-01', '2025-01-02')).rejects.toThrow('User not found');
+        });
+
+        it('should return empty calendars from freeBusy if user has no google tokens', async () => {
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    google_tokens: undefined
+                })
+            });
+
+            const mockQuery = vi.fn();
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            const result = await freeBusy('user_id', '2023-01-01', '2023-01-02');
+            expect(result).toEqual({ data: { calendars: {} } });
+            expect(mockQuery).not.toHaveBeenCalled();
         });
     });
 });
