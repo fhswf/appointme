@@ -199,5 +199,16 @@ export const ko = {
     "Book Appointment": "약속 예약",
     "Available Times": "사용 가능한 시간",
     "No slots available": "사용 가능한 슬롯 없음",
-    "Schedule Appointment": "약속 예약"
+    "Schedule Appointment": "약속 예약",
+    "Available Meeting Types": "사용 가능한 회의 유형",
+    "Please select a meeting type to view availability.": "가용성을 확인하려면 회의 유형을 선택하십시오.",
+    "All": "전체",
+    "No public events found.": "공개 이벤트를 찾을 수 없습니다.",
+    "Timezone": "시간대",
+    "Privacy & Terms": "개인정보 및 약관",
+    "Quick": "빠른",
+    "Consulting": "상담",
+    "Tags": "태그",
+    "Type a tag and press Enter": "태그를 입력하고 Enter를 누르세요",
+    "Press Enter to add a tag": "Enter를 눌러 태그 추가"
 };
