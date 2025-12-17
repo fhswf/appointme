@@ -14,13 +14,21 @@ vi.mock('@/components/ui/checkbox', () => ({
     )
 }));
 
-// Mock Select component parts to simplify testing
+// Mock Select component with Native Select for easier testing
 vi.mock('@/components/ui/select', () => ({
-    Select: ({ onValueChange, children }: any) => <div data-testid="select">{children}</div>,
-    SelectTrigger: ({ children }: any) => <button>{children}</button>,
-    SelectValue: () => <span>Select Value</span>,
-    SelectContent: ({ children }: any) => <div>{children}</div>,
-    SelectItem: ({ value, children, onClick }: any) => <button onClick={() => onClick?.(value)} data-value={value}>{children}</button>,
+    Select: ({ onValueChange, children, value }: any) => (
+        <select
+            data-testid="mock-select"
+            value={value}
+            onChange={e => onValueChange(e.target.value)}
+        >
+            {children}
+        </select>
+    ),
+    SelectTrigger: ({ children }: any) => null,
+    SelectValue: () => null,
+    SelectContent: ({ children }: any) => <>{children}</>,
+    SelectItem: ({ value, children }: any) => <option value={value}>{children}</option>,
 }));
 
 // Mock Textarea
@@ -31,7 +39,17 @@ vi.mock('@/components/ui/textarea', () => ({
 vi.mock('@/components/ui/input', () => ({
     Input: (props: any) => <input {...props} />
 }));
-
+// Mock useAuth
+vi.mock('../components/AuthProvider', () => ({
+    useAuth: () => ({
+        user: {
+            defaultAvailable: {
+                1: [{ start: "09:00", end: "17:00" }]
+            }
+        },
+        isAuthenticated: true
+    })
+}));
 
 const mockEvent = {
     _id: '1',
@@ -49,7 +67,8 @@ const mockEvent = {
     user: 'user1',
     minFuture: 0,
     maxFuture: 0,
-    maxPerDay: 0
+    maxPerDay: 0,
+    availabilityMode: 'define' as const
 };
 
 describe('EventForm Component', () => {
@@ -197,6 +216,50 @@ describe('EventForm Component', () => {
 
         const submitButton = screen.getByTestId('event-form-submit');
         expect(submitButton).toBeEnabled();
+    });
+    it('should pre-fill availability with standard when switching to restrict mode', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        // Find the Select that contains the "restrict" option (Standard + Constraints)
+        const restrictOption = screen.getByText('Standard + Constraints');
+        const select = restrictOption.closest('select');
+
+        if (!select) throw new Error("Select not found");
+
+        fireEvent.change(select, { target: { value: 'restrict' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        expect(submittedEvent.availabilityMode).toBe('restrict');
+        expect(submittedEvent.available[1]).toEqual([{ start: "09:00", end: "17:00" }]);
+    });
+
+    it('should clear availability when switching to extend mode', () => {
+        // Create event with some existing slots
+        const eventWithSlots = {
+            ...mockEvent,
+            available: {
+                0: [], 1: [{ start: "10:00", end: "11:00" }], 2: [], 3: [], 4: [], 5: [], 6: []
+            }
+        };
+
+        render(<EventForm event={eventWithSlots} handleOnSubmit={mockSubmit} />);
+
+        const extendOption = screen.getByText('Standard + Extra');
+        const select = extendOption.closest('select');
+
+        if (!select) throw new Error("Select not found");
+
+        fireEvent.change(select, { target: { value: 'extend' } });
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        expect(submittedEvent.availabilityMode).toBe('extend');
+        expect(submittedEvent.available[1]).toEqual([]);
     });
 });
 

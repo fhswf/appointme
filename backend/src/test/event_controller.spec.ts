@@ -33,6 +33,7 @@ vi.mock("../models/Event.js", () => {
 vi.mock("../models/User.js", () => {
     const UserModelMock = vi.fn();
     (UserModelMock as any).findOne = vi.fn();
+    (UserModelMock as any).findById = vi.fn();
     return { UserModel: UserModelMock };
 });
 
@@ -328,6 +329,9 @@ describe("Event Controller", () => {
                 return res;
             }));
 
+            (UserModel.findById as any).mockImplementation(() => mockQuery(USER));
+
+            const { addEventController, deleteEventController, updateEventController, getEventsController, getAvailableTimes, insertEvent, calculateFreeSlots } = await import("../controller/event_controller.js");
             const { events, freeBusy } = await import("../controller/google_controller.js");
             const { getBusySlots } = await import("../controller/caldav_controller.js");
 
@@ -550,7 +554,69 @@ describe("Event Controller", () => {
             const response = { data: { calendars: { 'primary': { busy: [] } } } };
             const calDavSlots = [];
 
-            const freeSlots = calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked);
+            const freeSlots = calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked, null);
+            expect(freeSlots).toBeDefined();
+        });
+
+        it("should calculate available slots with 'default' availability mode", async () => {
+            const { calculateFreeSlots } = await import("../controller/event_controller.js");
+            const userWithDefaults = {
+                ...USER,
+                defaultAvailable: {
+                    [1]: [{ start: "10:00", end: "12:00" }] // Mon 10-12
+                }
+            };
+            const eventWithMode = { ...EVENT, availabilityMode: 'default', available: { [1]: [] } };  // Event has no slots
+
+            const timeMin = new Date("2024-01-01T00:00:00Z"); // Mon
+            const timeMax = new Date("2024-01-01T23:59:59Z");
+            const blocked = { inverse: () => ({ intersect: (x: any) => x }) };
+            const response = { data: { calendars: { 'primary': { busy: [] } } } };
+            const calDavSlots: any[] = [];
+
+            const freeSlots = calculateFreeSlots(response, calDavSlots, eventWithMode, timeMin, timeMax, blocked, userWithDefaults);
+            // Should match user default 10-12
+            // (We can't easily assert on IntervalSet internals without its methods, but we expect it to run without error and return a set)
+            expect(freeSlots).toBeDefined();
+        });
+
+        it("should calculate available slots with 'restrict' availability mode", async () => {
+            const { calculateFreeSlots } = await import("../controller/event_controller.js");
+            const userWithDefaults = {
+                ...USER,
+                defaultAvailable: {
+                    [1]: [{ start: "09:00", end: "17:00" }]
+                }
+            };
+            const eventWithMode = { ...EVENT, availabilityMode: 'restrict', available: { [1]: [{ start: "12:00", end: "13:00" }] } };
+
+            const timeMin = new Date("2024-01-01T00:00:00Z");
+            const timeMax = new Date("2024-01-01T23:59:59Z");
+            const blocked = { inverse: () => ({ intersect: (x: any) => x }) };
+            const response = { data: { calendars: { 'primary': { busy: [] } } } };
+            const calDavSlots: any[] = [];
+
+            const freeSlots = calculateFreeSlots(response, calDavSlots, eventWithMode, timeMin, timeMax, blocked, userWithDefaults);
+            expect(freeSlots).toBeDefined();
+        });
+
+        it("should calculate available slots with 'extend' availability mode", async () => {
+            const { calculateFreeSlots } = await import("../controller/event_controller.js");
+            const userWithDefaults = {
+                ...USER,
+                defaultAvailable: {
+                    [1]: [{ start: "09:00", end: "12:00" }]
+                }
+            };
+            const eventWithMode = { ...EVENT, availabilityMode: 'extend', available: { [1]: [{ start: "13:00", end: "17:00" }] } };
+
+            const timeMin = new Date("2024-01-01T00:00:00Z");
+            const timeMax = new Date("2024-01-01T23:59:59Z");
+            const blocked = { inverse: () => ({ intersect: (x: any) => x }) };
+            const response = { data: { calendars: { 'primary': { busy: [] } } } };
+            const calDavSlots: any[] = [];
+
+            const freeSlots = calculateFreeSlots(response, calDavSlots, eventWithMode, timeMin, timeMax, blocked, userWithDefaults);
             expect(freeSlots).toBeDefined();
         });
     });

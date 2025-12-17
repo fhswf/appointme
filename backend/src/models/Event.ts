@@ -102,6 +102,11 @@ const eventSchema = new Schema<EventDocument>({
     type: Number,
     default: 2,
   },
+  availabilityMode: {
+    type: String,
+    enum: ['define', 'default', 'extend', 'restrict'],
+    default: 'define',
+  },
 
 });
 

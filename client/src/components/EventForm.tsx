@@ -12,130 +12,16 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, Settings } from "lucide-react";
 import { LocalizedTimeInput } from "./LocalizedTimeInput";
 
 import { EventFormProps } from "../pages/EditEvent";
-import { Day, Event, Slot } from "common";
-import { t } from "i18next";
-
-type EditSlotProps = {
-  day: Day;
-  slots: Slot[];
-  onChange: (slots: Slot[]) => void;
-};
-
-const EditSlot = (props: EditSlotProps) => {
-  const { i18n } = useTranslation();
-  const [slots, setSlots] = useState<Slot[]>([]);
-
-  useEffect(() => {
-    setSlots(props.slots);
-  }, [props.slots]);
-
-  const handleCheck = (checked: boolean) => {
-    if (checked) {
-      // ensure at least one entry
-      if (slots.length === 0) {
-        const _slots = [{ start: "09:00", end: "17:00" }];
-        setSlots(_slots);
-        props.onChange(_slots);
-      }
-    } else if (slots.length > 0) {
-      setSlots([]);
-      props.onChange([]);
-    }
-  };
-
-  const addSlot = () => {
-    const _slots = slots.slice();
-    _slots.push({ start: "", end: "" });
-    setSlots(_slots);
-    props.onChange(_slots);
-  };
-
-  const deleteSlot = (index: number) => () => {
-    console.log("delete slot %d", index);
-    const _slots = slots.filter((slot, idx) => index !== idx);
-    setSlots(_slots);
-    props.onChange(_slots);
-  };
-
-  const changeTime =
-    (key: keyof Slot, index: number) =>
-      (val: string) => {
-        console.log("ChangeTime: %s %d %o", key, index, val);
-        const _slots = slots.slice();
-        _slots[index][key] = val;
-        setSlots(_slots);
-        props.onChange(_slots);
-      };
-
-
-
-  console.log("EditSlot: %o", slots);
-
-  const getDayName = (day: Day) => {
-    // Jan 5, 2025 is a Sunday. Day enum is 0 for Sunday.
-    const date = new Date(2025, 0, 5 + day);
-    return date.toLocaleString(i18n.language, { weekday: 'short' });
-  };
-
-  return (
-    <div className="grid grid-cols-12 gap-4 items-start py-2 border-b last:border-0">
-      <div className="col-span-2 flex items-center space-x-2 pt-2">
-        <Checkbox
-          id={`day-${props.day}`}
-          checked={slots.length > 0}
-          onCheckedChange={handleCheck}
-        />
-        <Label htmlFor={`day-${props.day}`} className="font-medium">
-          {getDayName(props.day)}
-        </Label>
-      </div>
-      <div className="col-span-9 space-y-2">
-        {slots.map((slot, index) => (
-          <div key={`${slot.start}-${index}`} className="flex items-center gap-2">
-            <div className="w-1/3">
-
-              <LocalizedTimeInput
-                placeholder={t("Starttime")}
-                onChange={changeTime("start", index)}
-                value={slot.start}
-              />
-            </div>
-            <span className="text-muted-foreground">–</span>
-            <div className="w-1/3">
-              <LocalizedTimeInput
-                placeholder={t("Endtime")}
-                onChange={changeTime("end", index)}
-                value={slot.end}
-              />
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={deleteSlot(index)}
-              type="button"
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-      <div className="col-span-1 pt-1">
-        {slots.length > 0 && (
-          <Button variant="ghost" size="icon" onClick={addSlot} type="button">
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-};
+import { AvailabilityEditor } from "./AvailabilityEditor";
+import { useAuth } from "../components/AuthProvider";
 
 export const EventForm = (props: EventFormProps): JSX.Element => {
+  const { t } = useTranslation();
+  const { user } = useAuth();
   const [formData, setFormData] = useState<Event>(props.event);
   const [changed, setChanged] = useState(false);
 
@@ -181,13 +67,29 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         setFormData({ ...formData, [key]: Number(value) } as Event);
       };
 
-  const onChangeSlot = (day: Day) => (slots: Slot[]) => {
+  const onChangeAvailability = (slots: any) => {
     setChanged(true);
-    console.log("onChangeSlot: %d %o", day, slots);
-    const event: Event = { ...formData };
-    event.available[day] = slots;
-    setFormData(event);
+    setFormData({ ...formData, available: slots });
   };
+
+  const onAvailabilityModeChange = (val: string) => {
+    setChanged(true);
+    let newAvailable = formData.available;
+    const userHasDefault = user?.defaultAvailable && Object.keys(user.defaultAvailable).length > 0;
+
+    if (val === 'restrict' && userHasDefault) {
+      // ALWAYS pre-fill with standard availability when switching to restrict
+      newAvailable = JSON.parse(JSON.stringify(user?.defaultAvailable));
+    } else if (val === 'extend') {
+      // ALWAYS clear slots when switching to extend
+      // User wants to start with nothing (standard) and add extras.
+      newAvailable = {
+        [0]: [], [1]: [], [2]: [], [3]: [], [4]: [], [5]: [], [6]: []
+      };
+    }
+
+    setFormData({ ...formData, availabilityMode: val as any, available: newAvailable });
+  }
 
   return (
     <form onSubmit={handleOnSubmit} className="space-y-8">
@@ -363,16 +265,37 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           {t("Daily availability")}
         </h2>
 
-        <div className="border rounded-lg p-4 space-y-2">
-          {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-            <EditSlot
-              key={day}
-              day={day}
-              slots={formData.available[day as Day]}
-              onChange={onChangeSlot(day)}
-            />
-          ))}
+        <div className="flex items-center justify-between mb-4">
+          <div className="space-y-1">
+            <Label htmlFor="availabilityMode">{t("Availability Mode")}</Label>
+            <Select
+              value={formData.availabilityMode || 'define'}
+              onValueChange={onAvailabilityModeChange}
+            >
+              <SelectTrigger id="availabilityMode" className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="define">{t("Define Custom")}</SelectItem>
+                <SelectItem value="default">{t("Use Standard")}</SelectItem>
+                <SelectItem value="extend">{t("Standard + Extra")}</SelectItem>
+                <SelectItem value="restrict">{t("Standard + Constraints")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+
+        {formData.availabilityMode !== 'default' && (
+          <AvailabilityEditor
+            available={formData.available}
+            onChange={onChangeAvailability}
+          />
+        )}
+        {formData.availabilityMode === 'default' && (
+          <div className="border rounded-lg p-6 text-center text-muted-foreground bg-muted/20">
+            {t("Using Standard Availability defined in Profile settings.")}
+          </div>
+        )}
       </div>
 
       <Button

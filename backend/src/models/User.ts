@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
-import { User } from "common/src/types";
+import { User, Day } from "common/src/types";
 
 export interface UserDocument extends Document, User {
   google_picture_url?: string;
@@ -101,6 +101,36 @@ const userSchema = new Schema<UserDocument>(
     use_gravatar: {
       type: Boolean,
       default: false
+    },
+    defaultAvailable: {
+      [Day.SUNDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.MONDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.TUESDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.WEDNESDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.THURSDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.FRIDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
+      [Day.SATURDAY]: {
+        type: Array,
+        default: [{ start: "8:00", end: "17:00" }],
+      },
     }
   },
   {
