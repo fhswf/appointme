@@ -175,5 +175,18 @@ export const ko = {
     "Continue": "계속",
     "Book Appointment": "약속 예약",
     "Available Times": "사용 가능한 시간",
-    "No slots available": "사용 가능한 슬롯 없음"
+    "No slots available": "사용 가능한 슬롯 없음",
+    "Schedule Appointment": "약속 예약"
+    ,
+
+    // Missing keys added by script
+    "name": "이름",
+    "user_url": "사용자 URL",
+    "use_gravatar": "Gravatar 사용",
+    "save": "저장",
+    "profile_updated": "프로필이 성공적으로 업데이트되었습니다",
+    "error_saving_profile": "프로필 저장 오류",
+    "user_url_taken": "사용자 URL이 이미 사용 중입니다",
+    "error_loading_profile": "프로필 로드 오류",
+
 };

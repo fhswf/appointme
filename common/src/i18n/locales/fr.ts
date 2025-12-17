@@ -183,5 +183,6 @@ export const fr = {
     "Continue": "Continuer",
     "Book Appointment": "Réserver un rendez-vous",
     "Available Times": "Horaires disponibles",
-    "No slots available": "Aucun créneau disponible"
+    "No slots available": "Aucun créneau disponible",
+    "Schedule Appointment": "Planifier un rendez-vous"
 };

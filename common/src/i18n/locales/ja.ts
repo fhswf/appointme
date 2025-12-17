@@ -175,6 +175,19 @@ export const ja = {
     "Continue": "続行",
     "Book Appointment": "予約する",
     "Available Times": "利用可能な時間",
-    "No slots available": "利用可能な枠がありません"
+    "No slots available": "利用可能な枠がありません",
+    "Schedule Appointment": "予約をスケジュールする"
+
+    ,
+
+    // Missing keys added by script
+    "name": "名前",
+    "user_url": "ユーザーURL",
+    "use_gravatar": "Gravatarを使用",
+    "save": "保存",
+    "profile_updated": "プロファイルが正常に更新されました",
+    "error_saving_profile": "プロファイルの保存エラー",
+    "user_url_taken": "ユーザーURLは既に使用されています",
+    "error_loading_profile": "プロファイルの読み込みエラー",
 
 };

@@ -183,5 +183,6 @@ export const it = {
     "Continue": "Continua",
     "Book Appointment": "Prenota appuntamento",
     "Available Times": "Orari disponibili",
-    "No slots available": "Nessuno slot disponibile"
+    "No slots available": "Nessuno slot disponibile",
+    "Schedule Appointment": "Programma appuntamento"
 };

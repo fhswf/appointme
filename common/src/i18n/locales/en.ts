@@ -183,5 +183,6 @@ export const en = {
     "Continue": "Continue",
     "Book Appointment": "Book Appointment",
     "Available Times": "Available Times",
-    "No slots available": "No slots available"
+    "No slots available": "No slots available",
+    "Schedule Appointment": "Schedule Appointment"
 };

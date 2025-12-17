@@ -175,5 +175,18 @@ export const zh = {
     "Continue": "继续",
     "Book Appointment": "预订预约",
     "Available Times": "可用时间",
-    "No slots available": "无可用时间段"
+    "No slots available": "无可用时间段",
+    "Schedule Appointment": "安排预约"
+    ,
+
+    // Missing keys added by script
+    "name": "姓名",
+    "user_url": "用户链接",
+    "use_gravatar": "使用 Gravatar",
+    "save": "保存",
+    "profile_updated": "个人资料已更新",
+    "error_saving_profile": "保存个人资料失败",
+    "user_url_taken": "用户链接已被占用",
+    "error_loading_profile": "加载个人资料失败",
+
 };

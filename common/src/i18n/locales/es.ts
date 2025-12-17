@@ -183,5 +183,6 @@ export const es = {
     "Continue": "Continuar",
     "Book Appointment": "Reservar cita",
     "Available Times": "Horarios disponibles",
-    "No slots available": "No hay horarios disponibles"
+    "No slots available": "No hay horarios disponibles",
+    "Schedule Appointment": "Programar cita"
 };
