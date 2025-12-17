@@ -34,19 +34,19 @@ export const EventCard = (props: EventCardProps) => {
 
   const toggleActive = (checked: boolean) => {
     if (checked) {
-        if (!props.hasCalendar) {
-            toast.error(t("error_no_calendar"));
-            return;
-        }
-        if (event.duration <= 0) {
-            toast.error(t("error_no_duration"));
-            return;
-        }
-        const hasSlots = Object.values(event.available).some(daySlots => daySlots.length > 0);
-        if (!hasSlots) {
-            toast.error(t("error_no_slots"));
-            return;
-        }
+      if (!props.hasCalendar) {
+        toast.error(t("error_no_calendar"));
+        return;
+      }
+      if (event.duration <= 0) {
+        toast.error(t("error_no_duration"));
+        return;
+      }
+      const hasSlots = Object.values(event.available).some(daySlots => daySlots.length > 0);
+      if (!hasSlots) {
+        toast.error(t("error_no_slots"));
+        return;
+      }
     }
     setActive(checked);
     props.setActive(event, checked);
@@ -85,7 +85,7 @@ export const EventCard = (props: EventCardProps) => {
 
   return (
     <div
-      className={`group bg-card text-card-foreground rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full relative overflow-hidden ${active ? "ring-1 ring-primary/5 border-primary/20 md:shadow-lg md:shadow-blue-500/10" : ""}`}
+      className={`group bg-card text-card-foreground rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full relative overflow-hidden ${active ? "ring-1 ring-primary/5 border-primary/20 md:shadow-lg md:shadow-blue-500/10 active" : "inactive"}`}
       data-testid="event-card"
     >
       {/* Left border strip - hidden on mobile */}

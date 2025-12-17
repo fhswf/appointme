@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { defineStepper } from "@stepperize/react";
 
 import { getUserByUrl } from "../helpers/services/user_services";
@@ -27,8 +27,8 @@ import { Separator } from "@/components/ui/separator";
 import { LanguageSelector } from "../components/LanguageSelector";
 import Footer from "../components/Footer";
 import HorizontalWeekCalendar from "../components/HorizontalWeekCalendar";
-import { ChevronLeft, Globe, Clock, MapPin, Video, Monitor } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ChevronLeft, Globe, Clock, MapPin, Video } from "lucide-react";
+
 
 
 

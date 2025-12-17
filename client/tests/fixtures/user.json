@@ -13,5 +13,7 @@
   ],
   "updatedAt": "2024-10-05T15:09:00.077Z",
   "user_url": "christian-gawron",
-  "push_calendar": "t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com"
+  "push_calendars": [
+    "t6hldgptmgr36ctkm1720bvcfg@group.calendar.google.com"
+  ]
 }

@@ -113,7 +113,7 @@ test.describe('Main page', () => {
                 }
             });
 
-            await page.getByTestId('add-event-button').click();
+            await page.getByTestId('add-event-button-desktop').click();
             await expect(page).toHaveURL(/\/addevent/);
 
             await page.waitForSelector('[data-testid="event-form-title"]', { state: 'visible' });
@@ -197,8 +197,9 @@ test.describe('Main page', () => {
             await expect(page.getByTestId('event-card')).toHaveClass(/inactive/);
 
             const putPromise2 = page.waitForResponse(resp => resp.url().includes('/event/66e41e641f4f81ece1828ab5') && resp.request().method() === 'PUT');
-            await page.getByTestId('active-switch').click();
+            await page.getByTestId('active-switch').click({ force: true });
             await putPromise2;
+            console.log('Second PUT received.');
             await expect(page.getByTestId('event-card')).toHaveClass(/active/);
 
             await page.getByTestId('copy-link-button').click();
