@@ -14,24 +14,41 @@ type EditSlotProps = {
     onChange: (slots: Slot[]) => void;
 };
 
+// Internal type with ID for React keys
+type SlotWithId = Slot & { _id: string };
+
 const EditSlot = (props: EditSlotProps) => {
     const { i18n } = useTranslation();
-    const [slots, setSlots] = React.useState<Slot[]>([]);
+    const [slots, setSlots] = React.useState<SlotWithId[]>([]);
 
     React.useEffect(() => {
-        setSlots(props.slots || []);
+        // Create a content-only version of current state for comparison
+        const currentContent = slots.map(({ _id, ...rest }) => rest);
+        
+        // Only update from props if the content is actually different
+        // This prevents regenerating IDs (and losing focus/state) when the parent
+        // echoes back the same data we just sent.
+        if (JSON.stringify(currentContent) !== JSON.stringify(props.slots || [])) {
+            setSlots((props.slots || []).map(s => ({
+                ...s,
+                _id: Math.random().toString(36).substring(2, 9)
+            })));
+        }
+        // We purposefully omit 'slots' from dependencies to avoid reverting 
+        // local changes before the parent has caught up.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.slots]);
 
     const hasActiveSlots = slots.length > 0;
-
 
     const handleCheck = (checked: boolean) => {
         if (checked) {
             // ensure at least one entry
             if (slots.length === 0) {
-                const _slots = [{ start: "09:00", end: "17:00" }];
+                const newSlot = { start: "09:00", end: "17:00" };
+                const _slots = [{ ...newSlot, _id: Math.random().toString(36).substring(2, 9) }];
                 setSlots(_slots);
-                props.onChange(_slots);
+                props.onChange([newSlot]);
             }
         } else if (slots.length > 0) {
             setSlots([]);
@@ -40,27 +57,26 @@ const EditSlot = (props: EditSlotProps) => {
     };
 
     const addSlot = () => {
-        const _slots = slots.slice();
-        _slots.push({ start: "", end: "" });
+        const newSlot = { start: "", end: "" };
+        const _slots = [...slots, { ...newSlot, _id: Math.random().toString(36).substring(2, 9) }];
         setSlots(_slots);
-        props.onChange(_slots);
+        props.onChange(_slots.map(({ _id, ...rest }) => rest));
     };
 
-    const deleteSlot = (index: number) => () => {
-        // console.log("delete slot %d", index);
-        const _slots = slots.filter((slot, idx) => index !== idx);
+    const deleteSlot = (id: string) => () => {
+        const _slots = slots.filter((slot) => slot._id !== id);
         setSlots(_slots);
-        props.onChange(_slots);
+        props.onChange(_slots.map(({ _id, ...rest }) => rest));
     };
 
     const changeTime =
-        (key: keyof Slot, index: number) =>
+        (key: keyof Slot, id: string) =>
             (val: string) => {
-                // console.log("ChangeTime: %s %d %o", key, index, val);
-                const _slots = slots.slice();
-                _slots[index] = { ..._slots[index], [key]: val };
+                const _slots = slots.map(slot =>
+                    slot._id === id ? { ...slot, [key]: val } : slot
+                );
                 setSlots(_slots);
-                props.onChange(_slots);
+                props.onChange(_slots.map(({ _id, ...rest }) => rest));
             };
 
     const getDayName = (day: Day) => {
@@ -82,12 +98,12 @@ const EditSlot = (props: EditSlotProps) => {
                 </Label>
             </div>
             <div className="col-span-9 space-y-2">
-                {slots.map((slot, index) => (
-                    <div key={`${index}`} className="flex items-center gap-2">
+                {slots.map((slot) => (
+                    <div key={slot._id} className="flex items-center gap-2">
                         <div className="w-1/3">
                             <LocalizedTimeInput
                                 placeholder={t("Starttime")}
-                                onChange={changeTime("start", index)}
+                                onChange={changeTime("start", slot._id)}
                                 value={slot.start}
                             />
                         </div>
@@ -95,7 +111,7 @@ const EditSlot = (props: EditSlotProps) => {
                         <div className="w-1/3">
                             <LocalizedTimeInput
                                 placeholder={t("Endtime")}
-                                onChange={changeTime("end", index)}
+                                onChange={changeTime("end", slot._id)}
                                 value={slot.end}
                             />
                         </div>
@@ -103,7 +119,7 @@ const EditSlot = (props: EditSlotProps) => {
                         <Button
                             variant="ghost"
                             size="icon"
-                            onClick={deleteSlot(index)}
+                            onClick={deleteSlot(slot._id)}
                             type="button"
                         >
                             <Trash className="h-4 w-4" />

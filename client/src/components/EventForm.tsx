@@ -10,10 +10,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash, Settings, X } from "lucide-react";
-import { LocalizedTimeInput } from "./LocalizedTimeInput";
+import { X } from "lucide-react";
 
 import { EventFormProps } from "../pages/EditEvent";
 import { AvailabilityEditor } from "./AvailabilityEditor";
@@ -324,7 +322,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               size="sm"
               onClick={() => {
                 if (confirm(t("Overwrite current availability with standard?"))) {
-                  setFormData({ ...formData, available: structuredClone(user.defaultAvailable!) });
+                  setFormData({ ...formData, available: structuredClone(user.defaultAvailable) });
                   setChanged(true);
                 }
               }}
