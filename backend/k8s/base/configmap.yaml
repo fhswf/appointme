@@ -29,7 +29,9 @@ data:
   # OIDC Configuration
   OIDC_ISSUER: "https://keycloak.ki.fh-swf.de/realms/cluster"
   OIDC_CLIENT_ID: "appointme"
-  
+  OIDC_NAME: "Campus-ID"
+  OIDC_ICON: "/fh-swf.svg"
+
   # Client Configuration (Build-time variables for the frontend)
   REACT_APP_API_URL: "https://appointme.example.com/api/v1"
   REACT_APP_URL: "https://appointme.example.com"

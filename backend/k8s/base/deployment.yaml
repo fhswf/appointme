@@ -50,7 +50,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: CLIENT_ID
-                  name: appointme-secret
+                  name: appointme-secret                 
             - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -98,6 +98,16 @@ spec:
                 configMapKeyRef:
                   key: OIDC_CLIENT_ID
                   name: appointme
+            - name: OIDC_ICON
+              valueFrom:
+                configMapKeyRef:
+                  key: OIDC_ICON
+                  name: appointme
+            - name: OIDC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: OIDC_NAME
+                  name: appointme                  
             - name: OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
