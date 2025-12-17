@@ -150,7 +150,19 @@ export const it = {
     ,
 
     // Missing keys added by script
+    "edit": "Modifica",
     "copy": "Copia",
+    "Availability Mode": "Modalità di disponibilità",
+    "Define Custom": "Definisci personalizzato",
+    "Use Standard": "Usa standard",
+    "Standard + Extra": "Standard + Extra",
+    "Standard + Constraints": "Standard + Vincoli",
+    "Standard Availability": "Disponibilità standard",
+    "Using Standard Availability defined in Profile settings.": "Utilizzo della disponibilità standard definita nelle impostazioni del profilo.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "Definisci qui la tua disponibilità settimanale standard. Puoi utilizzare questa disponibilità nei tuoi tipi di eventi.",
+    "Copy Standard Availability": "Copia disponibilità standard",
+    "Overwrite current availability with standard?": "Sovrascrivere la disponibilità attuale con quella standard?",
+    "Profile": "Profilo",
     "about": "A proposito",
     "about_content": "# A proposito di AppointMe\n\nAppointMe è un semplice strumento per la pianificazione degli appuntamenti.\nConfigura i tuoi calendari, imposta la tua disponibilità e permetti agli altri di prenotare appuntamenti con te.\n\n## Github\n[Guarda il codice su Github](https://github.com/fhswf/appointme)\n\n## Crediti\nImplementato con ❤️ presso l'Università di Scienze Applicate della Westfalia Meridionale",
     "legal": "Note legali",
@@ -188,5 +200,16 @@ export const it = {
     "Book Appointment": "Prenota appuntamento",
     "Available Times": "Orari disponibili",
     "No slots available": "Nessuno slot disponibile",
-    "Schedule Appointment": "Programma appuntamento"
+    "Schedule Appointment": "Programma appuntamento",
+    "Available Meeting Types": "Tipi di riunione disponibili",
+    "Please select a meeting type to view availability.": "Seleziona un tipo di riunione per visualizzare la disponibilità.",
+    "All": "Tutti",
+    "No public events found.": "Nessun evento pubblico trovato.",
+    "Timezone": "Fuso orario",
+    "Privacy & Terms": "Privacy e Termini",
+    "Quick": "Veloce",
+    "Consulting": "Consulenza",
+    "Tags": "Etichette",
+    "Type a tag and press Enter": "Scrivi un'etichetta e premi Invio",
+    "Press Enter to add a tag": "Premi Invio per aggiungere un'etichetta"
 };

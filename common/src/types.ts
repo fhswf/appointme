@@ -40,6 +40,7 @@ export type Event = {
   duration: number;
   isActive: boolean;
   url: string;
+  tags?: string[];
 
   bufferafter: number;
   bufferbefore: number;
@@ -53,6 +54,9 @@ export type Event = {
 
   /** Maximum number of events per day */
   maxPerDay: number;
+
+  /** How compilation of availability slots is handled */
+  availabilityMode?: 'define' | 'default';
 };
 
 export const EMPTY_EVENT: Event = {
@@ -76,7 +80,8 @@ export const EMPTY_EVENT: Event = {
   },
   minFuture: 2 * 86400,
   maxFuture: 60 * 86400,
-  maxPerDay: 2
+  maxPerDay: 2,
+  availabilityMode: 'define'
 };
 
 export interface GoogleTokens extends Document {
@@ -107,6 +112,7 @@ export interface User {
   pull_calendars: string[];
   welcome?: string;
   send_invitation_email?: boolean;
+  defaultAvailable?: Slots;
 };
 
 export class TimeRange {

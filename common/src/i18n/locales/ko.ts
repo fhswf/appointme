@@ -137,6 +137,7 @@ export const ko = {
     "login_failed": "로그인 실패",
     "google_login_failed": "Google 로그인 실패",
     "Add": "추가",
+    "edit": "편집",
     "Close": "닫기",
     "Choose calendars in which appointments are created.": "약속이 생성될 캘린더를 선택하십시오.",
     "Email (Optional)": "이메일 (선택 사항)",
@@ -151,6 +152,17 @@ export const ko = {
 
     // Missing keys added by script
     "copy": "복사",
+    "Availability Mode": "가용성 모드",
+    "Define Custom": "사용자 정의",
+    "Use Standard": "표준 사용",
+    "Standard + Extra": "표준 + 추가",
+    "Standard + Constraints": "표준 + 제한",
+    "Standard Availability": "표준 가용성",
+    "Using Standard Availability defined in Profile settings.": "프로필 설정에 정의된 표준 가용성을 사용합니다.",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "여기서 표준 주간 가용성을 정의하세요. 이 가용성을 이벤트 유형에서 사용할 수 있습니다.",
+    "Copy Standard Availability": "표준 가용성 복사",
+    "Overwrite current availability with standard?": "현재 가용성을 표준으로 덮어쓰시겠습니까?",
+    "Profile": "프로필",
     "about": "소개",
     "about_content": "# AppointMe 소개\n\nAppointMe는 일정을 예약하기 위한 간단한 도구입니다.\n달력을 구성하고 가용성을 설정하여 다른 사람들이 귀하와 약속을 예약할 수 있도록 하세요.\n\n## Github\n[Github에서 코드 확인하기](https://github.com/fhswf/appointme)\n\n## 크레딧\nSouth Westphalia University of Applied Sciences에서 ❤️로 구현됨",
     "legal": "법적 고지",
@@ -188,5 +200,16 @@ export const ko = {
     "Book Appointment": "약속 예약",
     "Available Times": "사용 가능한 시간",
     "No slots available": "사용 가능한 슬롯 없음",
-    "Schedule Appointment": "약속 예약"
+    "Schedule Appointment": "약속 예약",
+    "Available Meeting Types": "사용 가능한 회의 유형",
+    "Please select a meeting type to view availability.": "가용성을 확인하려면 회의 유형을 선택하십시오.",
+    "All": "전체",
+    "No public events found.": "공개 이벤트를 찾을 수 없습니다.",
+    "Timezone": "시간대",
+    "Privacy & Terms": "개인정보 및 약관",
+    "Quick": "빠른",
+    "Consulting": "상담",
+    "Tags": "태그",
+    "Type a tag and press Enter": "태그를 입력하고 Enter를 누르세요",
+    "Press Enter to add a tag": "Enter를 눌러 태그 추가"
 };

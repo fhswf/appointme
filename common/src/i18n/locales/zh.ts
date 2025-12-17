@@ -137,6 +137,7 @@ export const zh = {
     "login_failed": "登录失败",
     "google_login_failed": "Google 登录失败",
     "Add": "添加",
+    "edit": "编辑",
     "Close": "关闭",
     "Choose calendars in which appointments are created.": "选择创建预约的日历。",
     "Email (Optional)": "电子邮件（可选）",
@@ -151,6 +152,17 @@ export const zh = {
 
     // Missing keys added by script
     "copy": "复制",
+    "Availability Mode": "可用性模式",
+    "Define Custom": "自定义",
+    "Use Standard": "使用标准",
+    "Standard + Extra": "标准 + 额外",
+    "Standard + Constraints": "标准 + 限制",
+    "Standard Availability": "标准可用性",
+    "Using Standard Availability defined in Profile settings.": "使用配置资料设置中定义的标准可用性。",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "在此处定义您的标准每周可用性。您可以在事件类型中使用此可用性。",
+    "Copy Standard Availability": "复制标准可用性",
+    "Overwrite current availability with standard?": "用标准覆盖当前的可用性？",
+    "Profile": "个人资料",
     "about": "关于",
     "about_content": "# 关于 AppointMe\n\nAppointMe 是一个简单的预约安排工具。\n配置您的日历，设置您的空闲时间，让其他人与您预约。\n\n## Github\n[在 Github 上查看代码](https://github.com/fhswf/appointme)\n\n## 致谢\n由 South Westphalia University of Applied Sciences ❤️ 实现",
     "legal": "法律声明",
@@ -188,5 +200,16 @@ export const zh = {
     "Book Appointment": "预订预约",
     "Available Times": "可用时间",
     "No slots available": "无可用时间段",
-    "Schedule Appointment": "安排预约"
-};
+    "Schedule Appointment": "预约",
+    "Available Meeting Types": "可用的会议类型",
+    "Please select a meeting type to view availability.": "请选择会议类型以查看可用性。",
+    "All": "全部",
+    "No public events found.": "未找到公共事件。",
+    "Timezone": "时区",
+    "Privacy & Terms": "隐私与条款",
+    "Quick": "快速",
+    "Consulting": "咨询",
+    "Tags": "标签",
+    "Type a tag and press Enter": "输入标签并按回车",
+    "Press Enter to add a tag": "按回车添加标签"
+}

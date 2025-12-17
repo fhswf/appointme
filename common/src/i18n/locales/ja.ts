@@ -137,6 +137,7 @@ export const ja = {
     "login_failed": "ログイン失敗",
     "google_login_failed": "Googleログイン失敗",
     "Add": "追加",
+    "edit": "編集",
     "Close": "閉じる",
     "Choose calendars in which appointments are created.": "予定が作成されるカレンダーを選択します。",
     "Email (Optional)": "メール（オプション）",
@@ -151,6 +152,17 @@ export const ja = {
 
     // Missing keys added by script
     "copy": "コピー",
+    "Availability Mode": "可用性モード",
+    "Define Custom": "カスタム定義",
+    "Use Standard": "標準を使用",
+    "Standard + Extra": "標準 + 追加",
+    "Standard + Constraints": "標準 + 制約",
+    "Standard Availability": "標準の可用性",
+    "Using Standard Availability defined in Profile settings.": "プロファイル設定で定義された標準の可用性を使用しています。",
+    "Define your standard weekly availability here. You can use this availability in your Event Types.": "ここで標準の週次可用性を定義します。この可用性はイベントタイプで使用できます。",
+    "Copy Standard Availability": "標準の可用性をコピー",
+    "Overwrite current availability with standard?": "現在の可用性を標準で上書きしますか？",
+    "Profile": "プロフィール",
     "about": "について",
     "about_content": "# AppointMeについて\n\nAppointMeは、予約スケジュールのためのシンプルなツールです。\nカレンダーを設定し、空き状況を決めれば、他の人があなたとの予約を取れるようになります。\n\n## Github\n[Githubでコードを確認する](https://github.com/fhswf/appointme)\n\n## クレジット\n南ヴェストファーレン応用科学大学で❤️を込めて実装されました",
     "legal": "法的通知",
@@ -188,6 +200,16 @@ export const ja = {
     "Book Appointment": "予約する",
     "Available Times": "利用可能な時間",
     "No slots available": "利用可能な枠がありません",
-    "Schedule Appointment": "予約をスケジュールする"
-
+    "Schedule Appointment": "予約をスケジュールする",
+    "Available Meeting Types": "利用可能な会議タイプ",
+    "Please select a meeting type to view availability.": "空き状況を確認するには、会議タイプを選択してください。",
+    "All": "すべて",
+    "No public events found.": "公開イベントが見つかりません。",
+    "Timezone": "タイムゾーン",
+    "Privacy & Terms": "プライバシーと利用規約",
+    "Quick": "クイック",
+    "Consulting": "コンサルティング",
+    "Tags": "タグ",
+    "Type a tag and press Enter": "タグを入力してEnterキーを押してください",
+    "Press Enter to add a tag": "Enterキーを押してタグを追加"
 };

@@ -57,6 +57,14 @@ describe("Server routes", () => {
               }
             })
           }
+        }),
+        findById: vi.fn((id) => {
+          console.log("UserModel: mocked findById");
+          return {
+            exec: vi.fn(() => {
+              return Promise.resolve(USER);
+            })
+          }
         })
       }
     }
