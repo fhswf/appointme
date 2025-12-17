@@ -137,6 +137,7 @@ export const zh = {
     "login_failed": "登录失败",
     "google_login_failed": "Google 登录失败",
     "Add": "添加",
+    "edit": "编辑",
     "Close": "关闭",
     "Choose calendars in which appointments are created.": "选择创建预约的日历。",
     "Email (Optional)": "电子邮件（可选）",

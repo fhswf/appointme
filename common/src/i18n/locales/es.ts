@@ -136,7 +136,7 @@ export const es = {
     "login_successful": "Inicio de sesión exitoso",
     "login_failed": "Inicio de sesión fallido",
     "google_login_failed": "Fallo en el inicio de sesión con Google",
-    "Add": "Añadir",
+    "edit": "Editar",
     "Close": "Cerrar",
     "Choose calendars in which appointments are created.": "Elija los calendarios en los que se crean las citas.",
     "Email (Optional)": "Correo electrónico (Opcional)",

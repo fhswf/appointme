@@ -150,6 +150,7 @@ export const it = {
     ,
 
     // Missing keys added by script
+    "edit": "Modifica",
     "copy": "Copia",
     "Availability Mode": "Modalità di disponibilità",
     "Define Custom": "Definisci personalizzato",

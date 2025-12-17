@@ -137,6 +137,7 @@ export const ja = {
     "login_failed": "ログイン失敗",
     "google_login_failed": "Googleログイン失敗",
     "Add": "追加",
+    "edit": "編集",
     "Close": "閉じる",
     "Choose calendars in which appointments are created.": "予定が作成されるカレンダーを選択します。",
     "Email (Optional)": "メール（オプション）",
