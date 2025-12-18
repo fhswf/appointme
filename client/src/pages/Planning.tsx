@@ -165,6 +165,9 @@ const Planning = () => {
             <a className="text-[#6b7280] dark:text-[#94a3b8] hover:text-primary dark:hover:text-white transition-colors text-sm" href="/legal">
               {t("Privacy & Terms")}
             </a>
+            <span className="text-[#6b7280] dark:text-[#94a3b8] text-sm">
+              {t("footer_credits")}
+            </span>
           </div>
         </div>
       </div>

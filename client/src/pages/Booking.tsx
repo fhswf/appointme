@@ -486,9 +486,7 @@ const Booking = () => {
           </form>
         </div>
       </div>
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };
