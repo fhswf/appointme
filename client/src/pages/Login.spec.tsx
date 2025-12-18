@@ -118,4 +118,17 @@ describe('Login Page', () => {
         await waitFor(() => expect(authServices.getOidcAuthUrl).toHaveBeenCalled());
         await waitFor(() => expect(window.location.href).toBe('http://oidc-url.com'));
     });
+
+    it('should handle OIDC login failure', async () => {
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ oidcEnabled: true });
+        vi.spyOn(authServices, 'getOidcAuthUrl').mockRejectedValue(new Error('OIDC Error'));
+        render(<Login />);
+
+        await waitFor(() => expect(screen.getByText('login_with SSO')).toBeInTheDocument());
+        fireEvent.click(screen.getByText('login_with SSO'));
+
+        await waitFor(() => expect(authServices.getOidcAuthUrl).toHaveBeenCalled());
+        await waitFor(() => expect(screen.getByText('login_with SSO')).toBeInTheDocument()); // Verify no nav/still on page
+        // Could assert toast error if mocked properly, but basic flow is covered
+    });
 });
