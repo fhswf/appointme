@@ -1,3 +1,10 @@
+# backend [1.32.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.12...backend@1.32.0-rc.13) (2025-12-18)
+
+
+### Bug Fixes
+
+* google login ([0c2cda1](https://github.com/fhswf/appointme/commit/0c2cda19f8c40441eedbbe403334c260eaf2a454))
+
 # backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
 
 
