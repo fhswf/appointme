@@ -259,5 +259,7 @@ Programmiert mit ❤️ an der Fachhochschule Südwestfalen`,
     "google": "Google",
     "sso_icon_alt": "SSO Icon",
     "SSO": "SSO",
-    "footer_credits": "Programmiert mit ❤️ an der Fachhochschule Südwestfalen"
+    "footer_credits": "Programmiert mit ❤️ an der Fachhochschule Südwestfalen",
+    "terms_of_use_title": "Nutzungsbedingungen",
+    "terms_of_use_content": "# Nutzungsbedingungen\n\n## Leistungserbringung\n\nDieser Dienst wird kostenlos zur Verfügung gestellt.\n\n## Haftungs- und Gewährleistungsausschluss\n\nWeder die Autoren noch die Fachhochschule Südwestfalen übernehmen eine Haftung für Schäden jeglicher Art oder eine Gewährleistung jeglicher Art im Zusammenhang mit der Nutzung dieses Dienstes. Die Nutzung erfolgt auf eigene Gefahr. Dieser Ausschluss gilt nicht für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit, die auf einer vorsätzlichen oder fahrlässigen Pflichtverletzung beruhen, sowie für sonstige Schäden, die auf einer vorsätzlichen oder grob fahrlässigen Pflichtverletzung beruhen."
 };

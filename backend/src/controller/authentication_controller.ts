@@ -12,13 +12,13 @@ import { logger } from "../logging.js";
 
 const { sign, verify } = pkg;
 
-const REDIRECT_URI = `${process.env.API_URL}/google/oauthcallback`;
-logger.debug("redirectUri: %s", REDIRECT_URI);
+const REDIRECT_URI = `postmessage`;
+logger.info("redirectUri: %s", REDIRECT_URI);
 if (!process.env.CLIENT_SECRET) {
   logger.error("CLIENT_SECRET not set!")
 }
 if (process.env.CLIENT_ID) {
-  logger.debug("clientId: %s", process.env.CLIENT_ID);
+  logger.info("clientId: %s", process.env.CLIENT_ID);
 }
 else {
   logger.error("CLIENT_ID not set!")

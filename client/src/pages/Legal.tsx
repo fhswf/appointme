@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useLocation } from 'react-router-dom';
 import AppNavbar from '../components/AppNavbar';
@@ -13,13 +13,15 @@ const Legal: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const { user } = useContext(UserContext);
-    const [activeTab, setActiveTab] = useState<'impressum' | 'privacy'>('impressum');
+    const [activeTab, setActiveTab] = useState<'terms' | 'impressum' | 'privacy'>('terms');
 
     useEffect(() => {
         if (location.hash === '#privacy') {
             setActiveTab('privacy');
         } else if (location.hash === '#impressum') {
             setActiveTab('impressum');
+        } else if (location.hash === '#terms') {
+            setActiveTab('terms');
         }
     }, [location.hash]);
 
@@ -29,6 +31,13 @@ const Legal: React.FC = () => {
             <main className="container mx-auto p-8 flex-grow">
                 <div className="max-w-3xl mx-auto">
                     <div className="flex space-x-4 border-b border-border mb-8">
+                        <Button
+                            variant="ghost"
+                            className={`pb-2 rounded-none px-4 ${activeTab === 'terms' ? 'border-b-2 border-primary font-bold text-foreground' : 'text-muted-foreground'}`}
+                            onClick={() => setActiveTab('terms')}
+                        >
+                            {t("terms_of_use_title")}
+                        </Button>
                         <Button
                             variant="ghost"
                             className={`pb-2 rounded-none px-4 ${activeTab === 'impressum' ? 'border-b-2 border-primary font-bold text-foreground' : 'text-muted-foreground'}`}
@@ -46,6 +55,12 @@ const Legal: React.FC = () => {
                     </div>
 
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        {activeTab === 'terms' && (
+                            <div>
+                                <ReactMarkdown components={markdownComponents}>{t("terms_of_use_content")}</ReactMarkdown>
+                                <ContactInfo />
+                            </div>
+                        )}
                         {activeTab === 'impressum' && (
                             <div>
                                 <ReactMarkdown components={markdownComponents}>{t("impressum_content")}</ReactMarkdown>

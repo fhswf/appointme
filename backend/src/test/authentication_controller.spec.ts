@@ -16,28 +16,30 @@ vi.mock("nodemailer", () => {
     }
 });
 
+const OAuth2ClientMock = vi.fn().mockImplementation(function () {
+    return ({
+        verifyIdToken: vi.fn().mockResolvedValue({
+            getAttributes: () => ({
+                payload: {
+                    email_verified: true,
+                    name: "Google User",
+                    email: "google@example.com",
+                    picture: "http://example.com/pic.jpg",
+                    sub: "google_id_123"
+                }
+            })
+        }),
+        getToken: vi.fn().mockResolvedValue({
+            tokens: {
+                id_token: "mock_id_token"
+            }
+        })
+    });
+});
+
 vi.mock("google-auth-library", () => {
     return {
-        OAuth2Client: vi.fn().mockImplementation(function () {
-            return ({
-                verifyIdToken: vi.fn().mockResolvedValue({
-                    getAttributes: () => ({
-                        payload: {
-                            email_verified: true,
-                            name: "Google User",
-                            email: "google@example.com",
-                            picture: "http://example.com/pic.jpg",
-                            sub: "google_id_123"
-                        }
-                    })
-                }),
-                getToken: vi.fn().mockResolvedValue({
-                    tokens: {
-                        id_token: "mock_id_token"
-                    }
-                })
-            });
-        })
+        OAuth2Client: OAuth2ClientMock
     }
 });
 
@@ -116,6 +118,11 @@ describe("Authentication Controller", () => {
 
             expect(res.status).toEqual(200);
             expect(res.body.user).toBeDefined();
+
+            // Verify OAuth2Client was initialized with correct redirectUri
+            expect(OAuth2ClientMock).toHaveBeenCalledWith(expect.objectContaining({
+                redirectUri: 'postmessage'
+            }));
         });
 
 
