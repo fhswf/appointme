@@ -237,5 +237,16 @@ export const en = {
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
-    "Contact": "Contact"
+    "Contact": "Contact",
+    "welcome_back": "Welcome back",
+    "login_subtitle": "Please sign in to continue.",
+    "login_tos_prefix": "By logging in you accept our",
+    "terms_of_service": "Terms of Service",
+    "help": "Help",
+    "privacy": "Privacy",
+    "imprint": "Imprint",
+    "or": "or",
+    "google": "Google",
+    "sso_icon_alt": "SSO Icon",
+    "SSO": "SSO"
 };

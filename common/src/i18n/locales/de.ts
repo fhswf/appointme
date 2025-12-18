@@ -247,5 +247,16 @@ Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
     "landing_footer_terms": "AGB",
     "landing_footer_copyright": "© 2023 Appoint Me. Alle Rechte vorbehalten.",
     "landing_footer_tagline": "Einfache Terminplanung für alle.",
-    "Contact": "Kontakt"
+    "Contact": "Kontakt",
+    "welcome_back": "Willkommen zurück",
+    "login_subtitle": "Bitte melden Sie sich an, um fortzufahren.",
+    "login_tos_prefix": "Durch die Anmeldung akzeptieren Sie unsere",
+    "terms_of_service": "Nutzungsbedingungen",
+    "help": "Hilfe",
+    "privacy": "Datenschutz",
+    "imprint": "Impressum",
+    "or": "oder",
+    "google": "Google",
+    "sso_icon_alt": "SSO Icon",
+    "SSO": "SSO"
 };
