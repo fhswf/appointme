@@ -51,7 +51,7 @@ try {
 
     // 3. Commit changes if in CI
     if (process.env.CI || process.env.GITHUB_ACTIONS) {
-        const { execSync } = require('node:child_process');
+        const { execSync, execFileSync } = require('node:child_process');
         try {
             console.log("Committing root changes to git...");
             // Ensure git is configured if not already
@@ -61,7 +61,7 @@ try {
             } catch (configError) {
                 console.log("Git identity already set or could not be set.");
             }
-            execSync(`git add ${rootPkgPath} ${sonarPath}`);
+            execFileSync('git', ['add', rootPkgPath, sonarPath]);
             execSync(`git commit -m "chore(release): update root version and sonar config to ${newVersion} [skip ci]" --allow-empty`);
             console.log("Successfully committed root changes.");
         } catch (error) {
