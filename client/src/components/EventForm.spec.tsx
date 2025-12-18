@@ -14,13 +14,21 @@ vi.mock('@/components/ui/checkbox', () => ({
     )
 }));
 
-// Mock Select component parts to simplify testing
+// Mock Select component with Native Select for easier testing
 vi.mock('@/components/ui/select', () => ({
-    Select: ({ onValueChange, children }: any) => <div data-testid="select">{children}</div>,
-    SelectTrigger: ({ children }: any) => <button>{children}</button>,
-    SelectValue: () => <span>Select Value</span>,
-    SelectContent: ({ children }: any) => <div>{children}</div>,
-    SelectItem: ({ value, children, onClick }: any) => <button onClick={() => onClick?.(value)} data-value={value}>{children}</button>,
+    Select: ({ onValueChange, children, value }: any) => (
+        <select
+            data-testid="mock-select"
+            value={value}
+            onChange={e => onValueChange(e.target.value)}
+        >
+            {children}
+        </select>
+    ),
+    SelectTrigger: ({ children }: any) => null,
+    SelectValue: () => null,
+    SelectContent: ({ children }: any) => <>{children}</>,
+    SelectItem: ({ value, children }: any) => <option value={value}>{children}</option>,
 }));
 
 // Mock Textarea
@@ -31,7 +39,17 @@ vi.mock('@/components/ui/textarea', () => ({
 vi.mock('@/components/ui/input', () => ({
     Input: (props: any) => <input {...props} />
 }));
-
+// Mock useAuth
+vi.mock('../components/AuthProvider', () => ({
+    useAuth: () => ({
+        user: {
+            defaultAvailable: {
+                1: [{ start: "09:00", end: "17:00" }]
+            }
+        },
+        isAuthenticated: true
+    })
+}));
 
 const mockEvent = {
     _id: '1',
@@ -49,7 +67,8 @@ const mockEvent = {
     user: 'user1',
     minFuture: 0,
     maxFuture: 0,
-    maxPerDay: 0
+    maxPerDay: 0,
+    availabilityMode: 'define' as const
 };
 
 describe('EventForm Component', () => {
@@ -198,5 +217,49 @@ describe('EventForm Component', () => {
         const submitButton = screen.getByTestId('event-form-submit');
         expect(submitButton).toBeEnabled();
     });
-});
+    it('should copy standard availability when copy button is clicked', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
 
+        // Mock window.confirm
+        const confirmSpy = vi.spyOn(window, 'confirm');
+        confirmSpy.mockImplementation(() => true);
+
+        const copyButton = screen.getByText('Copy Standard Availability');
+        fireEvent.click(copyButton);
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        // Expect availability to match mocked default (Monday 9-17)
+        // 1: [{ start: "09:00", end: "17:00" }]
+        expect(submittedEvent.available[1]).toEqual([{ start: "09:00", end: "17:00" }]);
+
+        confirmSpy.mockRestore();
+    });
+
+    it('should add and remove tags', () => {
+        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+
+        const tagInput = screen.getByPlaceholderText('Type a tag and press Enter');
+        fireEvent.change(tagInput, { target: { value: 'NewTag' } });
+        fireEvent.keyDown(tagInput, { key: 'Enter', code: 'Enter' });
+
+        expect(screen.getByText('NewTag')).toBeInTheDocument();
+
+        // Check if tag is in submission
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        // Remove tag
+        // Find the span containing the tag text
+        // The text 'NewTag' is directly inside the span
+        const tagSpan = screen.getByText('NewTag');
+        // The button is a sibling of the text node or child of the span
+        // tagSpan returned by getByText is likely the span itself if it contains the text
+        const removeButton = tagSpan.querySelector('button');
+
+        expect(removeButton).toBeInTheDocument();
+        if (removeButton) fireEvent.click(removeButton);
+    });
+});

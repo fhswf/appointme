@@ -51,7 +51,7 @@ describe('Login Component', () => {
         render(<Login />);
         const button = await screen.findByTestId('login-google');
         expect(button).toBeInTheDocument();
-        expect(button).toHaveTextContent('login_with Google');
+        expect(button).toHaveTextContent('login_with google');
     });
 
     it('should call postGoogleLogin and navigate on success', async () => {

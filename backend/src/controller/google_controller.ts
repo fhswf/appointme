@@ -24,7 +24,7 @@ const config = {
   redirectUri: `${process.env.API_URL}/google/oauthcallback`,
 }
 
-logger.debug("google_controller: ", config);
+logger.info("google_controller: ", config);
 
 const createOAuthClient = (userId?: string): OAuth2Client => {
   const client = new OAuth2Client(config);

@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.33.0",
+  "version": "1.34.0-rc.1",
   "description": "",
   "repository": {
     "type": "git",
@@ -105,7 +105,7 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
       [

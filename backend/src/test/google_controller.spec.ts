@@ -46,6 +46,7 @@ vi.mock('google-auth-library', () => {
 // Mock logger
 vi.mock('../logging', () => ({
     logger: {
+        info: vi.fn(),
         debug: vi.fn(),
         error: vi.fn()
     }

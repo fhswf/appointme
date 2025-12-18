@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 
 @theme {
   --color-border: hsl(var(--border));
@@ -29,9 +31,13 @@
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
 
+  --color-campus: hsl(var(--campus));
+  --color-campus-foreground: hsl(var(--campus-foreground));
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -64,8 +70,8 @@
 
 :root {
   /* Zinc-based light theme */
-  --background: 0 0% 100%;
-  /* #ffffff */
+  --background: 220 14% 96%;
+  /* #f3f4f6 (Zinc 100) */
   --foreground: 240 10% 3.9%;
   /* #09090b (text-main-light / background-dark) */
 
@@ -76,8 +82,8 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
 
-  --primary: 240 5.9% 10%;
-  /* #18181b (primary button / dark bg) */
+  --primary: 217 91% 60%;
+  /* #3b82f6 (campus blue) */
   --primary-foreground: 0 0% 98%;
 
   --secondary: 240 4.8% 95.9%;
@@ -106,35 +112,28 @@
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
   --chart-5: 27 87% 67%;
+
+  --campus: 217 91% 60%;
+  /* #3b82f6 (Blue 500) */
+  --campus-foreground: 0 0% 98%;
 }
 
 .dark {
   /* Zinc-based dark theme */
-  --background: 240 10% 3.9%;
-  /* #09090b */
+  --background: 222 47% 11%;
+  /* #0f172a (Slate 900) */
   --foreground: 0 0% 98%;
   /* #fafafa */
 
-  --card: 240 10% 3.9%;
-  /* Using background-dark for card base, or surface-dark #18181b? */
+  --card: 215 28% 17%;
+  /* #1e293b (Slate 800) */
   --card-foreground: 0 0% 98%;
 
   --popover: 240 10% 3.9%;
   --popover-foreground: 0 0% 98%;
 
-  --primary: 0 0% 98%;
-  /* White text on dark? Or should it be the black button? */
-  /* Template: dark:text-white. Primary button is always #18181b in template? */
-  /* Template primary color: #18181b. Matches the black button. */
-  /* If we keep shadcn conventions, primary in dark mode is usually light. */
-  /* But let's stick to the template's look. The button in the template is bg-primary text-white. */
-  /* In dark mode, the FAB is "bg-primary" which is #18181b. That would be invisible on #18181b background? */
-  /* Wait, template: "bg-background-light dark:bg-background-dark". dark bg is #09090b. */
-  /* FAB: bg-primary (#18181b). So it's slightly lighter than dark bg (#09090b). */
-
-  --primary: 0 0% 98%;
-  /* Resetting to standard shadcn to avoid confusion, will use specific classes if needed */
-  --primary-foreground: 240 5.9% 10%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 98%;
 
   --secondary: 240 3.7% 15.9%;
   /* #27272a (border-dark/primary-hover) */
@@ -160,6 +159,10 @@
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
+
+  --campus: 217 91% 60%;
+  /* #3b82f6 */
+  --campus-foreground: 0 0% 98%;
 }
 
 @utility no-scrollbar {

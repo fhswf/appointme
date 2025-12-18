@@ -59,8 +59,15 @@ export function calculateBlocked(events, event, timeMin, timeMax) {
   return blocked;
 }
 
-export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked) {
+export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMax, blocked, user) {
   let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+
+  if (user && user.defaultAvailable) {
+    if (event.availabilityMode === 'default') {
+      freeSlots = new IntervalSet(timeMin, timeMax, user.defaultAvailable, "Europe/Berlin");
+    }
+  }
+
   freeSlots = freeSlots.intersect(blocked.inverse());
 
   for (const key in response.data.calendars) {
@@ -92,12 +99,18 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   logger.debug('getAvailableTimes: %s %s %s', timeMin, timeMax, eventId);
   EventModel
     .findById(eventId)
-    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user")
+    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user availabilityMode")
     .exec()
     .then(event => {
       if (!event) {
         throw new Error("Event not found");
       }
+      return UserModel.findById(event.user).exec().then(user => {
+        if (!user) throw new Error("User not found");
+        return { event, user };
+      });
+    })
+    .then(({ event, user }) => {
       // Calculate intersection of requested and 'feasible' time interval
       timeMin = max(timeMin, startOfHour(Date.now() + 1000 * event.minFuture));
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture));
@@ -105,9 +118,9 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
 
       // Request currently booked events. We need them for the maxPerDay restriction
       return events(event.user, timeMin.toISOString(), timeMax.toISOString())
-        .then(events => ({ events, event }))
+        .then(events => ({ events, event, user }));
     })
-    .then(({ events, event }) => {
+    .then(({ events, event, user }) => {
       const blocked = calculateBlocked(events, event, timeMin, timeMax);
       logger.debug("blocked: %o", blocked);
       logger.debug("free: %o", blocked.inverse());
@@ -119,10 +132,10 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
           logger.error('CalDAV getBusySlots failed', err);
           return [];
         })
-      ]).then(([freeBusyResponse, calDavSlots]) => ({ freeBusyResponse, calDavSlots, event, blocked }));
+      ]).then(([freeBusyResponse, calDavSlots]) => ({ freeBusyResponse, calDavSlots, event, blocked, user }));
     })
-    .then(({ freeBusyResponse, calDavSlots, event, blocked }) => {
-      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked);
+    .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
+      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
       logger.debug('freeSlots before filtering: %j', freeSlots);
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
       logger.debug('freeSlots after filtering: %j', freeSlots);

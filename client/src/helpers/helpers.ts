@@ -1,6 +1,7 @@
 
 import { UserContext } from "../components/PrivateRoute";
 import { useContext } from "react";
+import { postLogout } from "./services/auth_services";
 
 export const setLocalStorage = (key: string, value: string) => {
   localStorage.setItem(key, JSON.stringify(value));
@@ -11,9 +12,15 @@ export const removeLocalStorage = (key: string) => {
 };
 
 
-export const signout = () => {
+
+
+export const signout = async () => {
   console.log('signout');
-  removeLocalStorage("access_token");
+  try {
+    await postLogout();
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
 };
 
 

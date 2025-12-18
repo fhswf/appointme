@@ -13,8 +13,8 @@ vi.mock('../models/User.js');
 vi.mock('../logging.js', () => ({
     logger: {
         info: vi.fn(),
-        error: vi.fn(),
         debug: vi.fn(),
+        error: vi.fn(),
         warn: vi.fn(),
     }
 }));

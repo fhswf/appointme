@@ -5,7 +5,7 @@
 import { Router } from "express";
 export const authenticationRouter = Router();
 
-import { googleLoginController, getConfig } from "../controller/authentication_controller.js";
+import { googleLoginController, getConfig, logout } from "../controller/authentication_controller.js";
 
 /**
  * @openapi
@@ -79,6 +79,19 @@ authenticationRouter.get("/config", getConfig);
  *               $ref: '#/components/schemas/Error'
  */
 authenticationRouter.post("/google_oauth2_code", googleLoginController);
+/**
+ * @openapi
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout
+ *     description: Logout the user by clearing the access token cookie
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+authenticationRouter.post("/logout", logout);
 
 export default authenticationRouter;
 

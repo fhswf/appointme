@@ -2,7 +2,7 @@
  * @module user_controller
  */
 import { UserModel } from "../models/User.js";
-import { User } from "common/src/types";
+import { User } from "common";
 import { Request, Response } from 'express';
 import crypto from 'node:crypto';
 // ...
@@ -35,7 +35,8 @@ export const getUser = (req: Request, res: Response): void => {
       "updatedAt": 1,
       "send_invitation_email": 1,
       "google_tokens.access_token": 1,
-      "use_gravatar": 1
+      "use_gravatar": 1,
+      "defaultAvailable": 1
     })
     .exec()
     .then(user => {
@@ -58,14 +59,7 @@ const filterUser = (user) => Object.keys(user)
   .filter(key => key != 'google_tokens')
   .reduce((obj, key) => { obj[key] = user[key]; return obj }, {});
 
-export const updateUser = (req: Request, res: Response): void => {
-  const userid = req['user_id'];
-  if (typeof userid !== 'string') {
-    res.status(400).json({ error: "Invalid user id" });
-    return;
-  }
-
-  const userData = req.body.data as Partial<User>;
+const buildUserUpdateObject = (userData: Partial<User>): Record<string, any> => {
   const update: Record<string, any> = {};
 
   // Explicitly allowlist and validate fields
@@ -74,19 +68,12 @@ export const updateUser = (req: Request, res: Response): void => {
   if (typeof userData.welcome === 'string') update.welcome = userData.welcome;
 
   // Validate arrays and specific types
-  if (Array.isArray(userData.pull_calendars)) {
-    // Ensure all elements are strings
-    if (userData.pull_calendars.every(c => typeof c === 'string')) {
-      update.pull_calendars = userData.pull_calendars.map(String);
-    }
+  if (Array.isArray(userData.pull_calendars) && userData.pull_calendars.every(c => typeof c === 'string')) {
+    update.pull_calendars = userData.pull_calendars.map(String);
   }
 
-  // Validate arrays and specific types
-  if (Array.isArray(userData.push_calendars)) {
-    // Ensure all elements are strings
-    if (userData.push_calendars.every(c => typeof c === 'string')) {
-      update.push_calendars = userData.push_calendars.map(String);
-    }
+  if (Array.isArray(userData.push_calendars) && userData.push_calendars.every(c => typeof c === 'string')) {
+    update.push_calendars = userData.push_calendars.map(String);
   }
 
   // Handle User URL
@@ -103,19 +90,44 @@ export const updateUser = (req: Request, res: Response): void => {
     update.send_invitation_email = userData.send_invitation_email;
   }
 
+  if (userData.defaultAvailable && typeof userData.defaultAvailable === 'object') {
+    update.defaultAvailable = userData.defaultAvailable;
+  }
+
+  return update;
+};
+
+const resolvePictureUrl = (currentUser: any, userData: Partial<User>): string | undefined => {
+  if (userData.use_gravatar !== undefined && userData.use_gravatar !== currentUser.use_gravatar) {
+    if (userData.use_gravatar) {
+      // Switched to Gravatar
+      const emailHash = crypto.createHash('md5').update(currentUser.email.toLowerCase().trim()).digest('hex');
+      return `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
+    } else {
+      // Switched back to Google picture (or empty if not available)
+      return currentUser.google_picture_url || "";
+    }
+  }
+  return undefined;
+};
+
+export const updateUser = (req: Request, res: Response): void => {
+  const userid = req['user_id'];
+  if (typeof userid !== 'string') {
+    res.status(400).json({ error: "Invalid user id" });
+    return;
+  }
+
+  const userData = req.body.data as Partial<User>;
+  const update = buildUserUpdateObject(userData);
+
   UserModel.findById(userid).exec()
     .then(currentUser => {
       if (!currentUser) throw new Error("User not found");
 
-      if (userData.use_gravatar !== undefined && userData.use_gravatar !== currentUser.use_gravatar) {
-        if (userData.use_gravatar) {
-          // Switched to Gravatar
-          const emailHash = crypto.createHash('md5').update(currentUser.email.toLowerCase().trim()).digest('hex');
-          update.picture_url = `https://www.gravatar.com/avatar/${emailHash}?d=mp`;
-        } else {
-          // Switched back to Google picture (or empty if not available)
-          update.picture_url = currentUser.google_picture_url || "";
-        }
+      const newPictureUrl = resolvePictureUrl(currentUser, userData);
+      if (newPictureUrl !== undefined) {
+        update.picture_url = newPictureUrl;
       }
 
       return UserModel.findByIdAndUpdate(userid, { $set: update },
@@ -133,7 +145,8 @@ export const updateUser = (req: Request, res: Response): void => {
             "updatedAt": 1,
             "google_tokens.access_token": 1,
             "use_gravatar": 1,
-            "send_invitation_email": 1
+            "send_invitation_email": 1,
+            "defaultAvailable": 1
           }
         }).exec();
     })

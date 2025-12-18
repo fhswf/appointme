@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthenticated, signout } from "../helpers/helpers";
 import { useAuth } from "./AuthProvider";
 import {
   Calendar,
@@ -39,15 +38,15 @@ declare global {
 const AppNavbar = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [profileOpen, setProfileOpen] = React.useState(false);
 
   const link = user ? import.meta.env.REACT_APP_URL + "/users/" + user.user_url : "";
 
   console.log("AppNavbar: user=%o", user);
 
-  const handleLogout = () => {
-    signout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/landing");
   };
 
@@ -61,7 +60,7 @@ const AppNavbar = () => {
 
   const handleOnClick = (target: string) => () => navigate(target);
 
-  const loginOut = useAuthenticated() ? (
+  const loginOut = isAuthenticated ? (
     <DropdownMenuItem onClick={handleLogout} data-testid="logout-button">
       <LogOut className="mr-2 h-4 w-4" />
       <span>{t("user_menu_log_out")}</span>

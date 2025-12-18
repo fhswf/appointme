@@ -58,13 +58,13 @@ describe('Legal Page', () => {
         expect(screen.getByTestId('footer')).toBeInTheDocument();
     });
 
-    it('should default to Impressum tab', () => {
+    it('should default to Terms of Use tab', () => {
         renderWithContext();
-        // Check if impressum button is active (bold/border is CSS class, hard to check "active" logic without checking class)
-        // Check if impressum content is shown
-        expect(screen.getByText('impressum_content')).toBeInTheDocument();
+        // Check if terms content is shown
+        expect(screen.getByText('terms_of_use_content')).toBeInTheDocument();
         expect(screen.getByTestId('contact-info')).toBeInTheDocument();
-        // Privacy content should not be visible
+        // Other content should not be visible
+        expect(screen.queryByText('impressum_content')).not.toBeInTheDocument();
         expect(screen.queryByText('privacy_content_public')).not.toBeInTheDocument();
     });
 
@@ -73,8 +73,8 @@ describe('Legal Page', () => {
         fireEvent.click(screen.getByText('Datenschutzhinweise'));
 
         expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
-        // Impressum content should be hidden
-        expect(screen.queryByText('impressum_content')).not.toBeInTheDocument();
+        // Terms of Use content should be hidden
+        expect(screen.queryByText('terms_of_use_content')).not.toBeInTheDocument();
     });
 
     it('should show public privacy content when not logged in', () => {
@@ -95,9 +95,43 @@ describe('Legal Page', () => {
         expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
     });
 
+    it('should respect hash #terms', () => {
+        mockLocation.hash = '#terms';
+        renderWithContext();
+        expect(screen.getByText('terms_of_use_content')).toBeInTheDocument();
+    });
+
     it('should respect hash #impressum', () => {
         mockLocation.hash = '#impressum';
         renderWithContext();
         expect(screen.getByText('impressum_content')).toBeInTheDocument();
+    });
+
+    it('should switch back to Impressum from Privacy', () => {
+        renderWithContext();
+        fireEvent.click(screen.getByText('Datenschutzhinweise'));
+        expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
+        
+        fireEvent.click(screen.getByText('Impressum'));
+        expect(screen.getByText('impressum_content')).toBeInTheDocument();
+        expect(screen.queryByText('privacy_content_public')).not.toBeInTheDocument();
+        expect(screen.queryByText('terms_of_use_content')).not.toBeInTheDocument();
+    });
+
+    it('should switch to Terms of Use from Impressum', () => {
+        renderWithContext();
+        fireEvent.click(screen.getByText('Impressum'));
+        expect(screen.getByText('impressum_content')).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText('terms_of_use_title'));
+        expect(screen.getByText('terms_of_use_content')).toBeInTheDocument();
+        expect(screen.queryByText('impressum_content')).not.toBeInTheDocument();
+    });
+
+    it('should handle authenticated internal privacy content', () => {
+        const user = { name: 'User' };
+        renderWithContext(user);
+        fireEvent.click(screen.getByText('Datenschutzhinweise'));
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
     });
 });

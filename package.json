@@ -1,6 +1,6 @@
 {
   "name": "appointme",
-  "version": "1.0.0",
+  "version": "1.35.0.1",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
   "directories": {
@@ -70,7 +70,7 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
       [
@@ -100,5 +100,6 @@
   "packageManager": "yarn@4.5.0",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17"
-  }
+  },
+  "stableVersion": "1.9.2"
 }

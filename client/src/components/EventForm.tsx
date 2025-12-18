@@ -10,132 +10,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash } from "lucide-react";
-import { LocalizedTimeInput } from "./LocalizedTimeInput";
+import { X } from "lucide-react";
 
 import { EventFormProps } from "../pages/EditEvent";
-import { Day, Event, Slot } from "common";
-import { t } from "i18next";
-
-type EditSlotProps = {
-  day: Day;
-  slots: Slot[];
-  onChange: (slots: Slot[]) => void;
-};
-
-const EditSlot = (props: EditSlotProps) => {
-  const { i18n } = useTranslation();
-  const [slots, setSlots] = useState<Slot[]>([]);
-
-  useEffect(() => {
-    setSlots(props.slots);
-  }, [props.slots]);
-
-  const handleCheck = (checked: boolean) => {
-    if (checked) {
-      // ensure at least one entry
-      if (slots.length === 0) {
-        const _slots = [{ start: "09:00", end: "17:00" }];
-        setSlots(_slots);
-        props.onChange(_slots);
-      }
-    } else if (slots.length > 0) {
-      setSlots([]);
-      props.onChange([]);
-    }
-  };
-
-  const addSlot = () => {
-    const _slots = slots.slice();
-    _slots.push({ start: "", end: "" });
-    setSlots(_slots);
-    props.onChange(_slots);
-  };
-
-  const deleteSlot = (index: number) => () => {
-    console.log("delete slot %d", index);
-    const _slots = slots.filter((slot, idx) => index !== idx);
-    setSlots(_slots);
-    props.onChange(_slots);
-  };
-
-  const changeTime =
-    (key: keyof Slot, index: number) =>
-      (val: string) => {
-        console.log("ChangeTime: %s %d %o", key, index, val);
-        const _slots = slots.slice();
-        _slots[index][key] = val;
-        setSlots(_slots);
-        props.onChange(_slots);
-      };
-
-
-
-  console.log("EditSlot: %o", slots);
-
-  const getDayName = (day: Day) => {
-    // Jan 5, 2025 is a Sunday. Day enum is 0 for Sunday.
-    const date = new Date(2025, 0, 5 + day);
-    return date.toLocaleString(i18n.language, { weekday: 'short' });
-  };
-
-  return (
-    <div className="grid grid-cols-12 gap-4 items-start py-2 border-b last:border-0">
-      <div className="col-span-2 flex items-center space-x-2 pt-2">
-        <Checkbox
-          id={`day-${props.day}`}
-          checked={slots.length > 0}
-          onCheckedChange={handleCheck}
-        />
-        <Label htmlFor={`day-${props.day}`} className="font-medium">
-          {getDayName(props.day)}
-        </Label>
-      </div>
-      <div className="col-span-9 space-y-2">
-        {slots.map((slot, index) => (
-          <div key={`${slot.start}-${index}`} className="flex items-center gap-2">
-            <div className="w-1/3">
-
-              <LocalizedTimeInput
-                placeholder={t("Starttime")}
-                onChange={changeTime("start", index)}
-                value={slot.start}
-              />
-            </div>
-            <span className="text-muted-foreground">–</span>
-            <div className="w-1/3">
-              <LocalizedTimeInput
-                placeholder={t("Endtime")}
-                onChange={changeTime("end", index)}
-                value={slot.end}
-              />
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={deleteSlot(index)}
-              type="button"
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-      <div className="col-span-1 pt-1">
-        {slots.length > 0 && (
-          <Button variant="ghost" size="icon" onClick={addSlot} type="button">
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-};
+import { AvailabilityEditor } from "./AvailabilityEditor";
+import { useAuth } from "../components/AuthProvider";
 
 export const EventForm = (props: EventFormProps): JSX.Element => {
+  const { t } = useTranslation();
+  const { user } = useAuth();
   const [formData, setFormData] = useState<Event>(props.event);
   const [changed, setChanged] = useState(false);
 
@@ -181,12 +65,39 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         setFormData({ ...formData, [key]: Number(value) } as Event);
       };
 
-  const onChangeSlot = (day: Day) => (slots: Slot[]) => {
+  const onChangeAvailability = (slots: any) => {
     setChanged(true);
-    console.log("onChangeSlot: %d %o", day, slots);
-    const event: Event = { ...formData };
-    event.available[day] = slots;
-    setFormData(event);
+    setFormData({ ...formData, available: slots });
+  };
+
+  const onAvailabilityModeChange = (val: string) => {
+    setChanged(true);
+    setFormData({ ...formData, availabilityMode: val as any });
+  }
+
+  const [tagInput, setTagInput] = useState("");
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const newTag = tagInput.trim();
+      if (newTag && !formData.tags?.includes(newTag)) {
+        setChanged(true);
+        setFormData({
+          ...formData,
+          tags: [...(formData.tags || []), newTag],
+        });
+        setTagInput("");
+      }
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setChanged(true);
+    setFormData({
+      ...formData,
+      tags: formData.tags?.filter((tag) => tag !== tagToRemove) || [],
+    });
   };
 
   return (
@@ -223,7 +134,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           <Input
             id="location"
             placeholder={t("tired_whole_bumblebee_type")}
-            defaultValue={t("Online via Zoom")}
             onChange={handleOnChange("location")}
             value={formData.location}
           />
@@ -239,6 +149,32 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             value={formData.url}
           />
           <p className="text-sm text-muted-foreground">{t("less_equal_octopus_dine")}</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="tags">{t("Tags")}</Label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {formData.tags?.map((tag, index) => (
+              <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm flex items-center gap-1">
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="hover:text-destructive focus:outline-none"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <Input
+            id="tags"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagKeyDown}
+            placeholder={t("Type a tag and press Enter")}
+          />
+          <p className="text-sm text-muted-foreground">{t("Press Enter to add a tag")}</p>
         </div>
       </div>
 
@@ -363,16 +299,54 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           {t("Daily availability")}
         </h2>
 
-        <div className="border rounded-lg p-4 space-y-2">
-          {[0, 1, 2, 3, 4, 5, 6].map((day) => (
-            <EditSlot
-              key={day}
-              day={day}
-              slots={formData.available[day as Day]}
-              onChange={onChangeSlot(day)}
-            />
-          ))}
+        <div className="flex items-center justify-between mb-4">
+          <div className="space-y-1">
+            <Label htmlFor="availabilityMode">{t("Availability Mode")}</Label>
+            <Select
+              value={formData.availabilityMode || 'define'}
+              onValueChange={onAvailabilityModeChange}
+            >
+              <SelectTrigger id="availabilityMode" className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="define">{t('Define Custom')}</SelectItem>
+                <SelectItem value="default">{t('Use Standard')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {formData.availabilityMode === 'define' && user?.defaultAvailable && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (confirm(t("Overwrite current availability with standard?"))) {
+                  setFormData({ ...formData, available: structuredClone(user.defaultAvailable) });
+                  setChanged(true);
+                }
+              }}
+            >
+              {t("Copy Standard Availability")}
+            </Button>
+          )}
         </div>
+        {formData.availabilityMode === 'default' && (
+          <div className="text-sm text-muted-foreground mb-4">
+            {t("Using Standard Availability defined in Profile settings.")}
+          </div>
+        )}
+        {formData.availabilityMode === 'define' && (
+          <AvailabilityEditor
+            available={formData.available}
+            onChange={onChangeAvailability}
+          />
+        )}
+        {formData.availabilityMode === 'default' && (
+          <div className="border rounded-lg p-6 text-center text-muted-foreground bg-muted/20">
+            {t("Using Standard Availability defined in Profile settings.")}
+          </div>
+        )}
       </div>
 
       <Button
