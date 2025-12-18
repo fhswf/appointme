@@ -20,7 +20,7 @@ try {
     const oldVersion = rootPkg.version || "0.0.0";
 
     // Simple semver increment
-    const parts = oldVersion.split('.').map(v => parseInt(v, 10) || 0);
+    const parts = oldVersion.split('.').map(v => Number.parseInt(v, 10) || 0);
     if (parts.length < 3) while (parts.length < 3) parts.push(0);
 
     if (releaseType === 'major') {
@@ -47,6 +47,26 @@ try {
         console.log(`Updated sonar.projectVersion to ${newVersion} in ${sonarPath}`);
     } else {
         console.warn(`sonar-project.properties not found at: ${sonarPath}. Skipping.`);
+    }
+
+    // 3. Commit changes if in CI
+    if (process.env.CI || process.env.GITHUB_ACTIONS) {
+        const { execSync } = require('node:child_process');
+        try {
+            console.log("Committing root changes to git...");
+            // Ensure git is configured if not already
+            try {
+                execSync('git config user.name "semantic-release-bot"');
+                execSync('git config user.email "semantic-release-bot@martynus.net"');
+            } catch (configError) {
+                console.log("Git identity already set or could not be set.");
+            }
+            execSync(`git add ${rootPkgPath} ${sonarPath}`);
+            execSync(`git commit -m "chore(release): update root version and sonar config to ${newVersion} [skip ci]" --allow-empty`);
+            console.log("Successfully committed root changes.");
+        } catch (error) {
+            console.warn("Failed to commit root changes. This might be expected if no changes were detected or git is not available.", error.message);
+        }
     }
 
 } catch (error) {
