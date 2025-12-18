@@ -248,5 +248,6 @@ export const en = {
     "or": "or",
     "google": "Google",
     "sso_icon_alt": "SSO Icon",
-    "SSO": "SSO"
+    "SSO": "SSO",
+    "footer_credits": "Programmed with ❤️ at the South Westphalia University of Applied Sciences"
 };

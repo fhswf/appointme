@@ -252,5 +252,6 @@ export const es = {
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
-    "Contact": "Contacto"
+    "Contact": "Contacto",
+    "footer_credits": "Programado con ❤️ en la Universidad de Ciencias Aplicadas de South Westphalia"
 };

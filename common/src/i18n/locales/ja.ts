@@ -252,5 +252,6 @@ export const ja = {
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
-    "Contact": "連絡先"
+    "Contact": "連絡先",
+    "footer_credits": "南ヴェストファーレン応用科学大学で❤️を込めて実装されました"
 };
