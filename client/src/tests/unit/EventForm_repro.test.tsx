@@ -1,7 +1,30 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { EventForm } from '../../components/EventForm';
 import { EMPTY_EVENT, Event } from 'common';
+
+// Mock react-router-dom
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+    };
+});
+
+// Mock useAuth
+vi.mock('../../components/AuthProvider', () => ({
+    useAuth: () => ({
+        user: {
+            defaultAvailable: {
+                1: [{ start: "09:00", end: "17:00" }]
+            }
+        },
+        isAuthenticated: true
+    })
+}));
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -25,7 +48,11 @@ describe('EventForm Reproduction', () => {
         // Let's use Monday (index 1)
         event.available[1] = [{ start: '09:00', end: '17:00' }];
 
-        render(<EventForm event={event} handleOnSubmit={handleOnSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={event} handleOnSubmit={handleOnSubmit} />
+            </BrowserRouter>
+        );
 
         // Find the "Monday" section. 
         // We know from the code: "Jan 5, 2025 is a Sunday. Day enum is 0 for Sunday."

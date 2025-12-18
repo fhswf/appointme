@@ -9,6 +9,8 @@ import { EMPTY_EVENT, Event } from "common";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { Card, CardContent } from "@/components/ui/card";
+
 export type EventFormProps = {
   event: Event;
   handleOnSubmit: (evt: Event) => void;
@@ -55,13 +57,19 @@ const EditEvent = (): JSX.Element => {
       <AppNavbar />
 
       <div className="container mx-auto p-4 max-w-3xl">
-        <h1 className="text-3xl font-bold mb-6">
-          {t("each_awake_tadpole_jest")}
-        </h1>
-        <EventForm
-          event={formData || EMPTY_EVENT}
-          handleOnSubmit={saveEvent}
-        />
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">
+            {t("each_awake_tadpole_jest")}
+          </h1>
+        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <EventForm
+              event={formData || EMPTY_EVENT}
+              handleOnSubmit={saveEvent}
+            />
+          </CardContent>
+        </Card>
       </div>
     </>
   );
