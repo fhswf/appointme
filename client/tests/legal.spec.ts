@@ -19,7 +19,7 @@ test.describe('Legal Pages', () => {
         await page.goto('/landing');
 
         // Check Legal link
-        const legalLink = page.getByRole('link', { name: /Legal|Rechtliches/ });
+        const legalLink = page.getByTestId('footer-legal-link');
         await expect(legalLink).toBeVisible();
 
         // Navigate to Legal page
