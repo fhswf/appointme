@@ -15,8 +15,11 @@ test.describe('Legal Pages', () => {
         await expect(page.getByRole('heading', { name: /Privacy Policy|Datenschutzhinweise/ })).toBeVisible();
     });
 
-    test('should navigate from Landing page footer', async ({ page }) => {
+    test('should navigate from Landing page footer', async ({ page, context }) => {
+        // Ensure we are not logged in, otherwise Landing redirects to /
+        await context.clearCookies();
         await page.goto('/landing');
+        await expect(page).toHaveURL(/.*\/landing/);
 
         // Check Legal link
         const legalLink = page.getByTestId('footer-legal-link');
