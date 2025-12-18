@@ -1,3 +1,5 @@
+const fs = require('node:fs');
+const path = require('node:path');
 const semver = require('semver');
 
 const releaseType = process.argv[2]; // 'major', 'minor', 'patch'
