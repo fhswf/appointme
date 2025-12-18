@@ -12,6 +12,7 @@ const Footer: React.FC = () => {
                 <Link to="/legal" className="hover:underline" data-testid="footer-legal-link">
                     {t("Legal")}
                 </Link>
+                <span>{t("footer_credits")}</span>
             </div>
         </footer>
     );
