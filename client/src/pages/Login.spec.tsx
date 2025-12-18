@@ -72,7 +72,7 @@ describe('Login Page', () => {
     it('should render Google login button when enabled', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
         render(<Login />);
-        await waitFor(() => expect(screen.getByText('login_with Google')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
     });
 
     it('should render OIDC login button when enabled', async () => {
@@ -84,9 +84,9 @@ describe('Login Page', () => {
     it('should handle Google login flow success', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
         render(<Login />);
-        await waitFor(() => expect(screen.getByText('login_with Google')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
 
-        fireEvent.click(screen.getByText('login_with Google'));
+        fireEvent.click(screen.getByText('login_with google'));
 
         await waitFor(() => expect(mockGoogleLogin).toHaveBeenCalled());
         await waitFor(() => expect(authServices.postGoogleLogin).toHaveBeenCalledWith('test-code'));
@@ -99,8 +99,8 @@ describe('Login Page', () => {
         vi.spyOn(authServices, 'postGoogleLogin').mockRejectedValue({ response: { data: { message: 'Invalid code' } } });
         render(<Login />);
 
-        await waitFor(() => expect(screen.getByText('login_with Google')).toBeInTheDocument());
-        fireEvent.click(screen.getByText('login_with Google'));
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
+        fireEvent.click(screen.getByText('login_with google'));
 
         await waitFor(() => expect(authServices.postGoogleLogin).toHaveBeenCalled());
         // Should show error toast? (Not checking implementation details of toast here, but could spy on it)

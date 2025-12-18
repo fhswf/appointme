@@ -252,5 +252,6 @@ export const it = {
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
-    "Contact": "Contatto"
+    "Contact": "Contatto",
+    "footer_credits": "Implementato con ❤️ presso l'Università di Scienze Applicate della Westfalia Meridionale"
 };

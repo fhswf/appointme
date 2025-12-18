@@ -252,5 +252,6 @@ export const fr = {
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
-    "landing_footer_tagline": "Simple appointment planning for everyone."
+    "landing_footer_tagline": "Simple appointment planning for everyone.",
+    "footer_credits": "Mis en œuvre avec ❤️ à l'Université des Sciences Appliquées de South Westphalia"
 };

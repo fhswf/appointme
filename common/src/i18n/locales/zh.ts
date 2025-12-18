@@ -252,5 +252,6 @@ export const zh = {
     "landing_footer_terms": "Terms & Conditions",
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
-    "Contact": "联系方式"
-}
+    "Contact": "联系方式",
+    "footer_credits": "由 South Westphalia University of Applied Sciences ❤️ 实现"
+};

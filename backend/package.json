@@ -105,7 +105,7 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js"
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
       [
@@ -129,7 +129,9 @@
           "assets": [
             "package.json",
             "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml"
+            "k8s/overlays/**/kustomization.yaml",
+            "../package.json",
+            "../sonar-project.properties"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }

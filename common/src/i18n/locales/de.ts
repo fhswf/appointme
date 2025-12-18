@@ -166,7 +166,7 @@ Konfiguriere Deine Kalender, lege Deine Verfügbarkeit fest und lass andere Term
 [Schau dir den Code auf Github an](https://github.com/fhswf/appointme)
 
 ## Credits
-Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
+Programmiert mit ❤️ an der Fachhochschule Südwestfalen`,
     "legal": "Rechtliches",
     "Calendar": "Kalender",
     "Select a calendar": "Kalender auswählen",
@@ -258,5 +258,6 @@ Implementiert mit ❤️ an der  Fachhochschule Südwestfalen`,
     "or": "oder",
     "google": "Google",
     "sso_icon_alt": "SSO Icon",
-    "SSO": "SSO"
+    "SSO": "SSO",
+    "footer_credits": "Programmiert mit ❤️ an der Fachhochschule Südwestfalen"
 };
