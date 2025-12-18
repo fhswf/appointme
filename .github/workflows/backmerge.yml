@@ -1,0 +1,28 @@
+name: Back-merge Prod to Main
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  back-merge:
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.author.name != 'semantic-release-bot'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Git Config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge prod into main
+        run: |
+          git checkout main
+          git merge origin/prod --no-edit || (git merge origin/prod -X theirs --no-edit)
+          git push origin main
