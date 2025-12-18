@@ -1,3 +1,11 @@
+# client [1.27.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.11...client@1.27.0-rc.12) (2025-12-18)
+
+
+### Features
+
+* improve landing page ([f485524](https://github.com/fhswf/appointme/commit/f4855243a732ddf0a953e5966635e77ad3b4f271))
+* improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
+
 # client [1.27.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.10...client@1.27.0-rc.11) (2025-12-17)
 
 
