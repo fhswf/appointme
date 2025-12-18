@@ -253,5 +253,7 @@ export const ja = {
     "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "連絡先",
-    "footer_credits": "南ヴェストファーレン応用科学大学で❤️を込めて実装されました"
+    "footer_credits": "南ヴェストファーレン応用科学大学で❤️を込めて実装されました",
+    "terms_of_use_title": "Terms of Use",
+    "terms_of_use_content": "# Terms of Use\n\n## Service Provision\n\nThis service is provided free of charge.\n\n## Disclaimer of Liability and Warranty\n\nNeither the authors nor the South Westphalia University of Applied Sciences accept any liability for damages of any kind or any warranty of any kind in connection with the use of this service. Use is at your own risk. This disclaimer does not apply to damages resulting from injury to life, body, or health based on an intentional or negligent breach of duty, nor to other damages based on an intentional or grossly negligent breach of duty."
 };
