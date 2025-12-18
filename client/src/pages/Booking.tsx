@@ -253,7 +253,7 @@ const Booking = () => {
   const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] dark:bg-[#0f172a] text-[#1f2937] dark:text-[#f8fafc] transition-colors duration-300 font-sans flex flex-col overflow-x-hidden w-full">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 font-sans flex flex-col overflow-x-hidden w-full">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center bg-background p-4 justify-between sticky top-0 z-20 shadow-sm border-b">
         <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigate(-1)}>

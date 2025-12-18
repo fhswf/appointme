@@ -35,6 +35,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -66,8 +67,8 @@
 
 :root {
   /* Zinc-based light theme */
-  --background: 0 0% 100%;
-  /* #ffffff */
+  --background: 220 14% 96%;
+  /* #f3f4f6 (Zinc 100) */
   --foreground: 240 10% 3.9%;
   /* #09090b (text-main-light / background-dark) */
 
@@ -112,13 +113,13 @@
 
 .dark {
   /* Zinc-based dark theme */
-  --background: 240 10% 3.9%;
-  /* #09090b */
+  --background: 222 47% 11%;
+  /* #0f172a (Slate 900) */
   --foreground: 0 0% 98%;
   /* #fafafa */
 
-  --card: 240 10% 3.9%;
-  /* Using background-dark for card base, or surface-dark #18181b? */
+  --card: 215 28% 17%;
+  /* #1e293b (Slate 800) */
   --card-foreground: 0 0% 98%;
 
   --popover: 240 10% 3.9%;
