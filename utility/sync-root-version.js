@@ -7,8 +7,8 @@ if (!releaseType) {
     process.exit(1);
 }
 
-const rootPkgPath = path.join(__dirname, '..', 'package.json');
-const sonarPath = path.join(__dirname, '..', 'sonar-project.properties');
+const rootPkgPath = path.join(process.cwd(), 'package.json');
+const sonarPath = path.join(process.cwd(), 'sonar-project.properties');
 
 try {
     // 1. Update Root package.json

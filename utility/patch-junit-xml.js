@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 
 const filePath = process.argv[2];

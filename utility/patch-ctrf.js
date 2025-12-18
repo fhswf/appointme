@@ -1,6 +1,8 @@
-const fs = require('fs');
+const fs = require('node:fs');
+const path = require('node:path');
 
-const filePath = process.argv[2];
+const filePathArg = process.argv[2];
+const filePath = filePathArg ? (path.isAbsolute(filePathArg) ? filePathArg : path.join(process.cwd(), filePathArg)) : null;
 
 if (!filePath) {
     console.error('Usage: node patch-ctrf.js <path-to-json-file>');
