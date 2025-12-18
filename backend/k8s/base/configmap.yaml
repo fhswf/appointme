@@ -24,7 +24,7 @@ data:
   # CORS_ALLOWED_ORIGINS: "https://appointme."
   
   # Feature Flags
-  DISABLE_GOOGLE_LOGIN: "true"
+  DISABLE_GOOGLE_LOGIN: "false"
   
   # OIDC Configuration
   OIDC_ISSUER: "https://keycloak.ki.fh-swf.de/realms/cluster"
