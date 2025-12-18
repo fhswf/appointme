@@ -123,6 +123,16 @@
           "prepareCmd": "node ../utility/update-kustomize.js backend backend ${nextRelease.version}"
         }
       ],
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "backend",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/appointme",
+          "dockerContext": ".."
+        }
+      ],
       [
         "@semantic-release/git",
         {
@@ -132,16 +142,6 @@
             "k8s/overlays/**/kustomization.yaml"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@codedependant/semantic-release-docker",
-        {
-          "dockerImage": "backend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/appointme",
-          "dockerContext": ".."
         }
       ]
     ]
