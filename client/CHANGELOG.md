@@ -1,3 +1,11 @@
+# client [1.27.0-rc.13](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.12...client@1.27.0-rc.13) (2025-12-18)
+
+
+### Features
+
+* add footer credits text ([bdbe88b](https://github.com/fhswf/appointme/commit/bdbe88be204850a8419c686a59507da2257c2f97))
+* Standardize primary color to campus blue and adjust foreground for both light and dark themes. ([5d6d16b](https://github.com/fhswf/appointme/commit/5d6d16bfc68ded638a60c392a5741319563e1b3e))
+
 # client [1.27.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.11...client@1.27.0-rc.12) (2025-12-18)
 
 
