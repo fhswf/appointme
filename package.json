@@ -1,6 +1,6 @@
 {
   "name": "appointme",
-  "version": "1.33.0.13",
+  "version": "1.33.0",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
   "directories": {
@@ -87,6 +87,7 @@
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
       "prod",
+      "stable",
       {
         "name": "main",
         "prerelease": "rc"

@@ -80,6 +80,17 @@
 * **common:** upgraded to 1.12.0-rc.1
 
 # client [1.27.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.6...client@1.27.0-rc.7) (2025-12-14)
+# client [1.27.0](https://github.com/fhswf/appointme/compare/client@1.26.1...client@1.27.0) (2025-12-13)
+
+
+### Bug Fixes
+
+* config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
+* environment variables ([a16167e](https://github.com/fhswf/appointme/commit/a16167eef811c480a31e48438048a8eddf713060))
+* image tagging ([95e03b0](https://github.com/fhswf/appointme/commit/95e03b0906d778dd0529b6746d009a82ab0c1308))
+* runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
+* state management in UI ([63809d7](https://github.com/fhswf/appointme/commit/63809d78f93787d0bb75b83814f0cdaaf2fb7e7a))
+* version bumps ([29c4d17](https://github.com/fhswf/appointme/commit/29c4d173a15de4207c6a4e1f8a76c885ff3ba210))
 
 
 ### Features
@@ -92,6 +103,7 @@
 ### Bug Fixes
 
 * use apsoluter path for runtime configuration ([9563fe7](https://github.com/fhswf/appointme/commit/9563fe70b6c16829eccd22e42edd5e8c2f08e289))
+* add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
 
 # client [1.27.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.4...client@1.27.0-rc.5) (2025-12-12)
 

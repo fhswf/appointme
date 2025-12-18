@@ -1,4 +1,4 @@
-# backend [1.32.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.12...backend@1.32.0-rc.13) (2025-12-18)
+# backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-17)
 
 
 ### Bug Fixes
@@ -41,6 +41,8 @@
 * simplify common package import paths by removing `/src/types` suffix. ([4ea8a35](https://github.com/fhswf/appointme/commit/4ea8a3575eaa3d4b065ab38654f293a171042962))
 
 # backend [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.7...backend@1.32.0-rc.8) (2025-12-17)
+* Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
+* regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
 
 
 ### Features
@@ -48,6 +50,9 @@
 * enhanced availability management ([7139d3d](https://github.com/fhswf/appointme/commit/7139d3ddc4035f14dcd9c728d96c6e02a2f1c656))
 * Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
 * simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+* gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
+* Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
 
 
 
@@ -55,9 +60,9 @@
 
 ### Dependencies
 
-* **common:** upgraded to 1.12.0-rc.3
+* **common:** upgraded to 1.12.0
 
-# backend [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.6...backend@1.32.0-rc.7) (2025-12-17)
+# backend [1.32.0](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.32.0) (2025-12-13)
 
 
 ### Bug Fixes
@@ -85,6 +90,12 @@
 ### Bug Fixes
 
 * Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
+* config update ([bff42e3](https://github.com/fhswf/appointme/commit/bff42e3e0b116b4e70771f58de022a16b007cf75))
+* config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
+* configuration ([cac0259](https://github.com/fhswf/appointme/commit/cac0259c5100802363f124153b463ba4f2258315))
+* image tagging ([95e03b0](https://github.com/fhswf/appointme/commit/95e03b0906d778dd0529b6746d009a82ab0c1308))
+* runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
+* version bumps ([29c4d17](https://github.com/fhswf/appointme/commit/29c4d173a15de4207c6a4e1f8a76c885ff3ba210))
 
 
 ### Features
@@ -99,6 +110,7 @@
 ### Dependencies
 
 * **common:** upgraded to 1.12.0-rc.1
+* add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
 
 # backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
 
