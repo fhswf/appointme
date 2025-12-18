@@ -1,5 +1,4 @@
-const fs = require('node:fs');
-const path = require('node:path');
+const semver = require('semver');
 
 const releaseType = process.argv[2]; // 'major', 'minor', 'patch'
 if (!releaseType) {
@@ -19,22 +18,20 @@ try {
     const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf8'));
     const oldVersion = rootPkg.version || "0.0.0";
 
-    // Simple semver increment
-    const parts = oldVersion.split('.').map(v => Number.parseInt(v, 10) || 0);
-    if (parts.length < 3) while (parts.length < 3) parts.push(0);
-
-    if (releaseType === 'major') {
-        parts[0]++; parts[1] = 0; parts[2] = 0;
-    } else if (releaseType === 'minor') {
-        parts[1]++; parts[2] = 0;
-    } else if (releaseType === 'patch') {
-        parts[2]++;
-    } else {
-        console.error(`Invalid release type: ${releaseType}. Expected major, minor, or patch.`);
+    // Use semver for robust incrementing
+    // Coerce first to recover from invalid formats like '1.36.0.1'
+    const baseVersion = semver.coerce(oldVersion);
+    if (!baseVersion) {
+        console.error(`Could not coerce version from: ${oldVersion}`);
         process.exit(1);
     }
 
-    const newVersion = parts.join('.');
+    const newVersion = semver.inc(baseVersion.version, releaseType);
+    if (!newVersion) {
+        console.error(`Invalid release type: ${releaseType}. Expected major, minor, or patch (or other semver types).`);
+        process.exit(1);
+    }
+
     rootPkg.version = newVersion;
     fs.writeFileSync(rootPkgPath, JSON.stringify(rootPkg, null, 2) + '\n');
     console.log(`Bumped root version: ${oldVersion} -> ${newVersion} (${releaseType})`);

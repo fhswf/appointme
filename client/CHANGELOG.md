@@ -1,3 +1,10 @@
+# client [1.29.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.29.0-rc.1...client@1.29.0-rc.2) (2025-12-18)
+
+
+### Bug Fixes
+
+* event form ([87ddd69](https://github.com/fhswf/appointme/commit/87ddd697faadde140261a98314d34c7c8b4a6946))
+
 # client [1.29.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0-rc.1) (2025-12-18)
 
 
@@ -16,6 +23,14 @@
 * information update ([a40b227](https://github.com/fhswf/appointme/commit/a40b227249cd3432586b4a3e7d2ea242ad0eaa27))
 * simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
 * Standardize primary color to campus blue and adjust foreground for both light and dark themes. ([5d6d16b](https://github.com/fhswf/appointme/commit/5d6d16bfc68ded638a60c392a5741319563e1b3e))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.13.0
 
 # client [1.28.0](https://github.com/fhswf/appointme/compare/client@1.27.0...client@1.28.0) (2025-12-18)
 

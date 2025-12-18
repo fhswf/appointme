@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.29.0-rc.1",
+  "version": "1.29.0",
   "homepage": "https://jupiter.fh-swf.de/meeting",
   "contributors": [
     {
@@ -100,7 +100,7 @@
     "@types/react-router-dom": "latest",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-istanbul": "^4.0.15",
-    "dotenv-cli": "^7.4.2",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.11.1",
     "eslint-plugin-i18next": "^6.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -114,10 +114,10 @@
     "sharp-cli": "^5.2.0",
     "start-server-and-test": "^1.13.1",
     "typescript-eslint": "^8.48.1",
-    "vite": "^5.4.7",
+    "vite": "^7.3.0",
     "vite-plugin-istanbul": "^7.2.1",
-    "vitest": "^4.0.15",
-    "wait-on": "^5.3.0"
+    "vitest": "^4.0.16",
+    "wait-on": "^9.0.3"
   },
   "release": {
     "plugins": [
