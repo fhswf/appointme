@@ -1,3 +1,22 @@
+# client [1.28.0](https://github.com/fhswf/appointme/compare/client@1.27.0...client@1.28.0) (2025-12-18)
+
+
+### Bug Fixes
+
+* **build:** release configuration ([8d13d85](https://github.com/fhswf/appointme/commit/8d13d8518f67b0ca4f498aaa79d40460f4a7797e))
+* use apsoluter path for runtime configuration ([9563fe7](https://github.com/fhswf/appointme/commit/9563fe70b6c16829eccd22e42edd5e8c2f08e289))
+
+
+### Features
+
+* add about page ([3e40a69](https://github.com/fhswf/appointme/commit/3e40a69ab0d7c92f0be0bf3d51e94d131b4b51aa))
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+* impove main ui ([c0eda64](https://github.com/fhswf/appointme/commit/c0eda649695ac8ddc19f2ff258d0bd3fa695039b))
+* localization of date picker ([b575f45](https://github.com/fhswf/appointme/commit/b575f45019fc025642e2d86bd6c5a713f1dad355))
+* refactor calendar integration ([2d1907a](https://github.com/fhswf/appointme/commit/2d1907aaaf30ba50ef64fd3bbdca0b057db4399a))
+* ui improvements ([f7e88df](https://github.com/fhswf/appointme/commit/f7e88dfeb8b7341723a0e7718b89d094c847c015))
+* ui improvements ([1e4f048](https://github.com/fhswf/appointme/commit/1e4f0484eeca7c5865af9bc45b941f611bf9bc7a))
+
 # client [1.27.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.8...client@1.27.0-rc.9) (2025-12-17)
 
 
