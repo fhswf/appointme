@@ -1,3 +1,10 @@
+## client [1.29.1-rc.1](https://github.com/fhswf/appointme/compare/client@1.29.0...client@1.29.1-rc.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* event form ([87ddd69](https://github.com/fhswf/appointme/commit/87ddd697faadde140261a98314d34c7c8b4a6946))
+
 # client [1.29.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.29.0-rc.1...client@1.29.0-rc.2) (2025-12-18)
 
 
