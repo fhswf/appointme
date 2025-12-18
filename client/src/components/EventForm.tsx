@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { EventFormProps } from "../pages/EditEvent";
 import { AvailabilityEditor } from "./AvailabilityEditor";
@@ -182,6 +183,27 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             placeholder={t("Type a tag and press Enter")}
           />
           <p className="text-sm text-muted-foreground">{t("Press Enter to add a tag")}</p>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="restricted"
+            checked={formData.allowed_roles?.includes("student")}
+            onCheckedChange={(checked) => {
+              setChanged(true);
+              const roles = formData.allowed_roles ? [...formData.allowed_roles] : [];
+              if (checked) {
+                if (!roles.includes("student")) roles.push("student");
+              } else {
+                const index = roles.indexOf("student");
+                if (index > -1) roles.splice(index, 1);
+              }
+              setFormData({ ...formData, allowed_roles: roles });
+            }}
+          />
+          <Label htmlFor="restricted" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            {t("Restricted to Students")}
+          </Label>
         </div>
       </div>
 

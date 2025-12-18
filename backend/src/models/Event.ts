@@ -42,6 +42,11 @@ const eventSchema = new Schema<EventDocument>({
     required: true,
   },
 
+  allowed_roles: {
+    type: [String],
+    default: [],
+  },
+
   isActive: {
     type: Boolean,
     default: false,

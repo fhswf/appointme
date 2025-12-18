@@ -85,57 +85,75 @@ const updateExistingUser = async (user: any, name?: string, picture?: string) =>
     return user;
 };
 
-const createNewUser = async (sub: string, email: string, name?: string, picture?: string) => {
+const mapRoles = (claims: any): string[] => {
+    const roles: string[] = [];
+    const ltiRoles = claims['https://purl.imsglobal.org/spec/lti/claim/roles'] ||
+        claims['roles'] ||
+        [];
+
+    if (Array.isArray(ltiRoles)) {
+        for (const r of ltiRoles) {
+            if ((r.toLowerCase().includes('student') || r.toLowerCase().includes('learner')) && !roles.includes('student')) {
+                roles.push('student');
+            }
+        }
+    }
+    return roles;
+};
+
+const createNewUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
     let user_url = validateUrl(email);
     const picture_url = picture || "";
     const userName = name || email.split('@')[0];
+    let user;
 
-    // 2. Retry loop for user_url uniqueness
     let retry = 0;
     const maxRetries = 5;
 
     while (retry < maxRetries) {
         try {
-            // Try to upsert/create user
-            return await UserModel.findOneAndUpdate(
+            user = await UserModel.findOneAndUpdate(
                 { _id: sub },
-                { name: userName, email, picture_url, user_url },
+                { name: userName, email, picture_url, user_url, roles },
                 { upsert: true, new: true, runValidators: true }
             ).exec();
+            break;
         } catch (err: any) {
-            if (err.code === 11000) {
-                // Check which key violated uniqueness
-                if (err.keyPattern?.user_url) {
-                    // User URL collision, append suffix and retry
-                    user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
-                    retry++;
-                    continue;
-                }
-                // If it's email collision (rare race condition if we checked above), likely unrecoverable here
-                throw err;
+            if (err.code === 11000 && err.keyPattern?.user_url) {
+                user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
+                retry++;
+                continue;
             }
             throw err;
         }
     }
-    throw new Error("User creation failed after retries");
+
+    if (!user) throw new Error("User creation failed after retries");
+    return user;
 };
 
-const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
-    // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
-    // Also check by _id to support legacy users or same provider
-    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
-
-    // If user doesn't exist, create it
-    if (user) {
-        return await updateExistingUser(user, name, picture);
-    } else {
-        return await createNewUser(sub, email, name, picture);
+const updateUserRoles = async (user: any, roles: string[]) => {
+    if (roles.length > 0) {
+        const params: any = { roles: { $each: roles } };
+        await UserModel.updateOne({ _id: user._id }, { $addToSet: params }).exec();
+        return await UserModel.findById(user._id).exec();
     }
+    return user;
+};
+
+const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
+    const user = await UserModel.findOne({ email }).exec();
+
+    if (user) {
+        return await updateUserRoles(user, roles);
+    }
+
+    return await createNewUser(sub, email, name, picture, roles);
 };
 
 const setAuthCookie = (res: Response, user: any) => {
     const access_token = sign(
-        { _id: user._id, name: user.name, email: user.email },
+        { _id: user._id, name: user.name, email: user.email, roles: user.roles },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     );
@@ -157,7 +175,7 @@ const setAuthCookie = (res: Response, user: any) => {
     res.cookie('access_token', access_token, cookieOptions)
         .status(200)
         .json({
-            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url },
+            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url, roles: user.roles },
         });
 };
 
@@ -197,13 +215,14 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
 
         const claims = tokenSet.claims();
         const { sub, email, name, picture } = claims;
+        const roles = mapRoles(claims);
 
         if (!email) {
             res.status(400).json({ error: "Email not provided by ID provider" });
             return;
         }
 
-        const user = await findOrCreateUser(sub as string, email as string, name as string | undefined, picture as string | undefined);
+        const user = await findOrCreateUser(sub, email, name, picture, roles);
 
         if (!user) {
             throw new Error("User creation failed after retries");

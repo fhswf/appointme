@@ -196,6 +196,53 @@ describe('OIDC Controller', () => {
             expect(accessTokenCookie).toContain('access_token=mock_access_token');
         });
 
+        it('should extract student role from claims', async () => {
+            await getCsrfToken();
+            const code = 'valid_code_student';
+            const claims = {
+                sub: 'student123',
+                email: 'student@example.com',
+                name: 'Student User',
+                roles: ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner']
+            };
+
+            mockClient.callback.mockResolvedValue({
+                claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // Mock findOne to return null
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const execMock = vi.fn().mockResolvedValue({
+                _id: 'student123',
+                email: 'student@example.com',
+                roles: ['student']
+            });
+
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: execMock
+            });
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ code });
+
+            expect(res.status).toBe(200);
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    roles: ['student']
+                }),
+                expect.anything()
+            );
+        });
+
         it('should fail if email is missing in claims', async () => {
             await getCsrfToken();
             const code = 'valid_code_no_email';

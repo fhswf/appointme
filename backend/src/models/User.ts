@@ -109,6 +109,10 @@ const userSchema = new Schema<UserDocument>(
       default: false
     },
     defaultAvailable: DEFAULT_AVAILABILITY
+    roles: {
+      type: [String],
+      default: []
+    },
   },
   {
     timestamps: true,
