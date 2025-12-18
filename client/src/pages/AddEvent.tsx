@@ -3,7 +3,6 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signout } from "../helpers/helpers";
-import { Button } from "@/components/ui/button";
 
 import AppNavbar from "../components/AppNavbar";
 import { saveUserEvent } from "../helpers/services/event_services";
@@ -13,6 +12,8 @@ import { UserContext } from "../components/PrivateRoute";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+
+import { Card, CardContent } from "@/components/ui/card";
 
 type AddEventProps = {};
 
@@ -48,9 +49,12 @@ const AddEvent = (props: AddEventProps) => {
       <div className="container mx-auto p-4 max-w-3xl">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">{t("Add Event Type")}</h2>
-          <Button variant="outline" onClick={() => navigate("/")}>{t("Cancel")}</Button>
         </div>
-        <EventForm event={formData} handleOnSubmit={saveEvent} data-testid="event-form" />
+        <Card>
+          <CardContent className="pt-6">
+            <EventForm event={formData} handleOnSubmit={saveEvent} data-testid="event-form" />
+          </CardContent>
+        </Card>
       </div>
     </>
   );

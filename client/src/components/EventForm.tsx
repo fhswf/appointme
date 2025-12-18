@@ -17,9 +17,12 @@ import { EventFormProps } from "../pages/EditEvent";
 import { AvailabilityEditor } from "./AvailabilityEditor";
 import { useAuth } from "../components/AuthProvider";
 
+import { useNavigate } from "react-router-dom";
+
 export const EventForm = (props: EventFormProps): JSX.Element => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<Event>(props.event);
   const [changed, setChanged] = useState(false);
 
@@ -154,8 +157,8 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         <div className="space-y-2">
           <Label htmlFor="tags">{t("Tags")}</Label>
           <div className="flex flex-wrap gap-2 mb-2">
-            {formData.tags?.map((tag, index) => (
-              <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm flex items-center gap-1">
+            {formData.tags?.map((tag) => (
+              <span key={tag} className="bg-primary/10 text-primary px-2 py-1 rounded-md text-sm flex items-center gap-1">
                 {tag}
                 <button
                   type="button"
@@ -315,7 +318,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
               </SelectContent>
             </Select>
           </div>
-          {formData.availabilityMode === 'define' && user?.defaultAvailable && (
+          {(formData.availabilityMode === 'define' || !formData.availabilityMode) && user?.defaultAvailable && (
             <Button
               type="button"
               variant="outline"
@@ -336,7 +339,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             {t("Using Standard Availability defined in Profile settings.")}
           </div>
         )}
-        {formData.availabilityMode === 'define' && (
+        {(formData.availabilityMode === 'define' || !formData.availabilityMode) && (
           <AvailabilityEditor
             available={formData.available}
             onChange={onChangeAvailability}
@@ -349,14 +352,22 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         )}
       </div>
 
-      <Button
-        data-testid="event-form-submit"
-        type="submit"
-        className="save"
-        disabled={!changed}
-      >
-        {t("Save")}
-      </Button>
+      <div className="flex items-center gap-4 pt-4 border-t border-border">
+        <Button
+          data-testid="event-form-submit"
+          type="submit"
+          disabled={!changed}
+        >
+          {t("Save")}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => navigate("/")}
+        >
+          {t("Cancel")}
+        </Button>
+      </div>
     </form>
   );
 };

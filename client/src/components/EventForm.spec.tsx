@@ -1,6 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
+import { BrowserRouter } from 'react-router-dom';
 import { EventForm } from './EventForm';
+
+// Mock react-router-dom
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+    };
+});
 
 // Mock Checkbox to avoid Radix UI issues in test environment
 vi.mock('@/components/ui/checkbox', () => ({
@@ -84,14 +95,22 @@ describe('EventForm Component', () => {
     });
 
     it('should render form with event data', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         expect(screen.getByTestId('event-form-title')).toHaveValue('Test Event');
         expect(screen.getByTestId('event-description')).toHaveValue('Test Description');
     });
 
     it('should update form fields', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const titleInput = screen.getByTestId('event-form-title');
         fireEvent.change(titleInput, { target: { value: 'Updated Event' } });
@@ -100,7 +119,11 @@ describe('EventForm Component', () => {
     });
 
     it('should submit form with updated data', async () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const titleInput = screen.getByTestId('event-form-title');
         fireEvent.change(titleInput, { target: { value: 'Updated Event' } });
@@ -115,7 +138,11 @@ describe('EventForm Component', () => {
     });
 
     it('should auto-generate slug from name if matching', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const titleInput = screen.getByTestId('event-form-title');
         // Initial state: url matches slug of name
@@ -132,7 +159,11 @@ describe('EventForm Component', () => {
     });
 
     it('should update description field', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const descriptionInput = screen.getByTestId('event-description');
         fireEvent.change(descriptionInput, { target: { value: 'New description' } });
@@ -141,7 +172,11 @@ describe('EventForm Component', () => {
     });
 
     it('should update location field', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const locationInput = screen.getByDisplayValue('Test Location');
         fireEvent.change(locationInput, { target: { value: 'New Location' } });
@@ -164,7 +199,11 @@ describe('EventForm Component', () => {
     });
 
     it('should update maxFuture field', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const maxFutureInput = screen.getAllByRole('spinbutton')[0]; // First number input
         fireEvent.change(maxFutureInput, { target: { value: '30' } });
@@ -177,7 +216,11 @@ describe('EventForm Component', () => {
     });
 
     it('should update minFuture field', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const minFutureInput = screen.getAllByRole('spinbutton')[1]; // Second number input
         fireEvent.change(minFutureInput, { target: { value: '2' } });
@@ -190,7 +233,11 @@ describe('EventForm Component', () => {
     });
 
     it('should update maxPerDay field', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const maxPerDayInput = screen.getAllByRole('spinbutton')[2]; // Third number input
         fireEvent.change(maxPerDayInput, { target: { value: '5' } });
@@ -202,14 +249,22 @@ describe('EventForm Component', () => {
     });
 
     it('should keep submit button disabled when form is unchanged', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const submitButton = screen.getByTestId('event-form-submit');
         expect(submitButton).toBeDisabled();
     });
 
     it('should enable submit button when form is changed', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const titleInput = screen.getByTestId('event-form-title');
         fireEvent.change(titleInput, { target: { value: 'Changed' } });
@@ -218,7 +273,11 @@ describe('EventForm Component', () => {
         expect(submitButton).toBeEnabled();
     });
     it('should copy standard availability when copy button is clicked', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         // Mock window.confirm
         const confirmSpy = vi.spyOn(window, 'confirm');
@@ -239,7 +298,11 @@ describe('EventForm Component', () => {
     });
 
     it('should add and remove tags', () => {
-        render(<EventForm event={mockEvent} handleOnSubmit={mockSubmit} />);
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
 
         const tagInput = screen.getByPlaceholderText('Type a tag and press Enter');
         fireEvent.change(tagInput, { target: { value: 'NewTag' } });
@@ -261,5 +324,19 @@ describe('EventForm Component', () => {
 
         expect(removeButton).toBeInTheDocument();
         if (removeButton) fireEvent.click(removeButton);
+    });
+
+    it('should show availability editor even if availabilityMode is missing', () => {
+        const { availabilityMode, ...eventWithoutMode } = mockEvent;
+        render(
+            <BrowserRouter>
+                <EventForm event={eventWithoutMode as any} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        // Should default to 'define' mode and show AvailabilityEditor
+        expect(screen.getByText('Daily availability')).toBeInTheDocument();
+        // Check for some day elements from AvailabilityEditor
+        expect(screen.getByText('Mon')).toBeInTheDocument();
     });
 });
