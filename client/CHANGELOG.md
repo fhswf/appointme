@@ -1,4 +1,4 @@
-# client [1.29.0](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0) (2025-12-18)
+# client [1.29.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0-rc.1) (2025-12-18)
 
 
 ### Bug Fixes
