@@ -57,9 +57,9 @@ vi.mock('../utility/encryption.js', () => ({
 vi.mock('../logging.js', () => ({
     logger: {
         info: vi.fn(),
+        debug: vi.fn(),
         error: vi.fn((...args) => console.error("Logger Error:", ...args)),
         warn: vi.fn(),
-        debug: vi.fn(),
     }
 }));
 
