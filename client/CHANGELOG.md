@@ -1,3 +1,30 @@
+# client [1.29.0](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0) (2025-12-18)
+
+
+### Bug Fixes
+
+* use cryptographic secure random numbers ([26de930](https://github.com/fhswf/appointme/commit/26de930a3e7b9899b62bb47690bb70a1b102dd7e))
+
+
+### Features
+
+* add footer credits text ([bdbe88b](https://github.com/fhswf/appointme/commit/bdbe88be204850a8419c686a59507da2257c2f97))
+* enhanced availability management ([7139d3d](https://github.com/fhswf/appointme/commit/7139d3ddc4035f14dcd9c728d96c6e02a2f1c656))
+* Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
+* improve landing page ([f485524](https://github.com/fhswf/appointme/commit/f4855243a732ddf0a953e5966635e77ad3b4f271))
+* improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
+* information update ([a40b227](https://github.com/fhswf/appointme/commit/a40b227249cd3432586b4a3e7d2ea242ad0eaa27))
+* simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
+* Standardize primary color to campus blue and adjust foreground for both light and dark themes. ([5d6d16b](https://github.com/fhswf/appointme/commit/5d6d16bfc68ded638a60c392a5741319563e1b3e))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.13.0
+
 # client [1.28.0](https://github.com/fhswf/appointme/compare/client@1.27.0...client@1.28.0) (2025-12-18)
 
 
