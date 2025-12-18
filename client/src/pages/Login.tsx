@@ -56,10 +56,6 @@ const Login = () => {
       });
   }
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-  };
-
   return (
     <div className="font-sans bg-background min-h-screen flex items-center justify-center p-4 transition-colors duration-300 relative overflow-hidden">
 
