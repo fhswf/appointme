@@ -1,4 +1,4 @@
-# backend [1.33.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0-rc.1) (2025-12-18)
+# backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-18)
 
 
 ### Bug Fixes
@@ -9,6 +9,9 @@
 * simplify common package import paths by removing `/src/types` suffix. ([4ea8a35](https://github.com/fhswf/appointme/commit/4ea8a3575eaa3d4b065ab38654f293a171042962))
 * trust proxy ([8839dc6](https://github.com/fhswf/appointme/commit/8839dc69a852db1859e7130b42a891a1b8cc9552))
 * update Swagger server URL environment variable from `REACT_APP_URL` to `CLIENT_URL` ([851218e](https://github.com/fhswf/appointme/commit/851218e6ab75340a60fb51a3384e5e90cc354f8a))
+* **build:** release configuration ([8d13d85](https://github.com/fhswf/appointme/commit/8d13d8518f67b0ca4f498aaa79d40460f4a7797e))
+* Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
+* regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
 
 
 ### Features
@@ -28,6 +31,8 @@
 ### Dependencies
 
 * **common:** upgraded to 1.13.0-rc.1
+* gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
+* Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
 
 # backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-17)
 

@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.28.0-rc.1",
+  "version": "1.28.0",
   "homepage": "https://jupiter.fh-swf.de/meeting",
   "contributors": [
     {
@@ -146,6 +146,16 @@
           "prepareCmd": "node ../utility/update-kustomize.js client frontend ${nextRelease.version}"
         }
       ],
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "frontend",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/appointme",
+          "dockerContext": ".."
+        }
+      ],
       [
         "@semantic-release/git",
         {
@@ -155,16 +165,6 @@
             "k8s/overlays/**/kustomization.yaml"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@codedependant/semantic-release-docker",
-        {
-          "dockerImage": "frontend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/appointme",
-          "dockerContext": ".."
         }
       ]
     ]
