@@ -82,8 +82,8 @@
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
 
-  --primary: 240 5.9% 10%;
-  /* #18181b (primary button / dark bg) */
+  --primary: 217 91% 60%;
+  /* #3b82f6 (campus blue) */
   --primary-foreground: 0 0% 98%;
 
   --secondary: 240 4.8% 95.9%;
@@ -132,19 +132,8 @@
   --popover: 240 10% 3.9%;
   --popover-foreground: 0 0% 98%;
 
-  --primary: 0 0% 98%;
-  /* White text on dark? Or should it be the black button? */
-  /* Template: dark:text-white. Primary button is always #18181b in template? */
-  /* Template primary color: #18181b. Matches the black button. */
-  /* If we keep shadcn conventions, primary in dark mode is usually light. */
-  /* But let's stick to the template's look. The button in the template is bg-primary text-white. */
-  /* In dark mode, the FAB is "bg-primary" which is #18181b. That would be invisible on #18181b background? */
-  /* Wait, template: "bg-background-light dark:bg-background-dark". dark bg is #09090b. */
-  /* FAB: bg-primary (#18181b). So it's slightly lighter than dark bg (#09090b). */
-
-  --primary: 0 0% 98%;
-  /* Resetting to standard shadcn to avoid confusion, will use specific classes if needed */
-  --primary-foreground: 240 5.9% 10%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 98%;
 
   --secondary: 240 3.7% 15.9%;
   /* #27272a (border-dark/primary-hover) */
