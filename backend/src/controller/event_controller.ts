@@ -578,6 +578,16 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       }
     }
 
+    // Check for role restrictions
+    if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
+      // Check if current user is authenticated and has required role
+      const currentUser = req["user"]; // Assuming middleware populates this
+      if (!currentUser || !currentUser.roles || !eventDoc.allowed_roles.some(r => currentUser.roles.includes(r))) {
+        res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
+        return;
+      }
+    }
+
     const userComment = req.body.description as string;
     const event = constructGoogleEvent(eventDoc, user, starttime, req.body);
 

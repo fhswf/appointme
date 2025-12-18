@@ -181,7 +181,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={handleTagKeyDown}
             placeholder={t("Type a tag and press Enter")}
-          />
           <p className="text-sm text-muted-foreground">{t("Press Enter to add a tag")}</p>
         </div>
 

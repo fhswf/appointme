@@ -108,7 +108,7 @@ const userSchema = new Schema<UserDocument>(
       type: Boolean,
       default: false
     },
-    defaultAvailable: DEFAULT_AVAILABILITY
+    defaultAvailable: DEFAULT_AVAILABILITY,
     roles: {
       type: [String],
       default: []
