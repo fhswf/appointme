@@ -1,3 +1,10 @@
+# client [1.27.0-rc.14](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.13...client@1.27.0-rc.14) (2025-12-18)
+
+
+### Features
+
+* information update ([a40b227](https://github.com/fhswf/appointme/commit/a40b227249cd3432586b4a3e7d2ea242ad0eaa27))
+
 # client [1.27.0-rc.13](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.12...client@1.27.0-rc.13) (2025-12-18)
 
 
