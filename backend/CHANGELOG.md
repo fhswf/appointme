@@ -1,3 +1,34 @@
+# backend [1.33.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0-rc.1) (2025-12-18)
+
+
+### Bug Fixes
+
+* Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
+* google login ([0c2cda1](https://github.com/fhswf/appointme/commit/0c2cda19f8c40441eedbbe403334c260eaf2a454))
+* regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
+* simplify common package import paths by removing `/src/types` suffix. ([4ea8a35](https://github.com/fhswf/appointme/commit/4ea8a3575eaa3d4b065ab38654f293a171042962))
+* trust proxy ([8839dc6](https://github.com/fhswf/appointme/commit/8839dc69a852db1859e7130b42a891a1b8cc9552))
+* update Swagger server URL environment variable from `REACT_APP_URL` to `CLIENT_URL` ([851218e](https://github.com/fhswf/appointme/commit/851218e6ab75340a60fb51a3384e5e90cc354f8a))
+
+
+### Features
+
+* enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
+* enhanced availability management ([7139d3d](https://github.com/fhswf/appointme/commit/7139d3ddc4035f14dcd9c728d96c6e02a2f1c656))
+* gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
+* Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
+* improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
+* Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
+* simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.13.0-rc.1
+
 # backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-17)
 
 
