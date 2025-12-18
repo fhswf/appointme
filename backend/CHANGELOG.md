@@ -5,6 +5,13 @@
 
 * improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
 
+# backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
+
+
+### Features
+
+* improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
+
 # backend [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.10...backend@1.32.0-rc.11) (2025-12-17)
 
 
