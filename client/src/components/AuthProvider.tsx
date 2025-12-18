@@ -6,13 +6,17 @@ interface AuthContextType {
     user: UserDocument | null;
     isAuthenticated: boolean | undefined;
     refreshAuth: () => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthContextType>({
     user: null,
     isAuthenticated: undefined,
     refreshAuth: async () => { },
+    logout: async () => { },
 });
+
+import { signout } from "../helpers/helpers";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<UserDocument | null>(null);
@@ -53,7 +57,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         refreshAuth();
     }, [refreshAuth]);
 
-    const value = React.useMemo(() => ({ user, isAuthenticated, refreshAuth }), [user, isAuthenticated, refreshAuth]);
+    const logout = useCallback(async () => {
+        await signout();
+        setIsAuthenticated(false);
+        setUser(null);
+    }, []);
+
+    const value = React.useMemo(() => ({ user, isAuthenticated, refreshAuth, logout }), [user, isAuthenticated, refreshAuth, logout]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

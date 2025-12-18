@@ -144,6 +144,23 @@ export const googleLoginController = (req: Request, res: Response): void => {
     });
 }
 
+export const logout = (req: Request, res: Response): void => {
+  const isDev = process.env.NODE_ENV === 'development';
+  const domain = process.env.DOMAIN;
+  const sameSite = isDev ? 'lax' : 'strict';
+
+  const cookieOptions: any = {
+    httpOnly: true,
+    secure: true,
+    sameSite
+  };
+  if (domain) {
+    cookieOptions.domain = domain;
+  }
+
+  res.clearCookie('access_token', cookieOptions).status(200).json({ message: "Logged out successfully" });
+};
+
 
 /**
  * Generates a URL based on the given email

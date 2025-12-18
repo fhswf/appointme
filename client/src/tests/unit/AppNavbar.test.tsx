@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 import AppNavbar from '../../components/AppNavbar';
-import * as helpers from '../../helpers/helpers';
+
 import { BrowserRouter } from 'react-router-dom';
 import { useAuth } from '../../components/AuthProvider';
 
@@ -26,8 +26,9 @@ vi.mock('react-i18next', () => ({
 // ... (other mocks)
 
 // Helper to render with Auth
-const renderWithUser = (user: any) => {
-    (useAuth as any).mockReturnValue({ user });
+const logoutMock = vi.fn();
+const renderWithUser = (user: any, isAuthenticated: boolean = !!user) => {
+    (useAuth as any).mockReturnValue({ user, isAuthenticated, logout: logoutMock });
     return render(
         <BrowserRouter>
             <AppNavbar />
@@ -43,8 +44,7 @@ describe('AppNavbar', () => {
     });
 
     it('renders login button when not authenticated', () => {
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(false);
-        renderWithUser(null);
+        renderWithUser(null, false);
 
         // Open menu
         fireEvent.pointerDown(screen.getByTestId('profile-menu'));
@@ -55,7 +55,6 @@ describe('AppNavbar', () => {
     });
 
     it('renders About link in user menu', async () => {
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
         const user = { name: 'Test User', picture_url: 'pic.jpg', user_url: 'test' };
         renderWithUser(user);
 
@@ -69,9 +68,8 @@ describe('AppNavbar', () => {
     });
 
     it('renders logout button when authenticated', () => {
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
         const user = { name: 'Test User', picture_url: 'pic.jpg', user_url: 'test' };
-        renderWithUser(user);
+        renderWithUser(user, true);
 
         // Open menu
         fireEvent.pointerDown(screen.getByTestId('profile-menu'));
@@ -81,22 +79,22 @@ describe('AppNavbar', () => {
         expect(screen.getByText('user_menu_log_out')).toBeInTheDocument();
     });
 
-    it('handles logout', () => {
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
+    it('handles logout', async () => {
         const user = { name: 'Test', picture_url: 'pic.jpg', user_url: 'test' };
-        renderWithUser(user);
+        renderWithUser(user, true);
 
         fireEvent.pointerDown(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('profile-menu'));
         fireEvent.click(screen.getByTestId('logout-button'));
 
-        expect(helpers.signout).toHaveBeenCalled();
+        await waitFor(() => {
+            expect(logoutMock).toHaveBeenCalled();
+        });
     });
 
     it('opens profile dialog', async () => {
         const user = { name: 'Test', picture_url: 'pic.jpg', user_url: 'test' };
-        vi.mocked(helpers.useAuthenticated).mockReturnValue(true);
-        (useAuth as any).mockReturnValue({ user });
+        (useAuth as any).mockReturnValue({ user, isAuthenticated: true });
 
         render(
             <BrowserRouter>

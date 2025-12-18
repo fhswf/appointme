@@ -57,6 +57,21 @@ export async function postGoogleLogin(code) {
   return response;
 }
 
+export async function postLogout() {
+  const csrfToken = await getCsrfToken();
+  const response = await axios.post(
+    `${CONFIG.API_URL}/auth/logout`,
+    {},
+    {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
+      withCredentials: true,
+    }
+  );
+  return response;
+}
+
 export async function postLogin(email, password) {
   const csrfToken = await getCsrfToken();
   const response = await axios.post(
