@@ -38,7 +38,7 @@ function min<T>(a: T, b: T): T {
 
 export function calculateBlocked(events, event, timeMin, timeMax) {
   const eventsPerDay = {};
-  const blocked = new IntervalSet([{ start: timeMin, end: timeMin }, { start: timeMax, end: timeMax }]);
+  const blocked = new IntervalSet([{ start: new Date(timeMin), end: new Date(timeMin) }, { start: new Date(timeMax), end: new Date(timeMax) }]);
   events.forEach(evt => {
     logger.debug('event: %o', evt);
     if (!evt.start.dateTime) {
@@ -72,13 +72,13 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
 
   for (const key in response.data.calendars) {
     const busy = response.data.calendars[key].busy;
-    const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+    const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferafter, event.bufferbefore);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
   if (calDavSlots && calDavSlots.length > 0) {
     calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferafter, event.bufferbefore);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
@@ -137,7 +137,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
       let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
       logger.debug('freeSlots before filtering: %j', freeSlots);
-      freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) > event.duration * 60 * 1000));
+      freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
       logger.debug('freeSlots after filtering: %j', freeSlots);
       res.status(200).json(freeSlots);
     })

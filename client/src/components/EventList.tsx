@@ -55,6 +55,7 @@ const EventList = (props: EventListProps) => {
           hasCalendar={
             !!(props.user.push_calendars && props.user.push_calendars.length > 0)
           }
+          defaultAvailable={props.user.defaultAvailable}
           setActive={updateEventStatus}
           onDelete={onDelete}
         />

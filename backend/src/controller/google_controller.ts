@@ -151,14 +151,14 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
   if (googleRes?.data?.calendars) {
     for (const key in googleRes.data.calendars) {
       const busy = googleRes.data.calendars[key].busy;
-      const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+      const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferafter, event.bufferbefore);
       freeSlots = freeSlots.intersect(calIntervals)
     }
   }
 
   if (calDavSlots && calDavSlots.length > 0) {
     calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
+    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferafter, event.bufferbefore);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
