@@ -211,8 +211,8 @@ describe('EventForm Component', () => {
         const submitButton = screen.getByTestId('event-form-submit');
         fireEvent.click(submitButton);
 
-        // maxFuture is multiplied by 86400 (seconds in a day), but value is string
-        expect(mockSubmit.mock.calls[3][0].maxFuture).toBe('30');
+        // maxFuture is multiplied by 86400 (seconds in a day)
+        expect(mockSubmit.mock.calls[3][0].maxFuture).toBe(30 * 86400);
     });
 
     it('should update minFuture field', () => {
@@ -228,8 +228,8 @@ describe('EventForm Component', () => {
         const submitButton = screen.getByTestId('event-form-submit');
         fireEvent.click(submitButton);
 
-        // Value is string
-        expect(mockSubmit.mock.calls[4][0].minFuture).toBe('2');
+        // minFuture is multiplied by 86400 (seconds in a day)
+        expect(mockSubmit.mock.calls[4][0].minFuture).toBe(2 * 86400);
     });
 
     it('should update maxPerDay field', () => {
@@ -245,7 +245,7 @@ describe('EventForm Component', () => {
         const submitButton = screen.getByTestId('event-form-submit');
         fireEvent.click(submitButton);
 
-        expect(mockSubmit.mock.calls[5][0].maxPerDay).toBe('5');
+        expect(mockSubmit.mock.calls[5][0].maxPerDay).toBe(5);
     });
 
     it('should keep submit button disabled when form is unchanged', () => {
