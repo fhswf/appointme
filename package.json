@@ -99,7 +99,7 @@
   },
   "packageManager": "yarn@4.5.0",
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.17"
+    "@tailwindcss/postcss": "^4.1.18"
   },
   "stableVersion": "1.9.2"
 }
