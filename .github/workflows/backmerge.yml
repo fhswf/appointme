@@ -1,14 +1,18 @@
 name: Back-merge Prod to Main
 
 on:
-  push:
-    branches:
-      - prod
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - completed
 
 jobs:
   back-merge:
     runs-on: ubuntu-latest
-    if: github.event.head_commit.author.name != 'semantic-release-bot'
+    if: >
+      github.event.workflow_run.head_branch == 'prod' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.sender.login != 'semantic-release-bot'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
