@@ -93,7 +93,7 @@
     "last 1 safari version"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/eslint": "^9.6.1",
     "@types/jsdom": "^27",
