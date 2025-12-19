@@ -2,6 +2,7 @@
  * @module user_controller
  */
 import { UserModel } from "../models/User.js";
+import { AppointmentModel } from "../models/Appointment.js";
 import { User } from "common";
 import { Request, Response } from 'express';
 import crypto from 'node:crypto';
@@ -185,4 +186,35 @@ export const getUserByUrl = (req: Request, res: Response): void => {
     .catch(error => {
       res.status(400).json({ error, query: { user_url: user_url } });
     })
+};
+
+/**
+ * Middleware to fetch appointments for a user
+ * @function
+ * @param {request} req
+ * @param {response} res
+ */
+export const getAppointments = (req: Request, res: Response): void => {
+  const userId = req.params.id;
+  const currentUserId = req['user_id'];
+
+  // Check if requesting own appointments
+  // For now we restrict to own appointments. Admin access logic could be added here.
+  if (userId !== 'me' && userId !== currentUserId) {
+    res.status(403).json({ error: "Forbidden: Can only access own appointments" });
+    return;
+  }
+
+  const targetId = userId === 'me' ? currentUserId : userId;
+
+  AppointmentModel.find({ user: targetId })
+    .populate("event")
+    .sort({ start: 1 })
+    .exec()
+    .then(appointments => {
+      res.status(200).json(appointments);
+    })
+    .catch(err => {
+      res.status(400).json({ error: err });
+    });
 };

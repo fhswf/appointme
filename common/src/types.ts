@@ -59,6 +59,20 @@ export type Event = {
   availabilityMode?: 'define' | 'default';
 };
 
+export interface Appointment {
+  _id?: string;
+  user: string;
+  event: string;
+  start: Date;
+  end: Date;
+  attendeeName: string;
+  attendeeEmail: string;
+  description?: string;
+  location?: string;
+  googleId?: string;
+  caldavUid?: string;
+}
+
 export const EMPTY_EVENT: Event = {
   user: "",
   name: "",

@@ -403,5 +403,5 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         logger.error('Error verifying event creation: %o', verifyError);
     }
 
-    return createdEvent;
+    return { response: createdEvent, uid };
 };

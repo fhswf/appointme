@@ -34,5 +34,14 @@ export default defineConfig(() => {
       },
     },
     envPrefix: ['REACT_APP_', 'VITE_'],
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
   }
 });

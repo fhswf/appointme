@@ -1,9 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import {
   Calendar,
+  CalendarDays,
   Link as LinkIcon,
   LogIn,
   LogOut,
@@ -95,6 +96,28 @@ const AppNavbar = () => {
           {/* Fallback for mobile title if needed, or just keep the simplified one */}
         </div>
 
+        {user && (
+          <nav className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-foreground border-b-2 border-primary" : "text-muted-foreground"}`
+              }
+            >
+              {t("My Event Types")}
+            </NavLink>
+            <NavLink
+              to="/appointments"
+              className={({ isActive }) =>
+                `text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-foreground border-b-2 border-primary" : "text-muted-foreground"}`
+              }
+            >
+              {t("my_appointments")}
+            </NavLink>
+          </nav>
+        )}
+
         <div className="flex items-center gap-4">
           <ThemeToggle />
 
@@ -111,6 +134,12 @@ const AppNavbar = () => {
               <DropdownMenuItem onClick={() => setProfileOpen(true)} disabled={!user}>
                 <User className="mr-2 h-4 w-4" />
                 <span>{t("user_menu_profile")}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild disabled={!user}>
+                <Link to="/appointments" className="flex items-center w-full">
+                  <CalendarDays className="mr-2 h-4 w-4" />
+                  <span>{t("my_appointments")}</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild disabled={!user}>
                 <Link to="/integration" data-testid="calendar-button" className="flex items-center w-full">

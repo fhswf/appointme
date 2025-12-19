@@ -27,8 +27,16 @@ const EventList = (props: EventListProps) => {
         navigate("/landing");
       } else {
         console.log("events: %o", res.data);
-        setEvents(res.data);
+        if (Array.isArray(res.data)) {
+          setEvents(res.data);
+        } else {
+          console.error("Expected array of events but got:", res.data);
+          setEvents([]);
+        }
       }
+    }).catch(err => {
+      console.error("Failed to load events", err);
+      setEvents([]);
     });
   }, [navigate]);
 

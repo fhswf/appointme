@@ -4,6 +4,7 @@
  * @module event_controller
  */
 import { EventDocument, EventModel } from "../models/Event.js";
+import { AppointmentModel } from "../models/Appointment.js";
 import { Event, IntervalSet } from "common";
 import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
 import { getBusySlots, createCalDavEvent, findAccountForCalendar } from "./caldav_controller.js";
@@ -408,6 +409,23 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     });
 
     if (successCount > 0) {
+      const googleResult = results.find(r => r.type === 'google' && r.success);
+      const caldavResult = results.find(r => r.type === 'caldav' && r.success);
+
+      const appointment = new AppointmentModel({
+        user: userId,
+        event: eventId,
+        start: starttime,
+        end: endtime,
+        attendeeName: req.body.attendeeName,
+        attendeeEmail: req.body.attendeeEmail,
+        description: userComment,
+        location: eventDoc.location,
+        googleId: googleResult?.event?.id,
+        caldavUid: caldavResult?.event?.uid
+      });
+      await appointment.save();
+
       // If at least one succeeded, we return success.
       // We return the result of the first successful one for backward compatibility with simple clients,
       // but also include full results.
@@ -455,7 +473,7 @@ async function pushEventToCalendars(params: {
     try {
       // Check if calendar is a CalDav URL (heuristic: starts with http/https) 
       if (calendar.startsWith('http') || calendar.startsWith('/')) {
-        await processCalDavBooking({
+        const res = await processCalDavBooking({
           user,
           event,
           userComment,
@@ -466,11 +484,11 @@ async function pushEventToCalendars(params: {
           sendInvitation: user.send_invitation_email
         });
         successCount++;
-        results.push({ calendar, success: true, type: 'caldav' });
+        results.push({ calendar, success: true, type: 'caldav', event: res.event });
       } else {
-        await processGoogleBooking(user, userComment, event, calendar);
+        const res = await processGoogleBooking(user, userComment, event, calendar);
         successCount++;
-        results.push({ calendar, success: true, type: 'google' });
+        results.push({ calendar, success: true, type: 'google', event: res.event });
       }
     } catch (err) {
       logger.error(`Failed to push to calendar ${calendar}:`, err);

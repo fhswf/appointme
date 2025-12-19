@@ -4,7 +4,7 @@
 import { Router } from "express";
 import { middleware } from "../handlers/middleware.js";
 import { userRateLimiter } from "../config/rateLimit.js";
-import { getUserByUrl, updateUser, getUser } from "../controller/user_controller.js";
+import { getUserByUrl, updateUser, getUser, getAppointments } from "../controller/user_controller.js";
 
 const { requireAuth } = middleware;
 
@@ -38,6 +38,40 @@ export const userRouter = Router();
  *               $ref: '#/components/schemas/Error'
  */
 userRouter.get("/me", userRateLimiter, requireAuth, getUser);
+
+/**
+ * @openapi
+ * /api/v1/user/{id}/appointment:
+ *   get:
+ *     summary: Get user appointments
+ *     description: Retrieve all appointments for the specified user (must be authenticated user)
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID or 'me'
+ *     responses:
+ *       200:
+ *         description: Appointments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Appointment'
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden
+ */
+userRouter.get("/:id/appointment", userRateLimiter, requireAuth, getAppointments);
 
 /**
  * @openapi

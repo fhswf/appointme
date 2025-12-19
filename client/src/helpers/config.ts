@@ -26,6 +26,6 @@ export const getConfig = (key: string, defaultValue?: string): string => {
 export const CONFIG = {
     CLIENT_ID: getConfig("REACT_APP_CLIENT_ID"),
     BASE_PATH: getConfig("REACT_APP_BASE_PATH", "/"),
-    API_URL: getConfig("REACT_APP_API_URL"),
+    API_URL: "/api/v1",
     APP_URL: getConfig("REACT_APP_URL"),
 };
