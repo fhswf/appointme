@@ -189,3 +189,25 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Override react-big-calendar event styles */
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.rbc-event:focus {
+  outline: none !important;
+}
+
+.rbc-event-content {
+  padding: 0 !important;
+  height: 100%;
+  width: 100%;
+}
+
+.rbc-event-label {
+  display: none !important;
+}

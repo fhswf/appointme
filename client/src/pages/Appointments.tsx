@@ -7,12 +7,11 @@ import Footer from "../components/Footer";
 import { AppointmentSidebar } from "../components/appointments/AppointmentSidebar";
 import { AppointmentCalendar } from "../components/appointments/AppointmentCalendar";
 import { AppointmentDetails } from "../components/appointments/AppointmentDetails";
+import { EventDetails } from "../components/appointments/EventDetails";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUsersEvents } from "../helpers/services/event_services";
-import { getCalendarList } from "../helpers/services/google_services";
-import { listAccounts, listCalendars } from "../helpers/services/caldav_services";
-import { startOfDay, endOfDay } from "date-fns";
+import { startOfDay } from "date-fns";
 
 interface Calendar {
     id: string;
@@ -21,6 +20,7 @@ interface Calendar {
     checked: boolean;
     type: 'google' | 'caldav';
     accountId?: string;
+    originalId?: string;
 }
 
 const Appointments = () => {
@@ -28,79 +28,39 @@ const Appointments = () => {
     const [events, setEvents] = useState<Record<string, Event>>({});
     const [loading, setLoading] = useState(true);
     const [calendars, setCalendars] = useState<Calendar[]>([]);
+    const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
 
     // View State
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>(Views.MONTH);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+    const [selectedCalendarEvent, setSelectedCalendarEvent] = useState<any | null>(null);
 
-    // Fetch calendars from Google and CalDAV
+    // Fetch calendars from unified endpoint
     useEffect(() => {
         const fetchCalendars = async () => {
-            const calendarList: Calendar[] = [];
-
             try {
-                // Fetch Google calendars
-                const googleRes = await getCalendarList();
-                console.log("Google calendars response:", googleRes.data);
-                if (googleRes.data && Array.isArray(googleRes.data)) {
-                    googleRes.data.forEach((cal: any, index: number) => {
-                        calendarList.push({
-                            id: `google-${cal.id}`,
-                            label: cal.summary || cal.id,
-                            color: cal.backgroundColor || (index === 0 ? "#3b82f6" : "#8b5cf6"),
-                            checked: index === 0, // Check the first calendar by default
-                            type: 'google'
-                        });
-                    });
+                const response = await axios.get("/api/v1/user/me/calendar");
+                console.log("Calendars response:", response.data);
+
+                if (response.data && Array.isArray(response.data)) {
+                    const calendarList: Calendar[] = response.data.map((cal: any, index: number) => ({
+                        id: cal.type === 'google' ? `google-${cal.id}` : `caldav-${cal.id}`,
+                        label: cal.summary || cal.id,
+                        color: cal.color || (index === 0 ? "#3b82f6" : "#8b5cf6"),
+                        checked: cal.primary || index === 0,
+                        type: cal.type,
+                        accountId: cal.accountId,
+                        originalId: cal.id
+                    }));
+
+                    setCalendars(calendarList);
                 }
             } catch (err) {
-                console.log("No Google calendars available", err);
+                console.log("Failed to fetch calendars", err);
+                // Set empty array on error
+                setCalendars([]);
             }
-
-            try {
-                // Fetch CalDAV accounts and their calendars
-                const caldavAccounts = await listAccounts();
-                console.log("CalDAV accounts response:", caldavAccounts.data);
-                if (caldavAccounts.data && Array.isArray(caldavAccounts.data)) {
-                    for (const account of caldavAccounts.data) {
-                        try {
-                            const calendarsRes = await listCalendars(account._id);
-                            console.log(`Calendars for account ${account._id}:`, calendarsRes.data);
-                            if (calendarsRes.data && Array.isArray(calendarsRes.data)) {
-                                calendarsRes.data.forEach((cal: any) => {
-                                    calendarList.push({
-                                        id: `caldav-${account._id}-${cal.url}`,
-                                        label: cal.displayName || cal.url,
-                                        color: cal.color || "#a855f7",
-                                        checked: false,
-                                        type: 'caldav',
-                                        accountId: account._id
-                                    });
-                                });
-                            }
-                        } catch (err) {
-                            console.log(`Failed to fetch calendars for account ${account._id}`, err);
-                        }
-                    }
-                }
-            } catch (err) {
-                console.log("No CalDAV calendars available", err);
-            }
-
-            // Add a default "My Appointments" calendar if no calendars were found
-            if (calendarList.length === 0) {
-                calendarList.push({
-                    id: "my-appointments",
-                    label: "My Appointments",
-                    color: "var(--primary)",
-                    checked: true,
-                    type: 'google'
-                });
-            }
-
-            console.log("Final calendar list:", calendarList);
-            setCalendars(calendarList);
         };
 
         fetchCalendars();
@@ -135,6 +95,70 @@ const Appointments = () => {
         fetchData();
     }, []);
 
+    // Fetch calendar events when calendars or view changes
+    useEffect(() => {
+        const fetchCalendarEvents = async () => {
+            const checkedCalendars = calendars.filter(c => c.checked);
+            if (checkedCalendars.length === 0) {
+                setCalendarEvents([]);
+                return;
+            }
+
+            // Calculate time range based on current view
+            const now = new Date(date);
+            let timeMin: Date, timeMax: Date;
+
+            if (view === Views.MONTH) {
+                timeMin = new Date(now.getFullYear(), now.getMonth(), 1);
+                timeMax = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+            } else if (view === Views.WEEK) {
+                const day = now.getDay();
+                timeMin = new Date(now);
+                timeMin.setDate(now.getDate() - day);
+                timeMin.setHours(0, 0, 0, 0);
+                timeMax = new Date(timeMin);
+                timeMax.setDate(timeMin.getDate() + 6);
+                timeMax.setHours(23, 59, 59);
+            } else {
+                timeMin = new Date(now);
+                timeMin.setHours(0, 0, 0, 0);
+                timeMax = new Date(now);
+                timeMax.setHours(23, 59, 59);
+            }
+
+            try {
+                const eventPromises = checkedCalendars.map(cal =>
+                    axios.get(`/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`, {
+                        params: {
+                            timeMin: timeMin.toISOString(),
+                            timeMax: timeMax.toISOString()
+                        }
+                    }).catch(err => {
+                        console.error(`Failed to fetch events for calendar ${cal.label}:`, err);
+                        return { data: [] };
+                    })
+                );
+
+                const results = await Promise.all(eventPromises);
+                const allEvents = results.flatMap((res, idx) =>
+                    res.data.map((evt: any) => ({
+                        ...evt,
+                        calendarId: checkedCalendars[idx].id,
+                        calendarColor: checkedCalendars[idx].color
+                    }))
+                );
+
+                setCalendarEvents(allEvents);
+            } catch (err) {
+                console.error("Failed to fetch calendar events", err);
+            }
+        };
+
+        if (calendars.length > 0) {
+            fetchCalendarEvents();
+        }
+    }, [calendars, date, view]);
+
     const handleDateChange = (newDate: Date | undefined) => {
         if (newDate) setDate(newDate);
     };
@@ -149,10 +173,29 @@ const Appointments = () => {
         eventDetails: events[apt.event]
     }));
 
-    // Get dates that have appointments for highlighting
-    const datesWithAppointments = new Set(
-        appointments.map(apt => startOfDay(new Date(apt.start)).getTime())
-    );
+    // Merge appointments and calendar events for display
+    const allEvents = [
+        ...enrichedAppointments.map(apt => ({
+            id: apt._id,
+            title: apt.eventDetails?.name || 'Appointment',
+            start: new Date(apt.start),
+            end: new Date(apt.end),
+            resource: { type: 'appointment', data: apt }
+        })),
+        ...calendarEvents.map(evt => ({
+            id: evt.id,
+            title: evt.summary || 'Event',
+            start: new Date(evt.start?.dateTime || evt.start),
+            end: new Date(evt.end?.dateTime || evt.end),
+            resource: { type: 'calendar', data: evt, color: evt.calendarColor }
+        }))
+    ];
+
+    // Get dates that have appointments or events for highlighting
+    const datesWithAppointments = new Set([
+        ...appointments.map(apt => startOfDay(new Date(apt.start)).getTime()),
+        ...calendarEvents.map(evt => startOfDay(new Date(evt.start?.dateTime || evt.start)).getTime())
+    ]);
 
     return (
         <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -174,12 +217,23 @@ const Appointments = () => {
                         </div>
                     ) : (
                         <AppointmentCalendar
-                            events={enrichedAppointments}
+                            events={allEvents}
                             date={date}
                             onDateChange={setDate}
                             view={view}
                             onViewChange={setView}
-                            onSelectEvent={setSelectedAppointment}
+                            onSelectEvent={(evt) => {
+                                // Clear both selections first
+                                setSelectedAppointment(null);
+                                setSelectedCalendarEvent(null);
+                                
+                                // Set the appropriate selection based on type
+                                if (evt.resource?.type === 'appointment') {
+                                    setSelectedAppointment(evt.resource.data);
+                                } else if (evt.resource?.type === 'calendar') {
+                                    setSelectedCalendarEvent(evt.resource.data);
+                                }
+                            }}
                         />
                     )}
 
@@ -197,6 +251,13 @@ const Appointments = () => {
                         appointment={selectedAppointment}
                         event={events[selectedAppointment.event]}
                         onClose={() => setSelectedAppointment(null)}
+                    />
+                )}
+
+                {selectedCalendarEvent && (
+                    <EventDetails
+                        event={selectedCalendarEvent}
+                        onClose={() => setSelectedCalendarEvent(null)}
                     />
                 )}
             </main>
