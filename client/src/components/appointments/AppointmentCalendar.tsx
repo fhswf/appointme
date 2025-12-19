@@ -133,23 +133,22 @@ export function AppointmentCalendar({
     }))
 
     return (
-        <div className="flex-1 h-full bg-background relative overflow-hidden flex flex-col">
+        <div className="flex-1 flex flex-col bg-background overflow-hidden h-full">
             <Calendar
                 localizer={localizer}
                 events={calendarEvents}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: '100%' }}
+                style={{ height: '100%', flex: 1 }}
                 date={date}
                 onNavigate={onDateChange}
                 view={view}
                 onView={onViewChange}
                 onSelectEvent={onSelectEvent}
                 components={{
-                    toolbar: CustomToolbar as any, // RBC types for CustomToolbar are sometimes tricky
+                    toolbar: CustomToolbar as any,
                     event: CustomEvent as any
                 }}
-                // Styling overrides
                 className="font-sans text-foreground"
             />
         </div>

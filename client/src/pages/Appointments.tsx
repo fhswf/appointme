@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { Appointment, Event } from "common";
 import { Views, View } from 'react-big-calendar'
@@ -11,24 +10,101 @@ import { AppointmentDetails } from "../components/appointments/AppointmentDetail
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getUsersEvents } from "../helpers/services/event_services";
+import { getCalendarList } from "../helpers/services/google_services";
+import { listAccounts, listCalendars } from "../helpers/services/caldav_services";
+import { startOfDay, endOfDay } from "date-fns";
 
-// Mock calendars for the sidebar
-const MOCK_CALENDARS = [
-    { id: "me", label: "My Calendar", color: "var(--primary)", checked: true },
-    { id: "team", label: "Team Events", color: "#a855f7", checked: true },
-];
+interface Calendar {
+    id: string;
+    label: string;
+    color: string;
+    checked: boolean;
+    type: 'google' | 'caldav';
+    accountId?: string;
+}
 
 const Appointments = () => {
-    const { t } = useTranslation();
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [events, setEvents] = useState<Record<string, Event>>({});
     const [loading, setLoading] = useState(true);
+    const [calendars, setCalendars] = useState<Calendar[]>([]);
 
     // View State
     const [date, setDate] = useState<Date>(new Date());
     const [view, setView] = useState<View>(Views.MONTH);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-    const [calendars, setCalendars] = useState(MOCK_CALENDARS);
+
+    // Fetch calendars from Google and CalDAV
+    useEffect(() => {
+        const fetchCalendars = async () => {
+            const calendarList: Calendar[] = [];
+
+            try {
+                // Fetch Google calendars
+                const googleRes = await getCalendarList();
+                console.log("Google calendars response:", googleRes.data);
+                if (googleRes.data && Array.isArray(googleRes.data)) {
+                    googleRes.data.forEach((cal: any, index: number) => {
+                        calendarList.push({
+                            id: `google-${cal.id}`,
+                            label: cal.summary || cal.id,
+                            color: cal.backgroundColor || (index === 0 ? "#3b82f6" : "#8b5cf6"),
+                            checked: index === 0, // Check the first calendar by default
+                            type: 'google'
+                        });
+                    });
+                }
+            } catch (err) {
+                console.log("No Google calendars available", err);
+            }
+
+            try {
+                // Fetch CalDAV accounts and their calendars
+                const caldavAccounts = await listAccounts();
+                console.log("CalDAV accounts response:", caldavAccounts.data);
+                if (caldavAccounts.data && Array.isArray(caldavAccounts.data)) {
+                    for (const account of caldavAccounts.data) {
+                        try {
+                            const calendarsRes = await listCalendars(account._id);
+                            console.log(`Calendars for account ${account._id}:`, calendarsRes.data);
+                            if (calendarsRes.data && Array.isArray(calendarsRes.data)) {
+                                calendarsRes.data.forEach((cal: any) => {
+                                    calendarList.push({
+                                        id: `caldav-${account._id}-${cal.url}`,
+                                        label: cal.displayName || cal.url,
+                                        color: cal.color || "#a855f7",
+                                        checked: false,
+                                        type: 'caldav',
+                                        accountId: account._id
+                                    });
+                                });
+                            }
+                        } catch (err) {
+                            console.log(`Failed to fetch calendars for account ${account._id}`, err);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.log("No CalDAV calendars available", err);
+            }
+
+            // Add a default "My Appointments" calendar if no calendars were found
+            if (calendarList.length === 0) {
+                calendarList.push({
+                    id: "my-appointments",
+                    label: "My Appointments",
+                    color: "var(--primary)",
+                    checked: true,
+                    type: 'google'
+                });
+            }
+
+            console.log("Final calendar list:", calendarList);
+            setCalendars(calendarList);
+        };
+
+        fetchCalendars();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -43,9 +119,9 @@ const Appointments = () => {
 
                 const eventMap: Record<string, Event> = {};
                 if (Array.isArray(evtRes.data)) {
-                    evtRes.data.forEach((evt: Event) => {
+                    for (const evt of evtRes.data) {
                         if (evt._id) eventMap[evt._id] = evt;
-                    });
+                    }
                 }
                 setEvents(eventMap);
 
@@ -73,19 +149,25 @@ const Appointments = () => {
         eventDetails: events[apt.event]
     }));
 
+    // Get dates that have appointments for highlighting
+    const datesWithAppointments = new Set(
+        appointments.map(apt => startOfDay(new Date(apt.start)).getTime())
+    );
+
     return (
-        <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+        <div className="min-h-screen flex flex-col bg-background text-foreground">
             <AppNavbar />
 
-            <main className="flex-1 flex overflow-hidden relative">
+            <main className="flex-1 flex overflow-hidden">
                 <AppointmentSidebar
                     date={date}
                     setDate={handleDateChange}
                     calendars={calendars}
                     onCalendarToggle={handleCalendarToggle}
+                    datesWithAppointments={datesWithAppointments}
                 />
 
-                <section className="flex-1 flex flex-col h-full bg-background overflow-hidden relative border-l border-border">
+                <section className="flex-1 flex flex-col bg-background overflow-hidden relative border-l border-border">
                     {loading ? (
                         <div className="flex justify-center items-center h-full">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -104,7 +186,6 @@ const Appointments = () => {
                     <Button
                         size="icon"
                         className="absolute bottom-8 right-8 h-14 w-14 rounded-full shadow-lg shadow-primary/40 z-10"
-                        // Add logic to open "Add Event" modal or navigate to add page
                         onClick={() => {/* Navigate to /add-event or open modal */ }}
                     >
                         <Plus className="h-6 w-6" />
@@ -116,10 +197,11 @@ const Appointments = () => {
                         appointment={selectedAppointment}
                         event={events[selectedAppointment.event]}
                         onClose={() => setSelectedAppointment(null)}
-                    // Add handlers for edit/delete if needed
                     />
                 )}
             </main>
+
+            <Footer />
         </div>
     );
 };

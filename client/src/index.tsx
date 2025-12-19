@@ -71,7 +71,7 @@ const Main = () => {
                 path="/appointments"
                 element={
                   <PrivateRoute>
-                    <App />
+                    <Appointments />
                   </PrivateRoute>
                 }
               />
