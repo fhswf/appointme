@@ -94,8 +94,8 @@ describe('scheduler utility', () => {
 
             expect(result.length).toBe(2);
             expect(result[0].start).toEqual(timeMin);
-            expect(result[0].end).toEqual(addMinutes(new Date('2025-01-01T12:00:00Z'), -15));
-            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
+            expect(result[0].end).toEqual(new Date('2025-01-01T12:00:00Z'));
+            expect(result[1].start).toEqual(addMinutes(new Date('2025-01-01T13:00:00Z'), 15));
             expect(result[1].end).toEqual(timeMax);
         });
 
@@ -111,8 +111,8 @@ describe('scheduler utility', () => {
 
             expect(result.length).toBe(2);
             expect(result[0].start).toEqual(timeMin);
-            expect(result[0].end).toEqual(new Date('2025-01-01T12:00:00Z'));
-            expect(result[1].start).toEqual(addMinutes(new Date('2025-01-01T13:00:00Z'), 30));
+            expect(result[0].end).toEqual(new Date('2025-01-01T11:30:00Z'));
+            expect(result[1].start).toEqual(new Date('2025-01-01T13:00:00Z'));
             expect(result[1].end).toEqual(timeMax);
         });
 
@@ -225,6 +225,67 @@ describe('scheduler utility', () => {
             expect(result.length).toBe(1);
             expect(result[0].start).toEqual(timeMin);
             expect(result[0].end).toEqual(new Date('2025-01-01T18:00:00Z'));
+        });
+        it('should offer slot at timeMin even with buffer if preceding busy slot ends enough before', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const bufferbefore = 5;
+            // Busy slot ending at 08:55. With 5m buffer, it ends at 09:00.
+            const busySlots = [
+                { start: new Date('2025-01-01T08:00:00Z'), end: new Date('2025-01-01T08:55:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferbefore, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should shift slot if preceding busy slot ends too late for buffer', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const bufferbefore = 5;
+            // Busy slot ending at 09:00. With 5m buffer, it ends at 09:05.
+            const busySlots = [
+                { start: new Date('2025-01-01T08:00:00Z'), end: new Date('2025-01-01T09:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferbefore, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(new Date('2025-01-01T09:05:00Z'));
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should offer 19:30 if busy slot ends at 19:30 and bufferbefore is 5', () => {
+            const timeMin = new Date('2025-12-23T19:30:00Z');
+            const timeMax = new Date('2025-12-23T20:30:00Z');
+            const bufferbefore = 5;
+            // Busy slot ending exactly when window starts.
+            // 19:30 + 5 = 19:35.
+            const busySlots = [
+                { start: new Date('2025-12-23T19:00:00Z'), end: new Date('2025-12-23T19:30:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferbefore, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(new Date('2025-12-23T19:35:00Z'));
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should offer 19:30 even with 5m buffer if no busy slots interfere', () => {
+            const timeMin = new Date('2025-12-23T19:30:00Z');
+            const timeMax = new Date('2025-12-23T20:30:00Z');
+            const bufferbefore = 5;
+            const busySlots: any[] = [];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferbefore, 0);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(timeMax);
         });
     });
 });

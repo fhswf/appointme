@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Edit, Trash, Copy, Clock } from "lucide-react";
 import { EventDocument } from "../helpers/EventDocument";
+import { Slots, Slot } from "common";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import "./EventCard.css";
@@ -18,6 +19,7 @@ type EventCardProps = {
   event: EventDocument;
   url: string;
   hasCalendar: boolean;
+  defaultAvailable?: Slots;
   setActive: (event: EventDocument, active: boolean) => void;
   onDelete: (event: EventDocument) => void;
 };
@@ -39,7 +41,8 @@ export const EventCard = (props: EventCardProps) => {
         toast.error(t("error_no_duration"));
         return;
       }
-      const hasSlots = Object.values(event.available).some(daySlots => daySlots.length > 0);
+      const slots = event.availabilityMode === 'default' ? props.defaultAvailable : event.available;
+      const hasSlots = slots && Object.values(slots).some((daySlots: Slot[]) => daySlots.length > 0);
       if (!hasSlots) {
         toast.error(t("error_no_slots"));
         return;
