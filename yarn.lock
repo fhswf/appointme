@@ -10083,7 +10083,7 @@ __metadata:
     express-jwt: "npm:^8.4.1"
     express-rate-limit: "npm:^7.4.1"
     express-validator: "npm:^7.0.1"
-    google-auth-library: "npm:^9.0.0"
+    google-auth-library: "npm:^10.5.0"
     googleapis: "npm:^126.0.1"
     ical-generator: "npm:^5.0.1"
     jest: "npm:^29.7.0"
@@ -11921,6 +11921,13 @@ __metadata:
   version: 1.0.8
   resolution: "damerau-levenshtein@npm:1.0.8"
   checksum: 10/f4eba1c90170f96be25d95fa3857141b5f81e254f7e4d530da929217b19990ea9a0390fc53d3c1cafac9152fda78e722ea4894f765cf6216be413b5af1fbf821
+  languageName: node
+  linkType: hard
+
+"data-uri-to-buffer@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "data-uri-to-buffer@npm:4.0.1"
+  checksum: 10/0d0790b67ffec5302f204c2ccca4494f70b4e2d940fea3d36b09f0bb2b8539c2e86690429eb1f1dc4bcc9e4df0644193073e63d9ee48ac9fce79ec1506e4aa4c
   languageName: node
   linkType: hard
 
@@ -14323,6 +14330,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-blob@npm:^3.1.2, fetch-blob@npm:^3.1.4":
+  version: 3.2.0
+  resolution: "fetch-blob@npm:3.2.0"
+  dependencies:
+    node-domexception: "npm:^1.0.0"
+    web-streams-polyfill: "npm:^3.0.3"
+  checksum: 10/5264ecceb5fdc19eb51d1d0359921f12730941e333019e673e71eb73921146dceabcb0b8f534582be4497312d656508a439ad0f5edeec2b29ab2e10c72a1f86b
+  languageName: node
+  linkType: hard
+
 "figures@npm:^2.0.0":
   version: 2.0.0
   resolution: "figures@npm:2.0.0"
@@ -14587,6 +14604,15 @@ __metadata:
     hasown: "npm:^2.0.2"
     mime-types: "npm:^2.1.12"
   checksum: 10/52ecd6e927c8c4e215e68a7ad5e0f7c1031397439672fd9741654b4a94722c4182e74cc815b225dcb5be3f4180f36428f67c6dd39eaa98af0dcfdd26c00c19cd
+  languageName: node
+  linkType: hard
+
+"formdata-polyfill@npm:^4.0.10":
+  version: 4.0.10
+  resolution: "formdata-polyfill@npm:4.0.10"
+  dependencies:
+    fetch-blob: "npm:^3.1.2"
+  checksum: 10/9b5001d2edef3c9449ac3f48bd4f8cc92e7d0f2e7c1a5c8ba555ad4e77535cc5cf621fabe49e97f304067037282dd9093b9160a3cb533e46420b446c4e6bc06f
   languageName: node
   linkType: hard
 
@@ -14866,6 +14892,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gaxios@npm:^7.0.0":
+  version: 7.1.3
+  resolution: "gaxios@npm:7.1.3"
+  dependencies:
+    extend: "npm:^3.0.2"
+    https-proxy-agent: "npm:^7.0.1"
+    node-fetch: "npm:^3.3.2"
+    rimraf: "npm:^5.0.1"
+  checksum: 10/234ae4d622c41472a0f1be252a9a0f0a6f4f6ae2418671ef83fd715b9e315100c621818d721fdf0e7471ef49a460f196eaf318c2b36ed5f51a1cf0f6a2639111
+  languageName: node
+  linkType: hard
+
 "gcp-metadata@npm:^6.1.0":
   version: 6.1.1
   resolution: "gcp-metadata@npm:6.1.1"
@@ -14874,6 +14912,17 @@ __metadata:
     google-logging-utils: "npm:^0.0.2"
     json-bigint: "npm:^1.0.0"
   checksum: 10/f6b1a604d5888db261a9a3ca0a494338b5cdbf815efa393aa38051d814387545bbfd9f25874bf8ea36441f2052625add42658e8973648e53f9b90f151b4bad1b
+  languageName: node
+  linkType: hard
+
+"gcp-metadata@npm:^8.0.0":
+  version: 8.1.2
+  resolution: "gcp-metadata@npm:8.1.2"
+  dependencies:
+    gaxios: "npm:^7.0.0"
+    google-logging-utils: "npm:^1.0.0"
+    json-bigint: "npm:^1.0.0"
+  checksum: 10/b3a4674067692991d1b72ddb5ff8cc24d08756fac2cf9ba4b49d92d0062724eca111ba58656fac54343bae8f0a29c8d264fb655ca2d6570e156fbdc338c787d9
   languageName: node
   linkType: hard
 
@@ -15226,6 +15275,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"google-auth-library@npm:^10.5.0":
+  version: 10.5.0
+  resolution: "google-auth-library@npm:10.5.0"
+  dependencies:
+    base64-js: "npm:^1.3.0"
+    ecdsa-sig-formatter: "npm:^1.0.11"
+    gaxios: "npm:^7.0.0"
+    gcp-metadata: "npm:^8.0.0"
+    google-logging-utils: "npm:^1.0.0"
+    gtoken: "npm:^8.0.0"
+    jws: "npm:^4.0.0"
+  checksum: 10/f9cec00f17f1082bc2e1e342043425063e347a06c4b4ae40c5d644f4491755b18690cb7f50daa9aa056539b14f993febdc009b0dada0c9b5bcf35c7e0caf78a3
+  languageName: node
+  linkType: hard
+
 "google-auth-library@npm:^9.0.0, google-auth-library@npm:^9.7.0":
   version: 9.15.1
   resolution: "google-auth-library@npm:9.15.1"
@@ -15244,6 +15308,13 @@ __metadata:
   version: 0.0.2
   resolution: "google-logging-utils@npm:0.0.2"
   checksum: 10/f8f5ec3087ef4563d12ee1afc603e6b42b4d703c1f10c9f37b3080e6f4a2e9554e0fd9dcdce97ded5a46ead465c706ff2bc791ad2ca478ed8dc62fdc4b06cac6
+  languageName: node
+  linkType: hard
+
+"google-logging-utils@npm:^1.0.0":
+  version: 1.1.3
+  resolution: "google-logging-utils@npm:1.1.3"
+  checksum: 10/5a6c090399545e0f1f2c92fbda316479dc5d573b2f4b54f0deb570dc31d8b254537894fd4e7c275ce7d352482e40d5857fa4b960c1b3d869584b5216dc2076e2
   languageName: node
   linkType: hard
 
@@ -15313,6 +15384,16 @@ __metadata:
     gaxios: "npm:^6.0.0"
     jws: "npm:^4.0.0"
   checksum: 10/640392261e55c9242137a81a4af8feb053b57061762cedddcbb6a0d62c2314316161808ac2529eea67d06d69fdc56d82361af50f2d840a04a87ea29e124d7382
+  languageName: node
+  linkType: hard
+
+"gtoken@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "gtoken@npm:8.0.0"
+  dependencies:
+    gaxios: "npm:^7.0.0"
+    jws: "npm:^4.0.0"
+  checksum: 10/b921430395dcd06ee63c3fc5a5e339ca4d6dcb38b6d618beb0f260bae1088d53d130f86029a9d578f1601c64685f49a65dba57bbd617c4b14039180b67b6c5ce
   languageName: node
   linkType: hard
 
@@ -20586,6 +20667,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-domexception@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "node-domexception@npm:1.0.0"
+  checksum: 10/e332522f242348c511640c25a6fc7da4f30e09e580c70c6b13cb0be83c78c3e71c8d4665af2527e869fc96848924a4316ae7ec9014c091e2156f41739d4fa233
+  languageName: node
+  linkType: hard
+
 "node-emoji@npm:^1.11.0":
   version: 1.11.0
   resolution: "node-emoji@npm:1.11.0"
@@ -20618,6 +20706,17 @@ __metadata:
     encoding:
       optional: true
   checksum: 10/b24f8a3dc937f388192e59bcf9d0857d7b6940a2496f328381641cb616efccc9866e89ec43f2ec956bbd6c3d3ee05524ce77fe7b29ccd34692b3a16f237d6676
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "node-fetch@npm:3.3.2"
+  dependencies:
+    data-uri-to-buffer: "npm:^4.0.0"
+    fetch-blob: "npm:^3.1.4"
+    formdata-polyfill: "npm:^4.0.10"
+  checksum: 10/24207ca8c81231c7c59151840e3fded461d67a31cf3e3b3968e12201a42f89ce4a0b5fb7079b1fa0a4655957b1ca9257553200f03a9f668b45ebad265ca5593d
   languageName: node
   linkType: hard
 
@@ -23693,7 +23792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^5.0.10":
+"rimraf@npm:^5.0.1, rimraf@npm:^5.0.10":
   version: 5.0.10
   resolution: "rimraf@npm:5.0.10"
   dependencies:
@@ -27192,6 +27291,13 @@ __metadata:
   dependencies:
     defaults: "npm:^1.0.3"
   checksum: 10/182ebac8ca0b96845fae6ef44afd4619df6987fe5cf552fdee8396d3daa1fb9b8ec5c6c69855acb7b3c1231571393bd1f0a4cdc4028d421575348f64bb0a8817
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.0.3":
+  version: 3.3.3
+  resolution: "web-streams-polyfill@npm:3.3.3"
+  checksum: 10/8e7e13501b3834094a50abe7c0b6456155a55d7571312b89570012ef47ec2a46d766934768c50aabad10a9c30dd764a407623e8bfcc74fcb58495c29130edea9
   languageName: node
   linkType: hard
 
