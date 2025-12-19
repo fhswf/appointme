@@ -66,10 +66,10 @@ spec:
                 configMapKeyRef:
                   key: BASE_PATH
                   name: appointme
-            - name: CLIENT_URL
+            - name: BASE_URL
               valueFrom:
                 configMapKeyRef:
-                  key: CLIENT_URL
+                  key: BASE_URL
                   name: appointme
             - name: MONGO_URI
               valueFrom:

@@ -383,10 +383,10 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
           email: req.body.attendeeEmail as string,
         }
       ],
-      source: {
+      source: (process.env.BASE_URL?.startsWith('http')) ? {
         title: "Appoint Me",
         url: process.env.BASE_URL,
-      },
+      } : undefined,
       guestsCanModify: true,
       guestsCanInviteOthers: true,
     };

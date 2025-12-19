@@ -77,7 +77,7 @@ describe("Authentication Controller", () => {
         process.env.CLIENT_SECRET = "test_client_secret";
         process.env.EMAIL_FROM = "test@example.com";
         process.env.EMAIL_PASSWORD = "password";
-        process.env.CLIENT_URL = "http://localhost:3000";
+        process.env.BASE_URL = "http://localhost:3000";
 
         // Re-import to ensure mocks are used
         const { init } = await import("../server.js");

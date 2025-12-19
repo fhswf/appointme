@@ -97,7 +97,7 @@ describe("User Identification by Email", () => {
         process.env.OIDC_ISSUER = "http://localhost:8080/auth/realms/test";
         process.env.OIDC_CLIENT_ID = "test_oidc_client";
         process.env.OIDC_CLIENT_SECRET = "test_oidc_secret";
-        process.env.CLIENT_URL = "http://localhost:3000";
+        process.env.BASE_URL = "http://localhost:3000";
 
         // Setup in-memory MongoDB or mock Mongoose (using existing server setup if possible, or mocks)
         // Here we rely on the server.ts setup which likely connects to a test DB or we mock UserModel.

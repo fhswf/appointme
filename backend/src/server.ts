@@ -21,7 +21,7 @@ import { swaggerSpec } from "./config/swagger.js";
 import { logger } from "./logging.js";
 
 logger.info("NODE_ENV: %s", process.env.NODE_ENV);
-logger.info("CLIENT_URL: %s", process.env.CLIENT_URL);
+logger.info("BASE_URL: %s", process.env.BASE_URL);
 logger.info("MONGO_URI: %s", process.env.MONGO_URI);
 logger.info("CLIENT_ID: %s", process.env.CLIENT_ID);
 
@@ -29,7 +29,7 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
-const ORIGINS = [process.env.CLIENT_URL, "https://appointme.gawron.cloud"];
+const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
   ORIGINS.push("http://localhost:5173");
 }
