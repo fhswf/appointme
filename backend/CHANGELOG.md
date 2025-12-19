@@ -1,3 +1,10 @@
+## backend [1.35.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.0...backend@1.35.1-rc.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* base url configuration ([2ee1503](https://github.com/fhswf/appointme/commit/2ee150348fe375c4613142ba1d859f980b2f845a))
+
 # backend [1.35.0](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0) (2025-12-19)
 
 
