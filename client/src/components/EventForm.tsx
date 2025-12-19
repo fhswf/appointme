@@ -46,17 +46,19 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
     (key: keyof Event, mult?: number) =>
       (evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setChanged(true);
-        console.log("onChange: %o %s", evt, key);
+        let value: string | number = evt.target.value;
+        if (mult || (evt.target as HTMLInputElement).type === "number") {
+          value = Number(evt.target.value) * (mult || 1);
+        }
+
         if (key === "name" && formData.url === generateSlug(formData.name)) {
           setFormData({
             ...formData,
-            [key]: mult
-              ? mult * Number.parseInt(evt.target.value)
-              : evt.target.value,
+            [key]: value,
             url: generateSlug(evt.target.value),
           } as Event);
         } else {
-          setFormData({ ...formData, [key]: evt.target.value } as Event);
+          setFormData({ ...formData, [key]: value } as Event);
         }
       };
 

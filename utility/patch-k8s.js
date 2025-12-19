@@ -1,14 +1,17 @@
-const fs = require('fs');
+const fs = require('node:fs');
+const path = require('node:path');
 const yaml = require('js-yaml');
 
-const config = JSON.parse(fs.readFileSync(`package.json`, 'utf8'));
+const pkgPath = path.join(process.cwd(), 'package.json');
+const config = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 console.log("config: %j", config)
 
 /* read arguments */
 const args = process.argv.slice(2);
 
 const git_sha = process.env.GITHUB_SHA;
-const k8sConfig = yaml.load(fs.readFileSync(args[0], 'utf8'));
+const k8sConfigPath = args[0];
+const k8sConfig = yaml.load(fs.readFileSync(k8sConfigPath, 'utf8'));
 
 console.log('Patching k8s config...');
 
@@ -22,4 +25,4 @@ else {
 }
 console.log(k8sConfig.spec.template.spec.containers[0].image)
 /* write the new k8s config */
-fs.writeFileSync(args[0], yaml.dump(k8sConfig));
+fs.writeFileSync(k8sConfigPath, yaml.dump(k8sConfig));
