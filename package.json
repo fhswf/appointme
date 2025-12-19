@@ -1,6 +1,6 @@
 {
   "name": "appointme",
-  "version": "1.38.0",
+  "version": "1.36.0",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
   "directories": {
@@ -100,6 +100,5 @@
   "packageManager": "yarn@4.5.0",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18"
-  },
-  "stableVersion": "1.9.2"
+  }
 }
