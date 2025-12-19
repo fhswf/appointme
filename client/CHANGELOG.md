@@ -4,6 +4,13 @@
 ### Features
 
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
+## client [1.29.1](https://github.com/fhswf/appointme/compare/client@1.29.0...client@1.29.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* event form ([3184083](https://github.com/fhswf/appointme/commit/31840832dfa2c237c29c200a52af46249a01256d))
+* event form ([87ddd69](https://github.com/fhswf/appointme/commit/87ddd697faadde140261a98314d34c7c8b4a6946))
 
 ## client [1.29.1-rc.2](https://github.com/fhswf/appointme/compare/client@1.29.1-rc.1...client@1.29.1-rc.2) (2025-12-19)
 
