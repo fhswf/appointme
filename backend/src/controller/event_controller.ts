@@ -72,13 +72,13 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
 
   for (const key in response.data.calendars) {
     const busy = response.data.calendars[key].busy;
-    const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferafter, event.bufferbefore);
+    const calIntervals = convertBusyToFree(busy, timeMin, timeMax, event.bufferbefore, event.bufferafter);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
   if (calDavSlots && calDavSlots.length > 0) {
     calDavSlots.sort((a, b) => a.start.getTime() - b.start.getTime());
-    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferafter, event.bufferbefore);
+    const calIntervals = convertBusyToFree(calDavSlots, timeMin, timeMax, event.bufferbefore, event.bufferafter);
     freeSlots = freeSlots.intersect(calIntervals);
   }
 
