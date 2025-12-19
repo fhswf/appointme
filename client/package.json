@@ -38,7 +38,7 @@
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.5.1",
     "@stepperize/react": "^5.1.9",
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/vite": "^4.1.18",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.2.1",
