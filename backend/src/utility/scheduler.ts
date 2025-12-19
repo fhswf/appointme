@@ -20,17 +20,24 @@ interface TimeSlot {
  */
 export function convertBusyToFree(busySlots: TimeSlot[], timeMin: Date, timeMax: Date, bufferBefore: number, bufferAfter: number): IntervalSet {
     const freeIntervals = new IntervalSet();
-    let current = timeMin;
+    let current = addMinutes(timeMin, -bufferBefore);
 
     for (const busy of busySlots) {
         const _start = addMinutes(new Date(busy.start), -bufferBefore);
         const _end = addMinutes(new Date(busy.end), bufferAfter);
-        if (current < _start)
-            freeIntervals.push({ start: current, end: _start });
+        if (current < _start) {
+            const start = Math.max(current.getTime(), timeMin.getTime());
+            if (start < _start.getTime()) {
+                freeIntervals.push({ start: new Date(start), end: _start });
+            }
+        }
         if (_end > current) current = _end;
     }
     if (current < timeMax) {
-        freeIntervals.push({ start: current, end: timeMax });
+        const start = Math.max(current.getTime(), timeMin.getTime());
+        if (start < timeMax.getTime()) {
+            freeIntervals.push({ start: new Date(start), end: timeMax });
+        }
     }
     return freeIntervals;
 }

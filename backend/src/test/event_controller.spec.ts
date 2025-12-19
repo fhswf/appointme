@@ -350,6 +350,46 @@ describe("Event Controller", () => {
             expect(Array.isArray(res.body)).toBe(true);
         });
 
+        it("should return slots of exact event duration", async () => {
+            (EventModel.findById as any).mockImplementation((() => {
+                return mockQuery({
+                    ...EVENT,
+                    minFuture: 0,
+                    maxFuture: 60 * 24 * 60 * 60,
+                    duration: 30,
+                    bufferbefore: 0,
+                    bufferafter: 0,
+                    available: {
+                        5: [{ start: "10:00", end: "10:30" }] // Friday (Dec 19 is Friday)
+                    },
+                    maxPerDay: 5,
+                    user: USER._id,
+                    availabilityMode: 'define'
+                });
+            }));
+
+            (UserModel.findById as any).mockImplementation(() => mockQuery(USER));
+
+            const { events, freeBusy } = await import("../controller/google_controller.js");
+            const { getBusySlots } = await import("../controller/caldav_controller.js");
+
+            (events as any).mockResolvedValue([]);
+            (freeBusy as any).mockResolvedValue({ data: { calendars: { 'primary': { busy: [] } } } });
+            (getBusySlots as any).mockResolvedValue([]);
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-19T00:00:00Z", // Friday
+                    timeMax: "2025-12-19T23:59:59Z"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(new Date(res.body[0].start).toISOString()).toContain("T09:00:00");
+            expect(new Date(res.body[0].end).toISOString()).toContain("T09:30:00");
+        });
+
         it("should return 400 if event not found", async () => {
             (EventModel.findById as any).mockImplementation(() => mockQuery(null));
 

@@ -226,5 +226,36 @@ describe('scheduler utility', () => {
             expect(result[0].start).toEqual(timeMin);
             expect(result[0].end).toEqual(new Date('2025-01-01T18:00:00Z'));
         });
+        it('should offer slot at timeMin even with buffer if preceding busy slot ends enough before', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const bufferbefore = 5;
+            // Busy slot ending at 08:55. With 5m buffer, it ends at 09:00.
+            const busySlots = [
+                { start: new Date('2025-01-01T08:00:00Z'), end: new Date('2025-01-01T08:55:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, bufferbefore);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(timeMax);
+        });
+
+        it('should shift slot if preceding busy slot ends too late for buffer', () => {
+            const timeMin = new Date('2025-01-01T09:00:00Z');
+            const timeMax = new Date('2025-01-01T17:00:00Z');
+            const bufferbefore = 5;
+            // Busy slot ending at 09:00. With 5m buffer, it ends at 09:05.
+            const busySlots = [
+                { start: new Date('2025-01-01T08:00:00Z'), end: new Date('2025-01-01T09:00:00Z') }
+            ];
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, 0, bufferbefore);
+
+            expect(result.length).toBe(1);
+            expect(result[0].start).toEqual(new Date('2025-01-01T09:05:00Z'));
+            expect(result[0].end).toEqual(timeMax);
+        });
     });
 });
