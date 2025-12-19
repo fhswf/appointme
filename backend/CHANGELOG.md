@@ -1,3 +1,10 @@
+# backend [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0-rc.1) (2025-12-19)
+
+
+### Features
+
+* Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
+
 # backend [1.34.0](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0) (2025-12-18)
 
 
