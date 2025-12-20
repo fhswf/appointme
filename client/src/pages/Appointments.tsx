@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Appointment, Event } from "common";
+import { Appointment, Event, IntervalSet, Slots } from "common";
 import { Views, View } from 'react-big-calendar'
 import AppNavbar from "../components/AppNavbar";
 import Footer from "../components/Footer";
@@ -23,12 +23,20 @@ interface Calendar {
     originalId?: string;
 }
 
+const CALENDAR_COLORS = [
+    "#3b82f6", // Blue
+    "#9333ea", // Purple
+    "#16a34a", // Green
+    "#ea580c"  // Orange
+];
+
 const Appointments = () => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [events, setEvents] = useState<Record<string, Event>>({});
     const [loading, setLoading] = useState(true);
     const [calendars, setCalendars] = useState<Calendar[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
+    const [backgroundEvents, setBackgroundEvents] = useState<any[]>([]);
 
     // View State
     const [date, setDate] = useState<Date>(new Date());
@@ -47,7 +55,7 @@ const Appointments = () => {
                     const calendarList: Calendar[] = response.data.map((cal: any, index: number) => ({
                         id: cal.type === 'google' ? `google-${cal.id}` : `caldav-${cal.id}`,
                         label: cal.summary || cal.id,
-                        color: cal.color || (index === 0 ? "#3b82f6" : "#8b5cf6"),
+                        color: cal.color || CALENDAR_COLORS[index % CALENDAR_COLORS.length],
                         checked: cal.primary || index === 0,
                         type: cal.type,
                         accountId: cal.accountId,
@@ -97,14 +105,8 @@ const Appointments = () => {
 
     // Fetch calendar events when calendars or view changes
     useEffect(() => {
-        const fetchCalendarEvents = async () => {
-            const checkedCalendars = calendars.filter(c => c.checked);
-            if (checkedCalendars.length === 0) {
-                setCalendarEvents([]);
-                return;
-            }
-
-            // Calculate time range based on current view
+        const fetchCalendarEventsAndAvailability = async () => {
+            // 1. Calculate time range based on current view
             const now = new Date(date);
             let timeMin: Date, timeMax: Date;
 
@@ -126,38 +128,76 @@ const Appointments = () => {
                 timeMax.setHours(23, 59, 59);
             }
 
-            try {
-                const eventPromises = checkedCalendars.map(cal =>
-                    axios.get(`/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`, {
-                        params: {
-                            timeMin: timeMin.toISOString(),
-                            timeMax: timeMax.toISOString()
+            // 2. Fetch external calendar events
+            const checkedCalendars = calendars.filter(c => c.checked);
+            if (checkedCalendars.length > 0) {
+                try {
+                    const eventPromises = checkedCalendars.map(cal =>
+                        axios.get(`/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`, {
+                            params: {
+                                timeMin: timeMin.toISOString(),
+                                timeMax: timeMax.toISOString()
+                            }
+                        }).catch(err => {
+                            console.error(`Failed to fetch events for calendar ${cal.label}:`, err);
+                            return { data: [] };
+                        })
+                    );
+
+                    const results = await Promise.all(eventPromises);
+                    const allEvents = results.flatMap((res, idx) =>
+                        res.data.map((evt: any) => ({
+                            ...evt,
+                            calendarId: checkedCalendars[idx].id,
+                            calendarColor: checkedCalendars[idx].color
+                        }))
+                    );
+
+                    setCalendarEvents(allEvents);
+                } catch (err) {
+                    console.error("Failed to fetch calendar events", err);
+                }
+            } else {
+                setCalendarEvents([]);
+            }
+
+            // 3. Calculate Availability Background Events
+            // Only perform if we have events loaded
+            if (Object.keys(events).length > 0 && view !== Views.MONTH) { // Month view usually doesn't show background events well
+                try {
+                    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    const availabilitySet = new IntervalSet();
+
+                    // Union availabilities of all active events
+                    Object.values(events).forEach((evt) => {
+                        if (evt.isActive && evt.available) {
+                            const eventAvailability = new IntervalSet(timeMin, timeMax, evt.available, userTimeZone);
+                            availabilitySet.add(eventAvailability);
                         }
-                    }).catch(err => {
-                        console.error(`Failed to fetch events for calendar ${cal.label}:`, err);
-                        return { data: [] };
-                    })
-                );
+                    });
 
-                const results = await Promise.all(eventPromises);
-                const allEvents = results.flatMap((res, idx) =>
-                    res.data.map((evt: any) => ({
-                        ...evt,
-                        calendarId: checkedCalendars[idx].id,
-                        calendarColor: checkedCalendars[idx].color
-                    }))
-                );
+                    // Map to calendar events
+                    const bgEvents = availabilitySet.map((range, idx) => ({
+                        id: `avail-${idx}`,
+                        title: 'Available',
+                        start: range.start,
+                        end: range.end,
+                        resource: { type: 'availability' }
+                    }));
 
-                setCalendarEvents(allEvents);
-            } catch (err) {
-                console.error("Failed to fetch calendar events", err);
+                    setBackgroundEvents(bgEvents);
+                } catch (e) {
+                    console.error("Error calculating availability", e);
+                }
+            } else {
+                setBackgroundEvents([]);
             }
         };
 
-        if (calendars.length > 0) {
-            fetchCalendarEvents();
+        if (calendars.length >= 0) { // Always run to calc availability even if no calendars
+            fetchCalendarEventsAndAvailability();
         }
-    }, [calendars, date, view]);
+    }, [calendars, date, view, events]);
 
     const handleDateChange = (newDate: Date | undefined) => {
         if (newDate) setDate(newDate);
@@ -218,6 +258,7 @@ const Appointments = () => {
                     ) : (
                         <AppointmentCalendar
                             events={allEvents}
+                            backgroundEvents={backgroundEvents}
                             date={date}
                             onDateChange={setDate}
                             view={view}
@@ -226,7 +267,7 @@ const Appointments = () => {
                                 // Clear both selections first
                                 setSelectedAppointment(null);
                                 setSelectedCalendarEvent(null);
-                                
+
                                 // Set the appropriate selection based on type
                                 if (evt.resource?.type === 'appointment') {
                                     setSelectedAppointment(evt.resource.data);

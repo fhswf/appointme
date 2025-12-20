@@ -211,3 +211,22 @@
 .rbc-event-label {
   display: none !important;
 }
+
+.bg-background {
+  background-color: var(--color-card);
+}
+
+/* Background Event Styles */
+.rbc-background-event {
+  background-color: hsl(var(--primary)) !important;
+  opacity: 0.1 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  pointer-events: none;
+  box-shadow: none !important;
+  z-index: 0;
+}
+
+.rbc-background-event>* {
+  display: none !important;
+}
