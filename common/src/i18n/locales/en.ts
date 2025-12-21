@@ -32,6 +32,7 @@ export const en = {
     "broad_close_butterfly_drop": "Schedule an appointment with {{name}}",
     "weary_known_gazelle_file": "Please select the type of appointment you need and click on the schedule\n      button to book it. You will get a list of available slots in my schedule.",
     "low_clean_haddock_bubble": "My Event Types",
+    "My Event Types": "My Event Types",
     "pink_trite_ocelot_enrich": "You need to connect your Calendar first, before you can add Events!",
     "early_sweet_mantis_peek": "Add event type",
     "deft_suave_bear_pause": "Loading",

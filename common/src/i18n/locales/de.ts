@@ -28,6 +28,7 @@ export const de = {
     "broad_close_butterfly_drop": "Vereinbaren Sie einen Termin mit {{name}}",
     "weary_known_gazelle_file": "Bitte wählen Sie die gewünschte Terminart. Sie erhalten eine Liste der verfügbaren Termine in meinem Zeitplan.",
     "low_clean_haddock_bubble": "Meine Terminarten",
+    "My Event Types": "Meine Terminarten",
     "pink_trite_ocelot_enrich": "Sie müssen zuerst Ihren Kalender verbinden, bevor Sie Ereignisse hinzufügen können!",
     "early_sweet_mantis_peek": "Veranstaltungstyp hinzufügen",
     "deft_suave_bear_pause": "Termine werden geladen ...",
