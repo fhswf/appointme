@@ -115,6 +115,14 @@ const AppNavbar = () => {
             >
               {t("my_appointments")}
             </NavLink>
+            <NavLink
+              to="/integration"
+              className={({ isActive }) =>
+                `text-sm font-medium transition-colors hover:text-primary ${isActive ? "text-foreground border-b-2 border-primary" : "text-muted-foreground"}`
+              }
+            >
+              {t("user_menu_calendar_integration")}
+            </NavLink>
           </nav>
         )}
 

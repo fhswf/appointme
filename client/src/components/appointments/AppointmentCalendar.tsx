@@ -230,6 +230,7 @@ export function AppointmentCalendar({
                     event: CustomEvent as any
                 }}
                 className="font-sans text-foreground"
+                scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
             />
         </div>
     )

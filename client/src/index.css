@@ -230,3 +230,8 @@
 .rbc-background-event>* {
   display: none !important;
 }
+
+/* Increase slot height */
+.rbc-timeslot-group {
+    min-height: 100px !important; 
+}

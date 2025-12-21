@@ -241,7 +241,7 @@ export const getCalendars = async (req: Request, res: Response): Promise<void> =
   try {
     // Fetch user to get CalDAV accounts
     const user = await UserModel.findOne({ _id: targetId }).exec();
-    
+
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -252,18 +252,18 @@ export const getCalendars = async (req: Request, res: Response): Promise<void> =
       try {
         const { google } = await import('googleapis');
         const { OAuth2Client } = await import('google-auth-library');
-        
+
         const oAuth2Client = new OAuth2Client({
           clientId: process.env.CLIENT_ID,
           clientSecret: process.env.CLIENT_SECRET,
           redirectUri: `${process.env.API_URL}/google/oauthcallback`,
         });
-        
+
         oAuth2Client.setCredentials(user.google_tokens);
-        
+
         const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
         const list = await calendar.calendarList.list();
-        
+
         if (list.data.items) {
           list.data.items.forEach((cal: any) => {
             calendars.push({
@@ -285,7 +285,7 @@ export const getCalendars = async (req: Request, res: Response): Promise<void> =
     if (user.caldav_accounts && user.caldav_accounts.length > 0) {
       const { DAVClient } = await import('tsdav');
       const { decrypt } = await import('../utility/encryption.js');
-      
+
       for (const account of user.caldav_accounts) {
         try {
           const client = new DAVClient({
@@ -352,7 +352,7 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
 
   try {
     const user = await UserModel.findOne({ _id: targetId }).exec();
-    
+
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -367,15 +367,15 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
         try {
           const { google } = await import('googleapis');
           const { OAuth2Client } = await import('google-auth-library');
-          
+
           const oAuth2Client = new OAuth2Client({
             clientId: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET,
             redirectUri: `${process.env.API_URL}/google/oauthcallback`,
           });
-          
+
           oAuth2Client.setCredentials(user.google_tokens);
-          
+
           const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
           const response = await calendar.events.list({
             calendarId,
@@ -402,10 +402,21 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
       const { DAVClient } = await import('tsdav');
       const { decrypt } = await import('../utility/encryption.js');
       const ical = await import('node-ical');
-      
-      // Find the account that owns this calendar
-      const account = user.caldav_accounts?.find(acc => calendarId.startsWith(acc.serverUrl));
-      
+
+      const accountId = req.params.accountId;
+      let account;
+
+      if (accountId) {
+        account = user.caldav_accounts?.find(acc => acc._id?.toString() === accountId);
+      }
+
+      // Fallback or explicit search if accountId not provided or not found (though if provided and not found it might be better to 404, 
+      // but strictly following the logic: checking if it was a "google" placeholder or similar)
+      if (!account && !accountId) {
+        // Find the account that owns this calendar by URL matching (Legacy/Fallback)
+        account = user.caldav_accounts?.find(acc => calendarId.startsWith(acc.serverUrl));
+      }
+
       if (!account) {
         res.status(404).json({ error: "CalDAV account not found for this calendar" });
         return;

@@ -134,8 +134,12 @@ const Appointments = () => {
             const checkedCalendars = calendars.filter(c => c.checked);
             if (checkedCalendars.length > 0) {
                 try {
-                    const eventPromises = checkedCalendars.map(cal =>
-                        axios.get(`/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`, {
+                    const eventPromises = checkedCalendars.map(cal => {
+                        const url = cal.accountId
+                            ? `/api/v1/user/me/calendar/${cal.accountId}/${encodeURIComponent(cal.originalId!)}/event`
+                            : `/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`;
+                            
+                        return axios.get(url, {
                             params: {
                                 timeMin: timeMin.toISOString(),
                                 timeMax: timeMax.toISOString()
@@ -143,8 +147,8 @@ const Appointments = () => {
                         }).catch(err => {
                             console.error(`Failed to fetch events for calendar ${cal.label}:`, err);
                             return { data: [] };
-                        })
-                    );
+                        });
+                    });
 
                     const results = await Promise.all(eventPromises);
                     const allEvents = results.flatMap((res, idx) =>
