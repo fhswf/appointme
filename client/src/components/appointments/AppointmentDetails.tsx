@@ -46,7 +46,7 @@ export function AppointmentDetails({
   const attendeeNotes = appointment.description
 
   return (
-    <aside className="w-80 bg-card border-l border-border flex flex-col shadow-xl z-20 h-full absolute right-0 top-0 lg:static lg:h-auto">
+    <aside className="bg-card border-l border-border flex flex-col shadow-xl z-20 h-full w-full overflow-hidden">
       {/* Header */}
       <div className="px-6 py-5 border-b border-border flex items-center justify-between bg-card sticky top-0 z-10">
         <h3 className="font-semibold text-lg">Details</h3>

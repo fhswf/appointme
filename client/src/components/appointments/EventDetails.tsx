@@ -13,7 +13,7 @@ export function EventDetails({ event, onClose }: EventDetailsProps) {
     const endDate = new Date(event.end?.dateTime || event.end);
 
     return (
-        <aside className="w-96 bg-card border-l border-border flex flex-col overflow-hidden">
+        <aside className="bg-card border-l border-border flex flex-col overflow-hidden w-full h-full">
             {/* Header */}
             <div className="sticky top-0 z-10 bg-card border-b border-border p-6 flex items-start justify-between">
                 <div className="flex-1 pr-4">

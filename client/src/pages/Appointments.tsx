@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Appointment, Event, IntervalSet, Slots } from "common";
+import { Appointment, Event, IntervalSet } from "common";
 import { Views, View } from 'react-big-calendar'
 import AppNavbar from "../components/AppNavbar";
 import Footer from "../components/Footer";
@@ -10,6 +10,7 @@ import { AppointmentDetails } from "../components/appointments/AppointmentDetail
 import { EventDetails } from "../components/appointments/EventDetails";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ResizableSidebar } from "@/components/ui/resizable-sidebar";
 import { getUsersEvents } from "../helpers/services/event_services";
 import { startOfDay } from "date-fns";
 
@@ -43,6 +44,7 @@ const Appointments = () => {
     const [view, setView] = useState<View>(Views.MONTH);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
     const [selectedCalendarEvent, setSelectedCalendarEvent] = useState<any | null>(null);
+    const [sidebarWidth, setSidebarWidth] = useState(320);
 
     // Fetch calendars from unified endpoint
     useEffect(() => {
@@ -238,7 +240,7 @@ const Appointments = () => {
     ]);
 
     return (
-        <div className="min-h-screen flex flex-col bg-background text-foreground">
+        <div className="h-screen flex flex-col bg-background text-foreground">
             <AppNavbar />
 
             <main className="flex-1 flex overflow-hidden">
@@ -288,18 +290,36 @@ const Appointments = () => {
                 </section>
 
                 {selectedAppointment && (
-                    <AppointmentDetails
-                        appointment={selectedAppointment}
-                        event={events[selectedAppointment.event]}
-                        onClose={() => setSelectedAppointment(null)}
-                    />
+                    <ResizableSidebar
+                        initialWidth={360}
+                        minWidth={300}
+                        maxWidth={600}
+                        side="right"
+                        width={sidebarWidth}
+                        onResize={setSidebarWidth}
+                    >
+                        <AppointmentDetails
+                            appointment={selectedAppointment}
+                            event={events[selectedAppointment.event]}
+                            onClose={() => setSelectedAppointment(null)}
+                        />
+                    </ResizableSidebar>
                 )}
 
                 {selectedCalendarEvent && (
-                    <EventDetails
-                        event={selectedCalendarEvent}
-                        onClose={() => setSelectedCalendarEvent(null)}
-                    />
+                    <ResizableSidebar
+                        initialWidth={360}
+                        minWidth={300}
+                        maxWidth={600}
+                        side="right"
+                        width={sidebarWidth}
+                        onResize={setSidebarWidth}
+                    >
+                        <EventDetails
+                            event={selectedCalendarEvent}
+                            onClose={() => setSelectedCalendarEvent(null)}
+                        />
+                    </ResizableSidebar>
                 )}
             </main>
 
