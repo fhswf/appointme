@@ -33,7 +33,8 @@ export function AppointmentSidebar({
                     modifiers={{
                         hasAppointment: (day) => datesWithAppointments.has(startOfDay(day).getTime())
                     }}
-                    hasAppointment: "bg-primary/20 font-medium text-foreground rounded-md transition-all duration-200"
+                    modifiersClassNames={{
+                        hasAppointment: "bg-primary/20 font-medium text-foreground rounded-md transition-all duration-200"
                     }}
                 classNames={{
                     month: "space-y-3 w-full",
