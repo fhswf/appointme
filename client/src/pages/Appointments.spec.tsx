@@ -53,8 +53,8 @@ vi.mock('../components/appointments/AppointmentCalendar', () => ({
         <div data-testid="calendar">
             Calendar
             {events.map((e: any) => (
-                <button key={e._id} onClick={() => onSelectEvent(e)} data-testid={`event-${e._id}`}>
-                    {e.description}
+                <button key={e.id} onClick={() => onSelectEvent(e)} data-testid={`event-${e.id}`}>
+                    {e.title} {e.resource?.data?.description}
                 </button>
             ))}
         </div>

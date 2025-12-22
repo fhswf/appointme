@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { format, parse, startOfWeek, getDay } from "date-fns";
@@ -174,12 +174,14 @@ const CustomToolbar = (toolbar: any) => {
 };
 
 const AgendaView = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [events, setEvents] = useState<AppointmentEvent[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [view, setView] = useState<View>(Views.WEEK);
     const [selectedAppointment, setSelectedAppointment] = useState<PopulatedAppointment | null>(null);
-    // const [loading, setLoading] = useState(true); // Removed as unused for now
+
+
+    const scrollToTime = useMemo(() => new Date(), []);
 
     useEffect(() => {
         axios.get("/api/v1/user/me/appointment")
@@ -199,7 +201,7 @@ const AgendaView = () => {
                 console.error("Failed to fetch appointments", err);
             })
             .finally(() => {
-                // setLoading(false);
+
             });
     }, [t]);
 
@@ -274,6 +276,7 @@ const AgendaView = () => {
                             agenda: t("agenda"),
                             showMore: (total) => `+${total} ${t("more")}`,
                         }}
+                        scrollToTime={scrollToTime}
                     />
                 </div>
             </div>

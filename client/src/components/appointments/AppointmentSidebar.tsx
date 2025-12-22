@@ -33,28 +33,27 @@ export function AppointmentSidebar({
                     modifiers={{
                         hasAppointment: (day) => datesWithAppointments.has(startOfDay(day).getTime())
                     }}
-                    modifiersClassNames={{
-                        hasAppointment: "relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-primary"
+                    hasAppointment: "bg-primary/20 font-medium text-foreground rounded-md transition-all duration-200"
                     }}
-                    classNames={{
-                        month: "space-y-3 w-full",
-                        table: "w-full border-collapse",
-                        head_row: "flex w-full",
-                        weekday: "text-muted-foreground rounded-md w-7 font-normal text-[0.7rem]",
-                        row: "flex w-full mt-1",
-                        cell: "h-7 w-7 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                        day: cn(
-                            "h-7 w-7 p-0 font-normal text-sm aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
-                        ),
-                        day_selected:
-                            "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                        day_today: "bg-accent text-accent-foreground font-semibold",
-                        day_outside: "text-muted-foreground opacity-50",
-                        day_disabled: "text-muted-foreground opacity-50",
-                        day_range_middle:
-                            "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                        day_hidden: "invisible",
-                    }}
+                classNames={{
+                    month: "space-y-3 w-full",
+                    table: "w-full border-collapse",
+                    head_row: "flex w-full",
+                    weekday: "text-muted-foreground rounded-md w-7 font-normal text-[0.7rem]",
+                    row: "flex w-full mt-1",
+                    cell: "h-7 w-7 text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: cn(
+                        "h-7 w-7 p-0 font-normal text-sm aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                    ),
+                    day_selected:
+                        "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                    day_today: "bg-accent text-accent-foreground font-semibold",
+                    day_outside: "text-muted-foreground opacity-50",
+                    day_disabled: "text-muted-foreground opacity-50",
+                    day_range_middle:
+                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                    day_hidden: "invisible",
+                }}
                 />
             </div>
 

@@ -1,10 +1,10 @@
 import { Calendar, dateFnsLocalizer, Views, ToolbarProps, View } from 'react-big-calendar'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-import startOfWeek from 'date-fns/startOfWeek'
-import getDay from 'date-fns/getDay'
-import enUS from 'date-fns/locale/en-US'
-// import 'react-big-calendar/lib/css/react-big-calendar.css' // Moved to index.css
+import { format } from 'date-fns/format'
+import { parse } from 'date-fns/parse'
+import { startOfWeek } from 'date-fns/startOfWeek'
+import { getDay } from 'date-fns/getDay'
+import { de, enUS, es, fr, it, ja, ko, zhCN } from 'date-fns/locale'
+import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Appointment, Event } from "common"
@@ -12,6 +12,14 @@ import { cn } from "@/lib/utils"
 
 const locales = {
     'en-US': enUS,
+    'en': enUS,
+    'de': de,
+    'es': es,
+    'fr': fr,
+    'it': it,
+    'ja': ja,
+    'ko': ko,
+    'zh': zhCN
 }
 
 const localizer = dateFnsLocalizer({
@@ -41,6 +49,7 @@ interface AppointmentCalendarProps {
 }
 
 const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) => {
+    const { t } = useTranslation();
     return (
         <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-card">
             <div className="flex items-center gap-4">
@@ -59,7 +68,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                         onClick={() => onNavigate('TODAY')}
                         className="px-4 font-semibold text-foreground bg-background shadow-sm hover:bg-background"
                     >
-                        Today
+                        {t('today')}
                     </Button>
                     <Button
                         variant="ghost"
@@ -80,7 +89,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     onClick={() => onView(Views.MONTH)}
                     className={cn("px-4 py-1.5 h-8 text-sm", view === Views.MONTH && "bg-background shadow-sm text-primary")}
                 >
-                    Month
+                    {t('month')}
                 </Button>
                 <Button
                     variant={view === Views.WEEK ? "outline" : "ghost"}
@@ -88,7 +97,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     onClick={() => onView(Views.WEEK)}
                     className={cn("px-4 py-1.5 h-8 text-sm", view === Views.WEEK && "bg-background shadow-sm text-primary")}
                 >
-                    Week
+                    {t('week')}
                 </Button>
                 <Button
                     variant={view === Views.DAY ? "outline" : "ghost"}
@@ -96,7 +105,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     onClick={() => onView(Views.DAY)}
                     className={cn("px-4 py-1.5 h-8 text-sm", view === Views.DAY && "bg-background shadow-sm text-primary")}
                 >
-                    Day
+                    {t('day')}
                 </Button>
             </div>
         </div>
@@ -198,6 +207,8 @@ export function AppointmentCalendar({
     onSelectEvent
 }: AppointmentCalendarProps) {
 
+    const { i18n } = useTranslation();
+
     const eventPropGetter = (event: CalendarEvent) => {
         return {
             className: "custom-rbc-event",
@@ -231,6 +242,15 @@ export function AppointmentCalendar({
                 }}
                 className="font-sans text-foreground"
                 scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
+                culture={i18n.language}
+                formats={{
+                    timeGutterFormat: (date: Date, culture: any, localizer: any) =>
+                        localizer.format(date, 'p', culture),
+                    eventTimeRangeFormat: ({ start, end }: any, culture: any, localizer: any) =>
+                        `${localizer.format(start, 'p', culture)} - ${localizer.format(end, 'p', culture)}`,
+                    agendaTimeRangeFormat: ({ start, end }: any, culture: any, localizer: any) =>
+                        `${localizer.format(start, 'p', culture)} - ${localizer.format(end, 'p', culture)}`,
+                }}
             />
         </div>
     )
