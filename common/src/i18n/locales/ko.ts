@@ -42,6 +42,7 @@ export const ko = {
     "broad_close_butterfly_drop": "{{name}} 님과 약속 잡기",
     "weary_known_gazelle_file": "필요한 약속 유형을 선택하고 일정 버튼을 클릭하여 예약하십시오. 내 일정의 사용 가능한 슬롯 목록을 받게 됩니다.",
     "low_clean_haddock_bubble": "내 이벤트 유형",
+    "My Event Types": "내 이벤트 유형",
     "pink_trite_ocelot_enrich": "이벤트를 추가하기 전에 먼저 캘린더를 연결해야 합니다!",
     "early_sweet_mantis_peek": "이벤트 유형 추가",
     "deft_suave_bear_pause": "로딩 중",
@@ -256,7 +257,7 @@ export const ko = {
     "footer_credits": "South Westphalia University of Applied Sciences에서 ❤️로 구현됨",
     "terms_of_use_title": "Terms of Use",
     "terms_of_use_content": "# Terms of Use\n\n## Service Provision\n\nThis service is provided free of charge.\n\n## Disclaimer of Liability and Warranty\n\nNeither the authors nor the South Westphalia University of Applied Sciences accept any liability for damages of any kind or any warranty of any kind in connection with the use of this service. Use is at your own risk. This disclaimer does not apply to damages resulting from injury to life, body, or health based on an intentional or negligent breach of duty, nor to other damages based on an intentional or grossly negligent breach of duty."
-, "my_appointments": "My Appointments",
+    , "my_appointments": "My Appointments",
     "no_upcoming_appointments": "No upcoming appointments found.",
     "appointment": "Appointment",
     "attendee": "Attendee",

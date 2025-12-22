@@ -42,6 +42,7 @@ export const es = {
     "broad_close_butterfly_drop": "Programar una cita con {{name}}",
     "weary_known_gazelle_file": "Por favor, seleccione el tipo de cita que necesita y haga clic en el botón de programación para reservarla. Obtendrá una lista de espacios disponibles en mi horario.",
     "low_clean_haddock_bubble": "Mis tipos de eventos",
+    "My Event Types": "Mis tipos de eventos",
     "pink_trite_ocelot_enrich": "¡Primero debe conectar su calendario antes de poder agregar eventos!",
     "early_sweet_mantis_peek": "Agregar tipo de evento",
     "deft_suave_bear_pause": "Cargando",

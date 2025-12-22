@@ -42,6 +42,7 @@ export const ja = {
     "broad_close_butterfly_drop": "{{name}} との予定をスケジュールする",
     "weary_known_gazelle_file": "必要な予定のタイプを選択し、スケジュールボタンをクリックして予約してください。私のスケジュールの利用可能なスロットのリストが表示されます。",
     "low_clean_haddock_bubble": "私のイベントタイプ",
+    "My Event Types": "私のイベントタイプ",
     "pink_trite_ocelot_enrich": "イベントを追加する前に、まずカレンダーを接続する必要があります！",
     "early_sweet_mantis_peek": "イベントタイプを追加",
     "deft_suave_bear_pause": "読み込み中",

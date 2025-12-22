@@ -42,6 +42,7 @@ export const it = {
     "broad_close_butterfly_drop": "Programma un appuntamento con {{name}}",
     "weary_known_gazelle_file": "Seleziona il tipo di appuntamento di cui hai bisogno e clicca sul pulsante di programmazione per prenotarlo. Otterrai un elenco di slot disponibili nel mio calendario.",
     "low_clean_haddock_bubble": "I miei tipi di eventi",
+    "My Event Types": "I miei tipi di eventi",
     "pink_trite_ocelot_enrich": "Devi prima collegare il tuo calendario prima di poter aggiungere eventi!",
     "early_sweet_mantis_peek": "Aggiungi tipo di evento",
     "deft_suave_bear_pause": "Caricamento",

@@ -42,6 +42,7 @@ export const fr = {
     "broad_close_butterfly_drop": "Programmer un rendez-vous avec {{name}}",
     "weary_known_gazelle_file": "Veuillez sélectionner le type de rendez-vous dont vous avez besoin et cliquez sur le bouton de programmation pour le réserver. Vous obtiendrez une liste des créneaux disponibles dans mon emploi du temps.",
     "low_clean_haddock_bubble": "Mes types d'événements",
+    "My Event Types": "Mes types d'événements",
     "pink_trite_ocelot_enrich": "Vous devez d'abord connecter votre calendrier avant de pouvoir ajouter des événements !",
     "early_sweet_mantis_peek": "Ajouter un type d'événement",
     "deft_suave_bear_pause": "Chargement",
