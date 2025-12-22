@@ -84,7 +84,7 @@ export const googleCallback = (req: Request, res: Response): void => {
   }
 };
 
-export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
+export const freeBusy = (user_id: string, timeMin: string, timeMax: string) => {
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
@@ -169,7 +169,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary'): Promise<GaxiosResponse<Schema$Event>> {
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary') {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
   }
