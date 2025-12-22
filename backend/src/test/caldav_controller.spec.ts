@@ -404,7 +404,7 @@ END:VCALENDAR` }
             const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
 
             expect(result).toBeDefined();
-            expect(result.ok).toBe(true);
+            expect(result.response.ok).toBe(true);
         });
 
         it("should use account email as organizer if configured for createCalDavEvent", async () => {

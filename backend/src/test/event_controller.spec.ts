@@ -37,6 +37,16 @@ vi.mock("../models/User.js", () => {
     return { UserModel: UserModelMock };
 });
 
+vi.mock("../models/Appointment.js", () => {
+    const AppointmentModelMock = vi.fn().mockImplementation(function (this: any, data: any) {
+        return {
+            ...data,
+            save: vi.fn().mockResolvedValue(data)
+        };
+    });
+    return { AppointmentModel: AppointmentModelMock };
+});
+
 
 vi.mock("../handlers/middleware.js", () => {
     return {
@@ -426,6 +436,9 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
+            if (res.status !== 200) {
+                 console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
+            }
             expect(res.status).toBe(200);
             expect(res.body.success).toBe(true);
         });
