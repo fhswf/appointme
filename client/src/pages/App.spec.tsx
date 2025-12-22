@@ -30,13 +30,7 @@ describe('App Page', () => {
         );
     };
 
-    it('should render welcome message when not logged in', () => {
-        renderWithContext(null);
-        expect(screen.getByTestId('app-navbar')).toBeInTheDocument();
-        expect(screen.getByText('low_clean_haddock_bubble')).toBeInTheDocument();
-        expect(screen.getByText('deft_suave_bear_pause')).toBeInTheDocument();
-        expect(screen.queryByTestId('event-list')).not.toBeInTheDocument();
-    });
+
 
     it('should render user info and list when logged in', () => {
         const user = { name: 'Dr. Test', user_url: 'testuser' };

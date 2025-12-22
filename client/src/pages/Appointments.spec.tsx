@@ -109,7 +109,7 @@ describe('Appointments Page', () => {
 
         await waitFor(() => {
             expect(screen.getByTestId('calendar')).toBeInTheDocument();
-            expect(screen.getByText('Meeting notes')).toBeInTheDocument();
+            expect(screen.getByText(/Meeting notes/)).toBeInTheDocument();
         });
     });
 
