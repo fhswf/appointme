@@ -8,6 +8,7 @@ export interface UserDocument extends Document, User {
   google_picture_url?: string;
   use_gravatar?: boolean;
   push_calendars: string[];
+  agenda_visible_calendars?: string[];
 }
 
 
@@ -91,6 +92,10 @@ const userSchema = new Schema<UserDocument>(
       default: []
     },
     push_calendars: {
+      type: [String],
+      default: []
+    },
+    agenda_visible_calendars: {
       type: [String],
       default: []
     },

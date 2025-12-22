@@ -124,6 +124,7 @@ export interface User {
   caldav_accounts?: CalDavAccount[];
   push_calendars: string[];
   pull_calendars: string[];
+  agenda_visible_calendars?: string[];
   welcome?: string;
   send_invitation_email?: boolean;
   defaultAvailable?: Slots;

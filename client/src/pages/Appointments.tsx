@@ -12,6 +12,8 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResizableSidebar } from "@/components/ui/resizable-sidebar";
 import { getUsersEvents } from "../helpers/services/event_services";
+import { useAuth } from "../components/AuthProvider";
+import { updateUser } from "../helpers/services/user_services";
 import { startOfDay } from "date-fns";
 
 interface Calendar {
@@ -46,6 +48,8 @@ const Appointments = () => {
     const [selectedCalendarEvent, setSelectedCalendarEvent] = useState<any | null>(null);
     const [sidebarWidth, setSidebarWidth] = useState(320);
 
+    const { user } = useAuth(); // Add useAuth hook
+
     // Fetch calendars from unified endpoint
     useEffect(() => {
         const fetchCalendars = async () => {
@@ -58,10 +62,12 @@ const Appointments = () => {
                         id: cal.type === 'google' ? `google-${cal.id}` : `caldav-${cal.id}`,
                         label: cal.summary || cal.id,
                         color: cal.color || CALENDAR_COLORS[index % CALENDAR_COLORS.length],
-                        checked: cal.primary || index === 0,
+                        checked: user?.agenda_visible_calendars && user.agenda_visible_calendars.length > 0
+                            ? user.agenda_visible_calendars.includes(cal.type === 'google' ? `google-${cal.id}` : `caldav-${cal.id}`)
+                            : cal.primary || index === 0,
                         type: cal.type,
                         accountId: cal.accountId,
-                        originalId: cal.id
+                        originalId: cal.id,
                     }));
 
                     setCalendars(calendarList);
@@ -138,7 +144,7 @@ const Appointments = () => {
                         const url = cal.accountId
                             ? `/api/v1/user/me/calendar/${cal.accountId}/${encodeURIComponent(cal.originalId!)}/event`
                             : `/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`;
-                            
+
                         return axios.get(url, {
                             params: {
                                 timeMin: timeMin.toISOString(),
@@ -210,7 +216,16 @@ const Appointments = () => {
     };
 
     const handleCalendarToggle = (id: string) => {
-        setCalendars(prev => prev.map(c => c.id === id ? { ...c, checked: !c.checked } : c));
+        setCalendars(prev => {
+            const newCalendars = prev.map(c => c.id === id ? { ...c, checked: !c.checked } : c);
+            const visibleIds = newCalendars.filter(c => c.checked).map(c => c.id);
+
+            if (user) {
+                updateUser({ ...user, agenda_visible_calendars: visibleIds })
+                    .catch(err => console.error("Failed to save calendar visibility", err));
+            }
+            return newCalendars;
+        });
     };
 
     // Enrich appointments with event details

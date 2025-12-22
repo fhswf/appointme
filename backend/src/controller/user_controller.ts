@@ -32,6 +32,7 @@ export const getUser = (req: Request, res: Response): void => {
       "pull_calendars": 1,
       "push_calendars": 1,
       "user_url": 1,
+      "agenda_visible_calendars": 1,
       "welcome": 1,
       "updatedAt": 1,
       "send_invitation_email": 1,
@@ -75,6 +76,10 @@ const buildUserUpdateObject = (userData: Partial<User>): Record<string, any> => 
 
   if (Array.isArray(userData.push_calendars) && userData.push_calendars.every(c => typeof c === 'string')) {
     update.push_calendars = userData.push_calendars.map(String);
+  }
+
+  if (Array.isArray(userData.agenda_visible_calendars) && userData.agenda_visible_calendars.every(c => typeof c === 'string')) {
+    update.agenda_visible_calendars = userData.agenda_visible_calendars.map(String);
   }
 
   // Handle User URL
@@ -141,6 +146,7 @@ export const updateUser = (req: Request, res: Response): void => {
             "picture_url": 1,
             "pull_calendars": 1,
             "push_calendars": 1,
+            "agenda_visible_calendars": 1,
             "user_url": 1,
             "welcome": 1,
             "updatedAt": 1,
