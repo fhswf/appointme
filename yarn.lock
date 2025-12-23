@@ -11117,6 +11117,7 @@ __metadata:
     i18next-http-backend: "npm:^2.6.1"
     i18next-parser: "npm:9.0.2"
     i18next-scanner: "npm:4.5.0"
+    ical.js: "npm:^2.2.1"
     js-cookie: "npm:^3.0.5"
     jsdom: "npm:^27.2.0"
     jsonwebtoken: "npm:^9.0.2"
@@ -15956,6 +15957,13 @@ __metadata:
     rrule:
       optional: true
   checksum: 10/e7ccd83ee9021a5381744d0d3e0e89e94f6871476ae7bf99556a1951b091b9b216f0644befb9d648e1f0a5af39bbc83897fa17d8c10ace306826106ebff11af4
+  languageName: node
+  linkType: hard
+
+"ical.js@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "ical.js@npm:2.2.1"
+  checksum: 10/73e130cc1839029d72811a7b8798ea287bb7260702fa0a1fec35e46d62e50b8ebecadfc4526667c6913ac51478d3aab4d6539ef693016729d9a2ed817bce60de
   languageName: node
   linkType: hard
 

@@ -426,7 +426,6 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
       // CalDAV calendar
       const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
       const { decrypt } = await import('../utility/encryption.js');
-      const ical = await import('node-ical');
 
       const accountId = req.params.accountId;
       let account;
@@ -490,20 +489,11 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
 
         for (const obj of objects) {
           if (obj.data) {
-            const parsed = ical.default.parseICS(obj.data);
-            for (const k in parsed) {
-              const event = parsed[k];
-              if (event.type === 'VEVENT') {
-                events.push({
-                  id: event.uid,
-                  summary: event.summary,
-                  start: { dateTime: event.start },
-                  end: { dateTime: event.end },
-                  description: event.description,
-                  location: event.location,
-                });
-              }
-            }
+            events.push({
+              id: obj.url,
+              format: 'ical',
+              data: obj.data
+            });
           }
         }
       } catch (err) {

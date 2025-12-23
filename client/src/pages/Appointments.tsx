@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Appointment, Event, IntervalSet } from "common";
 import { Views, View } from 'react-big-calendar'
+import ICAL from 'ical.js';
 import AppNavbar from "../components/AppNavbar";
 import Footer from "../components/Footer";
 import { AppointmentSidebar } from "../components/appointments/AppointmentSidebar";
@@ -158,11 +159,35 @@ const Appointments = () => {
 
                     const results = await Promise.all(eventPromises);
                     const allEvents = results.flatMap((res, idx) =>
-                        res.data.map((evt: any) => ({
-                            ...evt,
-                            calendarId: checkedCalendars[idx].id,
-                            calendarColor: checkedCalendars[idx].color
-                        }))
+                        res.data.map((evt: any) => {
+                            let parsedEvent = evt;
+                            if (evt.format === 'ical') {
+                                try {
+                                    const jcal = ICAL.parse(evt.data);
+                                    const comp = new ICAL.Component(jcal);
+                                    const vevent = comp.getFirstSubcomponent('vevent');
+                                    if (vevent) {
+                                        const dtstart = vevent.getFirstPropertyValue('dtstart');
+                                        const dtend = vevent.getFirstPropertyValue('dtend');
+                                        parsedEvent = {
+                                            id: evt.id,
+                                            summary: vevent.getFirstPropertyValue('summary'),
+                                            start: dtstart ? dtstart.toJSDate() : new Date(),
+                                            end: dtend ? dtend.toJSDate() : new Date(),
+                                            description: vevent.getFirstPropertyValue('description'),
+                                            location: vevent.getFirstPropertyValue('location'),
+                                        };
+                                    }
+                                } catch (err) {
+                                    console.error("Error parsing iCal data", err);
+                                }
+                            }
+                            return {
+                                ...parsedEvent,
+                                calendarId: checkedCalendars[idx].id,
+                                calendarColor: checkedCalendars[idx].color
+                            };
+                        })
                     );
 
                     setCalendarEvents(allEvents);
@@ -299,13 +324,13 @@ const Appointments = () => {
                         />
                     )}
 
-                    <Button
+                    {/*                     <Button
                         size="icon"
                         className="absolute bottom-8 right-8 h-14 w-14 rounded-full shadow-lg shadow-primary/40 z-10"
-                        onClick={() => {/* Navigate to /add-event or open modal */ }}
+                        onClick={() => {}}
                     >
                         <Plus className="h-6 w-6" />
-                    </Button>
+                    </Button> */}
                 </section>
 
                 {selectedAppointment && (
