@@ -9,8 +9,6 @@ import { AppointmentSidebar } from "../components/appointments/AppointmentSideba
 import { AppointmentCalendar } from "../components/appointments/AppointmentCalendar";
 import { AppointmentDetails } from "../components/appointments/AppointmentDetails";
 import { EventDetails } from "../components/appointments/EventDetails";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ResizableSidebar } from "@/components/ui/resizable-sidebar";
 import { getUsersEvents } from "../helpers/services/event_services";
 import { useAuth } from "../components/AuthProvider";
