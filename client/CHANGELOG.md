@@ -1,3 +1,29 @@
+# client [1.31.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0-rc.1) (2025-12-23)
+
+
+### Bug Fixes
+
+* layout issues ([5fac68a](https://github.com/fhswf/appointme/commit/5fac68a6af0c33a400ce0533c1e833338bad3297))
+
+
+### Features
+
+* add agenda view with all appointments ([1080840](https://github.com/fhswf/appointme/commit/1080840dea25492830e9a95d33cb4fb64755db4d))
+* add agenda view with all appointments ([8b113cf](https://github.com/fhswf/appointme/commit/8b113cf1a9aefc49ec748e930a2a505a26565fc3))
+* add agenda view with all appointments ([adfa0ce](https://github.com/fhswf/appointme/commit/adfa0ce8b4992093d749d6538dddb3698c2c7ab8))
+* Add background events to calendar and refactor event rendering for improved styling. ([c9f5e38](https://github.com/fhswf/appointme/commit/c9f5e384a3584abc2bc8261a0b0b15468f6069b6))
+* Add i18n support to calendar components, implement dynamic scroll to time, and refine appointment day styling. ([0c993ee](https://github.com/fhswf/appointme/commit/0c993eec94e874f5a0328a19abdc2988d80a3f59))
+* Add persistent agenda visible calendars to user profiles and integrate them into the appointments page. ([b826bd1](https://github.com/fhswf/appointme/commit/b826bd1f60d43a28e9fb97642220d4bb02c05241))
+* introduce calendar integration settings for Google and CalDAV with event fetching API. ([f176798](https://github.com/fhswf/appointme/commit/f1767983fe9126c39f681019a21360580eaf779d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.14.0-rc.1
+
 # client [1.30.0](https://github.com/fhswf/appointme/compare/client@1.29.1...client@1.30.0) (2025-12-19)
 
 
