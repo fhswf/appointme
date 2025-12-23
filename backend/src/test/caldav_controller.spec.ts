@@ -120,11 +120,14 @@ describe("CalDAV Controller Unit Tests", () => {
             );
         });
 
-        it("should retry with homeUrl if first attempt fails", async () => {
+        it("should retry with homeUrl (Direct Access) if first attempt fails", async () => {
             const { DAVClient } = await import('tsdav');
             const loginMock = vi.fn()
                 .mockRejectedValueOnce(new Error("First login failed"))
                 .mockResolvedValueOnce(true);
+
+            // Mock fetchCalendarObjects to succeed for the fallback verification
+            const fetchObjectsMock = vi.fn().mockResolvedValue([]);
 
             // @ts-ignore
             DAVClient.mockImplementation(function () {
@@ -132,6 +135,7 @@ describe("CalDAV Controller Unit Tests", () => {
                     login: loginMock,
                     // @ts-ignore
                     fetchCalendars: vi.fn().mockResolvedValue([]),
+                    fetchCalendarObjects: fetchObjectsMock
                 });
             })
 
@@ -140,24 +144,32 @@ describe("CalDAV Controller Unit Tests", () => {
                 serverUrl: "https://caldav.example.com",
                 username: "user",
                 password: "password",
-                name: "Retry Account"
+                name: "Retry Account",
+                email: "test@example.com"
             };
             const res = mockResponse();
 
             await caldavController.addAccount(req, res);
 
             expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
-            expect(loginMock).toHaveBeenCalledTimes(2);
+            // Call 1: login() (fails)
+            expect(loginMock).toHaveBeenCalledTimes(1);
+            // Call 2: fetchCalendarObjects() (fallback verification)
+            expect(fetchObjectsMock).toHaveBeenCalledTimes(1);
         });
 
         it("should return error if both attempts fail", async () => {
             const { DAVClient } = await import('tsdav');
             const loginMock = vi.fn().mockRejectedValue(new Error("All logins failed"));
+            // Fallback verification also fails
+            const fetchObjectsFailMock = vi.fn().mockRejectedValue(new Error("Fetch failed"));
 
             // @ts-ignore
             DAVClient.mockImplementation(function () {
                 return ({
                     login: loginMock,
+                    fetchCalendars: vi.fn(),
+                    fetchCalendarObjects: fetchObjectsFailMock
                 });
             })
 
@@ -173,7 +185,7 @@ describe("CalDAV Controller Unit Tests", () => {
             await caldavController.addAccount(req, res);
 
             expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: 'Failed to connect to CalDAV server' }));
+            expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: 'Failed to connect to CalDAV server (Discovery and Direct Access failed)' }));
         });
     });
 
