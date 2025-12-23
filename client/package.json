@@ -110,7 +110,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "i18next-parser": "9.0.2",
+    "i18next-parser": "9.3.0",
     "i18next-scanner": "4.5.0",
     "jsdom": "^27.2.0",
     "nyc": "^17.1.0",
