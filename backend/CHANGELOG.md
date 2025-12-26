@@ -1,3 +1,56 @@
+# backend [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.1-rc.1...backend@1.36.0-rc.1) (2025-12-23)
+
+
+### Bug Fixes
+
+* google login library update ([e701999](https://github.com/fhswf/appointme/commit/e70199961624c5c526ff886ee1522d975f6429cf))
+
+
+### Features
+
+* add agenda view with all appointments ([1080840](https://github.com/fhswf/appointme/commit/1080840dea25492830e9a95d33cb4fb64755db4d))
+* add agenda view with all appointments ([adfa0ce](https://github.com/fhswf/appointme/commit/adfa0ce8b4992093d749d6538dddb3698c2c7ab8))
+* Add persistent agenda visible calendars to user profiles and integrate them into the appointments page. ([b826bd1](https://github.com/fhswf/appointme/commit/b826bd1f60d43a28e9fb97642220d4bb02c05241))
+* Enhance CalDAV compatibility with a configured client utility and direct access fallback for account setup. ([1987f6e](https://github.com/fhswf/appointme/commit/1987f6e3c205066c99e80527f587b4291fa2596b))
+* introduce calendar integration settings for Google and CalDAV with event fetching API. ([f176798](https://github.com/fhswf/appointme/commit/f1767983fe9126c39f681019a21360580eaf779d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.14.0-rc.1
+
+## backend [1.35.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.0...backend@1.35.1-rc.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* base url configuration ([2ee1503](https://github.com/fhswf/appointme/commit/2ee150348fe375c4613142ba1d859f980b2f845a))
+
+# backend [1.35.0](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0) (2025-12-19)
+
+
+### Features
+
+* Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([e6e0014](https://github.com/fhswf/appointme/commit/e6e0014d1f3835b5f7bed5f35cfad25e7e406a60))
+* Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
+
+# backend [1.35.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.35.0-rc.1...backend@1.35.0-rc.2) (2025-12-19)
+
+
+### Features
+
+* Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([e6e0014](https://github.com/fhswf/appointme/commit/e6e0014d1f3835b5f7bed5f35cfad25e7e406a60))
+
+# backend [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0-rc.1) (2025-12-19)
+
+
+### Features
+
+* Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
+
 # backend [1.34.0](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0) (2025-12-18)
 
 

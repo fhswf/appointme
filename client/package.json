@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.29.1-rc.2",
+  "version": "1.31.0-rc.1",
   "homepage": "https://jupiter.fh-swf.de/meeting",
   "contributors": [
     {
@@ -39,7 +39,7 @@
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.5.1",
     "@stepperize/react": "^5.1.9",
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/vite": "^4.1.18",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -106,12 +106,12 @@
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-istanbul": "^4.0.15",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^9.11.1",
+    "eslint": "^9.39.2",
     "eslint-plugin-i18next": "^6.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "i18next-parser": "9.0.2",
+    "i18next-parser": "9.3.0",
     "i18next-scanner": "4.5.0",
     "jsdom": "^27.2.0",
     "nyc": "^17.1.0",
