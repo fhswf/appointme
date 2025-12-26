@@ -5,7 +5,7 @@ import { startOfWeek } from 'date-fns/startOfWeek'
 import { getDay } from 'date-fns/getDay'
 import { de, enUS, es, fr, it, ja, ko, zhCN } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -144,13 +144,18 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
 
     const { i18n } = useTranslation();
     const currentLocale = locales[i18n.language as keyof typeof locales] || enUS;
+
+    // Extract additional details
+    const description = event.resource?.data?.description;
+    const location = event.resource?.data?.location;
+
     return (
         <div
             className={cn(
                 "h-full w-full border-l-4 p-2 overflow-hidden rounded-md text-xs",
                 "shadow-md hover:shadow-lg cursor-pointer",
                 "transform hover:-translate-y-0.5 transition-all duration-200",
-                "ring-1"
+                "ring-1 flex flex-col"
             )}
             style={{
                 backgroundColor,
@@ -158,10 +163,10 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
                 ['--ring-color' as any]: ringColor
             }}
         >
-            <div className="flex items-start justify-between gap-1">
+            <div className="flex items-start justify-between gap-1 mb-0.5">
                 <div className="flex-1 min-w-0">
                     <h4
-                        className="text-xs font-bold leading-tight mb-0.5 truncate"
+                        className="text-xs font-bold leading-tight truncate"
                         style={{
                             color: isCalendarEvent ? bgColor : 'hsl(var(--foreground))'
                         }}
@@ -184,6 +189,22 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
                     </div>
                 )}
             </div>
+
+            {(location || description) && (
+                <div className="mt-1 space-y-0.5 overflow-hidden">
+                    {location && (
+                        <div className="flex items-center text-[10px] text-muted-foreground">
+                            <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+                            <span className="truncate">{location}</span>
+                        </div>
+                    )}
+                    {description && (
+                        <div className="text-[10px] text-muted-foreground/80 line-clamp-2 leading-tight">
+                            {description}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

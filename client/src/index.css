@@ -195,7 +195,8 @@
   background-color: hsl(var(--card));
 }
 
-.rbc-event {
+/* Month view specific event styles - compact fixed height */
+.rbc-month-view .rbc-event {
   background-color: transparent !important;
   border: none !important;
   padding: 0 !important;
@@ -206,6 +207,16 @@
   line-height: 22px !important;
   margin-bottom: 2px !important;
   /* Restore margin for spacing */
+}
+
+/* Time view (Week/Day) event styles - let RBC handle height */
+.rbc-time-view .rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  /* Restore radius for time view */
+  box-shadow: none !important;
+  /* Allow height to be determined by inline styles from RBC */
 }
 
 /* Compact date cell */
@@ -244,7 +255,12 @@
   width: 100%;
 }
 
-.rbc-event-label {
+.rbc-month-view .rbc-event-label {
+  display: none !important;
+}
+
+/* Show label in time view if needed, or keep hidden if handled by custom component */
+.rbc-time-view .rbc-event-label {
   display: none !important;
 }
 
