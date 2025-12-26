@@ -268,5 +268,6 @@ export const en = {
     "agenda": "Agenda",
     "more": "more",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "n_more": "{{count}} more ..."
 };
