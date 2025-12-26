@@ -57,7 +57,7 @@
     "i18next-http-backend": "^2.6.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.555.0",
+    "lucide-react": "^0.562.0",
     "moment": "^2.30.1",
     "notistack": "^3.0.1",
     "react": "^18.3.1",
