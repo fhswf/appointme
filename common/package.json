@@ -32,11 +32,11 @@
   ],
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@types/chai": "^4.2.18",
+    "@types/chai": "^5.2.3",
     "@types/expect": "^24.3.0",
     "@types/jest": "^29.5.13",
     "@types/mocha": "^8.2.2",
-    "chai": "^4.3.4",
+    "chai": "^6.2.1",
     "eslint": "^7.19.0",
     "jest": "^29.7.0",
     "jest-ctrf-json-reporter": "^0.0.10",

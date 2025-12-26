@@ -1,3 +1,11 @@
+# common [1.14.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0-rc.1) (2025-12-23)
+
+
+### Features
+
+* add agenda view with all appointments ([adfa0ce](https://github.com/fhswf/appointme/commit/adfa0ce8b4992093d749d6538dddb3698c2c7ab8))
+* Add persistent agenda visible calendars to user profiles and integrate them into the appointments page. ([b826bd1](https://github.com/fhswf/appointme/commit/b826bd1f60d43a28e9fb97642220d4bb02c05241))
+
 # common [1.13.0](https://github.com/fhswf/appointme/compare/common@1.12.0...common@1.13.0) (2025-12-18)
 
 
