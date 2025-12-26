@@ -7,7 +7,6 @@ import { de, enUS, es, fr, it, ja, ko, zhCN } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Appointment, Event } from "common"
 import { cn } from "@/lib/utils"
 
 const locales = {
