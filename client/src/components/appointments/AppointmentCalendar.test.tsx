@@ -157,4 +157,112 @@ describe('AppointmentCalendar', () => {
         expect(screen.getByText('Desc')).toBeInTheDocument();
         expect(screen.getByText('Office')).toBeInTheDocument();
     });
+
+    it('renders custom toolbar with correct active states', () => {
+        render(<AppointmentCalendar {...defaultProps} view={Views.MONTH} />);
+
+        const monthButton = screen.getByText('month').closest('button');
+        const weekButton = screen.getByText('week').closest('button');
+        const dayButton = screen.getByText('day').closest('button');
+
+        expect(monthButton).toHaveClass('bg-card');
+        expect(weekButton).not.toHaveClass('bg-card');
+        expect(dayButton).not.toHaveClass('bg-card');
+    });
+
+    it('custom event component handles styling for calendar events', () => {
+        const calendarEvent = {
+            ...mockEvents[0],
+            resource: {
+                type: 'calendar',
+                color: '#ff0000',
+                data: { description: 'Test Desc' }
+            }
+        };
+
+        render(<AppointmentCalendar {...defaultProps} events={[calendarEvent]} view={Views.WEEK} />);
+
+        const eventTitle = screen.getByText('Test Event');
+        const eventContainer = eventTitle.closest('div')?.parentElement?.parentElement;
+
+        // We can check styles directly or indirectly via class names if they were dynamic classes
+        // Here we check inline styles applied by CustomEvent
+        expect(eventContainer).toHaveStyle({
+            backgroundColor: '#ff000015',
+            borderLeftColor: '#ff0000'
+        });
+
+        expect(eventTitle).toHaveStyle({
+            color: '#ff0000'
+        });
+    });
+
+    it('custom event component handles styling for appointments', () => {
+        const appointmentEvent = {
+            ...mockEvents[0],
+            resource: {
+                type: 'appointment',
+                data: { attendee: { name: 'Jane Doe' } }
+            }
+        };
+
+        render(<AppointmentCalendar {...defaultProps} events={[appointmentEvent]} view={Views.WEEK} />);
+
+        const eventTitle = screen.getByText('Test Event');
+        const eventContainer = eventTitle.closest('div')?.parentElement?.parentElement;
+
+        expect(eventContainer).toHaveStyle({
+            backgroundColor: 'hsl(var(--card))'
+        });
+
+        expect(eventTitle).toHaveStyle({
+            color: 'hsl(var(--foreground))'
+        });
+    });
+
+
+    it('custom month event component renders correctly', () => {
+        const calendarEvent = {
+            ...mockEvents[0],
+            resource: {
+                type: 'calendar',
+                color: '#00ff00'
+            }
+        };
+
+        render(<AppointmentCalendar {...defaultProps} events={[calendarEvent]} view={Views.MONTH} />);
+        
+        const timeElement = screen.getByText('10:00');
+        const eventElement = timeElement.closest('div');
+        
+        expect(eventElement).toHaveStyle({
+            backgroundColor: '#00ff00',
+            opacity: '0.9'
+        });
+    });
+
+    it('custom month event component handles non-calendar events', () => {
+         const otherEvent = {
+            ...mockEvents[0],
+            resource: {
+                type: 'other'
+            }
+        };
+
+        render(<AppointmentCalendar {...defaultProps} events={[otherEvent]} view={Views.MONTH} />);
+        
+        const timeElement = screen.getByText('10:00');
+        const eventElement = timeElement.closest('div');
+
+        expect(eventElement).toHaveStyle({
+            backgroundColor: 'hsl(var(--primary))',
+            opacity: '1'
+        });
+    });
+
+    it('passes correct formats to Calendar', () => {
+        render(<AppointmentCalendar {...defaultProps} />);
+        fireEvent.click(screen.getByText('week'));
+        fireEvent.click(screen.getByText('day'));
+    });
 });
