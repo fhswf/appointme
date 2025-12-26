@@ -189,6 +189,37 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
     )
 }
 
+const MonthEvent = ({ event }: { event: CalendarEvent }) => {
+    const isCalendarEvent = event.resource?.type === 'calendar';
+    const bgColor = isCalendarEvent && event.resource?.color
+        ? event.resource.color
+        : '#3b82f6';
+
+    const style: React.CSSProperties = {
+        backgroundColor: isCalendarEvent ? bgColor : 'hsl(var(--primary))',
+        color: '#fff',
+        opacity: isCalendarEvent ? 0.9 : 1,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 4px',
+        fontSize: '11px',
+        lineHeight: 'inherit',
+        overflow: 'hidden'
+    };
+
+    return (
+        <div style={style} title={event.title}>
+            <span className="font-semibold mr-1 whitespace-nowrap">
+                {format(event.start, "HH:mm")}
+            </span>
+            <span className="truncate whitespace-nowrap">
+                {event.title}
+            </span>
+        </div>
+    )
+}
+
 export function AppointmentCalendar({
     events,
     backgroundEvents,
@@ -199,7 +230,7 @@ export function AppointmentCalendar({
     onSelectEvent
 }: AppointmentCalendarProps) {
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const eventPropGetter = (event: CalendarEvent) => {
         return {
@@ -228,9 +259,16 @@ export function AppointmentCalendar({
                 onView={onViewChange}
                 onSelectEvent={onSelectEvent}
                 eventPropGetter={eventPropGetter}
+                messages={{
+                    showMore: (total) => t('n_more', { count: total })
+                }}
+                popup
                 components={{
                     toolbar: CustomToolbar as any,
-                    event: CustomEvent as any
+                    event: CustomEvent as any,
+                    month: {
+                        event: MonthEvent as any
+                    }
                 }}
                 className="font-sans text-foreground"
                 scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}

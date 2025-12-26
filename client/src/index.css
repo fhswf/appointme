@@ -200,6 +200,38 @@
   border: none !important;
   padding: 0 !important;
   border-radius: 0 !important;
+  min-height: 0 !important;
+  height: 22px !important;
+  /* Force fixed height for consistent calculation */
+  line-height: 22px !important;
+  margin-bottom: 2px !important;
+  /* Restore margin for spacing */
+}
+
+/* Compact date cell */
+.rbc-date-cell {
+  padding: 2px 4px 0 0 !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  margin-bottom: 0px !important;
+  text-align: right;
+  /* Reverted height/flex to fix header layout breakage */
+}
+
+/* Compact "Show more" link */
+.rbc-show-more {
+  background-color: transparent !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  color: hsl(var(--primary)) !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  margin: 0 !important;
+  display: block;
+}
+
+.rbc-row-segment {
+  padding: 0 2px !important;
 }
 
 .rbc-event:focus {
