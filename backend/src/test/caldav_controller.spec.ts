@@ -638,16 +638,61 @@ END:VCALENDAR` }
 
         it("should verify successfully even if fetch returns many objects", async () => {
             const { DAVClient } = await import('tsdav');
+            const createObjectMock = vi.fn().mockResolvedValue({
+                ok: true,
+                status: 201,
+                statusText: "Created",
+                text: vi.fn().mockResolvedValue("")
+            });
+
+            // Mock fetch to return multiple objects, one matching roughly what we expect (though we can't match strict UID easily without deep mocking)
+            // Actually, we can just assert that the function completes successfully.
+            // The verification logic inside logs a warning if not found, but doesn't throw.
+            // So we just want to ensure it doesn't crash given many objects.
             const fetchObjectsMock = vi.fn().mockResolvedValue([
                 { data: 'BEGIN:VCALENDAR\nUID:other-uid\nEND:VCALENDAR' },
-                // The mock logic in controller looks for UID:${uid} string inclusion
-                // We don't know the random UID, but the controller returns it.
-                // WE can mock crypto to know the UID or just rely on the fact that if we return a matching string it works. 
-                // But since UID is generated inside, we can't easily match IT.
-                // However, we can test the *failure* to find it, or we can mock crypto.
+                { data: 'BEGIN:VCALENDAR\nUID:another-uid\nEND:VCALENDAR' },
             ]);
 
-            // Let's just test that it runs through without error
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
+                    ]),
+                    createCalendarObject: createObjectMock,
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            });
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com",
+                        username: "user",
+                        password: "encrypted_password",
+                        name: "Main Account"
+                    }
+                ],
+                push_calendar: "https://caldav.example.com/calendar-1"
+            };
+
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Ex",
+                description: "Desc",
+                location: "Loc",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
+
+            expect(result.response.ok).toBe(true);
+            expect(fetchObjectsMock).toHaveBeenCalled();
         });
 
         it("should throw error if creation fails", async () => {
