@@ -1,3 +1,20 @@
+# client [1.31.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.31.0-rc.1...client@1.31.0-rc.2) (2025-12-27)
+
+
+### Bug Fixes
+
+* display event details ([262f2b1](https://github.com/fhswf/appointme/commit/262f2b1ddcd32ca78b0674fe594e8c83d142707f))
+* dynamic display of events in month view ([33544f2](https://github.com/fhswf/appointme/commit/33544f22445767ce9ff63a9ef54cc8540fc2b7bf))
+* linting issues ([1d3c190](https://github.com/fhswf/appointme/commit/1d3c1907a6612891298b1a8eba50a51c9a071913))
+* reduce nesting of functions ([f774112](https://github.com/fhswf/appointme/commit/f7741128b8c5b588041335c8ec65582db0fd8718))
+* remove unused import ([fd1222d](https://github.com/fhswf/appointme/commit/fd1222d0387bc0fa12507a8253ec0935987497e0))
+* styling fixes ([70c272f](https://github.com/fhswf/appointme/commit/70c272fbee8f10ea444ab14acaf58f68d161a8aa))
+
+
+### Features
+
+* refactor calendar endpoint to use VEVENT data for CalDAV calendars ([b26fdec](https://github.com/fhswf/appointme/commit/b26fdec9ff6c4b42c7e88564bc7218a63b28f542))
+
 # client [1.31.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0-rc.1) (2025-12-23)
 
 
