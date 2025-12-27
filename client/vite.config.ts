@@ -9,7 +9,7 @@ import path from "path";
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss(), istanbul({
-      include: 'src/*',
+      include: 'src/**/*',
       exclude: ['node_modules', 'test/'],
       extension: ['.js', '.ts', '.tsx'],
       requireEnv: true,
