@@ -190,7 +190,7 @@ describe('CalendarSettings Component', () => {
 
         // Open Dialog
         const editBtn = screen.getByTestId('edit-push-calendar');
-        userEvent.click(editBtn);
+        await userEvent.click(editBtn);
 
         // Dialog opens
         expect(screen.getAllByText('Calendar')).toHaveLength(1); // Dialog title only
@@ -198,13 +198,13 @@ describe('CalendarSettings Component', () => {
         // Select a calendar (assuming mocked list has items)
         // Mock list has 'Google Calendar 1' (id: cal1)
         const checkbox = screen.getByLabelText('Google Calendar 1');
-        userEvent.click(checkbox);
+        await userEvent.click(checkbox);
         await waitFor(() => {
             expect(checkbox).toBeChecked();
         });
 
         const saveBtn = screen.getByTestId('button-save');
-        userEvent.click(saveBtn);
+        await userEvent.click(saveBtn);
 
         await waitFor(() => {
             expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
