@@ -1,30 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Appointment, Event, IntervalSet } from "common";
+import { Appointment, Event } from "common";
 import { Views, View } from 'react-big-calendar'
+
 import AppNavbar from "../components/AppNavbar";
 import Footer from "../components/Footer";
 import { AppointmentSidebar } from "../components/appointments/AppointmentSidebar";
 import { AppointmentCalendar } from "../components/appointments/AppointmentCalendar";
 import { AppointmentDetails } from "../components/appointments/AppointmentDetails";
 import { EventDetails } from "../components/appointments/EventDetails";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ResizableSidebar } from "@/components/ui/resizable-sidebar";
 import { getUsersEvents } from "../helpers/services/event_services";
 import { useAuth } from "../components/AuthProvider";
 import { updateUser } from "../helpers/services/user_services";
 import { startOfDay } from "date-fns";
 
-interface Calendar {
-    id: string;
-    label: string;
-    color: string;
-    checked: boolean;
-    type: 'google' | 'caldav';
-    accountId?: string;
-    originalId?: string;
-}
+import { fetchCalendarEvents, calculateAvailabilityEvents, getTimeRangeForView } from "../helpers/calendar_helpers";
+import { Calendar } from "../helpers/types";
 
 const CALENDAR_COLORS = [
     "#3b82f6", // Blue
@@ -115,101 +107,23 @@ const Appointments = () => {
     useEffect(() => {
         const fetchCalendarEventsAndAvailability = async () => {
             // 1. Calculate time range based on current view
-            const now = new Date(date);
-            let timeMin: Date, timeMax: Date;
-
-            if (view === Views.MONTH) {
-                timeMin = new Date(now.getFullYear(), now.getMonth(), 1);
-                timeMax = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-            } else if (view === Views.WEEK) {
-                const day = now.getDay();
-                timeMin = new Date(now);
-                timeMin.setDate(now.getDate() - day);
-                timeMin.setHours(0, 0, 0, 0);
-                timeMax = new Date(timeMin);
-                timeMax.setDate(timeMin.getDate() + 6);
-                timeMax.setHours(23, 59, 59);
-            } else {
-                timeMin = new Date(now);
-                timeMin.setHours(0, 0, 0, 0);
-                timeMax = new Date(now);
-                timeMax.setHours(23, 59, 59);
-            }
+            const { timeMin, timeMax } = getTimeRangeForView(view, date);
 
             // 2. Fetch external calendar events
-            const checkedCalendars = calendars.filter(c => c.checked);
-            if (checkedCalendars.length > 0) {
-                try {
-                    const eventPromises = checkedCalendars.map(cal => {
-                        const url = cal.accountId
-                            ? `/api/v1/user/me/calendar/${cal.accountId}/${encodeURIComponent(cal.originalId!)}/event`
-                            : `/api/v1/user/me/calendar/${encodeURIComponent(cal.originalId!)}/event`;
-
-                        return axios.get(url, {
-                            params: {
-                                timeMin: timeMin.toISOString(),
-                                timeMax: timeMax.toISOString()
-                            }
-                        }).catch(err => {
-                            console.error(`Failed to fetch events for calendar ${cal.label}:`, err);
-                            return { data: [] };
-                        });
-                    });
-
-                    const results = await Promise.all(eventPromises);
-                    const allEvents = results.flatMap((res, idx) =>
-                        res.data.map((evt: any) => ({
-                            ...evt,
-                            calendarId: checkedCalendars[idx].id,
-                            calendarColor: checkedCalendars[idx].color
-                        }))
-                    );
-
-                    setCalendarEvents(allEvents);
-                } catch (err) {
-                    console.error("Failed to fetch calendar events", err);
-                }
-            } else {
-                setCalendarEvents([]);
-            }
+            const allEvents = await fetchCalendarEvents(calendars, timeMin, timeMax);
+            setCalendarEvents(allEvents);
 
             // 3. Calculate Availability Background Events
-            // Only perform if we have events loaded
-            if (Object.keys(events).length > 0 && view !== Views.MONTH) { // Month view usually doesn't show background events well
-                try {
-                    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                    const availabilitySet = new IntervalSet();
-
-                    // Union availabilities of all active events
-                    Object.values(events).forEach((evt) => {
-                        if (evt.isActive && evt.available) {
-                            const eventAvailability = new IntervalSet(timeMin, timeMax, evt.available, userTimeZone);
-                            availabilitySet.add(eventAvailability);
-                        }
-                    });
-
-                    // Map to calendar events
-                    const bgEvents = availabilitySet.map((range, idx) => ({
-                        id: `avail-${idx}`,
-                        title: 'Available',
-                        start: range.start,
-                        end: range.end,
-                        resource: { type: 'availability' }
-                    }));
-
-                    setBackgroundEvents(bgEvents);
-                } catch (e) {
-                    console.error("Error calculating availability", e);
-                }
-            } else {
-                setBackgroundEvents([]);
-            }
+            const bgEvents = calculateAvailabilityEvents(events, view, timeMin, timeMax);
+            setBackgroundEvents(bgEvents);
         };
 
         if (calendars.length >= 0) { // Always run to calc availability even if no calendars
             fetchCalendarEventsAndAvailability();
         }
     }, [calendars, date, view, events]);
+
+
 
     const handleDateChange = (newDate: Date | undefined) => {
         if (newDate) setDate(newDate);
@@ -299,13 +213,13 @@ const Appointments = () => {
                         />
                     )}
 
-                    <Button
+                    {/*                     <Button
                         size="icon"
                         className="absolute bottom-8 right-8 h-14 w-14 rounded-full shadow-lg shadow-primary/40 z-10"
-                        onClick={() => {/* Navigate to /add-event or open modal */ }}
+                        onClick={() => {}}
                     >
                         <Plus className="h-6 w-6" />
-                    </Button>
+                    </Button> */}
                 </section>
 
                 {selectedAppointment && (

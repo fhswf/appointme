@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { format, parse, startOfWeek, getDay } from "date-fns";
-import { enUS, de } from "date-fns/locale";
+import { enUS, de, es, fr, it, ja, ko, zhCN } from "date-fns/locale";
 import { Calendar as BigCalendar, dateFnsLocalizer, View, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Calendar as SmallCalendar } from "@/components/ui/calendar";
@@ -13,7 +13,14 @@ import { Button } from "@/components/ui/button";
 
 const locales = {
     "en-US": enUS,
+    "en": enUS,
     "de": de,
+    "es": es,
+    "fr": fr,
+    "it": it,
+    "ja": ja,
+    "ko": ko,
+    "zh": zhCN
 };
 
 const localizer = dateFnsLocalizer({

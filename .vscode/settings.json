@@ -1,7 +1,7 @@
 {
     "git.ignoreLimitWarning": true,
     "sonarlint.connectedMode.project": {
-        "connectionId": "http-sonarqube-fh-swf-cloud",
-        "projectKey": "book_me"
+        "connectionId": "sonarqube-fh-swf-cloud",
+        "projectKey": "fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3"
     }
 }

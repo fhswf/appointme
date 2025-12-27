@@ -272,5 +272,6 @@ export const ja = {
     "agenda": "アジェンダ",
     "more": "もっと",
     "next": "次へ",
-    "back": "戻る"
+    "back": "Back",
+    "n_more": "他 {{count}} 件 ..."
 };

@@ -62,11 +62,11 @@ export function ResizableSidebar(props: ResizableSidebarProps) {
     );
 
     useEffect(() => {
-        window.addEventListener('mousemove', resize);
-        window.addEventListener('mouseup', stopResizing);
+        globalThis.addEventListener('mousemove', resize);
+        globalThis.addEventListener('mouseup', stopResizing);
         return () => {
-            window.removeEventListener('mousemove', resize);
-            window.removeEventListener('mouseup', stopResizing);
+            globalThis.removeEventListener('mousemove', resize);
+            globalThis.removeEventListener('mouseup', stopResizing);
         };
     }, [resize, stopResizing]);
 
@@ -77,10 +77,16 @@ export function ResizableSidebar(props: ResizableSidebarProps) {
         >
             {/* Resizer Handle */}
             <div
+                role="separator"
+                aria-valuenow={typeof width === 'number' ? width : undefined}
+                aria-valuemin={minWidth}
+                aria-valuemax={maxWidth}
+                aria-orientation="vertical"
+                aria-label="Resize sidebar"
                 className={cn(
-                    "absolute top-0 bottom-0 w-1 cursor-col-resize z-50 hover:bg-primary/50 transition-colors",
+                    "absolute top-0 bottom-0 w-1 cursor-col-resize z-50 hover:bg-primary/50 transition-colors focus-visible:bg-primary focus-visible:outline-none",
                     isResizing && "bg-primary w-1 opacity-100",
-                    side === 'right' ? "left-0" : "right-0" // Handle is on the opposite side of the anchor
+                    side === 'right' ? "left-0" : "right-0"
                 )}
                 onMouseDown={startResizing}
             />

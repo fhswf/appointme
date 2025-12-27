@@ -272,5 +272,6 @@ export const it = {
     "agenda": "Agenda",
     "more": "altro",
     "next": "Successivo",
-    "back": "Indietro"
+    "back": "Indietro",
+    "n_more": "{{count}} altri ..."
 };

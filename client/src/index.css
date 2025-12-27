@@ -191,11 +191,58 @@
 }
 
 /* Override react-big-calendar event styles */
-.rbc-event {
+.rbc-calendar {
+  background-color: hsl(var(--card));
+}
+
+/* Month view specific event styles - compact fixed height */
+.rbc-month-view .rbc-event {
   background-color: transparent !important;
   border: none !important;
   padding: 0 !important;
   border-radius: 0 !important;
+  min-height: 0 !important;
+  height: 22px !important;
+  /* Force fixed height for consistent calculation */
+  line-height: 22px !important;
+  margin-bottom: 2px !important;
+  /* Restore margin for spacing */
+}
+
+/* Time view (Week/Day) event styles - let RBC handle height */
+.rbc-time-view .rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  /* Restore radius for time view */
+  box-shadow: none !important;
+  /* Allow height to be determined by inline styles from RBC */
+}
+
+/* Compact date cell */
+.rbc-date-cell {
+  padding: 2px 4px 0 0 !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  margin-bottom: 0px !important;
+  text-align: right;
+  /* Reverted height/flex to fix header layout breakage */
+}
+
+/* Compact "Show more" link */
+.rbc-show-more {
+  background-color: transparent !important;
+  font-size: 11px !important;
+  font-weight: 600;
+  color: hsl(var(--primary)) !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  margin: 0 !important;
+  display: block;
+}
+
+.rbc-row-segment {
+  padding: 0 2px !important;
 }
 
 .rbc-event:focus {
@@ -208,12 +255,17 @@
   width: 100%;
 }
 
-.rbc-event-label {
+.rbc-month-view .rbc-event-label {
+  display: none !important;
+}
+
+/* Show label in time view if needed, or keep hidden if handled by custom component */
+.rbc-time-view .rbc-event-label {
   display: none !important;
 }
 
 .bg-background {
-  background-color: var(--color-card);
+  background-color: var(--color-background);
 }
 
 /* Background Event Styles */
@@ -233,5 +285,29 @@
 
 /* Increase slot height */
 .rbc-timeslot-group {
-    min-height: 100px !important; 
+  min-height: 100px !important;
+}
+
+/* Agenda View Styles */
+.rbc-agenda-view {
+  background-color: hsl(var(--card));
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.rbc-agenda-view table.rbc-agenda-table {
+  border: none !important;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody>tr>td {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.rbc-agenda-view table.rbc-agenda-table thead>tr>th {
+  background-color: hsl(var(--secondary)) !important;
+  color: hsl(var(--secondary-foreground)) !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
 }

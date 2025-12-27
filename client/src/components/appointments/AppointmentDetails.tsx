@@ -10,8 +10,7 @@ import {
   Clock,
   Video,
   MapPin,
-  FileText,
-  Edit
+  FileText
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -189,12 +188,12 @@ export function AppointmentDetails({
       </div>
 
       {/* Footer Actions */}
-      <div className="p-6 border-t border-border bg-secondary/10">
+      {/*       <div className="p-6 border-t border-border bg-secondary/10">
         <Button className="w-full gap-2 h-11" size="lg">
           <Edit className="h-4 w-4" />
           Reschedule Appointment
         </Button>
-      </div>
+      </div> */}
     </aside>
   )
 }

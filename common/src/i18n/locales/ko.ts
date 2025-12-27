@@ -272,5 +272,6 @@ export const ko = {
     "agenda": "Agenda",
     "more": "more",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "n_more": "{{count}}개 더 ..."
 };

@@ -190,17 +190,17 @@ describe("User Controller", () => {
 
     describe("getUser", () => {
         it("should return 400 if user_id is not a string", async () => {
-            const res = await request(app)
-                .get("/api/v1/user/me")
-                .set("user_id", 123 as any); // Simulate invalid middleware injection if possible, or just unit test logic
+            const req = { user_id: 123 } as any;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn()
+            } as any;
 
-            // Note: supertest + middleware might make it hard to inject non-string if middleware sets it.
-            // But if we mock middleware to set invalid ID:
-            (UserModel.findOne as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue(null)
-            });
-            // ... actually hard to test middleware contract if we can't easily inject bad type.
-            // skip bad type test if middleware guarantees string.
+            const { getUser } = await import("../controller/user_controller.js");
+            await getUser(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: "Invalid user id" });
         });
 
         it("should return user data if found", async () => {

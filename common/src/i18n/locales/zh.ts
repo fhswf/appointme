@@ -272,5 +272,6 @@ export const zh = {
     "agenda": "Agenda",
     "more": "more",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "n_more": "还有 {{count}} 项 ..."
 };

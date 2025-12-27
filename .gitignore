@@ -31,9 +31,9 @@ sonar-scanner-5.0.1.3006-linux/**
 backend/src/dav_test.js
 test_output.txt
 backend/debug_output.txt
+**/junit.xml
 
 # k8s secrets
 backend/k8s/configmap.yaml
 backend/k8s/secret.yaml
-client/yarn-error.log
-client/yarn-error.log
+

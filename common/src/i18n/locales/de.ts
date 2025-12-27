@@ -278,5 +278,6 @@ Programmiert mit ❤️ an der Fachhochschule Südwestfalen`,
     "my_appointments": "Meine Termine",
     "no_upcoming_appointments": "Keine anstehenden Termine gefunden.",
     "appointment": "Termin",
-    "attendee": "Teilnehmer"
+    "attendee": "Teilnehmer",
+    "n_more": "{{count}} weitere ..."
 };

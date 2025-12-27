@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { resources, type ResourceKey, type Language } from './index';
 import { en } from './locales/en';
 import { de } from './locales/de';

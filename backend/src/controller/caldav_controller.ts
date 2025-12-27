@@ -1,4 +1,3 @@
-import { DAVClient } from 'tsdav';
 import { createConfiguredDAVClient } from '../utility/dav_client.js';
 import { User, CalDavAccount } from "common";
 import { UserModel } from "../models/User.js";
@@ -63,9 +62,8 @@ export const addAccount = async (req: Request, res: Response) => {
 
             // Build Auth Header manually
             const authString = `${username}:${password}`;
-            const encodedAuth = typeof Buffer !== 'undefined'
-                ? Buffer.from(authString).toString('base64')
-                : btoa(authString);
+            const encodedAuth = typeof Buffer == 'undefined'
+                ? btoa(authString) : Buffer.from(authString).toString('base64');
 
             // @ts-ignore
             client.authHeaders = {
@@ -295,24 +293,6 @@ export const listCalendars = async (req: Request, res: Response) => {
 
         res.json(mappedCalendars);
     } catch (e: any) {
-        // Backup mechanism: if fetching calendars failed, but we strictly have a direct URL account, return it as the single calendar
-        // This is important for our direct-CalDAV logic where discovery fails.
-        if (account) {
-            logger.warn(`Standard listing failed for ${account.serverUrl}: ${e.message}. checking if direct access applies.`);
-            // Use our logic to detecting/verifying direct access or just trusting it if it was added.
-            // Ideally we'd verify with a fetchCalendarObjects call but we want to be fast here.
-            // We return a synthetic calendar.
-            const syntheticCalendar = {
-                id: account.serverUrl,
-                summary: account.name || 'Calendar'
-            };
-            // We cannot easily verify if it works here without credentials fully set up for direct access again,
-            // but if the user added it, it passed the addAccount check.
-
-            // However, `e` might be 'login failed' or similar. 
-            // If we really want to support it, we should probably catch the error inside the standard flow or just try/catch around logic.
-        }
-
         // Actually, better to do this: if fetchCalendars returns empty OR throws, and we have a direct url...
         // But the previous block throws. So we are here.
         if (account) {
@@ -328,8 +308,6 @@ export const listCalendars = async (req: Request, res: Response) => {
         res.status(400).json({ error: 'Failed to list calendars' });
     }
 };
-
-
 
 export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavAccount | undefined => {
     return user.caldav_accounts.find(acc => {

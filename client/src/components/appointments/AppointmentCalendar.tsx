@@ -5,9 +5,8 @@ import { startOfWeek } from 'date-fns/startOfWeek'
 import { getDay } from 'date-fns/getDay'
 import { de, enUS, es, fr, it, ja, ko, zhCN } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Appointment, Event } from "common"
 import { cn } from "@/lib/utils"
 
 const locales = {
@@ -66,7 +65,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                         variant="ghost"
                         size="sm"
                         onClick={() => onNavigate('TODAY')}
-                        className="px-4 font-semibold text-foreground bg-background shadow-sm hover:bg-background"
+                        className="px-4 font-semibold text-foreground bg-card shadow-sm hover:bg-card"
                     >
                         {t('today')}
                     </Button>
@@ -87,7 +86,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     variant={view === Views.MONTH ? "outline" : "ghost"}
                     size="sm"
                     onClick={() => onView(Views.MONTH)}
-                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.MONTH && "bg-background shadow-sm text-primary")}
+                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.MONTH && "bg-card shadow-sm text-primary")}
                 >
                     {t('month')}
                 </Button>
@@ -95,7 +94,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     variant={view === Views.WEEK ? "outline" : "ghost"}
                     size="sm"
                     onClick={() => onView(Views.WEEK)}
-                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.WEEK && "bg-background shadow-sm text-primary")}
+                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.WEEK && "bg-card shadow-sm text-primary")}
                 >
                     {t('week')}
                 </Button>
@@ -103,7 +102,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view, label }: ToolbarProps) 
                     variant={view === Views.DAY ? "outline" : "ghost"}
                     size="sm"
                     onClick={() => onView(Views.DAY)}
-                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.DAY && "bg-background shadow-sm text-primary")}
+                    className={cn("px-4 py-1.5 h-8 text-sm", view === Views.DAY && "bg-card shadow-sm text-primary")}
                 >
                     {t('day')}
                 </Button>
@@ -143,34 +142,31 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
         ? `${bgColor}30`
         : 'hsl(var(--border))';
 
+    const { i18n } = useTranslation();
+    const currentLocale = locales[i18n.language as keyof typeof locales] || enUS;
+
+    // Extract additional details
+    const description = event.resource?.data?.description;
+    const location = event.resource?.data?.location;
+
     return (
         <div
             className={cn(
                 "h-full w-full border-l-4 p-2 overflow-hidden rounded-md text-xs",
                 "shadow-md hover:shadow-lg cursor-pointer",
                 "transform hover:-translate-y-0.5 transition-all duration-200",
-                "ring-1"
+                "ring-1 flex flex-col"
             )}
             style={{
                 backgroundColor,
                 borderLeftColor: bgColor,
-                // ringColor is not a valid style property, but we'll leave it as it was in previous logic or remove it if invalid. 
-                // However, likely it was intended for CSS variable or similar. 
-                // Since I am fixing files, I will comment it out or remove it to avoid runtime warnings if it's invalid
-                // But the user had it, so I will interpret "ringColor" might be used by Tailwind or custom logic? 
-                // Actually, standard CSS doesn't have ringColor property. Tailwind uses --tw-ring-color.
-                // I will assume the previous logic was trying to pass it but it might have been doing nothing or strictly for custom use.
-                // Wait, style objects must match CSSProperties. ringColor is not valid. 
-                // I'll remove it from the style object and use a CSS variable if needed, or just rely on the class.
-                // The original code had `ringColor` inside style which is definitely wrong for React CSSProperties if it's not a custom property.
-                // I will create a custom property for it.
                 ['--ring-color' as any]: ringColor
             }}
         >
-            <div className="flex items-start justify-between gap-1">
+            <div className="flex items-start justify-between gap-1 mb-0.5">
                 <div className="flex-1 min-w-0">
                     <h4
-                        className="text-xs font-bold leading-tight mb-0.5 truncate"
+                        className="text-xs font-bold leading-tight truncate"
                         style={{
                             color: isCalendarEvent ? bgColor : 'hsl(var(--foreground))'
                         }}
@@ -178,7 +174,7 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
                         {event.title}
                     </h4>
                     <p className="text-[10px] text-muted-foreground truncate">
-                        {format(event.start, "h:mm a")} - {format(event.end, "h:mm a")}
+                        {format(event.start, "p", { locale: currentLocale })} - {format(event.end, "p", { locale: currentLocale })}
                     </p>
                 </div>
                 {initials && (
@@ -193,6 +189,53 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
                     </div>
                 )}
             </div>
+
+            {(location || description) && (
+                <div className="mt-1 space-y-0.5 overflow-hidden">
+                    {location && (
+                        <div className="flex items-center text-[10px] text-muted-foreground">
+                            <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
+                            <span className="truncate">{location}</span>
+                        </div>
+                    )}
+                    {description && (
+                        <div className="text-[10px] text-muted-foreground/80 line-clamp-2 leading-tight">
+                            {description}
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    )
+}
+
+const MonthEvent = ({ event }: { event: CalendarEvent }) => {
+    const isCalendarEvent = event.resource?.type === 'calendar';
+    const bgColor = isCalendarEvent && event.resource?.color
+        ? event.resource.color
+        : '#3b82f6';
+
+    const style: React.CSSProperties = {
+        backgroundColor: isCalendarEvent ? bgColor : 'hsl(var(--primary))',
+        color: '#fff',
+        opacity: isCalendarEvent ? 0.9 : 1,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 4px',
+        fontSize: '11px',
+        lineHeight: 'inherit',
+        overflow: 'hidden'
+    };
+
+    return (
+        <div style={style} title={event.title}>
+            <span className="font-semibold mr-1 whitespace-nowrap">
+                {format(event.start, "HH:mm")}
+            </span>
+            <span className="truncate whitespace-nowrap">
+                {event.title}
+            </span>
         </div>
     )
 }
@@ -207,7 +250,7 @@ export function AppointmentCalendar({
     onSelectEvent
 }: AppointmentCalendarProps) {
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const eventPropGetter = (event: CalendarEvent) => {
         return {
@@ -236,9 +279,16 @@ export function AppointmentCalendar({
                 onView={onViewChange}
                 onSelectEvent={onSelectEvent}
                 eventPropGetter={eventPropGetter}
+                messages={{
+                    showMore: (total) => t('n_more', { count: total })
+                }}
+                popup
                 components={{
                     toolbar: CustomToolbar as any,
-                    event: CustomEvent as any
+                    event: CustomEvent as any,
+                    month: {
+                        event: MonthEvent as any
+                    }
                 }}
                 className="font-sans text-foreground"
                 scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
