@@ -8,12 +8,12 @@ import path from "path";
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), istanbul({
+    plugins: [istanbul({
       include: 'src/**/*',
       exclude: ['node_modules', 'test/'],
       extension: ['.js', '.ts', '.tsx'],
       requireEnv: true,
-    }),],
+    }), react(), tailwindcss()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

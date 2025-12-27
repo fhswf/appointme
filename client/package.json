@@ -82,10 +82,11 @@
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
     "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
-    "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:merge",
+    "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:patch && npm run coverage:merge",
     "coverage:clean": "rm -rf .nyc_output coverage",
     "coverage:copy-unit": "mkdir -p .nyc_output && cp coverage/coverage-final.json .nyc_output/unit-coverage.json",
-    "coverage:merge": "nyc merge .nyc_output .nyc_output/coverage-merged.json && nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output",
+    "coverage:patch": "node scripts/patch-coverage-hash.cjs",
+    "coverage:merge": "rm -f .nyc_output/coverage-merged.json && nyc merge .nyc_output .nyc_output/coverage-merged.json && nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output",
     "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
   },
   "eslintConfig": {
