@@ -1,3 +1,15 @@
+# backend [1.36.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.36.0-rc.1...backend@1.36.0-rc.2) (2025-12-27)
+
+
+### Bug Fixes
+
+* increase rate limit in backend ([945e904](https://github.com/fhswf/appointme/commit/945e9040061c231c3042bfa4137a486983ed2c25))
+
+
+### Features
+
+* refactor calendar endpoint to use VEVENT data for CalDAV calendars ([b26fdec](https://github.com/fhswf/appointme/commit/b26fdec9ff6c4b42c7e88564bc7218a63b28f542))
+
 # backend [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.1-rc.1...backend@1.36.0-rc.1) (2025-12-23)
 
 
