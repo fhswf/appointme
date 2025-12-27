@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Appointment, Event, IntervalSet } from "common";
+import { Appointment, Event } from "common";
 import { Views, View } from 'react-big-calendar'
 
 import AppNavbar from "../components/AppNavbar";
