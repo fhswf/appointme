@@ -17,7 +17,7 @@
     "importHelpers": true,
     "types": [
       "node",
-      "jest"
+      "vitest"
     ]
   },
   "include": [
