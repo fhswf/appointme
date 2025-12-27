@@ -1,17 +1,11 @@
+export const _coverage_align = true;
+
+import { Calendar } from './types';
 import axios from "axios";
 import ICAL from 'ical.js';
-import { Event, IntervalSet } from "common";
 import { Views, View } from 'react-big-calendar';
-
-export interface Calendar {
-    id: string;
-    label: string;
-    color: string;
-    checked: boolean;
-    type: 'google' | 'caldav';
-    accountId?: string;
-    originalId?: string;
-}
+import type { Event } from "common";
+import { IntervalSet } from "common";
 
 export const getTimeRangeForView = (view: View, date: Date): { timeMin: Date, timeMax: Date } => {
     const now = new Date(date);

@@ -1,12 +1,11 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
     getTimeRangeForView,
     parseICalEvent,
     fetchCalendarEvents,
     calculateAvailabilityEvents,
-    Calendar
 } from './calendar_helpers';
+import { Calendar } from './types';
 import { Views } from 'react-big-calendar';
 import axios from 'axios';
 import { IntervalSet } from 'common';
@@ -88,19 +87,20 @@ describe('calendar_helpers', () => {
 
         it('parses iCal data correctly', () => {
             // Minimal valid VEVENT iCal string
-            const iCalData =
-                `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Test//EN
-BEGIN:VEVENT
-UID:123
-SUMMARY:Meeting
-DTSTART:20250101T100000Z
-DTEND:20250101T110000Z
-DESCRIPTION:Discuss project
-LOCATION:Room 101
-END:VEVENT
-END:VCALENDAR`;
+            const iCalData = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Test//EN',
+                'BEGIN:VEVENT',
+                'UID:123',
+                'SUMMARY:Meeting',
+                'DTSTART:20250101T100000Z',
+                'DTEND:20250101T110000Z',
+                'DESCRIPTION:Discuss project',
+                'LOCATION:Room 101',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
 
             const rawEvent = {
                 id: '1',

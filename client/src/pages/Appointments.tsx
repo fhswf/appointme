@@ -15,7 +15,8 @@ import { useAuth } from "../components/AuthProvider";
 import { updateUser } from "../helpers/services/user_services";
 import { startOfDay } from "date-fns";
 
-import { Calendar, fetchCalendarEvents, calculateAvailabilityEvents, getTimeRangeForView } from "../helpers/calendar_helpers";
+import { fetchCalendarEvents, calculateAvailabilityEvents, getTimeRangeForView } from "../helpers/calendar_helpers";
+import { Calendar } from "../helpers/types";
 
 const CALENDAR_COLORS = [
     "#3b82f6", // Blue
