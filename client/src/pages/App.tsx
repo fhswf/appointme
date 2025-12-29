@@ -8,6 +8,11 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
+// Tabs removed
+
+import AppointmentList from "../components/AppointmentList";
+import { useLocation } from "react-router-dom";
+
 const App = () => {
   const user = useContext(UserContext).user;
   const [connected, setConnected] = useState(false);
@@ -19,12 +24,77 @@ const App = () => {
 
 
 
-  const renderList = () => {
-    if (user && connected) {
-      return <EventList url={user.user_url} user={user} />;
-    }
-  };
+  const location = useLocation();
+  const isAppointments = location.pathname === "/appointments";
 
+  const renderContent = () => {
+    if (!user) return null;
+
+    if (!connected) {
+      return (
+        <>
+          <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between border-b border-border pb-6">
+            <div>
+              <h1 className="text-3xl font-bold mb-2 tracking-tight">
+                {t("low_clean_haddock_bubble")}
+              </h1>
+              <div className="text-muted-foreground mt-2">
+                <p>{t("deft_suave_bear_pause")}</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-2 mb-8">
+            <Button asChild variant="link" className="p-0 h-auto text-sm">
+              <RouterLink to="/integration">
+                {t("pink_trite_ocelot_enrich")}
+              </RouterLink>
+            </Button>
+          </div>
+          <EventList url={user.user_url} user={user} />
+        </>
+      );
+    }
+
+    if (isAppointments) {
+      return <AppointmentList />;
+    }
+
+    // Default: events
+    return (
+      <>
+        <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between border-b border-border pb-6">
+          <div>
+            <h1 className="text-3xl font-bold mb-2 tracking-tight">
+              {t("low_clean_haddock_bubble")}
+            </h1>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">{user.name}</span>
+              <span className="hidden sm:inline text-muted-foreground/50">•</span>
+              <Button asChild variant="link" className="p-0 h-auto text-muted-foreground font-normal hover:text-primary">
+                <RouterLink to={"/users/" + user.user_url}>
+                  @{user.user_url}
+                </RouterLink>
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-4 sm:mt-0">
+            <Button
+              asChild
+              className="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 font-medium text-sm h-auto"
+              data-testid="add-event-button-desktop"
+            >
+              <RouterLink to="/addevent">
+                <Plus className="text-sm w-4 h-4" />
+                <span>{t("Add Event Type")}</span>
+              </RouterLink>
+            </Button>
+          </div>
+        </div>
+        <EventList url={user.user_url} user={user} />
+      </>
+    );
+  };
   console.log("App: user=%o", user);
   return (
     <div className="flex flex-col h-screen bg-background text-foreground font-sans overflow-hidden relative selection:bg-gray-200 dark:selection:bg-gray-800">
@@ -32,55 +102,7 @@ const App = () => {
 
       <main className="flex-1 overflow-y-auto no-scrollbar pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between border-b border-border pb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 tracking-tight">
-                {t("low_clean_haddock_bubble")}
-              </h1>
-              {user && (
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{user.name}</span>
-                  <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                  <Button asChild variant="link" className="p-0 h-auto text-muted-foreground font-normal hover:text-primary">
-                    <RouterLink to={"/users/" + user.user_url}>
-                      @{user.user_url}
-                    </RouterLink>
-                  </Button>
-                </div>
-              )}
-              {!user && (
-                <div className="text-muted-foreground mt-2">
-                  <p>{t("deft_suave_bear_pause")}</p>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-4 sm:mt-0">
-              {connected && (
-                <Button
-                  asChild
-                  className="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-5 py-2.5 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 font-medium text-sm h-auto"
-                  data-testid="add-event-button-desktop"
-                >
-                  <RouterLink to="/addevent">
-                    <Plus className="text-sm w-4 h-4" />
-                    <span>{t("Add Event Type")}</span>
-                  </RouterLink>
-                </Button>
-              )}
-            </div>
-          </div>
-          {user && !connected && (
-            <div className="mt-2 mb-8">
-              <Button asChild variant="link" className="p-0 h-auto text-sm">
-                <RouterLink to="/integration">
-                  {t("pink_trite_ocelot_enrich")}
-                </RouterLink>
-              </Button>
-            </div>
-          )}
-
-          {renderList()}
+          {renderContent()}
         </div>
       </main>
 

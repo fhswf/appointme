@@ -52,7 +52,7 @@ describe('OIDC Controller', () => {
         vi.stubEnv('OIDC_ISSUER', 'https://issuer.example.com');
         vi.stubEnv('OIDC_CLIENT_ID', 'client_id');
         vi.stubEnv('OIDC_CLIENT_SECRET', 'client_secret');
-        vi.stubEnv('CLIENT_URL', 'http://localhost:3000');
+        vi.stubEnv('BASE_URL', 'http://localhost:3000');
         vi.stubEnv('JWT_SECRET', 'test_secret');
         vi.stubEnv('NODE_ENV', 'test');
 

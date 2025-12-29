@@ -4,7 +4,7 @@
 import { Router } from "express";
 import { middleware } from "../handlers/middleware.js";
 import { userRateLimiter } from "../config/rateLimit.js";
-import { getUserByUrl, updateUser, getUser } from "../controller/user_controller.js";
+import { getUserByUrl, updateUser, getUser, getAppointments, getCalendars, getCalendarEvents } from "../controller/user_controller.js";
 
 const { requireAuth } = middleware;
 
@@ -38,6 +38,202 @@ export const userRouter = Router();
  *               $ref: '#/components/schemas/Error'
  */
 userRouter.get("/me", userRateLimiter, requireAuth, getUser);
+
+/**
+ * @openapi
+ * /api/v1/user/{id}/appointment:
+ *   get:
+ *     summary: Get user appointments
+ *     description: Retrieve all appointments for the specified user (must be authenticated user)
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID or 'me'
+ *     responses:
+ *       200:
+ *         description: Appointments retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Appointment'
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden
+ */
+userRouter.get("/:id/appointment", userRateLimiter, requireAuth, getAppointments);
+
+/**
+ * @openapi
+ * /api/v1/user/{id}/calendar:
+ *   get:
+ *     summary: Get user calendars
+ *     description: Retrieve all calendars (Google + CalDAV) for the specified user
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID or 'me'
+ *     responses:
+ *       200:
+ *         description: Calendars retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   summary:
+ *                     type: string
+ *                   type:
+ *                     type: string
+ *                     enum: [google, caldav]
+ *                   primary:
+ *                     type: boolean
+ *                   color:
+ *                     type: string
+ *                   accountId:
+ *                     type: string
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden
+ */
+userRouter.get("/:id/calendar", userRateLimiter, requireAuth, getCalendars);
+
+/**
+ * @openapi
+ * /api/v1/user/{id}/calendar/{calendarId}/event:
+ *   get:
+ *     summary: Get calendar events
+ *     description: Retrieve events for a specific calendar (Google or CalDAV)
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID or 'me'
+ *       - in: path
+ *         name: calendarId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Calendar ID (Google calendar ID or CalDAV calendar URL)
+ *       - in: query
+ *         name: timeMin
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Start time for events (ISO 8601)
+ *       - in: query
+ *         name: timeMax
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: End time for events (ISO 8601)
+ *     responses:
+ *       200:
+ *         description: Events retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Calendar not found
+ */
+userRouter.get("/:id/calendar/:calendarId/event", userRateLimiter, requireAuth, getCalendarEvents);
+
+/**
+ * @openapi
+ * /api/v1/user/{id}/calendar/{accountId}/{calendarId}/event:
+ *   get:
+ *     summary: Get calendar events with account ID
+ *     description: Retrieve events for a specific calendar (Google or CalDAV) using explicit account ID
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID or 'me'
+ *       - in: path
+ *         name: accountId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Account ID (for CalDAV) or 'google'
+ *       - in: path
+ *         name: calendarId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Calendar ID
+ *       - in: query
+ *         name: timeMin
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Start time for events (ISO 8601)
+ *       - in: query
+ *         name: timeMax
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: End time for events (ISO 8601)
+ *     responses:
+ *       200:
+ *         description: Events retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Calendar or Account not found
+ */
+userRouter.get("/:id/calendar/:accountId/:calendarId/event", userRateLimiter, requireAuth, getCalendarEvents);
 
 /**
  * @openapi

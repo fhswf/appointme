@@ -2,6 +2,7 @@
  * @module user_controller
  */
 import { UserModel } from "../models/User.js";
+import { AppointmentModel } from "../models/Appointment.js";
 import { User } from "common";
 import { Request, Response } from 'express';
 import crypto from 'node:crypto';
@@ -31,6 +32,7 @@ export const getUser = (req: Request, res: Response): void => {
       "pull_calendars": 1,
       "push_calendars": 1,
       "user_url": 1,
+      "agenda_visible_calendars": 1,
       "welcome": 1,
       "updatedAt": 1,
       "send_invitation_email": 1,
@@ -74,6 +76,10 @@ const buildUserUpdateObject = (userData: Partial<User>): Record<string, any> => 
 
   if (Array.isArray(userData.push_calendars) && userData.push_calendars.every(c => typeof c === 'string')) {
     update.push_calendars = userData.push_calendars.map(String);
+  }
+
+  if (Array.isArray(userData.agenda_visible_calendars) && userData.agenda_visible_calendars.every(c => typeof c === 'string')) {
+    update.agenda_visible_calendars = userData.agenda_visible_calendars.map(String);
   }
 
   // Handle User URL
@@ -140,6 +146,7 @@ export const updateUser = (req: Request, res: Response): void => {
             "picture_url": 1,
             "pull_calendars": 1,
             "push_calendars": 1,
+            "agenda_visible_calendars": 1,
             "user_url": 1,
             "welcome": 1,
             "updatedAt": 1,
@@ -185,4 +192,320 @@ export const getUserByUrl = (req: Request, res: Response): void => {
     .catch(error => {
       res.status(400).json({ error, query: { user_url: user_url } });
     })
+};
+
+/**
+ * Middleware to fetch appointments for a user
+ * @function
+ * @param {request} req
+ * @param {response} res
+ */
+export const getAppointments = (req: Request, res: Response): void => {
+  const userId = req.params.id;
+  const currentUserId = req['user_id'];
+
+  // Check if requesting own appointments
+  // For now we restrict to own appointments. Admin access logic could be added here.
+  if (userId !== 'me' && userId !== currentUserId) {
+    res.status(403).json({ error: "Forbidden: Can only access own appointments" });
+    return;
+  }
+
+  const targetId = userId === 'me' ? currentUserId : userId;
+
+  AppointmentModel.find({ user: targetId })
+    .populate("event")
+    .sort({ start: 1 })
+    .exec()
+    .then(appointments => {
+      res.status(200).json(appointments);
+    })
+    .catch(err => {
+      res.status(400).json({ error: err });
+    });
+};
+
+/**
+ * Middleware to fetch all calendars (Google + CalDAV) for a user
+ * @function
+ * @param {request} req
+ * @param {response} res
+ */
+export const getCalendars = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.params.id;
+  const currentUserId = req['user_id'];
+
+  // Check if requesting own calendars
+  if (userId !== 'me' && userId !== currentUserId) {
+    res.status(403).json({ error: "Forbidden: Can only access own calendars" });
+    return;
+  }
+
+  const targetId = userId === 'me' ? currentUserId : userId;
+  const calendars: any[] = [];
+
+  try {
+    // Fetch user to get CalDAV accounts
+    const user = await UserModel.findOne({ _id: targetId }).exec();
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    // Fetch Google calendars if user has Google tokens
+    if (user.google_tokens?.access_token) {
+      try {
+        const { google } = await import('googleapis');
+        const { OAuth2Client } = await import('google-auth-library');
+
+        const oAuth2Client = new OAuth2Client({
+          clientId: process.env.CLIENT_ID,
+          clientSecret: process.env.CLIENT_SECRET,
+          redirectUri: `${process.env.API_URL}/google/oauthcallback`,
+        });
+
+        oAuth2Client.setCredentials(user.google_tokens);
+
+        const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+        const list = await calendar.calendarList.list();
+
+        if (list.data.items) {
+          list.data.items.forEach((cal: any) => {
+            calendars.push({
+              id: cal.id,
+              summary: cal.summary || cal.id,
+              type: 'google',
+              primary: cal.primary || false,
+              color: cal.backgroundColor,
+            });
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching Google calendars:", err);
+        // Continue to CalDAV even if Google fails
+      }
+    }
+
+    // Fetch CalDAV calendars
+    if (user.caldav_accounts && user.caldav_accounts.length > 0) {
+      const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+      const { decrypt } = await import('../utility/encryption.js');
+
+      for (const account of user.caldav_accounts) {
+        try {
+          const client = createConfiguredDAVClient({
+            serverUrl: account.serverUrl,
+            credentials: {
+              username: account.username,
+              password: decrypt(account.password),
+            },
+            authMethod: 'Basic',
+            defaultAccountType: 'caldav',
+            fetchOptions: {
+              headers: {}
+            }
+          });
+
+          await client.login();
+          const caldavCalendars = await client.fetchCalendars();
+
+          // Check for direct calendar URL
+          const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+          const foundDirect = caldavCalendars.find((c: any) => c.url.replace(/\/$/, '') === normalizedServerUrl);
+
+          if (!foundDirect) {
+            caldavCalendars.push({
+              url: account.serverUrl,
+              displayName: account.name || 'Direct Calendar',
+              color: undefined // or default
+            } as any);
+          }
+
+          caldavCalendars.forEach((cal: any) => {
+            calendars.push({
+              id: cal.url,
+              summary: cal.displayName || cal.url,
+              type: 'caldav',
+              color: cal.color,
+              accountId: account._id?.toString(),
+            });
+          });
+        } catch (err: any) {
+          console.error(`Error fetching CalDAV calendars for account ${account._id}:`, err);
+          // Fallback for direct calendar URLs where discovery fails
+          // If we failed to fetch calendars, but valid account exists, try to push the account itself as a calendar
+          // checking if it was a "google" placeholder or similar)
+          // Since we only allow Adding via addAccount which now validates, we can assume it's meant to work.
+          calendars.push({
+            id: account.serverUrl,
+            summary: account.name || 'Direct Calendar',
+            type: 'caldav',
+            accountId: account._id?.toString(),
+          });
+        }
+      }
+    }
+
+    res.status(200).json(calendars);
+  } catch (err) {
+    console.error("Error in getCalendars:", err);
+    res.status(500).json({ error: "Failed to fetch calendars" });
+  }
+};
+
+/**
+ * Middleware to fetch events for a specific calendar
+ * @function
+ * @param {request} req
+ * @param {response} res
+ */
+export const getCalendarEvents = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.params.id;
+  const calendarId = req.params.calendarId;
+  const currentUserId = req['user_id'];
+  const timeMin = req.query.timeMin as string;
+  const timeMax = req.query.timeMax as string;
+
+  // Check if requesting own calendar events
+  if (userId !== 'me' && userId !== currentUserId) {
+    res.status(403).json({ error: "Forbidden: Can only access own calendar events" });
+    return;
+  }
+
+  const targetId = userId === 'me' ? currentUserId : userId;
+
+  try {
+    const user = await UserModel.findOne({ _id: targetId }).exec();
+
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const events: any[] = [];
+
+    // Check if it's a Google calendar (doesn't start with http)
+    if (!calendarId.startsWith('http')) {
+      // Google calendar
+      if (user.google_tokens?.access_token) {
+        try {
+          const { google } = await import('googleapis');
+          const { OAuth2Client } = await import('google-auth-library');
+
+          const oAuth2Client = new OAuth2Client({
+            clientId: process.env.CLIENT_ID,
+            clientSecret: process.env.CLIENT_SECRET,
+            redirectUri: `${process.env.API_URL}/google/oauthcallback`,
+          });
+
+          oAuth2Client.setCredentials(user.google_tokens);
+
+          const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+          const response = await calendar.events.list({
+            calendarId,
+            timeMin,
+            timeMax,
+            singleEvents: true,
+            orderBy: 'startTime'
+          });
+
+          if (response.data.items) {
+            events.push(...response.data.items);
+          }
+        } catch (err) {
+          console.error("Error fetching Google calendar events:", err);
+          res.status(500).json({ error: "Failed to fetch Google calendar events" });
+          return;
+        }
+      } else {
+        res.status(401).json({ error: "Google authentication required" });
+        return;
+      }
+    } else {
+      // CalDAV calendar
+      const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+      const { decrypt } = await import('../utility/encryption.js');
+
+      const accountId = req.params.accountId;
+      let account;
+
+      if (accountId) {
+        account = user.caldav_accounts?.find(acc => acc._id?.toString() === accountId);
+      }
+
+      // Fallback or explicit search if accountId not provided or not found (though if provided and not found it might be better to 404, 
+      // but strictly following the logic: checking if it was a "google" placeholder or similar)
+      if (!account && !accountId) {
+        // Find the account that owns this calendar by URL matching (Legacy/Fallback)
+        account = user.caldav_accounts?.find(acc => calendarId.startsWith(acc.serverUrl));
+      }
+
+      if (!account) {
+        res.status(404).json({ error: "CalDAV account not found for this calendar" });
+        return;
+      }
+
+      try {
+        const client = createConfiguredDAVClient({
+          serverUrl: account.serverUrl,
+          credentials: {
+            username: account.username,
+            password: decrypt(account.password),
+          },
+          authMethod: 'Basic',
+          defaultAccountType: 'caldav',
+          fetchOptions: {
+            headers: {}
+          }
+        });
+
+        await client.login();
+        const calendars = await client.fetchCalendars();
+        let targetCalendar = calendars.find(c => c.url === calendarId);
+
+        if (!targetCalendar) {
+          // Fallback: Check if this is a direct calendar URL
+          const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+          const normalizedCalendarId = calendarId.replace(/\/$/, '');
+
+          if (normalizedCalendarId === normalizedServerUrl) {
+            targetCalendar = {
+              url: account.serverUrl,
+              displayName: account.name || 'Direct Calendar',
+              resourcetype: 'calendar',
+              currentUserPrivilegeSet: [] // Dummy
+            } as any;
+          } else {
+            res.status(404).json({ error: "Calendar not found" });
+            return;
+          }
+        }
+
+        const objects = await client.fetchCalendarObjects({
+          calendar: targetCalendar,
+          timeRange: timeMin && timeMax ? { start: timeMin, end: timeMax } : undefined
+        });
+
+        for (const obj of objects) {
+          if (obj.data) {
+            events.push({
+              id: obj.url,
+              format: 'ical',
+              data: obj.data
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching CalDAV calendar events:", err);
+        res.status(500).json({ error: "Failed to fetch CalDAV calendar events" });
+        return;
+      }
+    }
+
+    res.status(200).json(events);
+  } catch (err) {
+    console.error("Error in getCalendarEvents:", err);
+    res.status(500).json({ error: "Failed to fetch calendar events" });
+  }
 };

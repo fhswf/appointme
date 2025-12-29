@@ -28,7 +28,7 @@ const getClient = async (): Promise<Client | null> => {
         client = new issuer.Client({
             client_id: process.env.OIDC_CLIENT_ID,
             client_secret: process.env.OIDC_CLIENT_SECRET,
-            redirect_uris: [`${process.env.CLIENT_URL}/oidc-callback`],
+            redirect_uris: [`${process.env.BASE_URL}/oidc-callback`],
             response_types: ['code'],
             token_endpoint_auth_method: process.env.OIDC_CLIENT_SECRET ? 'client_secret_basic' : 'none',
         });
@@ -168,7 +168,7 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         // Exchange code for tokens
         // We must pass the same redirect_uri that was used in the authorization request
         const tokenSet = await oidcClient.callback(
-            `${process.env.CLIENT_URL}/oidc-callback`,
+            `${process.env.BASE_URL}/oidc-callback`,
             { code }
         );
 

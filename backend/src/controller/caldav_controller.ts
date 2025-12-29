@@ -1,4 +1,4 @@
-import { DAVClient } from 'tsdav';
+import { createConfiguredDAVClient } from '../utility/dav_client.js';
 import { User, CalDavAccount } from "common";
 import { UserModel } from "../models/User.js";
 import ical from 'node-ical';
@@ -17,13 +17,11 @@ export const addAccount = async (req: Request, res: Response) => {
     }
 
     const fetchOptions = {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
-        }
+        headers: {}
     };
 
     try {
-        const client = new DAVClient({
+        const client = createConfiguredDAVClient({
             serverUrl,
             credentials: { username, password },
             authMethod: 'Basic',
@@ -37,31 +35,71 @@ export const addAccount = async (req: Request, res: Response) => {
             { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name, email } } }
         );
         res.json({ success: true });
-    } catch (e) {
-        logger.error('Failed to add CalDAV account', e);
-        // Retry with homeUrl set to serverUrl if the error suggests it might help, or just try it as a fallback
+    } catch (e: any) {
+        logger.warn(`Standard CalDAV discovery failed for ${serverUrl}: ${e.message}. Attempting direct calendar access...`);
+
+        // Fallback: Try to treat serverUrl as the direct calendar URL
         try {
-            const client = new DAVClient({
+            // Manually construct client for direct access
+            const client = createConfiguredDAVClient({
                 serverUrl,
                 credentials: { username, password },
                 authMethod: 'Basic',
                 defaultAccountType: 'caldav',
-                fetchOptions,
-                // @ts-ignore
-                caldavSettings: {
-                    homeUrl: serverUrl
+                fetchOptions
+            });
+
+            // Manually inject account details to bypass discovery
+            // @ts-ignore
+            client.account = {
+                serverUrl,
+                credentials: { username, password },
+                accountType: 'caldav',
+                rootUrl: serverUrl,
+                principalUrl: serverUrl,
+                homeUrl: serverUrl
+            };
+
+            // Build Auth Header manually
+            const authString = `${username}:${password}`;
+            const encodedAuth = typeof Buffer == 'undefined'
+                ? btoa(authString) : Buffer.from(authString).toString('base64');
+
+            // @ts-ignore
+            client.authHeaders = {
+                Authorization: `Basic ${encodedAuth}`
+            };
+
+            // Inject into fetchOptions.headers just in case (tsdav quirk)
+            // @ts-ignore
+            if (!client.fetchOptions) client.fetchOptions = {};
+            // @ts-ignore
+            if (!client.fetchOptions.headers) client.fetchOptions.headers = {};
+            // @ts-ignore
+            client.fetchOptions.headers.Authorization = `Basic ${encodedAuth}`;
+
+            // Verify by trying to fetch objects (light verification)
+            // We use the serverUrl as the calendar URL
+            await client.fetchCalendarObjects({
+                calendar: {
+                    url: serverUrl,
+                    displayName: name,
+                    resourcetype: 'calendar'
                 }
             });
-            await client.login();
 
+            logger.info(`Direct calendar access successful for ${serverUrl}`);
+
+            // Save the account
             await UserModel.updateOne(
                 { _id: userId },
                 { $push: { caldav_accounts: { serverUrl, username, password: encrypt(password), name, email } } }
             );
             res.json({ success: true });
+
         } catch (retryError) {
-            logger.error('Retry failed to add CalDAV account', retryError);
-            res.status(400).json({ error: 'Failed to connect to CalDAV server' });
+            logger.error('Retry with direct access failed', retryError);
+            res.status(400).json({ error: 'Failed to connect to CalDAV server (Discovery and Direct Access failed)' });
         }
     }
 };
@@ -131,7 +169,7 @@ const fetchAndProcessAccountCalendars = async (
     busySlots: { start: Date, end: Date }[]
 ) => {
     try {
-        const client = new DAVClient({
+        const client = createConfiguredDAVClient({
             serverUrl: account.serverUrl,
             credentials: {
                 username: account.username,
@@ -140,14 +178,27 @@ const fetchAndProcessAccountCalendars = async (
             authMethod: 'Basic',
             defaultAccountType: 'caldav',
             fetchOptions: {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
-                }
+                headers: {}
             }
         });
 
         await client.login();
         const calendars = await client.fetchCalendars();
+
+        // Fallback: Check if the account's serverUrl serves as a calendar itself but wasn't discovered
+        const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+        const foundDirect = calendars.find(c => c.url.replace(/\/$/, '') === normalizedServerUrl);
+
+        if (!foundDirect) {
+            // Check if this direct URL is in the pull list (or if we should just verify it exists)
+            // For safety, we can just add it. The filter below will remove it if the user hasn't selected it.
+            calendars.push({
+                url: account.serverUrl,
+                displayName: account.name || 'Direct Calendar',
+                resourcetype: 'calendar',
+                currentUserPrivilegeSet: [] // Dummy
+            } as any);
+        }
 
         // Filter calendars based on user selection
         const selectedCalendars = calendars.filter(cal => pullCalendars.has(cal.url));
@@ -193,15 +244,16 @@ export const listCalendars = async (req: Request, res: Response) => {
     const userId = req['user_id'];
     const accountId = req.params.id;
 
+    let account;
     try {
         const user = await UserModel.findOne({ _id: userId }).exec();
-        const account = user?.caldav_accounts?.find(acc => acc._id.toString() === accountId);
+        account = user?.caldav_accounts?.find(acc => acc._id.toString() === accountId);
 
         if (!account) {
             return res.status(404).json({ error: 'Account not found' });
         }
 
-        const client = new DAVClient({
+        const client = createConfiguredDAVClient({
             serverUrl: account.serverUrl,
             credentials: {
                 username: account.username,
@@ -210,14 +262,29 @@ export const listCalendars = async (req: Request, res: Response) => {
             authMethod: 'Basic',
             defaultAccountType: 'caldav',
             fetchOptions: {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
-                }
+                headers: {}
             }
         });
 
         await client.login();
         const calendars = await client.fetchCalendars();
+
+        // Check if the account's serverUrl is present in the discovered calendars
+        // We normalize by removing trailing slash for comparison
+        const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+        const foundDirect = calendars.find(c => c.url.replace(/\/$/, '') === normalizedServerUrl);
+
+        if (!foundDirect) {
+            // If the specific URL provided by the user isn't in the discovered list, 
+            // we assume the user intended to add that specific calendar directly.
+            // We append it to the list.
+            calendars.push({
+                url: account.serverUrl,
+                displayName: account.name || 'Direct Calendar',
+                resourcetype: 'calendar',
+                currentUserPrivilegeSet: [] // Dummy
+            } as any);
+        }
 
         const mappedCalendars = calendars.map(cal => ({
             id: cal.url,
@@ -225,13 +292,22 @@ export const listCalendars = async (req: Request, res: Response) => {
         }));
 
         res.json(mappedCalendars);
-    } catch (e) {
+    } catch (e: any) {
+        // Actually, better to do this: if fetchCalendars returns empty OR throws, and we have a direct url...
+        // But the previous block throws. So we are here.
+        if (account) {
+            // Simplified fallback: Return the account itself as a calendar
+            res.json([{
+                id: account.serverUrl,
+                summary: account.name || 'Direct Calendar'
+            }]);
+            return;
+        }
+
         logger.error('Failed to list calendars for account %s', accountId, e);
         res.status(400).json({ error: 'Failed to list calendars' });
     }
 };
-
-
 
 export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavAccount | undefined => {
     return user.caldav_accounts.find(acc => {
@@ -269,7 +345,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
     }
     logger.info('Found CalDAV account for push calendar: %s', account.name);
 
-    const client = new DAVClient({
+    const client = createConfiguredDAVClient({
         serverUrl: account.serverUrl,
         credentials: {
             username: account.username,
@@ -278,9 +354,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         authMethod: 'Basic',
         defaultAccountType: 'caldav',
         fetchOptions: {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Thunderbird/143.0'
-            }
+            headers: {}
         }
     });
 
@@ -290,11 +364,24 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
     // Optimization: We could cache this or construct a minimal object if tsdav allows
     const calendars = await client.fetchCalendars();
     logger.debug('Fetched %d calendars', calendars.length);
-    const targetCalendar = calendars.find(c => c.url === calendarUrl);
+    let targetCalendar = calendars.find(c => c.url === calendarUrl);
 
     if (!targetCalendar) {
-        logger.error('Target calendar not found: %s', calendarUrl);
-        throw new Error('Target calendar not found');
+        // Fallback: Check if this is a direct calendar URL
+        const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+        const normalizedCalendarId = calendarUrl.replace(/\/$/, '');
+
+        if (normalizedCalendarId === normalizedServerUrl) {
+            targetCalendar = {
+                url: account.serverUrl,
+                displayName: account.name || 'Direct Calendar',
+                resourcetype: 'calendar',
+                currentUserPrivilegeSet: [] // Dummy
+            } as any;
+        } else {
+            logger.error('Target calendar not found: %s', calendarUrl);
+            throw new Error('Target calendar not found');
+        }
     }
     logger.info('Found target calendar: %s', targetCalendar.url);
 
@@ -403,5 +490,5 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         logger.error('Error verifying event creation: %o', verifyError);
     }
 
-    return createdEvent;
+    return { response: createdEvent, uid };
 };

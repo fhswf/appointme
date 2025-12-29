@@ -18,7 +18,7 @@ const options: swaggerJsdoc.Options = {
         },
         servers: [
             {
-                url: process.env.CLIENT_URL,
+                url: process.env.BASE_URL,
                 description: 'This server'
             },
             {
