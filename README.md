@@ -93,4 +93,96 @@ You can manage multiple environments (e.g., Staging, Production) using Kustomize
 | `EMAIL_PASSWORD` | Password for the email account | Yes | |
 | `ENCRYPTION_KEY` | 32-byte hex key for encrypting CalDAV passwords | Yes | |
 
+## LTI Integration
+
+APPointment supports **LTI 1.3** (Learning Tools Interoperability) integration through **OpenID Connect (OIDC)**. This allows the application to be integrated into Learning Management Systems (LMS) like Moodle, Canvas, or other LTI-compliant platforms.
+
+### How It Works
+
+The LTI integration is implemented using the standard OIDC authentication flow:
+
+1. **Authentication Flow**:
+   - User clicks "Login with OIDC" in the application
+   - Client fetches authorization URL from `/api/v1/oidc/url`
+   - User is redirected to the OIDC provider (e.g., Keycloak, LMS LTI endpoint)
+   - After successful authentication, user is redirected back to `/oidc-callback` with authorization code
+   - Client sends code to `/api/v1/oidc/login` endpoint
+   - Backend exchanges code for tokens and retrieves user claims
+   - User is created or updated in the database based on email
+   - JWT token is issued and set as HTTP-only cookie
+
+2. **LTI Role Mapping**:
+   The application automatically maps LTI roles from the OIDC claims to internal application roles:
+   - LTI roles are extracted from `https://purl.imsglobal.org/spec/lti/claim/roles` claim
+   - Users with roles containing "student" or "learner" (case-insensitive) are assigned the `student` role
+   - Additional role mappings can be extended in [`oidc_controller.ts`](backend/src/controller/oidc_controller.ts)
+
+3. **User Creation**:
+   - Users are identified by their `sub` (subject) claim from the OIDC token
+   - User profile is created/updated with:
+     - Email (required)
+     - Name (from `name` claim or derived from email)
+     - Profile picture (from `picture` claim, if provided)
+     - Roles (mapped from LTI roles)
+   - User URL collisions are automatically handled with random suffixes
+
+### Configuration
+
+To enable LTI/OIDC authentication, configure the following environment variables:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `OIDC_ISSUER` | OIDC Provider/LTI Platform URL | `https://keycloak.example.com/realms/myrealm` |
+| `OIDC_CLIENT_ID` | OIDC Client ID registered with the provider | `appointme` |
+| `OIDC_CLIENT_SECRET` | Client Secret (for confidential clients) | `your-secret-here` |
+| `OIDC_NAME` | Display name for the login button (optional) | `Campus-ID` |
+| `OIDC_ICON` | Icon path for the login button (optional) | `/fh-swf.svg` |
+
+### Setting Up with Keycloak
+
+1. Create a new client in Keycloak:
+   - Client ID: Your desired client ID (e.g., `appointme`)
+   - Client Protocol: `openid-connect`
+   - Access Type: `confidential` (if using client secret) or `public`
+   - Valid Redirect URIs: `https://your-domain.com/oidc-callback`
+
+2. Configure LTI Claims (if using LTI):
+   - Ensure the client mapper includes `https://purl.imsglobal.org/spec/lti/claim/roles` in the ID token
+   - Map user roles appropriately (e.g., Student, Instructor)
+
+3. Set environment variables in your deployment with the Keycloak realm URL and client credentials
+
+### Setting Up with LMS (Moodle/Canvas)
+
+Most modern LMS platforms support LTI 1.3 with OIDC. Configure the LMS as your OIDC provider:
+
+1. Register APPointment as an external tool in your LMS
+2. Configure the OIDC endpoints according to your LMS documentation
+3. Use the LMS-provided issuer URL, client ID, and client secret in your environment variables
+4. Ensure the LMS sends appropriate role claims for student/instructor identification
+
+### Security Features
+
+- **Rate Limiting**: 
+  - Authorization URL endpoint: 100 requests per 15 minutes per IP
+  - Login endpoint: 5 attempts per minute per IP
+- **HTTP-only Cookies**: JWT tokens are stored in secure, HTTP-only cookies
+- **Token Validation**: All tokens are validated using the OIDC provider's public keys (JWKS)
+- **CORS Protection**: Configurable allowed origins via `CORS_ALLOWED_ORIGINS`
+
+### API Endpoints
+
+- `GET /api/v1/oidc/config` - Check if OIDC is enabled
+- `GET /api/v1/oidc/url` - Get authorization URL for authentication
+- `POST /api/v1/oidc/login` - Complete authentication with authorization code
+
+### Technical Implementation
+
+The LTI/OIDC integration is implemented in:
+- Backend controller: [`backend/src/controller/oidc_controller.ts`](backend/src/controller/oidc_controller.ts)
+- Backend routes: [`backend/src/routes/oidc_routes.ts`](backend/src/routes/oidc_routes.ts)
+- Client callback handler: [`client/src/pages/OidcCallback.tsx`](client/src/pages/OidcCallback.tsx)
+
+For detailed implementation, see the source code in the repository.
+
 
