@@ -36,6 +36,12 @@ vi.mock('./AvailabilityEditor', () => ({
     )
 }));
 
+vi.mock('./CalendarSettings', () => ({
+    CalendarSettings: () => (
+        <div data-testid="calendar-settings">Calendar Settings Mock</div>
+    )
+}));
+
 const mockRefreshAuth = vi.fn();
 vi.mock('../components/AuthProvider', () => ({
     useAuth: () => ({

@@ -119,7 +119,10 @@ jobs:
           VITE_COVERAGE: true
 
       - name: Generate Coverage Report
-        run: cd client && npm run coverage:merge
+        run: |
+          cd client
+          npm run coverage:patch
+          npm run coverage:merge
 
       - name: Publish Test Report with Pull Request Comment
         uses: ctrf-io/github-test-reporter@v1

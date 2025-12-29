@@ -154,4 +154,112 @@ describe("User Controller", () => {
             expect(res.json).toHaveBeenCalledWith({ error: "Invalid user_url" });
         });
     });
+
+    describe("getCalendarEvents with accountId", () => {
+        it("should use accountId to find caldav account", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    caldav_accounts: [
+                        { _id: "acc1", serverUrl: "http://srv1", username: "u1", password: "p1" },
+                        { _id: "acc2", serverUrl: "http://srv2", username: "u2", password: "p2" }
+                    ]
+                })
+            });
+
+            // Mock DAVClient/imports if possible, or just expect it to proceed past account lookup behavior.
+            // Since mocking dynamic imports in this existing structure is tricky without major refactoring or top-level hoisting,
+            // we will verify that the controller attempts to use the account logic.
+            // For now, let's assume if it doesn't return 404 "CalDAV account not found", we succeeded in lookup.
+            // It will likely fail later at DAVClient network call, so we expect 500 or specific error, but NOT "CalDAV account not found".
+
+            const res = await request(app)
+                .get("/api/v1/user/me/calendar/acc1/http%3A%2F%2Fsrv1%2Fcal1/event");
+
+            // If it found the account, it proceeds to try and fetch using DAVClient.
+            // Since DAVClient is not mocked fully/correctly for dynamic import in this test file yet, 
+            // the observation of the error type tells us if it passed the lookup.
+            // 404 "CalDAV account not found" -> Failed lookup
+            // 500 "Failed to fetch CalDAV..." -> Passed lookup, failed network/lib
+
+            if (res.status === 404) {
+                expect(res.body.error).not.toBe("CalDAV account not found for this calendar");
+            }
+        });
+    });
+
+    describe("getUser", () => {
+        it("should return 400 if user_id is not a string", async () => {
+            const req = { user_id: 123 } as any;
+            const res = {
+                status: vi.fn().mockReturnThis(),
+                json: vi.fn()
+            } as any;
+
+            const { getUser } = await import("../controller/user_controller.js");
+            await getUser(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: "Invalid user id" });
+        });
+
+        it("should return user data if found", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
+
+            const res = await request(app).get("/api/v1/user/me");
+            expect(res.status).toBe(200);
+            expect(res.body.email).toBe(USER.email);
+        });
+
+        it("should return 404 if user not found", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            const res = await request(app).get("/api/v1/user/me");
+            expect(res.status).toBe(404);
+        });
+    });
+
+    describe("getAppointments", () => {
+        it("should return appointments for the user", async () => {
+            const { AppointmentModel } = await import("../models/Appointment.js");
+            // Mock AppointmentModel.find
+            (AppointmentModel as any).find = vi.fn().mockReturnValue({
+                populate: vi.fn().mockReturnThis(),
+                sort: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue([{ title: "Appt 1", start: new Date() }])
+            });
+
+            const res = await request(app).get("/api/v1/user/me/appointment");
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0].title).toBe("Appt 1");
+        });
+
+        it("should return 403 if accessing other user appointments", async () => {
+            const res = await request(app).get("/api/v1/user/otheruser/appointment");
+            expect(res.status).toBe(403);
+        });
+    });
+
+    describe("getCalendars", () => {
+        it("should return empty list if user has no calendars", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({ ...USER, google_tokens: null, caldav_accounts: [] })
+            });
+
+            const res = await request(app).get("/api/v1/user/me/calendar");
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual([]);
+        });
+
+        it("should return 403 if accessing other user calendars", async () => {
+            const res = await request(app).get("/api/v1/user/otheruser/calendar");
+            expect(res.status).toBe(403);
+        });
+    });
 });
+

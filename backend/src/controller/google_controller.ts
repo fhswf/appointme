@@ -5,7 +5,6 @@
 
 
 import { calendar_v3, google } from 'googleapis';
-import { GaxiosResponse, GaxiosPromise } from "gaxios";
 import { OAuth2Client } from 'google-auth-library';
 import Schema$Event = calendar_v3.Schema$Event;
 import { UserModel, UserDocument } from "../models/User.js";
@@ -73,7 +72,7 @@ export const googleCallback = (req: Request, res: Response): void => {
     oAuth2Client.getToken(code)
       .then(token => {
         saveTokens(user, token);
-        res.redirect(`${process.env.CLIENT_URL}/integration/select`);
+        res.redirect(`${process.env.BASE_URL}/integration/select`);
       })
       .catch(error => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -84,7 +83,7 @@ export const googleCallback = (req: Request, res: Response): void => {
   }
 };
 
-export const freeBusy = (user_id: string, timeMin: string, timeMax: string): GaxiosPromise<calendar_v3.Schema$FreeBusyResponse> => {
+export const freeBusy = (user_id: string, timeMin: string, timeMax: string) => {
   return UserModel
     .findOne({ _id: { $eq: user_id } })
     .exec()
@@ -169,7 +168,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary'): Promise<GaxiosResponse<Schema$Event>> {
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary') {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
   }

@@ -15,7 +15,7 @@ data:
   # The Base Path of the Application
   BASE_PATH: "/"
   # The URL of the client application (CORS)
-  CLIENT_URL: "https://appointme.example.com"
+  BASE_URL: "https://appointme.example.com"
   # MongoDB Connection String
   MONGO_URI: "mongodb://mongo-appointme:27017/appointme"
   # Server Port

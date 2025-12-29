@@ -1,5 +1,5 @@
 import { Day, IntervalSet, Slot, Slots, TimeRange } from "../types"
-import { expect, jest, test } from '@jest/globals';
+import { expect, test, describe } from 'vitest';
 
 
 describe('Test for issue with freeBusy', () => {

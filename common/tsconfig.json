@@ -16,16 +16,16 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "types": [
-      "jest",
       "node"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/test/intervalSet.spec.ts",
-    "src/test/freeBusy.spec.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "vitest.config.ts"
   ]
 }

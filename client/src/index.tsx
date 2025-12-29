@@ -15,6 +15,7 @@ import Finished from "./pages/Finished";
 import OidcCallback from "./pages/OidcCallback";
 import Legal from "./pages/Legal";
 import About from "./pages/About";
+import Appointments from "./pages/Appointments";
 import { AuthProvider } from "./components/AuthProvider";
 
 import "./i18n";
@@ -62,6 +63,15 @@ const Main = () => {
                 element={
                   <PrivateRoute>
                     <Calendarintegration />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/appointments"
+                element={
+                  <PrivateRoute>
+                    <Appointments />
                   </PrivateRoute>
                 }
               />

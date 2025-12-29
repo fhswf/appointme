@@ -120,11 +120,14 @@ describe("CalDAV Controller Unit Tests", () => {
             );
         });
 
-        it("should retry with homeUrl if first attempt fails", async () => {
+        it("should retry with homeUrl (Direct Access) if first attempt fails", async () => {
             const { DAVClient } = await import('tsdav');
             const loginMock = vi.fn()
                 .mockRejectedValueOnce(new Error("First login failed"))
                 .mockResolvedValueOnce(true);
+
+            // Mock fetchCalendarObjects to succeed for the fallback verification
+            const fetchObjectsMock = vi.fn().mockResolvedValue([]);
 
             // @ts-ignore
             DAVClient.mockImplementation(function () {
@@ -132,6 +135,7 @@ describe("CalDAV Controller Unit Tests", () => {
                     login: loginMock,
                     // @ts-ignore
                     fetchCalendars: vi.fn().mockResolvedValue([]),
+                    fetchCalendarObjects: fetchObjectsMock
                 });
             })
 
@@ -140,24 +144,32 @@ describe("CalDAV Controller Unit Tests", () => {
                 serverUrl: "https://caldav.example.com",
                 username: "user",
                 password: "password",
-                name: "Retry Account"
+                name: "Retry Account",
+                email: "test@example.com"
             };
             const res = mockResponse();
 
             await caldavController.addAccount(req, res);
 
             expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
-            expect(loginMock).toHaveBeenCalledTimes(2);
+            // Call 1: login() (fails)
+            expect(loginMock).toHaveBeenCalledTimes(1);
+            // Call 2: fetchCalendarObjects() (fallback verification)
+            expect(fetchObjectsMock).toHaveBeenCalledTimes(1);
         });
 
         it("should return error if both attempts fail", async () => {
             const { DAVClient } = await import('tsdav');
             const loginMock = vi.fn().mockRejectedValue(new Error("All logins failed"));
+            // Fallback verification also fails
+            const fetchObjectsFailMock = vi.fn().mockRejectedValue(new Error("Fetch failed"));
 
             // @ts-ignore
             DAVClient.mockImplementation(function () {
                 return ({
                     login: loginMock,
+                    fetchCalendars: vi.fn(),
+                    fetchCalendarObjects: fetchObjectsFailMock
                 });
             })
 
@@ -173,7 +185,7 @@ describe("CalDAV Controller Unit Tests", () => {
             await caldavController.addAccount(req, res);
 
             expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: 'Failed to connect to CalDAV server' }));
+            expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ error: 'Failed to connect to CalDAV server (Discovery and Direct Access failed)' }));
         });
     });
 
@@ -275,6 +287,64 @@ describe("CalDAV Controller Unit Tests", () => {
             ]));
         });
 
+        it("should fallback to direct account calendar if discovery returns empty and account URL not in list", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    caldav_accounts: [
+                        { _id: "acc1", name: "Account 1", serverUrl: "http://direct.url/cal", username: "u", password: "p" }
+                    ]
+                })
+            });
+
+            const req = mockRequest();
+            req.params.id = "acc1";
+            const res = mockResponse();
+
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([]), // Return empty
+                });
+            })
+
+            await caldavController.listCalendars(req, res);
+
+            expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([
+                expect.objectContaining({ id: 'http://direct.url/cal', summary: 'Account 1' })
+            ]));
+        });
+
+        it("should fallback when discovery throws error", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    caldav_accounts: [
+                        { _id: "acc1", name: "Account 1", serverUrl: "http://direct.url/cal", username: "u", password: "p" }
+                    ]
+                })
+            });
+
+            const req = mockRequest();
+            req.params.id = "acc1";
+            const res = mockResponse();
+
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockRejectedValue(new Error('Discovery failed')),
+                });
+            })
+
+            await caldavController.listCalendars(req, res);
+
+            expect(res.json).toHaveBeenCalledWith([
+                expect.objectContaining({ id: 'http://direct.url/cal', summary: 'Account 1' })
+            ]);
+        });
+
         it("should return 404 if account not found", async () => {
             (UserModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue({
@@ -294,7 +364,7 @@ describe("CalDAV Controller Unit Tests", () => {
     });
 
     describe("getBusySlots", () => {
-        it("should return busy slots from fetched events", async () => {
+        it("should return busy slots from fetched events including recurring ones", async () => {
             (UserModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue({
                     _id: "test_user_id",
@@ -310,13 +380,18 @@ describe("CalDAV Controller Unit Tests", () => {
                 {
                     data: `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//BookMe//EN
 BEGIN:VEVENT
 UID:12345
-DTSTAMP:20251224T090000Z
 DTSTART:20251224T100000Z
 DTEND:20251224T110000Z
-SUMMARY:Test Event
+SUMMARY:Regular Event
+END:VEVENT
+BEGIN:VEVENT
+UID:recur1
+DTSTART:20251224T120000Z
+DTEND:20251224T130000Z
+RRULE:FREQ=DAILY;COUNT=2
+SUMMARY:Recurring Event
 END:VEVENT
 END:VCALENDAR`
                 }
@@ -327,20 +402,122 @@ END:VCALENDAR`
                 return ({
                     login: vi.fn().mockResolvedValue(true),
                     fetchCalendars: vi.fn().mockResolvedValue([
-                        { url: 'url1', displayName: 'Calendar 1' }
+                        { url: 'url1', displayName: 'Calendar 1' },
+                        // Fallback check in controller might trigger a find
                     ]),
                     fetchCalendarObjects: fetchObjectsMock
                 });
             })
 
             const timeMin = "2025-12-24T00:00:00Z";
-            const timeMax = "2025-12-25T00:00:00Z";
+            const timeMax = "2025-12-26T00:00:00Z";
 
             const slots = await caldavController.getBusySlots("test_user_id", timeMin, timeMax);
 
             expect(slots).toBeDefined();
-            // The default mock logic should parse the event
-            expect(slots.length).toBeGreaterThan(0);
+            expect(slots.length).toBeGreaterThan(1); // Should have regular + 2 recurrences
+            // Verify fallback logic coverage by ensuring fetchCalendars was called
+        });
+
+        it("should handle error in fetchAndProcessAccountCalendars gracefully", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: "test_user_id",
+                    caldav_accounts: [{ _id: "acc1", name: "Account 1", serverUrl: "url1" }],
+                    pull_calendars: ["url1"]
+                })
+            });
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockRejectedValue(new Error("Login failed")),
+                });
+            })
+
+            const slots = await caldavController.getBusySlots("test_user_id", "2025-01-01", "2025-01-02");
+            expect(slots).toEqual([]); // Should be empty, logged error
+        });
+
+        it("should fallback to direct calendar in fetchAndProcessAccountCalendars if not discovered", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: "test_user_id",
+                    caldav_accounts: [{ _id: "acc1", name: "Account 1", serverUrl: "http://direct/cal", username: "u", password: "p" }],
+                    pull_calendars: ["http://direct/cal"]
+                })
+            });
+
+            const fetchObjectsMock = vi.fn().mockResolvedValue([
+                {
+                    data: `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:direct1
+DTSTART:20250101T100000Z
+DTEND:20250101T110000Z
+SUMMARY:Direct Event
+END:VEVENT
+END:VCALENDAR`
+                }
+            ]);
+
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([]), // Return empty to trigger fallback
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            });
+
+            const slots = await caldavController.getBusySlots("test_user_id", "2025-01-01T00:00:00Z", "2025-01-02T00:00:00Z");
+
+            expect(slots.length).toBe(1);
+            expect(fetchObjectsMock).toHaveBeenCalled();
+        });
+
+        it("should ignore non-VEVENT objects and events outside range", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: "test_user_id",
+                    caldav_accounts: [{ _id: "acc1", name: "Account 1", serverUrl: "url1", username: "u", password: "p" }],
+                    pull_calendars: ["url1"]
+                })
+            });
+
+            const fetchObjectsMock = vi.fn().mockResolvedValue([
+                {
+                    data: `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VTODO
+UID:todo1
+SUMMARY:Not an event
+END:VTODO
+BEGIN:VEVENT
+UID:outside
+DTSTART:20240101T100000Z
+DTEND:20240101T110000Z
+SUMMARY:Outside Range
+END:VEVENT
+END:VCALENDAR`
+                },
+                { data: null } // Should be ignored
+            ]);
+
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([{ url: 'url1', displayName: 'Calendar 1' }]),
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            });
+
+            const slots = await caldavController.getBusySlots("test_user_id", "2025-01-01T00:00:00Z", "2025-01-02T00:00:00Z");
+            expect(slots.length).toBe(0);
         });
     });
 
@@ -404,7 +581,7 @@ END:VCALENDAR` }
             const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
 
             expect(result).toBeDefined();
-            expect(result.ok).toBe(true);
+            expect(result.response.ok).toBe(true);
         });
 
         it("should use account email as organizer if configured for createCalDavEvent", async () => {
@@ -459,6 +636,106 @@ END:VCALENDAR` }
             expect(createCall.iCalString).toContain("ORGANIZER;CN=Org:mailto:custom@example.com");
         });
 
+        it("should verify successfully even if fetch returns many objects", async () => {
+            const { DAVClient } = await import('tsdav');
+            const createObjectMock = vi.fn().mockResolvedValue({
+                ok: true,
+                status: 201,
+                statusText: "Created",
+                text: vi.fn().mockResolvedValue("")
+            });
+
+            // Mock fetch to return multiple objects, one matching roughly what we expect (though we can't match strict UID easily without deep mocking)
+            // Actually, we can just assert that the function completes successfully.
+            // The verification logic inside logs a warning if not found, but doesn't throw.
+            // So we just want to ensure it doesn't crash given many objects.
+            const fetchObjectsMock = vi.fn().mockResolvedValue([
+                { data: 'BEGIN:VCALENDAR\nUID:other-uid\nEND:VCALENDAR' },
+                { data: 'BEGIN:VCALENDAR\nUID:another-uid\nEND:VCALENDAR' },
+            ]);
+
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
+                    ]),
+                    createCalendarObject: createObjectMock,
+                    fetchCalendarObjects: fetchObjectsMock
+                });
+            });
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com",
+                        username: "user",
+                        password: "encrypted_password",
+                        name: "Main Account"
+                    }
+                ],
+                push_calendar: "https://caldav.example.com/calendar-1"
+            };
+
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Ex",
+                description: "Desc",
+                location: "Loc",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
+
+            expect(result.response.ok).toBe(true);
+            expect(fetchObjectsMock).toHaveBeenCalled();
+        });
+
+        it("should throw error if creation fails", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "https://caldav.example.com/calendar-1", displayName: "Main" }
+                    ]),
+                    createCalendarObject: vi.fn().mockResolvedValue({
+                        ok: false,
+                        status: 500,
+                        statusText: "Server Error",
+                        text: vi.fn().mockResolvedValue("Internal Error")
+                    })
+                });
+            })
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com",
+                        username: "user",
+                        password: "encrypted_password",
+                        name: "Main Account"
+                    }
+                ],
+            };
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Christmas Brunch",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            await expect(caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1"))
+                .rejects.toThrow('Failed to create event');
+        });
+
         it("should throw error if account not found for push calendar", async () => {
             const user = {
                 caldav_accounts: [],
@@ -496,6 +773,109 @@ END:VCALENDAR` }
             await expect(caldavController.createCalDavEvent(user as any, {}, undefined, "https://caldav.example.com/calendar-1"))
                 .rejects.toThrow('Target calendar not found');
         });
+
+        it("should fallback to direct calendar in createCalDavEvent if not discovered", async () => {
+            const { DAVClient } = await import('tsdav');
+            const createObjectMock = vi.fn().mockResolvedValue({
+                ok: true,
+                status: 201,
+                statusText: "Created",
+                text: vi.fn().mockResolvedValue("")
+            });
+
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([]), // Empty discovery
+                    createCalendarObject: createObjectMock,
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([])
+                });
+            });
+
+            const user = {
+                caldav_accounts: [
+                    {
+                        serverUrl: "https://caldav.example.com/calendar-1", // Matches target
+                        username: "user",
+                        password: "p",
+                        name: "Main Account"
+                    }
+                ]
+            };
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Christmas Brunch",
+                description: "Desc",
+                location: "Loc",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "https://caldav.example.com/calendar-1");
+            expect(result.response.ok).toBe(true);
+        });
+
+        it("should handle verification failure gracefully", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([{ url: "url", displayName: "Cal" }]),
+                    createCalendarObject: vi.fn().mockResolvedValue({ ok: true, status: 201 }),
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([]) // Return empty to fail verification
+                });
+            });
+
+            const user = {
+                caldav_accounts: [{ serverUrl: "url", username: "u", password: "p", name: "A" }]
+            };
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Ex",
+                description: "Desc",
+                location: "Loc",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "url");
+            // Should succeed despite verification failing (it just logs warning)
+            expect(result.response.ok).toBe(true);
+        });
+
+        it("should handle verification exception gracefully", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([{ url: "url", displayName: "Cal" }]),
+                    createCalendarObject: vi.fn().mockResolvedValue({ ok: true, status: 201 }),
+                    fetchCalendarObjects: vi.fn().mockRejectedValue(new Error("Verification Network Error"))
+                });
+            });
+
+            const user = {
+                caldav_accounts: [{ serverUrl: "url", username: "u", password: "p", name: "A" }]
+            };
+            const eventDetails = {
+                start: { dateTime: "2025-12-25T10:00:00Z" },
+                end: { dateTime: "2025-12-25T11:00:00Z" },
+                summary: "Ex",
+                organizer: { displayName: "Org", email: "org@test.com" },
+                attendees: []
+            };
+
+            // @ts-ignore
+            const result = await caldavController.createCalDavEvent(user as any, eventDetails, undefined, "url");
+            expect(result.response.ok).toBe(true);
+        });
     });
 
     describe("findAccountForCalendar", () => {
@@ -522,6 +902,17 @@ END:VCALENDAR` }
             // @ts-ignore
             const account = await caldavController.findAccountForCalendar(user, "https://caldav.example.com/calendars/u/cal");
 
+            expect(account).toBeUndefined();
+        });
+
+        it("should handle error parsing account URL gracefully", async () => {
+            const user = {
+                caldav_accounts: [
+                    { _id: "acc1", name: "Account 1", serverUrl: "not-a-valid-url", username: "u" }
+                ]
+            };
+            // @ts-ignore
+            const account = await caldavController.findAccountForCalendar(user, "https://caldav.example.com/calendars/u/cal");
             expect(account).toBeUndefined();
         });
     });

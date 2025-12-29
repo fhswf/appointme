@@ -8,12 +8,12 @@ import path from "path";
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), istanbul({
-      include: 'src/*',
+    plugins: [istanbul({
+      include: 'src/**/*',
       exclude: ['node_modules', 'test/'],
       extension: ['.js', '.ts', '.tsx'],
       requireEnv: true,
-    }),],
+    }), react(), tailwindcss()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -34,5 +34,14 @@ export default defineConfig(() => {
       },
     },
     envPrefix: ['REACT_APP_', 'VITE_'],
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
   }
 });

@@ -28,10 +28,17 @@
   </g>
   
   <!-- Text -->
+  <style>
+    @font-face {
+      font-family: "Gill Sans MT";
+      src: url("GillSans.ttf") format("truetype");
+    }
+  </style>
   <text x="50%" 
         y="320" 
         dominant-baseline="middle" 
-        text-anchor="middle" font-family="Gill Sans MT, sans-serif" 
+        text-anchor="middle" 
+        font-family="Gill Sans MT, sans-serif" 
         font-weight="bold" 
         font-size="80">
     <tspan fill="var(--color-dark-blue)">App</tspan><tspan fill="var(--color-text-blue-medium)">oint</tspan>
