@@ -9520,7 +9520,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^7.0.1"
     eslint-plugin-react-refresh: "npm:^0.4.24"
     globals: "npm:^16.5.0"
-    i18next: "npm:^23.15.1"
+    i18next: "npm:^25.7.3"
     i18next-browser-languagedetector: "npm:^8.0.0"
     i18next-http-backend: "npm:^2.6.1"
     i18next-parser: "npm:9.3.0"
@@ -13757,7 +13757,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:*":
+"i18next@npm:*, i18next@npm:^25.7.3":
   version: 25.7.3
   resolution: "i18next@npm:25.7.3"
   dependencies:
@@ -13768,15 +13768,6 @@ __metadata:
     typescript:
       optional: true
   checksum: 10/ec6601b22660b2f0d2d3996e7ef6dd2ff24f6f6e4bee121b33ecd3d36fe11018a01af9e66c01a93e8b42669ca9735f6c0888621c46bc1894872db3ba836815d8
-  languageName: node
-  linkType: hard
-
-"i18next@npm:^23.15.1":
-  version: 23.16.8
-  resolution: "i18next@npm:23.16.8"
-  dependencies:
-    "@babel/runtime": "npm:^7.23.2"
-  checksum: 10/d5c38011de4d3b4aa466fac6773520eb28007b9d6138e03432bfbfc0d041c04df45e15c67d96f22cd660088cc9b24d3eda32cddc9fb4c6508c5afada6c2e6290
   languageName: node
   linkType: hard
 
