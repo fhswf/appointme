@@ -5,3 +5,4 @@ resources:
   - configmap.yaml
   - secret.yaml
   - service.yaml
+  - cronjob.yaml
