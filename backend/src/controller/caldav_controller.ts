@@ -331,7 +331,7 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string): Promise<any> => {
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any): Promise<any> => {
     const calendarUrl = targetCalendarUrl;
     if (!calendarUrl) {
         throw new Error('Target calendar URL is required');
@@ -435,7 +435,8 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
             email: a.mailto,
             partstat: a.partstat,
             rsvp: a.rsvp
-        }))
+        })),
+        recurrence: recurrence
     }, { comment: userComment });
 
     const createdEvent = await client.createCalendarObject({

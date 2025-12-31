@@ -44,6 +44,17 @@ const appointmentSchema = new Schema<AppointmentDocument>({
     },
     caldavUid: {
         type: String
+    },
+    seriesId: {
+        type: String,
+        index: true  // For querying all appointments in a series
+    },
+    isRecurring: {
+        type: Boolean,
+        default: false
+    },
+    recurrenceIndex: {
+        type: Number
     }
 }, {
     timestamps: true
