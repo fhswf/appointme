@@ -35,7 +35,6 @@ To deploy the application on Kubernetes, you need to create the necessary Config
 
 3.  **Deploy Application:**
     ```bash
-    ```bash
     kubectl apply -f backend/k8s/deployment.yaml
     ```
 
