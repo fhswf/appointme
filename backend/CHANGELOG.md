@@ -1,3 +1,26 @@
+# backend [1.37.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.1...backend@1.37.0-rc.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* build issues ([81fdde0](https://github.com/fhswf/appointme/commit/81fdde0b67a6ba2f21b662d276b991ff517ea3e4))
+* build issues ([6be2f0e](https://github.com/fhswf/appointme/commit/6be2f0e03913bdc40a3a500b83e21ae29a98cbbc))
+
+
+### Features
+
+* handling of free slots for recurrent events ([032748b](https://github.com/fhswf/appointme/commit/032748bbc0ac7fa752fe70ed9173ead3cc094d68))
+* recurring events ([2ae62ca](https://github.com/fhswf/appointme/commit/2ae62ca8cbb9597598651465ad042643c5c20c26))
+* recurring events ([e9a1f9f](https://github.com/fhswf/appointme/commit/e9a1f9f89b04a2df72fca75db44f443568260c55))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.0-rc.1
+
 # backend [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0-rc.1) (2025-12-31)
 
 
