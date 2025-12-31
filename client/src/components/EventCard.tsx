@@ -111,7 +111,14 @@ export const EventCard = (props: EventCardProps) => {
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
           <Clock className="h-4 w-4" />
           <span>{props.event.duration} min</span>
+          {props.event.recurrence?.enabled && (
+            <span>
+              • {t("Recurring")}: {t(props.event.recurrence.frequency)}
+            </span>
+          )}
         </div>
+
+
 
         <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
           {props.event.description}

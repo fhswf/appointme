@@ -79,12 +79,18 @@ export const PublicEventCard = ({ event, onClick, index = 0 }: PublicEventCardPr
                 <div className="space-y-3 mt-auto">
                     <div className="flex items-center text-sm text-foreground">
                         <Clock className="w-4 h-4 text-muted-foreground mr-2" />
-                        <span>{event.duration} {t("Minutes")}</span>
+                        <span>
+                            {event.duration} {t("Minutes")}
+                            {event.recurrence?.enabled && (
+                                <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
+                            )}
+                        </span>
                     </div>
                     <div className="flex items-center text-sm text-foreground">
                         <MapPin className="w-4 h-4 text-muted-foreground mr-2" />
                         <span>{event.location || t("Online Meeting")}</span>
                     </div>
+
                 </div>
             </div>
 
