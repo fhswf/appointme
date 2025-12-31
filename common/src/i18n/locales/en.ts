@@ -270,5 +270,28 @@ export const en = {
     "more": "more",
     "next": "Next",
     "back": "Back",
-    "n_more": "{{count}} more ..."
+    "n_more": "{{count}} more ...",
+
+    // Recurrence
+    "Recurrence": "Recurrence",
+    "Enable Recurring Event": "Enable Recurring Event",
+    "Frequency": "Frequency",
+    "Weekly": "Weekly",
+    "Bi-weekly": "Bi-weekly",
+    "Tri-weekly": "Tri-weekly",
+    "Monthly": "Monthly",
+    "End Condition": "End Condition",
+    "Occurrences": "Occurrences",
+    "OR": "OR",
+    "Until Date": "Until Date",
+    "Time Span": "Time Span",
+    "Months": "Months",
+    "Weeks": "Weeks",
+    "Recurring Event": "Recurring Event",
+    "Recurring": "Recurring",
+    "weekly": "Weekly",
+    "biweekly": "Bi-weekly",
+    "triweekly": "Tri-weekly",
+    "monthly": "Monthly",
+    "Series Booking Note: Students will book all occurrences at once.": "Series Booking Note: Students will book all occurrences at once."
 };
