@@ -1,3 +1,10 @@
+# client [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0-rc.1) (2025-12-31)
+
+
+### Features
+
+* enhance locale handling ([ea390db](https://github.com/fhswf/appointme/commit/ea390dbbe98c8e5697037965a80fc1dd846f2941))
+
 # client [1.31.0](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0) (2025-12-29)
 
 
