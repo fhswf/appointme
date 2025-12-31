@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Event } from "common";
 import {
   Select,
   SelectContent,
@@ -11,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 
 import { EventFormProps } from "../pages/EditEvent";
@@ -299,6 +301,158 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
         </div>
       </div>
 
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {t("Recurrence")}
+        </h2>
+
+        <div className="flex items-center space-x-2 mb-4">
+          <Switch
+            id="recurrence-enabled"
+            checked={formData.recurrence?.enabled || false}
+            onCheckedChange={(checked) => {
+              setChanged(true);
+              setFormData({
+                ...formData,
+                recurrence: {
+                  enabled: checked,
+                  frequency: formData.recurrence?.frequency || 'weekly',
+                  interval: formData.recurrence?.interval || 1,
+                  count: formData.recurrence?.count,
+                  until: formData.recurrence?.until
+                }
+              } as Event);
+            }}
+          />
+          <Label htmlFor="recurrence-enabled" className="text-base font-medium">
+            {t("Enable Recurring Event")}
+          </Label>
+        </div>
+
+        {formData.recurrence?.enabled && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/20">
+            <div className="space-y-2">
+              <Label htmlFor="frequency">{t("Frequency")}</Label>
+              <Select
+                value={formData.recurrence.frequency}
+                onValueChange={(val: any) => {
+                  setChanged(true);
+                  setFormData({
+                    ...formData,
+                    recurrence: {
+                      ...formData.recurrence!,
+                      frequency: val
+                    }
+                  });
+                }}
+              >
+                <SelectTrigger id="frequency">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="weekly">{t("Weekly")}</SelectItem>
+                  <SelectItem value="biweekly">{t("Bi-weekly")}</SelectItem>
+                  <SelectItem value="triweekly">{t("Tri-weekly")}</SelectItem>
+                  <SelectItem value="monthly">{t("Monthly")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>{t("End Condition")}</Label>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="recurrence-count" className="w-24 font-normal">{t("Occurrences")}:</Label>
+                  <Input
+                    id="recurrence-count"
+                    type="number"
+                    min="1"
+                    max="52"
+                    placeholder="e.g. 10"
+                    value={formData.recurrence.count || ''}
+                    onChange={(e) => {
+                      setChanged(true);
+                      const val = e.target.value ? parseInt(e.target.value) : undefined;
+                      setFormData({
+                        ...formData,
+                        recurrence: {
+                          ...formData.recurrence!,
+                          count: val,
+                          span: undefined, // Clear span/until if count is set
+                          until: undefined
+                        }
+                      });
+                    }}
+                  />
+                </div>
+                <div className="relative flex items-center gap-2">
+                  <Label className="w-24 font-normal text-center text-muted-foreground">- {t("OR")} -</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="recurrence-span-val" className="w-24 font-normal">{t("Time Span")}:</Label>
+                  <div className="flex flex-1 gap-2">
+                    <Input
+                      id="recurrence-span-val"
+                      type="number"
+                      min="1"
+                      className="w-20"
+                      value={formData.recurrence.span?.value || ''}
+                      onChange={(e) => {
+                        setChanged(true);
+                        const val = e.target.value ? parseInt(e.target.value) : 1;
+                        setFormData({
+                          ...formData,
+                          recurrence: {
+                            ...formData.recurrence!,
+                            span: {
+                              value: val,
+                              unit: formData.recurrence?.span?.unit || 'months'
+                            },
+                            count: undefined,
+                            until: undefined
+                          }
+                        });
+                      }}
+                    />
+                    <Select
+                      value={formData.recurrence.span?.unit || 'months'}
+                      onValueChange={(val: 'weeks' | 'months') => {
+                        setChanged(true);
+                        setFormData({
+                          ...formData,
+                          recurrence: {
+                            ...formData.recurrence!,
+                            span: {
+                              value: formData.recurrence?.span?.value || 3,
+                              unit: val
+                            },
+                            count: undefined,
+                            until: undefined
+                          }
+                        });
+                      }}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="months">{t("Months")}</SelectItem>
+                        <SelectItem value="weeks">{t("Weeks")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="md:col-span-2 text-sm text-muted-foreground mt-2">
+              <p>{t("Series Booking Note: Students will book all occurrences at once.")}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold tracking-tight">
           {t("Daily availability")}
@@ -370,6 +524,6 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
           {t("Cancel")}
         </Button>
       </div>
-    </form>
+    </form >
   );
 };

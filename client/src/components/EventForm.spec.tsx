@@ -339,4 +339,112 @@ describe('EventForm Component', () => {
         // Check for some day elements from AvailabilityEditor
         expect(screen.getByText('Mon')).toBeInTheDocument();
     });
+
+    it('should handle recurrence settings', () => {
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        // Enable recurrence
+        const recurrenceSwitch = screen.getByLabelText('Enable Recurring Event');
+        fireEvent.click(recurrenceSwitch);
+
+        // Check availability of recurrence fields
+        expect(screen.getByText('Frequency')).toBeInTheDocument();
+        expect(screen.getByText('End Condition')).toBeInTheDocument();
+
+        // Change frequency to Monthly
+        const selects = screen.getAllByTestId('mock-select');
+        const frequencySelect = selects.find(select => select.querySelector('option[value="monthly"]'));
+        if (frequencySelect) {
+            fireEvent.change(frequencySelect, { target: { value: 'monthly' } });
+        }
+
+        // Submit and check
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+
+        expect(submittedEvent.recurrence.enabled).toBe(true);
+        expect(submittedEvent.recurrence.frequency).toBe('monthly');
+    });
+
+    it('should update recurrence count and span', () => {
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+        const recurrenceSwitch = screen.getByLabelText('Enable Recurring Event');
+        fireEvent.click(recurrenceSwitch);
+
+        // Set occurrences
+        const countInput = screen.getByPlaceholderText('e.g. 10');
+        fireEvent.change(countInput, { target: { value: '5' } });
+
+        let submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        let submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        expect(submittedEvent.recurrence.count).toBe(5);
+        expect(submittedEvent.recurrence.span).toBeUndefined();
+
+        // Change to Time Span
+        const spanInput = screen.getByLabelText('Time Span:').querySelector('input'); // The input is inside or near label, finding by ID is better
+        // ID is recurrence-span-val
+        const spanValInput = document.getElementById('recurrence-span-val');
+        if (spanValInput) {
+            fireEvent.change(spanValInput, { target: { value: '6' } });
+        }
+
+        submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+
+        expect(submittedEvent.recurrence.span.value).toBe(6);
+        expect(submittedEvent.recurrence.count).toBeUndefined();
+    });
+
+    it('should switch availability mode', () => {
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        // Switch to 'default' (Use Standard)
+        const selects = screen.getAllByTestId('mock-select');
+        const availabilitySelect = selects.find(select => select.querySelector('option[value="default"]'));
+
+        if (availabilitySelect) {
+            fireEvent.change(availabilitySelect, { target: { value: 'default' } });
+        }
+
+        expect(screen.getAllByText('Using Standard Availability defined in Profile settings.').length).toBeGreaterThan(0);
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+        expect(submittedEvent.availabilityMode).toBe('default');
+    });
+
+    it('should update form when props change', () => {
+        const { rerender } = render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        expect(screen.getByTestId('event-form-title')).toHaveValue('Test Event');
+
+        const newEvent = { ...mockEvent, name: 'New Prop Event' };
+        rerender(
+            <BrowserRouter>
+                <EventForm event={newEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        expect(screen.getByTestId('event-form-title')).toHaveValue('New Prop Event');
+    });
 });
