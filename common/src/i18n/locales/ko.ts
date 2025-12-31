@@ -274,5 +274,28 @@ export const ko = {
     "more": "more",
     "next": "Next",
     "back": "Back",
-    "n_more": "{{count}}개 더 ..."
+    "n_more": "{{count}}개 더 ...",
+
+    // Recurrence
+    "Recurrence": "반복",
+    "Enable Recurring Event": "반복 이벤트 활성화",
+    "Frequency": "빈도",
+    "Weekly": "매주",
+    "Bi-weekly": "격주",
+    "Tri-weekly": "3주마다",
+    "Monthly": "매월",
+    "End Condition": "종료 조건",
+    "Occurrences": "횟수",
+    "OR": "또는",
+    "Until Date": "종료 날짜",
+    "Time Span": "기간",
+    "Months": "개월",
+    "Weeks": "주",
+    "Recurring Event": "반복 이벤트",
+    "Recurring": "반복",
+    "weekly": "매주",
+    "biweekly": "격주",
+    "triweekly": "3주마다",
+    "monthly": "매월",
+    "Series Booking Note: Students will book all occurrences at once.": "연속 예약 참고: 학생들은 모든 일정을 한 번에 예약합니다."
 };

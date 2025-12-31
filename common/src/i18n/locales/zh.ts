@@ -274,5 +274,28 @@ export const zh = {
     "more": "more",
     "next": "Next",
     "back": "Back",
-    "n_more": "还有 {{count}} 项 ..."
+    "n_more": "还有 {{count}} 项 ...",
+
+    // Recurrence
+    "Recurrence": "重复",
+    "Enable Recurring Event": "启用重复事件",
+    "Frequency": "频率",
+    "Weekly": "每周",
+    "Bi-weekly": "每两周",
+    "Tri-weekly": "每三周",
+    "Monthly": "每月",
+    "End Condition": "结束条件",
+    "Occurrences": "次数",
+    "OR": "或",
+    "Until Date": "截止日期",
+    "Time Span": "时间跨度",
+    "Months": "月",
+    "Weeks": "周",
+    "Recurring Event": "重复事件",
+    "Recurring": "重复",
+    "weekly": "每周",
+    "biweekly": "每两周",
+    "triweekly": "每三周",
+    "monthly": "每月",
+    "Series Booking Note: Students will book all occurrences at once.": "系列预订说明：学生将一次性预订所有事件。"
 };
