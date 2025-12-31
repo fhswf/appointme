@@ -37,6 +37,94 @@ function min<T>(a: T, b: T): T {
   return a < b ? a : b;
 }
 
+/**
+ * Calculate all instance dates for a recurring event
+ * @param startTime First occurrence start time
+ * @param recurrence Recurrence rule configuration
+ * @returns Array of Date objects for each instance
+ */
+function calculateRecurrenceInstances(
+  startTime: Date,
+  recurrence: { enabled: boolean; frequency: string; interval: number; count?: number; until?: string; span?: { value: number; unit: 'weeks' | 'months' } }
+): Date[] {
+  if (!recurrence?.enabled) {
+    return [startTime];
+  }
+
+  const instances: Date[] = [];
+  let current = new Date(startTime);
+  const maxInstances = recurrence.count || 52; // Default max 52 if no count/until/span
+  let untilDate = recurrence.until ? new Date(recurrence.until) : null;
+
+  if (recurrence.span) {
+    const spanDate = new Date(startTime);
+    if (recurrence.span.unit === 'months') {
+      spanDate.setMonth(spanDate.getMonth() + recurrence.span.value);
+    } else {
+      spanDate.setDate(spanDate.getDate() + (recurrence.span.value * 7));
+    }
+    // If until date is also set, use the earlier one, otherwise use calculated span date
+    untilDate = untilDate ? min(untilDate, spanDate) : spanDate;
+  }
+
+  // Calculate interval in days based on frequency
+  let intervalDays: number;
+  switch (recurrence.frequency) {
+    case 'weekly':
+      intervalDays = 7;
+      break;
+    case 'biweekly':
+      intervalDays = 14;
+      break;
+    case 'triweekly':
+      intervalDays = 21;
+      break;
+    case 'monthly':
+      intervalDays = 30; // Approximate for monthly
+      break;
+    default:
+      intervalDays = recurrence.interval * 7; // Fallback to weeks
+  }
+
+  for (let i = 0; i < maxInstances; i++) {
+    // Stop if we've passed the until date
+    if (untilDate && current > untilDate) {
+      break;
+    }
+
+    instances.push(new Date(current));
+
+    // Calculate next occurrence
+    current = addDays(current, intervalDays);
+  }
+
+  return instances;
+}
+
+/**
+ * Validate that all slots in a recurring series are available
+ * @param eventDoc Event document
+ * @param userId User ID
+ * @param instances Array of instance start times
+ * @returns Promise<boolean> true if all slots are available
+ */
+async function validateAllSlotsAvailable(
+  eventDoc: EventDocument,
+  userId: string,
+  instances: Date[]
+): Promise<{ available: boolean; conflictDate?: Date }> {
+  for (const startTime of instances) {
+    const endTime = addMinutes(startTime, eventDoc.duration);
+    const isFree = await checkFree(eventDoc, userId, startTime, endTime);
+
+    if (!isFree) {
+      return { available: false, conflictDate: startTime };
+    }
+  }
+
+  return { available: true };
+}
+
 export function calculateBlocked(events, event, timeMin, timeMax) {
   const eventsPerDay = {};
   const blocked = new IntervalSet([{ start: new Date(timeMin), end: new Date(timeMin) }, { start: new Date(timeMax), end: new Date(timeMax) }]);
@@ -138,8 +226,12 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
       let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
       logger.debug('freeSlots before filtering: %j', freeSlots);
+      console.log("DEBUG: freeSlots count before filter:", freeSlots ? 'intervalset' : 'null');
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
       logger.debug('freeSlots after filtering: %j', freeSlots);
+      console.log("DEBUG: freeSlots final count:", freeSlots.length); // Assuming IntervalSet has length or we check filtered array
+      if (typeof freeSlots.count === 'function') console.log("DEBUG: count:", freeSlots.count());
+
       res.status(200).json(freeSlots);
     })
     .catch((err: unknown) => {
@@ -343,23 +435,48 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ error: "Event not found" });
       return;
     }
-    const endtime = addMinutes(starttime, eventDoc.duration);
+
     const userId = eventDoc.user;
-
-    const free = await checkFree(eventDoc, userId, starttime, endtime);
-    if (!free) {
-      res.status(400).json({ error: "requested slot not available" });
-      return;
-    }
-
     const user = await UserModel.findOne({ _id: { $eq: userId } }).exec();
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
     }
 
+    // Check if this is a recurring event and calculate all instances
+    const instances = calculateRecurrenceInstances(starttime, eventDoc.recurrence || { enabled: false, frequency: 'weekly', interval: 1 });
+    logger.debug("Recurring instances: %o", instances);
+
+    // For recurring events, validate ALL slots are available
+    if (eventDoc.recurrence?.enabled && instances.length > 1) {
+      const validation = await validateAllSlotsAvailable(eventDoc, userId, instances);
+      if (!validation.available) {
+        const conflictDateStr = validation.conflictDate?.toLocaleDateString('de-DE', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        res.status(400).json({
+          error: `This recurring series is not available. Slot on ${conflictDateStr} is already booked.`,
+          conflictDate: validation.conflictDate
+        });
+        return;
+      }
+    } else {
+      // Single event - check just the first slot
+      const endtime = addMinutes(starttime, eventDoc.duration);
+      const free = await checkFree(eventDoc, userId, starttime, endtime);
+      if (!free) {
+        res.status(400).json({ error: "requested slot not available" });
+        return;
+      }
+    }
+
     const userComment = req.body.description as string;
     const eventDescription = String(eventDoc.description);
+    const endtime = addMinutes(starttime, eventDoc.duration);
 
     const event: Schema$Event = {
       summary: eventDoc.name + " mit " + (req.body.attendeeName),
@@ -398,6 +515,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     const attendeeName = validator.escape(req.body.attendeeName as string);
     const attendeeEmail = req.body.attendeeEmail as string;
 
+    // For recurring events, pass recurrence info to calendar creation
     const { results, successCount } = await pushEventToCalendars({
       user,
       event,
@@ -405,32 +523,49 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       targetCalendars,
       locale,
       attendeeName,
-      attendeeEmail
+      attendeeEmail,
+      recurrence: eventDoc.recurrence?.enabled ? eventDoc.recurrence : undefined
     });
 
     if (successCount > 0) {
       const googleResult = results.find(r => r.type === 'google' && r.success);
       const caldavResult = results.find(r => r.type === 'caldav' && r.success);
 
-      const appointment = new AppointmentModel({
-        user: userId,
-        event: eventId,
-        start: starttime,
-        end: endtime,
-        attendeeName: req.body.attendeeName,
-        attendeeEmail: req.body.attendeeEmail,
-        description: userComment,
-        location: eventDoc.location,
-        googleId: googleResult?.event?.id,
-        caldavUid: caldavResult?.event?.uid
-      });
-      await appointment.save();
+      // Create appointments for all instances (or just one for non-recurring)
+      const seriesId = instances.length > 1 ? crypto.randomUUID() : undefined;
+
+      for (let i = 0; i < instances.length; i++) {
+        const instanceStart = instances[i];
+        const instanceEnd = addMinutes(instanceStart, eventDoc.duration);
+
+        const appointment = new AppointmentModel({
+          user: userId,
+          event: eventId,
+          start: instanceStart,
+          end: instanceEnd,
+          attendeeName: req.body.attendeeName,
+          attendeeEmail: req.body.attendeeEmail,
+          description: userComment,
+          location: eventDoc.location,
+          googleId: i === 0 ? googleResult?.event?.id : undefined,  // Only first instance gets googleId (it's a recurring event)
+          caldavUid: i === 0 ? caldavResult?.event?.uid : undefined,
+          seriesId: seriesId,
+          isRecurring: instances.length > 1,
+          recurrenceIndex: i
+        });
+        await appointment.save();
+      }
 
       // If at least one succeeded, we return success.
       // We return the result of the first successful one for backward compatibility with simple clients,
       // but also include full results.
       const firstSuccess = results.find(r => r.success);
-      res.json({ ...firstSuccess, results });
+      res.json({
+        ...firstSuccess,
+        results,
+        instancesCreated: instances.length,
+        seriesId: seriesId
+      });
     } else if (targetCalendars.length > 0) {
       // All attempted failed
       const firstError = results[0]?.error || "Failed to create event on any calendar";
@@ -445,8 +580,32 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       // So if list is empty, we should fallback to Google Primary.
       logger.info("No push calendars configured, falling back to Google Primary");
       try {
-        const result = await processGoogleBooking(user, userComment, event, 'primary');
-        res.json(result);
+        const result = await processGoogleBooking(user, userComment, event, 'primary', eventDoc.recurrence);
+
+        // Create appointment records
+        const seriesId = instances.length > 1 ? crypto.randomUUID() : undefined;
+        for (let i = 0; i < instances.length; i++) {
+          const instanceStart = instances[i];
+          const instanceEnd = addMinutes(instanceStart, eventDoc.duration);
+
+          const appointment = new AppointmentModel({
+            user: userId,
+            event: eventId,
+            start: instanceStart,
+            end: instanceEnd,
+            attendeeName: req.body.attendeeName,
+            attendeeEmail: req.body.attendeeEmail,
+            description: userComment,
+            location: eventDoc.location,
+            googleId: i === 0 ? result?.event?.id : undefined,
+            seriesId: seriesId,
+            isRecurring: instances.length > 1,
+            recurrenceIndex: i
+          });
+          await appointment.save();
+        }
+
+        res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
       } catch (err) {
         res.status(400).json({ error: err });
       }
@@ -464,8 +623,9 @@ async function pushEventToCalendars(params: {
   locale: Locale;
   attendeeName: string;
   attendeeEmail: string;
+  recurrence?: any;
 }) {
-  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail } = params;
+  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail, recurrence } = params;
   const results = [];
   let successCount = 0;
 
@@ -481,12 +641,13 @@ async function pushEventToCalendars(params: {
           locale,
           attendeeName,
           attendeeEmail,
-          sendInvitation: user.send_invitation_email
+          sendInvitation: user.send_invitation_email,
+          recurrence
         });
         successCount++;
         results.push({ calendar, success: true, type: 'caldav', event: res.event });
       } else {
-        const res = await processGoogleBooking(user, userComment, event, calendar);
+        const res = await processGoogleBooking(user, userComment, event, calendar, recurrence);
         successCount++;
         results.push({ calendar, success: true, type: 'google', event: res.event });
       }
@@ -508,9 +669,10 @@ async function processCalDavBooking(
     attendeeName: string;
     attendeeEmail: string;
     sendInvitation: boolean;
+    recurrence?: any;
   }
 ) {
-  const { user, event, userComment, calendarUrl, locale, attendeeName, attendeeEmail, sendInvitation } = params;
+  const { user, event, userComment, calendarUrl, locale, attendeeName, attendeeEmail, sendInvitation, recurrence } = params;
   const calDavAccount = findAccountForCalendar(user, calendarUrl);
   if (calDavAccount) {
     if (validator.isEmail(calDavAccount.username)) {
@@ -523,7 +685,7 @@ async function processCalDavBooking(
 
   try {
     // Pass userComment and calendarUrl to CalDAV interaction
-    const evt = await createCalDavEvent(user, event, userComment, calendarUrl);
+    const evt = await createCalDavEvent(user, event, userComment, calendarUrl, recurrence);
     logger.debug('CalDav insert returned %j', evt);
 
     const randomStr = crypto.randomBytes(8).toString('hex');
@@ -578,7 +740,7 @@ async function processCalDavBooking(
   }
 }
 
-async function processGoogleBooking(user: any, userComment: string, event: Schema$Event, calendarUrl: string) {
+async function processGoogleBooking(user: any, userComment: string, event: Schema$Event, calendarUrl: string, recurrence?: any) {
   // Fallback to Google Calendar
   try {
     const googleEvent = { ...event };
@@ -586,9 +748,9 @@ async function processGoogleBooking(user: any, userComment: string, event: Schem
       googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
     }
 
-    const evt = await insertGoogleEvent(user, googleEvent, calendarUrl);
+    const evt = await insertGoogleEvent(user, googleEvent, calendarUrl, recurrence);
     logger.debug('insert returned %j', evt)
-    return { success: true, message: "Event wurde gebucht", event: evt };
+    return { success: true, message: "Event wurde gebucht", event: evt.data };
   } catch (error) {
     logger.error('Google insert failed: %o', error);
     throw error;
