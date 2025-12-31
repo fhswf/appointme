@@ -98,6 +98,7 @@ export const fr = {
     "teal_lofty_hawk_peek": "Annuler",
     "mild_raw_elk_delight": "Enregistrer les modifications",
     "Choose date": "Choisir une date",
+    "Please select a date": "Veuillez sélectionner une date",
     "Choose time": "Choisir une heure",
     "Provide details": "Fournir des détails",
     "Confirmation": "Confirmation",

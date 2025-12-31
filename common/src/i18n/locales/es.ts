@@ -85,6 +85,7 @@ export const es = {
     "teal_lofty_hawk_peek": "Cancelar",
     "mild_raw_elk_delight": "Guardar cambios",
     "Choose date": "Elegir fecha",
+    "Please select a date": "Por favor seleccione una fecha",
     "Choose time": "Elegir hora",
     "Provide details": "Proporcionar detalles",
     "Confirmation": "Confirmación",
