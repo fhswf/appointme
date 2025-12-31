@@ -113,6 +113,28 @@ const eventSchema = new Schema<EventDocument>({
     default: [],
   },
 
+  recurrence: {
+    enabled: {
+      type: Boolean,
+      default: false,
+    },
+    frequency: {
+      type: String,
+      enum: ['weekly', 'biweekly', 'triweekly', 'monthly'],
+      default: 'biweekly',
+    },
+    interval: {
+      type: Number,
+      default: 2,
+    },
+    count: {
+      type: Number,
+    },
+    until: {
+      type: String,  // ISO date string
+    }
+  },
+
 });
 
 eventSchema.index({ user: 1, url: 1 }, { unique: true });

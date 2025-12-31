@@ -137,12 +137,28 @@ const Booking = () => {
   };
 
   const checkDay = (date: Date) => {
-    if (event.available) {
+    // If we have slots, they are the source of truth for availability.
+    // The backend already validates against event.available or user.defaultAvailable.
+    if (slots) {
       return (
         date > new Date() &&
-        event.available[date.getDay() as Day].length > 0 &&
-        event.available[date.getDay() as Day][0].start !== "" &&
-        slots?.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
+        slots.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
+      );
+    }
+
+    // Fallback if slots aren't loaded yet (though this usually creates a flash of disabled state)
+    // We check the appropriate availability source based on mode
+    const available = (event.availabilityMode === 'default' && user?.defaultAvailable)
+      ? user.defaultAvailable
+      : event.available;
+
+    if (available) {
+      const daySlots = available[date.getDay() as Day];
+      return (
+        date > new Date() &&
+        daySlots &&
+        daySlots.length > 0 &&
+        daySlots[0].start !== ""
       );
     } else {
       return false;
@@ -306,7 +322,12 @@ const Booking = () => {
               <div className="flex items-center gap-3 text-muted-foreground text-sm">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>{event?.duration} Min</span>
+                  <span>
+                    {event?.duration} Min
+                    {event?.recurrence?.enabled && (
+                      <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
+                    )}
+                  </span>
                 </div>
                 {/* Location placeholder - add to Event type later if needed */}
                 <div className="flex items-center gap-1">
