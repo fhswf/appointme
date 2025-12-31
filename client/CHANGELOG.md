@@ -1,3 +1,24 @@
+# client [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.2...client@1.32.0-rc.3) (2025-12-31)
+
+
+### Bug Fixes
+
+* code cleanup ([4025162](https://github.com/fhswf/appointme/commit/40251620e87c843c48518cb14a91a49670569923))
+
+
+### Features
+
+* handling of free slots for recurrent events ([032748b](https://github.com/fhswf/appointme/commit/032748bbc0ac7fa752fe70ed9173ead3cc094d68))
+* recurring events ([e9a1f9f](https://github.com/fhswf/appointme/commit/e9a1f9f89b04a2df72fca75db44f443568260c55))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.0-rc.1
+
 # client [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.1...client@1.32.0-rc.2) (2025-12-31)
 
 
