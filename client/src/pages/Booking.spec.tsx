@@ -336,5 +336,56 @@ describe('Booking Page', () => {
 
         // "Please select a date" should be present
         expect(screen.getByText(/Please select a date/i)).toBeInTheDocument();
+
+
+    });
+
+    it('should switch calendar view to the month of the first available slot', async () => {
+        const { getAvailableTimes, getEventByUrlAndUser } = await import('../helpers/services/event_services');
+        const { addMonths, format, startOfMonth } = await import('date-fns');
+
+        // Setup a slot one month in the future
+        const nextMonthDate = addMonths(new Date(), 1);
+        const slotStart = new Date(nextMonthDate);
+        slotStart.setHours(10, 0, 0, 0);
+        const slotEnd = new Date(slotStart);
+        slotEnd.setHours(11, 0, 0, 0); // 1 hour duration (ok for 30min event)
+
+        const mockSlotsImpl = {
+            overlapping: () => ['something'],
+            intersect: () => [
+                { start: slotStart, end: slotEnd }
+            ]
+        };
+
+        // @ts-ignore
+        (getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(getEventByUrlAndUser).toHaveBeenCalled();
+            expect(getAvailableTimes).toHaveBeenCalled();
+        });
+
+        // The logic we added sets checkDay(iterator) -> hasAvailableSlots -> returns true for this day.
+        // It then sets selectedDate AND currentMonth.
+        // The calendar header should display the month name of nextMonthDate.
+
+        const expectedMonthName = format(nextMonthDate, 'MMMM yyyy'); // e.g. "January 2026"
+
+        // Check if the calendar header displays the expected month
+        // We use findByText to wait for the state update and re-render
+        try {
+            expect(await screen.findByText(expectedMonthName, {}, { timeout: 3000 })).toBeInTheDocument();
+        } catch (e) {
+            screen.debug();
+            throw e;
+        }
     });
 });
+

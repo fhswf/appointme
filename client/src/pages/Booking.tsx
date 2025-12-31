@@ -49,6 +49,7 @@ const Booking = () => {
   const [user, setUser] = useState<UserDocument>();
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setSelectedTime] = useState<Date>();
@@ -73,7 +74,9 @@ const Booking = () => {
           // Simple loop to find first day with availability
           while (iterator < end) {
             if (hasAvailableSlots(iterator, slots)) {
-              setSelectedDate(new Date(iterator));
+              const newDate = new Date(iterator);
+              setSelectedDate(newDate);
+              setCurrentMonth(newDate);
               break;
             }
             iterator = addDays(iterator, 1);
@@ -368,6 +371,8 @@ const Booking = () => {
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateChange}
+                      month={currentMonth}
+                      onMonthChange={setCurrentMonth}
                       disabled={(date) => !checkDay(date)}
                       className="rounded-md border"
                     />
