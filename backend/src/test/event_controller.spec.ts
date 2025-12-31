@@ -691,6 +691,8 @@ describe("Event Controller", () => {
                 user: USER._id
             }));
 
+            (UserModel.findOne as any).mockImplementation(() => mockQuery(USER));
+
             // Simulate error in checkFree
             const { checkFree } = await import("../controller/google_controller.js");
             (checkFree as any).mockRejectedValue(new Error("Service down"));
