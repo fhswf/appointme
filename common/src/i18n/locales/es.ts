@@ -273,5 +273,28 @@ export const es = {
     "more": "más",
     "next": "Siguiente",
     "back": "Atrás",
-    "n_more": "{{count}} más ..."
+    "n_more": "{{count}} más ...",
+
+    // Recurrence
+    "Recurrence": "Recurrencia",
+    "Enable Recurring Event": "Habilitar evento recurrente",
+    "Frequency": "Frecuencia",
+    "Weekly": "Semanal",
+    "Bi-weekly": "Quincenal",
+    "Tri-weekly": "Cada 3 semanas",
+    "Monthly": "Mensual",
+    "End Condition": "Condición de finalización",
+    "Occurrences": "Ocurrencias",
+    "OR": "O",
+    "Until Date": "Hasta la fecha",
+    "Time Span": "Lapso de tiempo",
+    "Months": "Meses",
+    "Weeks": "Semanas",
+    "Recurring Event": "Evento recurrente",
+    "Recurring": "Recurrente",
+    "weekly": "Semanal",
+    "biweekly": "Quincenal",
+    "triweekly": "Cada 3 semanas",
+    "monthly": "Mensual",
+    "Series Booking Note: Students will book all occurrences at once.": "Nota de reserva en serie: Los estudiantes reservarán todas las ocurrencias a la vez."
 };

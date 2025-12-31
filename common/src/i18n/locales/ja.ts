@@ -273,5 +273,28 @@ export const ja = {
     "more": "もっと",
     "next": "次へ",
     "back": "Back",
-    "n_more": "他 {{count}} 件 ..."
+    "n_more": "他 {{count}} 件 ...",
+
+    // Recurrence
+    "Recurrence": "繰り返し",
+    "Enable Recurring Event": "繰り返しイベントを有効にする",
+    "Frequency": "頻度",
+    "Weekly": "毎週",
+    "Bi-weekly": "隔週",
+    "Tri-weekly": "3週間ごと",
+    "Monthly": "毎月",
+    "End Condition": "終了条件",
+    "Occurrences": "回数",
+    "OR": "または",
+    "Until Date": "終了日",
+    "Time Span": "期間",
+    "Months": "ヶ月",
+    "Weeks": "週間",
+    "Recurring Event": "定期イベント",
+    "Recurring": "定期",
+    "weekly": "毎週",
+    "biweekly": "隔週",
+    "triweekly": "3週間ごと",
+    "monthly": "毎月",
+    "Series Booking Note: Students will book all occurrences at once.": "定期予約の注記：学生はすべての回を一括で予約します。"
 };
