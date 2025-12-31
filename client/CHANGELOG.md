@@ -1,3 +1,11 @@
+# client [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.1...client@1.32.0-rc.2) (2025-12-31)
+
+
+### Features
+
+* improved booking ([b6e841c](https://github.com/fhswf/appointme/commit/b6e841c19ad723131fc2bb4e2f2f911f905447be))
+* Initialize booking calendar view to the month of the first available slot and add a corresponding test. ([80b1abf](https://github.com/fhswf/appointme/commit/80b1abf01c1916c8c8c7338a281ee7298b464596))
+
 # client [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0-rc.1) (2025-12-31)
 
 
