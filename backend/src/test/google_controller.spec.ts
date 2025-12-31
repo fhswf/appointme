@@ -208,7 +208,9 @@ describe('google_controller', () => {
 
         await googleCallback(req, res);
 
-        expect(OAuth2Client).toHaveBeenCalled();
+        expect(OAuth2Client).toHaveBeenCalledWith(expect.objectContaining({
+            redirectUri: expect.stringMatching(/.*\/api\/v1\/google\/oauthcallback/)
+        }));
     });
 
     it('should generate auth url', () => {
