@@ -14,6 +14,8 @@ import { Event, IntervalSet } from 'common';
 
 import { logger } from '../logging.js';
 import { getBusySlots } from './caldav_controller.js';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 
 
@@ -47,13 +49,23 @@ const SCOPES = [
  */
 export const generateAuthUrl = (req: Request, res: Response): Response => {
   const userid = req['user_id'];
+  const nonce = crypto.randomBytes(16).toString('base64');
+  const state = jwt.sign({ id: userid, nonce }, process.env.JWT_SECRET, { expiresIn: '10m' });
+
   const oAuth2Client = createOAuthClient(userid);
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
     scope: SCOPES,
-    state: userid,
+    state: state,
   });
+
+  res.cookie('google_auth_state', nonce, {
+    httpOnly: true,
+    secure: true, // check if this needs to be conditionally false for local dev? assuming yes for now based on other settings
+    maxAge: 1000 * 60 * 10 // 10 minutes
+  });
+
   return res.json({ url: authUrl });
 };
 
@@ -66,61 +78,102 @@ export const generateAuthUrl = (req: Request, res: Response): Response => {
  */
 export const googleCallback = (req: Request, res: Response): void => {
   const code = <string>req.query.code;
-  const user = <string>req.query.state;
-  if (code) {
-    const oAuth2Client = createOAuthClient(user);
+  const state = <string>req.query.state;
+  const cookieNonce = req.cookies['google_auth_state'];
+
+  if (!code) {
+    res.status(400).json({ err: "No authorization code was provided." });
+    return;
+  }
+
+  if (!state || !cookieNonce) {
+    res.status(400).json({ message: "Invalid state parameter" });
+    return;
+  }
+
+  jwt.verify(state, process.env.JWT_SECRET, (err, decoded) => {
+    if (err || !decoded || (decoded as any).nonce !== cookieNonce) {
+      logger.error('Google callback state verification failed', err);
+      res.status(400).json({ message: "Invalid state parameter" });
+      return;
+    }
+
+    const userid = (decoded as any).id;
+    res.clearCookie('google_auth_state');
+
+    const oAuth2Client = createOAuthClient(userid);
     oAuth2Client.getToken(code)
       .then(token => {
-        saveTokens(user, token);
+        saveTokens(userid, token);
         res.redirect(`${process.env.BASE_URL}/integration/select`);
       })
       .catch(error => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         res.status(400).json({ message: "Error retrieving access token", error });
       });
-  } else {
-    res.status(400).json({ err: "No authorization code was provided." });
-  }
+  });
 };
 
-export const freeBusy = (user_id: string, timeMin: string, timeMax: string) => {
-  return UserModel
-    .findOne({ _id: { $eq: user_id } })
-    .exec()
-    .then((user: UserDocument | null) => {
-      if (!user) throw new Error("User not found");
-      const google_tokens = user.google_tokens;
-      if (!google_tokens || !google_tokens.access_token) {
-        // @ts-ignore
-        return { data: { calendars: {} } } as any;
-      }
-      const oAuth2Client = createOAuthClient(user_id);
-      oAuth2Client.setCredentials(google_tokens);
-      const items = user.pull_calendars
-        .filter(id => !id.startsWith('http') && !id.startsWith('/'))
-        .map(id => { return { id } });
+export const freeBusy = async (user_id: string, timeMin: string, timeMax: string, retry = true) => {
+  const user = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
+  if (!user) throw new Error("User not found");
 
-      if (items.length === 0) {
-        // @ts-ignore
-        return { data: { calendars: {} } } as any;
-      }
+  const google_tokens = user.google_tokens;
+  if (!google_tokens || !google_tokens.access_token) {
+    // @ts-ignore
+    return { data: { calendars: {} } } as any;
+  }
 
-      const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
-      return calendar.freebusy.query({
-        requestBody: {
-          timeMin,
-          timeMax,
-          items
+  const items = user.pull_calendars
+    .filter(id => !id.startsWith('http') && !id.startsWith('/'))
+    .map(id => { return { id } });
+
+  if (items.length === 0) {
+    // @ts-ignore
+    return { data: { calendars: {} } } as any;
+  }
+
+  const performQuery = async (tokens) => {
+    const oAuth2Client = createOAuthClient(user_id);
+    oAuth2Client.setCredentials(tokens);
+    const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+    return calendar.freebusy.query({
+      requestBody: {
+        timeMin,
+        timeMax,
+        items
+      }
+    });
+  };
+
+  try {
+    return await performQuery(google_tokens);
+  } catch (err: any) {
+    const isInvalidGrant = err.message === 'invalid_grant' ||
+      err.response?.data?.error === 'invalid_grant' ||
+      err.code === 400; // invalid_grant often comes as 400
+
+    if (retry && isInvalidGrant) {
+      logger.warn(`freeBusy failed with invalid_grant for user ${user_id}. Checking for updated tokens...`);
+      // Re-fetch user to check for updated tokens (bypass cache if any, though Mongoose default is fresh)
+      const freshUser = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
+
+      if (freshUser && freshUser.google_tokens && freshUser.google_tokens.access_token) {
+        if (freshUser.google_tokens.access_token !== google_tokens.access_token) {
+          logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
+          return await performQuery(freshUser.google_tokens);
+        } else {
+          logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted.`);
         }
-      })
-        .catch(err => {
-          logger.error('freeBusy failed inside: %o', err);
-          if (err instanceof Error) {
-            logger.error(err.stack);
-          }
-          throw err;
-        })
-    })
+      }
+    }
+
+    logger.error('freeBusy failed inside: %o', err);
+    if (err instanceof Error) {
+      logger.error(err.stack);
+    }
+    throw err;
+  }
 }
 
 import { convertBusyToFree } from '../utility/scheduler.js';

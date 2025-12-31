@@ -106,12 +106,13 @@ app.use('/api/docs', swaggerUi.serve as any, swaggerUi.setup(swaggerSpec, {
 }) as any);
 
 const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot from CSRF protection
-  if (req.method === 'POST' && /^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path)) {
-    next();
-  } else {
-    doubleCsrfProtection(req, res, next);
+  // Exclude POST /api/v1/events/:id/slot AND /api/v1/cron/validate-tokens from CSRF protection
+  if (req.method === 'POST') {
+    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens') {
+      return next();
+    }
   }
+  doubleCsrfProtection(req, res, next);
 };
 
 app.use(csrfProtection);
@@ -124,6 +125,10 @@ router.use("/google/", googleRouter);
 router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);
 router.use("/oidc/", oidcRouter);
+
+import { validateGoogleTokens } from "./controller/cron_controller.js";
+router.post("/cron/validate-tokens", validateGoogleTokens);
+
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
