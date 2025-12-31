@@ -16,7 +16,6 @@ import OidcCallback from "./pages/OidcCallback";
 import Legal from "./pages/Legal";
 import About from "./pages/About";
 import Appointments from "./pages/Appointments";
-import { AuthProvider } from "./components/AuthProvider";
 import { AuthLayout } from "./components/AuthLayout";
 
 import "./i18n";
