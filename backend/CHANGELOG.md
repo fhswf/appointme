@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0-rc.1) (2025-12-31)
+
+
+### Features
+
+* token handling ([588900c](https://github.com/fhswf/appointme/commit/588900c092800cce3aebc49baa96a804a7ae7ea6))
+
 # backend [1.36.0](https://github.com/fhswf/appointme/compare/backend@1.35.0...backend@1.36.0) (2025-12-29)
 
 
