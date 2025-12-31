@@ -134,7 +134,7 @@ const Booking = () => {
   };
 
   const hasAvailableSlots = (date: Date, slots: IntervalSet | undefined) => {
-    if (!slots || !event.available?.[date.getDay() as Day]?.length) return false;
+    if (!slots) return false;
 
     const daySlots = slots.intersect(new IntervalSet(startOfDay(date), endOfDay(date)));
     for (const slot of daySlots) {
@@ -310,7 +310,12 @@ const Booking = () => {
               <div className="flex items-center gap-3 text-muted-foreground text-sm">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>{event?.duration} Min</span>
+                  <span>
+                    {event?.duration} Min
+                    {event?.recurrence?.enabled && (
+                      <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
+                    )}
+                  </span>
                 </div>
                 {/* Location placeholder - add to Event type later if needed */}
                 <div className="flex items-center gap-1">

@@ -240,7 +240,9 @@ describe("Server routes", () => {
   it("should get available slots for 'sprechstunde'", async () => {
     // Assuming EVENT._id is the ID used. The mock returns EVENT.
     // We need to use a dummy ID in the URL.
-    const res = await request(app).get("/api/v1/event/12345/slot?timeMin=2024-10-13T15:51:00.529Z&timeMax=2025-04-14T15:51:00.529Z");
+    const start = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+    const end = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString();
+    const res = await request(app).get(`/api/v1/event/12345/slot?timeMin=${start}&timeMax=${end}`);
     expect(res.status).toEqual(200);
   })
 
