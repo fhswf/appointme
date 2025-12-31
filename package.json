@@ -100,5 +100,6 @@
   "packageManager": "yarn@4.5.0",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18"
-  }
+  },
+  "stableVersion": "1.38.0"
 }
