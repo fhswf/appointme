@@ -353,9 +353,16 @@ describe('Booking Page', () => {
 
         const mockSlotsImpl = {
             overlapping: () => ['something'],
-            intersect: () => [
-                { start: slotStart, end: slotEnd }
-            ]
+            intersect: (range: any) => {
+                // range is the IntervalSet passed from Booking.tsx (startOfDay to endOfDay) which is an array-like
+                if (!range || range.length === 0) return [];
+                const r = range[0];
+                // Check if our slot overlaps with the requested range
+                if (r.start <= slotEnd && r.end >= slotStart) {
+                    return [{ start: slotStart, end: slotEnd }];
+                }
+                return [];
+            }
         };
 
         // @ts-ignore
@@ -380,12 +387,7 @@ describe('Booking Page', () => {
 
         // Check if the calendar header displays the expected month
         // We use findByText to wait for the state update and re-render
-        try {
-            expect(await screen.findByText(expectedMonthName, {}, { timeout: 3000 })).toBeInTheDocument();
-        } catch (e) {
-            screen.debug();
-            throw e;
-        }
+        expect(await screen.findByText(expectedMonthName, {}, { timeout: 3000 })).toBeInTheDocument();
     });
 });
 
