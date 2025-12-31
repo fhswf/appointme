@@ -2,7 +2,9 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
     test: {
-        reporters: ['junit'],
+        include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+        exclude: ['build/**', 'node_modules/**'],
+        reporters: ['default', 'junit'],
         outputFile: './TEST-backend.xml',
         coverage: {
             provider: 'v8',
