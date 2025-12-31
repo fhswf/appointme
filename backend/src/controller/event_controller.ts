@@ -175,6 +175,25 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
 }
 
 /**
+ * Helper function to shift an IntervalSet by a specific duration.
+ * Used for checking availability of recurring event instances.
+ * 
+ * @param intervalSet - The set of intervals to shift
+ * @param shiftMs - The number of milliseconds to shift (positive or negative)
+ * @returns A new IntervalSet with shifted start/end times
+ */
+const shiftIntervalSet = (intervalSet: IntervalSet, shiftMs: number): IntervalSet => {
+  const result = new IntervalSet();
+  for (const range of intervalSet) {
+    result.push({
+      start: new Date(range.start.getTime() + shiftMs),
+      end: new Date(range.end.getTime() + shiftMs)
+    });
+  }
+  return result;
+}
+
+/**
  * Middleware to get available times for one weekday of a given user
  * @function
  * @param {request} req
@@ -188,7 +207,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   logger.debug('getAvailableTimes: %s %s %s', timeMin, timeMax, eventId);
   EventModel
     .findById(eventId)
-    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user availabilityMode")
+    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user availabilityMode recurrence")
     .exec()
     .then(event => {
       if (!event) {
@@ -205,31 +224,96 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture));
       logger.debug("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
 
+      // Determine the check range. For recurring events, we need to check future instances.
+      let checkMax = new Date(timeMax);
+      let recurrenceCount = 1;
+      let recurrenceIntervalMs = 0;
+
+      if (event.recurrence?.enabled) {
+        const count = event.recurrence.count || 12; // Check up to 12 instances if not specified, to be safe/performant
+        recurrenceCount = count;
+
+        // Calculate interval in ms
+        let intervalDays = 7;
+        switch (event.recurrence.frequency) {
+          case 'daily': intervalDays = 1; break;
+          case 'weekly': intervalDays = 7; break;
+          case 'biweekly': intervalDays = 14; break;
+          case 'triweekly': intervalDays = 21; break;
+          case 'monthly': intervalDays = 30; break;
+          default: intervalDays = event.recurrence.interval * 7;
+        }
+        recurrenceIntervalMs = intervalDays * 24 * 60 * 60 * 1000;
+
+        // Extend checkMax to cover the recurrence period
+        const addedTime = (count - 1) * recurrenceIntervalMs;
+        // Safety cap for checkMax (e.g. 1 year from now) to avoid performance issues
+        const limitDate = addDays(new Date(), 365);
+
+        const potentialMax = new Date(checkMax.getTime() + addedTime);
+        checkMax = min(potentialMax, limitDate);
+
+        if (event.recurrence.until) {
+          checkMax = min(checkMax, new Date(event.recurrence.until));
+        }
+      }
+
       // Request currently booked events. We need them for the maxPerDay restriction
-      return events(event.user, timeMin.toISOString(), timeMax.toISOString())
-        .then(events => ({ events, event, user }));
+      return events(event.user, timeMin.toISOString(), checkMax.toISOString())
+        .then(events => ({ events, event, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }));
     })
-    .then(({ events, event, user }) => {
-      const blocked = calculateBlocked(events, event, timeMin, timeMax);
+    .then(({ events, event, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }) => {
+      const blocked = calculateBlocked(events, event, timeMin, checkMax);
       logger.debug("blocked: %o", blocked);
       logger.debug("free: %o", blocked.inverse());
 
       // Now query freeBusy service and CalDAV
       return Promise.all([
         (user.google_tokens && user.google_tokens.access_token) ?
-          freeBusy(event.user, timeMin.toISOString(), timeMax.toISOString()) :
+          freeBusy(event.user, timeMin.toISOString(), checkMax.toISOString()) :
           Promise.resolve({ data: { calendars: {} } }),
-        getBusySlots(event.user, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+        getBusySlots(event.user, timeMin.toISOString(), checkMax.toISOString()).catch(err => {
           logger.error('CalDAV getBusySlots failed', err);
           return [];
         })
-      ]).then(([freeBusyResponse, calDavSlots]) => ({ freeBusyResponse, calDavSlots, event, blocked, user }));
+      ]).then(([freeBusyResponse, calDavSlots]) => ({
+        freeBusyResponse,
+        calDavSlots,
+        event,
+        blocked,
+        user,
+        timeMin,
+        timeMax,
+        checkMax,
+        recurrenceCount,
+        recurrenceIntervalMs
+      }));
     })
-    .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
-      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
-      logger.debug('freeSlots before filtering: %j', freeSlots);
+    .then(({ freeBusyResponse, calDavSlots, event, blocked, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }) => {
+      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, checkMax, blocked, user);
+
+      // Filter slots by duration first
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
-      logger.debug('freeSlots after filtering: %j', freeSlots);
+
+      // Handle recurrence validation
+      if (event.recurrence?.enabled && recurrenceCount > 1 && recurrenceIntervalMs > 0) {
+        let validatedSlots = new IntervalSet(freeSlots);
+
+        for (let i = 1; i < recurrenceCount; i++) {
+          const shiftAmount = -1 * i * recurrenceIntervalMs;
+          const shifted = shiftIntervalSet(freeSlots, shiftAmount);
+
+          // We intersect the current candidates with the available slots of the i-th instance (shifted back to base time)
+          validatedSlots = validatedSlots.intersect(shifted);
+        }
+        freeSlots = validatedSlots;
+      }
+
+      // Finally clip to the requested view range
+      const viewRange = new IntervalSet(timeMin, timeMax);
+      freeSlots = freeSlots.intersect(viewRange);
+
+      logger.debug('freeSlots after filtering and recurrence check: %j', freeSlots);
 
       res.status(200).json(freeSlots);
     })

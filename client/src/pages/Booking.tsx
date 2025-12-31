@@ -134,7 +134,7 @@ const Booking = () => {
   };
 
   const hasAvailableSlots = (date: Date, slots: IntervalSet | undefined) => {
-    if (!slots || !event.available?.[date.getDay() as Day]?.length) return false;
+    if (!slots) return false;
 
     const daySlots = slots.intersect(new IntervalSet(startOfDay(date), endOfDay(date)));
     for (const slot of daySlots) {
