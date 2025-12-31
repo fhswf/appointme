@@ -74,6 +74,7 @@ export const en = {
     "teal_lofty_hawk_peek": "Cancel",
     "mild_raw_elk_delight": "Save Changes",
     "Choose date": "Choose date",
+    "Please select a date": "Please select a date",
     "Choose time": "Choose time",
     "Provide details": "Provide details",
     "Confirmation": "Confirmation",

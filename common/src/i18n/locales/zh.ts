@@ -85,6 +85,7 @@ export const zh = {
     "teal_lofty_hawk_peek": "取消",
     "mild_raw_elk_delight": "保存更改",
     "Choose date": "选择日期",
+    "Please select a date": "请选择日期",
     "Choose time": "选择时间",
     "Provide details": "提供详细信息",
     "Confirmation": "确认",

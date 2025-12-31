@@ -85,6 +85,7 @@ export const ja = {
     "teal_lofty_hawk_peek": "キャンセル",
     "mild_raw_elk_delight": "変更を保存",
     "Choose date": "日付を選択",
+    "Please select a date": "日付を選択してください",
     "Choose time": "時間を選択",
     "Provide details": "詳細を提供",
     "Confirmation": "確認",
