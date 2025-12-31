@@ -84,6 +84,7 @@ export const de = {
     "availableSlots": "Am {{date}} sind die folgenden Termine verfügbar. Reservieren Sie einen oder wählen Sie einen anderen Tag.",
     "minutes": "Minuten",
     "Choose date": "Datum wählen",
+    "Please select a date": "Bitte wählen Sie ein Datum",
     "Choose time": "Uhrzeit wählen",
     "Provide details": "Details angeben",
     "teal_lofty_hawk_peek": "Abbrechen",
