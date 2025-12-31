@@ -44,12 +44,18 @@ export const EventType = (props: EventTypeProps) => {
             <CardContent className="grid gap-4">
                 <div className="flex items-center gap-4">
                     <Hourglass className="h-5 w-5 text-muted-foreground" />
-                    <span>{event.duration + t("equal_jolly_thrush_empower")}</span>
+                    <span>
+                        {event.duration + t("equal_jolly_thrush_empower")}
+                        {event.recurrence?.enabled && (
+                            <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
+                        )}
+                    </span>
                 </div>
                 <div className="flex items-center gap-4">
                     <MapPin className="h-5 w-5 text-muted-foreground" />
                     <span>{event.location}</span>
                 </div>
+
                 {time && (
                     <div className="flex items-center gap-4">
                         <CalendarClock className="h-5 w-5 text-muted-foreground" />

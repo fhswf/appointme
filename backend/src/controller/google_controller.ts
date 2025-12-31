@@ -14,6 +14,7 @@ import { Event, IntervalSet } from 'common';
 
 import { logger } from '../logging.js';
 import { getBusySlots } from './caldav_controller.js';
+import { generateRRule } from '../utility/ical.js';
 
 
 
@@ -143,7 +144,16 @@ async function fetchFreeBusyData(userid: string, timeMin: Date, timeMax: Date) {
 
 export async function checkFree(event: Event, userid: string, timeMin: Date, timeMax: Date): Promise<boolean> {
   const interval = new IntervalSet(timeMin, timeMax);
-  let freeSlots = new IntervalSet(timeMin, timeMax, event.available, "Europe/Berlin");
+
+  let availableSlots = event.available;
+  if (event.availabilityMode === 'default') {
+    const user = await UserModel.findById(userid).select('defaultAvailable').exec();
+    if (user?.defaultAvailable) {
+      availableSlots = user.defaultAvailable;
+    }
+  }
+
+  let freeSlots = new IntervalSet(timeMin, timeMax, availableSlots, "Europe/Berlin");
 
   const [googleRes, calDavSlots] = await fetchFreeBusyData(userid, timeMin, timeMax);
 
@@ -168,13 +178,22 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary') {
+export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary', recurrence?: any) {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
   }
 
   const oAuth2Client = createOAuthClient(user._id as string);
   oAuth2Client.setCredentials(user.google_tokens);
+  oAuth2Client.setCredentials(user.google_tokens);
+
+  if (recurrence && recurrence.enabled) {
+    const rrule = generateRRule(recurrence);
+    if (rrule) {
+      event.recurrence = [rrule];
+    }
+  }
+
   logger.debug('insert: event=%j', event)
 
   return google.calendar({ version: "v3" }).events.insert({
