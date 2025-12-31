@@ -1,5 +1,5 @@
-node_modules/**
-test-results/**
+**/node_modules/**
+**/test-results/**
 types.js
 types.js.map
 docker.env
