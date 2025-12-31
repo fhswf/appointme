@@ -1,3 +1,10 @@
+# common [1.15.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0-rc.1) (2025-12-31)
+
+
+### Features
+
+* recurring events ([e9a1f9f](https://github.com/fhswf/appointme/commit/e9a1f9f89b04a2df72fca75db44f443568260c55))
+
 # common [1.14.0](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0) (2025-12-29)
 
 
