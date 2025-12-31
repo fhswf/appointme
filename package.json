@@ -41,7 +41,8 @@
   "workspaces": [
     "common",
     "backend",
-    "client"
+    "client",
+    "mcp-server"
   ],
   "engines": {
     "yarn": "4.3.0"

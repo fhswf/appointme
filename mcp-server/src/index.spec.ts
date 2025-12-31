@@ -1,0 +1,157 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import axios from 'axios';
+import { server } from './index.js';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
+
+vi.mock('axios');
+
+class MockTransport implements Transport {
+    other?: MockTransport;
+    onmessage?: (message: any) => void;
+    onclose?: () => void;
+    onerror?: (error: Error) => void;
+
+    connect(other: MockTransport) {
+        this.other = other;
+        other.other = this;
+    }
+
+    async start() { }
+
+    async send(message: any) {
+        if (this.other?.onmessage) {
+            // Simulate async network
+            await Promise.resolve();
+            this.other.onmessage(message);
+        }
+    }
+
+    async close() {
+        if (this.onclose) this.onclose();
+    }
+}
+
+describe('MCP Server Tools', () => {
+    let client: Client;
+    let clientTransport: MockTransport;
+    let serverTransport: MockTransport;
+
+    beforeEach(async () => {
+        vi.resetAllMocks();
+
+        clientTransport = new MockTransport();
+        serverTransport = new MockTransport();
+        clientTransport.connect(serverTransport);
+
+        // Reset server state if needed (though Server class usually allows reconnects or we might need a fresh instance if supported)
+        // For now, we assume global 'server' instance can be re-connected.
+        // Actually, the server in index.ts is a singleton. We should check if we can re-connect.
+        // If server.connect throws on second call, we might have issues.
+        // But let's try.
+
+        // We need to ignore the promise of server.connect as it might await close
+        server.connect(serverTransport).catch(console.error);
+
+        client = new Client({ name: "test-client", version: "1.0.0" }, { capabilities: {} });
+        await client.connect(clientTransport);
+    });
+
+    afterEach(async () => {
+        await client.close();
+        // Server close not easily accessible but usually fine in tests
+    });
+
+    it('should list event types', async () => {
+        const mockResponse = { data: [{ id: '1', title: 'Test Event' }] };
+        vi.mocked(axios.get).mockResolvedValue(mockResponse);
+
+        const result = await client.callTool({
+            name: 'list_event_types',
+            arguments: { userId: 'user123' },
+        });
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/event/active/user123'));
+        expect(result).toBeDefined();
+        // @ts-ignore
+        const content = JSON.parse(result.content[0].text);
+        expect(content).toEqual(mockResponse.data);
+    });
+
+    it('should get free slots', async () => {
+        const mockResponse = { data: { slots: [] } };
+        vi.mocked(axios.get).mockResolvedValue(mockResponse);
+
+        const result = await client.callTool({
+            name: 'get_free_slots',
+            arguments: {
+                eventId: 'event123',
+                timeMin: '2023-01-01T00:00:00Z',
+                timeMax: '2023-01-02T00:00:00Z',
+            },
+        });
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/event/event123/slot'), {
+            params: {
+                timeMin: '2023-01-01T00:00:00Z',
+                timeMax: '2023-01-02T00:00:00Z',
+            },
+        });
+        // @ts-ignore
+        const content = JSON.parse(result.content[0].text);
+        expect(content).toEqual(mockResponse.data);
+    });
+
+    it('should book appointment', async () => {
+        const mockResponse = { data: { success: true } };
+        vi.mocked(axios.post).mockResolvedValue(mockResponse);
+
+        const result = await client.callTool({
+            name: 'book_appointment',
+            arguments: {
+                eventId: 'event123',
+                slotStart: 1234567890,
+                attendeeName: 'John Doe',
+                attendeeEmail: 'john@example.com',
+            },
+        });
+
+        expect(axios.post).toHaveBeenCalledWith(
+            expect.stringContaining('/api/v1/event/event123/slot'),
+            expect.objectContaining({
+                start: 1234567890,
+                attendeeName: 'John Doe',
+                attendeeEmail: 'john@example.com',
+            })
+        );
+        // @ts-ignore
+        const content = JSON.parse(result.content[0].text);
+        expect(content).toEqual(mockResponse.data);
+    });
+
+    it('should handle API errors', async () => {
+        const errorMessage = "Slot not available";
+        const mockError = new Error("Request failed with status code 400");
+        // @ts-ignore
+        mockError.response = { data: { error: errorMessage } };
+        // @ts-ignore
+        mockError.isAxiosError = true;
+
+        vi.mocked(axios.post).mockRejectedValue(mockError);
+        vi.mocked(axios.isAxiosError).mockReturnValue(true);
+
+        const result = await client.callTool({
+            name: 'book_appointment',
+            arguments: {
+                eventId: 'event123',
+                slotStart: 1234567890,
+                attendeeName: 'John Doe',
+                attendeeEmail: 'john@example.com',
+            },
+        });
+
+        expect(result.isError).toBe(true);
+        // @ts-ignore
+        expect(result.content[0].text).toContain(errorMessage);
+    });
+});
