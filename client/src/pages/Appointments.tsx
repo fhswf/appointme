@@ -117,10 +117,7 @@ const Appointments = () => {
             const bgEvents = calculateAvailabilityEvents(events, view, timeMin, timeMax);
             setBackgroundEvents(bgEvents);
         };
-
-        if (calendars.length >= 0) { // Always run to calc availability even if no calendars
-            fetchCalendarEventsAndAvailability();
-        }
+        fetchCalendarEventsAndAvailability();
     }, [calendars, date, view, events]);
 
 
