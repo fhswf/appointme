@@ -15,6 +15,7 @@ import { oidcRouter } from "./routes/oidc_routes.js";
 
 // Swagger documentation
 import swaggerUi from "swagger-ui-express";
+import rateLimit from "express-rate-limit";
 import { swaggerSpec } from "./config/swagger.js";
 
 // logger
@@ -127,7 +128,15 @@ router.use("/caldav/", caldavRouter);
 router.use("/oidc/", oidcRouter);
 
 import { validateGoogleTokens } from "./controller/cron_controller.js";
-router.post("/cron/validate-tokens", validateGoogleTokens);
+
+const cronLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // limit each IP to 5 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
 
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
