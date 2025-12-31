@@ -22,7 +22,7 @@ import crypto from 'crypto';
 const config = {
   clientId: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: `${process.env.API_URL}/google/oauthcallback`,
+  redirectUri: `${process.env.BASE_URL}/api/v1/google/oauthcallback`,
 }
 
 logger.info("google_controller: ", config);
