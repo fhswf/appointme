@@ -32,7 +32,7 @@ function Calendar({
   const defaultClassNames = getDefaultClassNames()
   const { i18n } = useTranslation()
 
-  const locale = locales[i18n.language] || locales["en"]
+  const locale = locales[i18n.language] || locales[i18n.language.split("-")[0]] || locales["en"]
 
   return (
     <DayPicker

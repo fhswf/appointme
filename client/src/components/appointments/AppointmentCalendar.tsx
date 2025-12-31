@@ -143,7 +143,7 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
         : 'hsl(var(--border))';
 
     const { i18n } = useTranslation();
-    const currentLocale = locales[i18n.language as keyof typeof locales] || enUS;
+    const currentLocale = locales[i18n.language as keyof typeof locales] || locales[i18n.language.split('-')[0] as keyof typeof locales] || enUS;
 
     // Extract additional details
     const description = event.resource?.data?.description;
@@ -292,7 +292,7 @@ export function AppointmentCalendar({
                 }}
                 className="font-sans text-foreground"
                 scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
-                culture={i18n.language}
+                culture={locales[i18n.language as keyof typeof locales] ? i18n.language : (locales[i18n.language.split('-')[0] as keyof typeof locales] ? i18n.language.split('-')[0] : 'en-US')}
                 formats={{
                     timeGutterFormat: (date: Date, culture: any, localizer: any) =>
                         localizer.format(date, 'p', culture),
