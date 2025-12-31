@@ -228,8 +228,11 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
     .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
       let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
       logger.debug('freeSlots before filtering: %j', freeSlots);
+      console.log("DEBUG: freeSlots count before filter:", freeSlots ? 'intervalset' : 'null');
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
       logger.debug('freeSlots after filtering: %j', freeSlots);
+      console.log("DEBUG: freeSlots final count:", freeSlots.length); // Assuming IntervalSet has length or we check filtered array
+      if (typeof freeSlots.count === 'function') console.log("DEBUG: count:", freeSlots.count());
 
       res.status(200).json(freeSlots);
     })
