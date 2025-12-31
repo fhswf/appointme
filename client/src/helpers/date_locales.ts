@@ -2,7 +2,8 @@ import { de, enUS, fr, es, it, ja, ko, zhCN } from "date-fns/locale";
 import { Locale } from "date-fns";
 
 export const getLocale = (lang: string): Locale => {
-    switch (lang) {
+    const baseLang = lang.split('-')[0];
+    switch (baseLang) {
         case 'de': return de;
         case 'fr': return fr;
         case 'es': return es;

@@ -412,6 +412,53 @@ describe("Event Controller", () => {
 
             expect(res.status).toBe(400);
         });
+
+        it("should NOT call Google freeBusy if user has no Google tokens", async () => {
+            (EventModel.findById as any).mockImplementation((() => {
+                const res = mockQuery({
+                    ...EVENT,
+                    minFuture: 0,
+                    maxFuture: 24 * 60 * 60,
+                    duration: 30,
+                    bufferbefore: 0,
+                    bufferafter: 0,
+                    available: {
+                        0: [], 1: [{ start: "09:00", end: "17:00" }], 2: [], 3: [], 4: [], 5: [], 6: []
+                    },
+                    maxPerDay: 5,
+                    user: USER._id
+                });
+                return res;
+            }));
+
+            // Mock User WITHOUT google_tokens
+            const userNoGoogle = { ...USER };
+            delete userNoGoogle.google_tokens;
+
+            (UserModel.findById as any).mockImplementation(() => mockQuery(userNoGoogle));
+
+            const { events, freeBusy } = await import("../controller/google_controller.js");
+            const { getBusySlots } = await import("../controller/caldav_controller.js");
+
+            (events as any).mockResolvedValue([]);
+            (freeBusy as any).mockClear();
+            (freeBusy as any).mockResolvedValue({ data: { calendars: {} } });
+
+            (getBusySlots as any).mockResolvedValue([]);
+
+            const res = await request(app)
+                .get("/api/v1/event/123/slot")
+                .query({
+                    timeMin: "2025-12-02T00:00:00Z",
+                    timeMax: "2025-12-02T23:59:59Z"
+                });
+
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+
+            // CRITICAL: Verify Google freeBusy was NOT called
+            expect(freeBusy).not.toHaveBeenCalled();
+        });
     });
 
     describe("POST /api/v1/event/:id/slot (insertEvent)", () => {
@@ -437,7 +484,7 @@ describe("Event Controller", () => {
                 });
 
             if (res.status !== 200) {
-                 console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
+                console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
             }
             expect(res.status).toBe(200);
             expect(res.body.success).toBe(true);

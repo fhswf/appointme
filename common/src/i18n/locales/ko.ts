@@ -85,6 +85,7 @@ export const ko = {
     "teal_lofty_hawk_peek": "취소",
     "mild_raw_elk_delight": "변경 사항 저장",
     "Choose date": "날짜 선택",
+    "Please select a date": "날짜를 선택해주세요",
     "Choose time": "시간 선택",
     "Provide details": "세부 정보 제공",
     "Confirmation": "확인",

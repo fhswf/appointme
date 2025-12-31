@@ -85,6 +85,7 @@ export const it = {
     "teal_lofty_hawk_peek": "Annulla",
     "mild_raw_elk_delight": "Salva modifiche",
     "Choose date": "Scegli data",
+    "Please select a date": "Si prega di selezionare una data",
     "Choose time": "Scegli ora",
     "Provide details": "Fornisci dettagli",
     "Confirmation": "Conferma",
