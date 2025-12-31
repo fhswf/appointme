@@ -72,13 +72,7 @@ const Booking = () => {
 
           // Simple loop to find first day with availability
           while (iterator < end) {
-            // Re-using check logic similar to checkDay but we need to check if slots actually exist for this day
-            const dayOfWeek = iterator.getDay() as Day;
-            if (
-              event.available[dayOfWeek] &&
-              event.available[dayOfWeek].length > 0 &&
-              slots.overlapping({ start: startOfDay(iterator), end: endOfDay(iterator) }).length > 0
-            ) {
+            if (hasAvailableSlots(iterator, slots)) {
               setSelectedDate(new Date(iterator));
               break;
             }
@@ -136,17 +130,23 @@ const Booking = () => {
     // No stepper navigation needed on date change anymore as it is same step
   };
 
-  const checkDay = (date: Date) => {
-    if (event.available) {
-      return (
-        date > new Date() &&
-        event.available[date.getDay() as Day].length > 0 &&
-        event.available[date.getDay() as Day][0].start !== "" &&
-        slots?.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
-      );
-    } else {
-      return false;
+  const hasAvailableSlots = (date: Date, slots: IntervalSet | undefined) => {
+    if (!slots || !event.available || !event.available[date.getDay() as Day]?.length) return false;
+
+    const daySlots = slots.intersect(new IntervalSet(startOfDay(date), endOfDay(date)));
+    for (const slot of daySlots) {
+      const start = new Date(slot.start);
+      const end = new Date(slot.end);
+      // Check if at least one event of duration fits in this slot
+      if (addMinutes(start, event.duration) <= end) {
+        return true;
+      }
     }
+    return false;
+  };
+
+  const checkDay = (date: Date) => {
+    return date > new Date() && hasAvailableSlots(date, slots);
   };
 
   const getTimes = (day: Date) => {
@@ -157,7 +157,8 @@ const Booking = () => {
         const start = new Date(slot.start);
         const end = new Date(slot.end);
         let s = start;
-        while (s < addMinutes(end, -event.duration)) {
+        // Fix loop condition to include the last valid slot
+        while (s <= addMinutes(end, -event.duration)) {
           times.push(s);
           s = addMinutes(s, event.duration);
         }

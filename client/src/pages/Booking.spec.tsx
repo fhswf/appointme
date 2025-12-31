@@ -299,4 +299,42 @@ describe('Booking Page', () => {
             expect(mockNavigate).not.toHaveBeenCalledWith('/booked', expect.any(Object));
         });
     });
+
+    it('should NOT select a date if the available slot is shorter than event duration', async () => {
+        const { getAvailableTimes, getEventByUrlAndUser } = await import('../helpers/services/event_services');
+
+        // Mock a slot that is only 15 minutes long (shorter than event duration of 30)
+        const shortSlotStart = new Date();
+        shortSlotStart.setHours(10, 0, 0, 0);
+        const shortSlotEnd = new Date(shortSlotStart);
+        shortSlotEnd.setMinutes(15);
+
+        const mockSlotsImpl = {
+            overlapping: () => ['something'],
+            intersect: () => [
+                { start: shortSlotStart, end: shortSlotEnd }
+            ]
+        };
+
+        // @ts-ignore
+        (getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(getEventByUrlAndUser).toHaveBeenCalled();
+            expect(getAvailableTimes).toHaveBeenCalled();
+        });
+
+        // The date should NOT be selected because the slot (15m) < duration (30m)
+        // If selected, "Available Times" would appear.
+        expect(screen.queryByText(/Available Times/i)).not.toBeInTheDocument();
+
+        // "Please select a date" should be present
+        expect(screen.getByText(/Please select a date/i)).toBeInTheDocument();
+    });
 });
