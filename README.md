@@ -38,6 +38,19 @@ To deploy the application on Kubernetes, you need to create the necessary Config
     kubectl apply -f backend/k8s/deployment.yaml
     ```
 
+4.  **Deploy MCP Server:**
+    The MCP server is a separate deployment that integrates with the backend.
+    
+    ```bash
+    kubectl apply -k mcp-server/k8s/base
+    ```
+    
+    The Ingress handles routing:
+    *   `/` -> Client
+    *   `/api` -> Backend
+    *   `/mcp` -> MCP Server
+
+
 ### Environment Overlays (Staging/Production)
 
 You can manage multiple environments (e.g., Staging, Production) using Kustomize overlays located in `k8s/overlays/`.

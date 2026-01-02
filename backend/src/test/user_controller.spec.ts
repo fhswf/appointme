@@ -10,6 +10,7 @@ vi.mock("../models/User.js", () => {
     (UserModelMock as any).findOne = vi.fn();
     (UserModelMock as any).findById = vi.fn();
     (UserModelMock as any).findByIdAndUpdate = vi.fn();
+    (UserModelMock as any).find = vi.fn();
     return { UserModel: UserModelMock };
 });
 
@@ -259,6 +260,41 @@ describe("User Controller", () => {
         it("should return 403 if accessing other user calendars", async () => {
             const res = await request(app).get("/api/v1/user/otheruser/calendar");
             expect(res.status).toBe(403);
+        });
+    });
+
+    describe("GET /api/v1/user (Search)", () => {
+        it("should return users matching the search query", async () => {
+            (UserModel.find as any).mockReturnValue({
+                select: vi.fn().mockReturnThis(),
+                limit: vi.fn().mockReturnThis(),
+                exec: vi.fn().mockResolvedValue([
+                    { _id: "1", name: "Test User", email: "test@example.com" }
+                ])
+            });
+
+            const res = await request(app).get("/api/v1/user?q=Test");
+            expect(res.status).toBe(200);
+            expect(Array.isArray(res.body)).toBe(true);
+            expect(res.body[0].name).toBe("Test User");
+        });
+
+        it("should return 400 if query parameter is missing", async () => {
+            const res = await request(app).get("/api/v1/user");
+            expect(res.status).toBe(400);
+            expect(res.body.error).toMatch(/query parameter/i);
+        });
+
+        it("should return 400 if query parameter is empty", async () => {
+            const res = await request(app).get("/api/v1/user?q=  ");
+            expect(res.status).toBe(400);
+        });
+
+        it("should handle special regex characters in query safely", async () => {
+            // This would crash or behave unexpectedly if not escaped
+            const res = await request(app).get("/api/v1/user?q=(test");
+            expect(res.status).toBe(200); // Should treat "(" as a literal character, not regex group start
+            // If it returns 200, it means it didn't crash with SyntaxError: Invalid regular expression
         });
     });
 });
