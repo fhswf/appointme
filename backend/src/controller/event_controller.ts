@@ -524,7 +524,7 @@ export const updateEventController = (req: Request, res: Response): void => {
 
 export const insertEvent = async (req: Request, res: Response): Promise<void> => {
   const startInput = req.body.start;
-  const starttime = !isNaN(Number(startInput)) ? new Date(Number(startInput)) : new Date(startInput);
+  const starttime = Number.isNaN(Number(startInput)) ? new Date(startInput) : new Date(Number(startInput));
   const eventId = req.params.id;
   logger.debug("insertEvent: %s %o", req.body.start, starttime);
 
