@@ -24,7 +24,7 @@ export const searchUsers = (req: Request, res: Response): void => {
     return;
   }
 
-  const searchRegex = new RegExp(query.trim(), 'i');
+  const searchRegex = new RegExp(escapeRegExp(query.trim()), 'i');
 
   UserModel.find({
     $or: [
@@ -42,6 +42,15 @@ export const searchUsers = (req: Request, res: Response): void => {
       res.status(400).json({ error: err });
     });
 };
+
+/**
+ * Escapes special characters in a string for use in a regular expression.
+ * @param {string} string - The string to escape.
+ * @returns {string} The escaped string.
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 
 /**
  * Middleware to get the logged in user
