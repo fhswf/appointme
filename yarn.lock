@@ -5685,28 +5685,61 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:6.19.7":
-  version: 6.19.7
-  resolution: "@sentry/browser@npm:6.19.7"
+"@sentry-internal/browser-utils@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry-internal/browser-utils@npm:10.32.1"
   dependencies:
-    "@sentry/core": "npm:6.19.7"
-    "@sentry/types": "npm:6.19.7"
-    "@sentry/utils": "npm:6.19.7"
-    tslib: "npm:^1.9.3"
-  checksum: 10/226c077d287b4d374637bfd32c5a1cbd15eab3ee920aba50a18896a9447d475e6ac2e4852c1bffe9a65925eef7bbaaba87b1ff79bcc2529f0cc35668fcfd4bfc
+    "@sentry/core": "npm:10.32.1"
+  checksum: 10/34fc5fda058e498b4d333d2423a6c009d4803ff57d115168e5f186c89b7da0211bdf58b631bef596837aa8bf98bab5dd57c492b49b7128901f725c7bda8ba8c6
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:6.19.7":
-  version: 6.19.7
-  resolution: "@sentry/core@npm:6.19.7"
+"@sentry-internal/feedback@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry-internal/feedback@npm:10.32.1"
   dependencies:
-    "@sentry/hub": "npm:6.19.7"
-    "@sentry/minimal": "npm:6.19.7"
-    "@sentry/types": "npm:6.19.7"
-    "@sentry/utils": "npm:6.19.7"
-    tslib: "npm:^1.9.3"
-  checksum: 10/75f98ae1ad2d27deda35f88f07cf6a29f1f2eaa956ba5e2292d4d8ea2cd087a6c4a9303856ac09e6cab5cea0a1579128f35f7add14524c6e72292e65ebeab6ab
+    "@sentry/core": "npm:10.32.1"
+  checksum: 10/c743f142273f73daba1231510eeee15df5e9ad4421ed023ba808872a9b0755634de3cdf2a2ad9d4e4fdb6a9d3f8abb8ead0e4aacf2a7eed2e1fd4975a97d669e
+  languageName: node
+  linkType: hard
+
+"@sentry-internal/replay-canvas@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry-internal/replay-canvas@npm:10.32.1"
+  dependencies:
+    "@sentry-internal/replay": "npm:10.32.1"
+    "@sentry/core": "npm:10.32.1"
+  checksum: 10/73eb706b0cee201098b0aac0fe3a5c293a61bf5931350e7acc9e68d5a00fb63a11aceffc4d77eff1c01fa0f9f371aed847282b281d4388c0f5ce6489e5857bea
+  languageName: node
+  linkType: hard
+
+"@sentry-internal/replay@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry-internal/replay@npm:10.32.1"
+  dependencies:
+    "@sentry-internal/browser-utils": "npm:10.32.1"
+    "@sentry/core": "npm:10.32.1"
+  checksum: 10/7356c97aabaad7b5223313ebca758c604ee6c61e430b64122bf051909b25bb7f0acfe00c2c77aedbe6000d847bc83b1bc2c6935d4b3bc2b7cff690b9de2b89f5
+  languageName: node
+  linkType: hard
+
+"@sentry/browser@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry/browser@npm:10.32.1"
+  dependencies:
+    "@sentry-internal/browser-utils": "npm:10.32.1"
+    "@sentry-internal/feedback": "npm:10.32.1"
+    "@sentry-internal/replay": "npm:10.32.1"
+    "@sentry-internal/replay-canvas": "npm:10.32.1"
+    "@sentry/core": "npm:10.32.1"
+  checksum: 10/eeccff0f2cd2ef4bd6cbc5883ce1e57c952b30c0c22aa6166ae76a54929020efd9415e187a46f7d21bf345cda643f48f9e98975e193a47a1dd85d3f8c2509b08
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:10.32.1":
+  version: 10.32.1
+  resolution: "@sentry/core@npm:10.32.1"
+  checksum: 10/63f06108f6c090477fcf2d9d10f4ae7b1f94ac5d29cd7e18d96520a3ceb24dc5aec39d23a1c5b11e41f6ccf44421bfd965ff290938aa58fe45ad2b6525ab077f
   languageName: node
   linkType: hard
 
@@ -5732,19 +5765,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react@npm:^6.11.0":
-  version: 6.19.7
-  resolution: "@sentry/react@npm:6.19.7"
+"@sentry/react@npm:^10.32.1":
+  version: 10.32.1
+  resolution: "@sentry/react@npm:10.32.1"
   dependencies:
-    "@sentry/browser": "npm:6.19.7"
-    "@sentry/minimal": "npm:6.19.7"
-    "@sentry/types": "npm:6.19.7"
-    "@sentry/utils": "npm:6.19.7"
+    "@sentry/browser": "npm:10.32.1"
+    "@sentry/core": "npm:10.32.1"
     hoist-non-react-statics: "npm:^3.3.2"
-    tslib: "npm:^1.9.3"
   peerDependencies:
-    react: 15.x || 16.x || 17.x || 18.x
-  checksum: 10/3bd32b942eda76f4178d3d6c3c74c0e42b0afa85a2acb1fc69421f733fa9c76c3125371a04ce1624c13b184f1d4e00d729649928942825e2be040be1a5e0a7b7
+    react: ^16.14.0 || 17.x || 18.x || 19.x
+  checksum: 10/02ec35b1b3874ba17708470047610d8493062a960b46c1f8681f7c65fb5e93e56938d1766974a52606cc15f9cba409cf3487ece35e31e0234b87d8d8d40686c6
   languageName: node
   linkType: hard
 
@@ -9507,7 +9537,7 @@ __metadata:
     "@radix-ui/react-switch": "npm:^1.2.6"
     "@radix-ui/react-tabs": "npm:^1.1.13"
     "@react-oauth/google": "npm:latest"
-    "@sentry/react": "npm:^6.11.0"
+    "@sentry/react": "npm:^10.32.1"
     "@sentry/tracing": "npm:^6.5.1"
     "@stepperize/react": "npm:^5.1.9"
     "@tailwindcss/vite": "npm:^4.1.18"
