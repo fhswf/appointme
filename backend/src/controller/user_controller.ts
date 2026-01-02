@@ -16,6 +16,48 @@ import crypto from 'node:crypto';
  * @param {request} req
  * @param {response} res
  */
+export const searchUsers = (req: Request, res: Response): void => {
+  const query = req.query.q;
+
+  if (typeof query !== 'string' || !query.trim()) {
+    res.status(400).json({ error: "Query parameter 'q' is required" });
+    return;
+  }
+
+  const searchRegex = new RegExp(escapeRegExp(query.trim()), 'i');
+
+  UserModel.find({
+    $or: [
+      { name: searchRegex },
+      { email: searchRegex }
+    ]
+  })
+    .select("_id name email picture_url user_url")
+    .limit(10)
+    .exec()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(err => {
+      res.status(400).json({ error: err });
+    });
+};
+
+/**
+ * Escapes special characters in a string for use in a regular expression.
+ * @param {string} string - The string to escape.
+ * @returns {string} The escaped string.
+ */
+function escapeRegExp(string: string): string {
+  return string.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); // $& means the whole matched string
+}
+
+/**
+ * Middleware to get the logged in user
+ * @function
+ * @param {request} req
+ * @param {response} res
+ */
 export const getUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
   if (typeof userid !== 'string') {
