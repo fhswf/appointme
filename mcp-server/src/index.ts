@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
@@ -20,7 +21,7 @@ const server = new Server(
     }
 );
 
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:5000";
 
 // Define Zod schemas for tool arguments
 const ListEventTypesSchema = z.object({
@@ -35,13 +36,17 @@ const GetFreeSlotsSchema = z.object({
 
 const BookAppointmentSchema = z.object({
     eventId: z.string().describe("The ID of the event type"),
-    slotStart: z.number().describe("Start time of the slot as Unix timestamp (ms)"),
+    slotStart: z.string().describe("Start time of the slot as ISO 8601 string"),
     attendeeName: z.string().describe("Name of the person booking"),
     attendeeEmail: z.string().email().describe("Email of the person booking"),
     description: z.string().optional().describe("Additional notes or comment"),
 });
 
-// List available tools
+
+
+const SearchUsersSchema = z.object({
+    query: z.string().describe("Search query to find users by name or email"),
+});
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
         tools: [
@@ -81,6 +86,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                     required: ["eventId", "timeMin", "timeMax"]
                 }
             },
+
+
             {
                 name: "book_appointment",
                 description: "Book an appointment for a specific slot.",
@@ -92,8 +99,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                             description: "The ID of the event type"
                         },
                         slotStart: {
-                            type: "number",
-                            description: "Start time of the slot as Unix timestamp (ms)"
+                            type: "string",
+                            description: "Start time of the slot as ISO 8601 string"
                         },
                         attendeeName: {
                             type: "string",
@@ -109,6 +116,20 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                         }
                     },
                     required: ["eventId", "slotStart", "attendeeName", "attendeeEmail"]
+                }
+            },
+            {
+                name: "search_users",
+                description: "Search for users by name or email.",
+                inputSchema: {
+                    type: "object",
+                    properties: {
+                        query: {
+                            type: "string",
+                            description: "Search query"
+                        }
+                    },
+                    required: ["query"]
                 }
             },
         ],
@@ -137,7 +158,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "get_free_slots": {
                 const { eventId, timeMin, timeMax } = GetFreeSlotsSchema.parse(args);
                 const response = await axios.get(`${API_BASE_URL}/api/v1/event/${eventId}/slot`, {
-                    params: { timeMin, timeMax },
+                    params: { timeMin, timeMax, slots: "true" },
                 });
                 return {
                     content: [
@@ -156,6 +177,21 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                     attendeeName,
                     attendeeEmail,
                     description,
+                });
+                return {
+                    content: [
+                        {
+                            type: "text",
+                            text: JSON.stringify(response.data, null, 2),
+                        },
+                    ],
+                };
+            }
+
+            case "search_users": {
+                const { query } = SearchUsersSchema.parse(args);
+                const response = await axios.get(`${API_BASE_URL}/api/v1/user`, {
+                    params: { q: query },
                 });
                 return {
                     content: [

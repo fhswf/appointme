@@ -4,7 +4,7 @@
 import { Router } from "express";
 import { middleware } from "../handlers/middleware.js";
 import { userRateLimiter } from "../config/rateLimit.js";
-import { getUserByUrl, updateUser, getUser, getAppointments, getCalendars, getCalendarEvents } from "../controller/user_controller.js";
+import { getUserByUrl, updateUser, getUser, getAppointments, getCalendars, getCalendarEvents, searchUsers } from "../controller/user_controller.js";
 
 const { requireAuth } = middleware;
 
@@ -38,6 +38,37 @@ export const userRouter = Router();
  *               $ref: '#/components/schemas/Error'
  */
 userRouter.get("/me", userRateLimiter, requireAuth, getUser);
+
+/**
+ * @openapi
+ * /api/v1/user:
+ *   get:
+ *     summary: Search users
+ *     description: Search for users by name or email
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Search query
+ *     responses:
+ *       200:
+ *         description: Users found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Missing query parameter
+ *       401:
+ *         description: Not authenticated
+ */
+userRouter.get("/", userRateLimiter, searchUsers);
 
 /**
  * @openapi
