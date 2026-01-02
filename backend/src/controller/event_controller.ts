@@ -313,6 +313,21 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       const viewRange = new IntervalSet(timeMin, timeMax);
       freeSlots = freeSlots.intersect(viewRange);
 
+      if (req.query.slots === 'true') {
+        const slots: string[] = [];
+        for (const slot of freeSlots) {
+          let s = new Date(slot.start);
+          const end = new Date(slot.end);
+          // Check if at least one duration fits
+          while (s.getTime() + event.duration * 60000 <= end.getTime()) {
+            slots.push(s.toISOString());
+            s = addMinutes(s, event.duration);
+          }
+        }
+        res.status(200).json(slots);
+        return;
+      }
+
       logger.debug('freeSlots after filtering and recurrence check: %j', freeSlots);
 
       res.status(200).json(freeSlots);
@@ -508,7 +523,8 @@ export const updateEventController = (req: Request, res: Response): void => {
  */
 
 export const insertEvent = async (req: Request, res: Response): Promise<void> => {
-  const starttime = new Date(Number.parseInt(req.body.start));
+  const startInput = req.body.start;
+  const starttime = !isNaN(Number(startInput)) ? new Date(Number(startInput)) : new Date(startInput);
   const eventId = req.params.id;
   logger.debug("insertEvent: %s %o", req.body.start, starttime);
 

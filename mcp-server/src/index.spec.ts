@@ -95,6 +95,7 @@ describe('MCP Server Tools', () => {
             params: {
                 timeMin: '2023-01-01T00:00:00Z',
                 timeMax: '2023-01-02T00:00:00Z',
+                slots: 'true',
             },
         });
         // @ts-ignore
@@ -110,7 +111,7 @@ describe('MCP Server Tools', () => {
             name: 'book_appointment',
             arguments: {
                 eventId: 'event123',
-                slotStart: 1234567890,
+                slotStart: '2023-01-01T12:00:00Z',
                 attendeeName: 'John Doe',
                 attendeeEmail: 'john@example.com',
             },
@@ -119,11 +120,29 @@ describe('MCP Server Tools', () => {
         expect(axios.post).toHaveBeenCalledWith(
             expect.stringContaining('/api/v1/event/event123/slot'),
             expect.objectContaining({
-                start: 1234567890,
+                start: '2023-01-01T12:00:00Z',
                 attendeeName: 'John Doe',
                 attendeeEmail: 'john@example.com',
             })
         );
+        // @ts-ignore
+        const content = JSON.parse(result.content[0].text);
+        expect(content).toEqual(mockResponse.data);
+    });
+
+    it('should search users', async () => {
+        const mockResponse = { data: [{ id: 'u1', name: 'Test User' }] };
+        vi.mocked(axios.get).mockResolvedValue(mockResponse);
+
+        const result = await client.callTool({
+            name: 'search_users',
+            arguments: { query: 'Test' },
+        });
+
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/api/v1/user'), {
+            params: { q: 'Test' },
+        });
+        expect(result).toBeDefined();
         // @ts-ignore
         const content = JSON.parse(result.content[0].text);
         expect(content).toEqual(mockResponse.data);
@@ -144,7 +163,7 @@ describe('MCP Server Tools', () => {
             name: 'book_appointment',
             arguments: {
                 eventId: 'event123',
-                slotStart: 1234567890,
+                slotStart: '2023-01-01T12:00:00Z',
                 attendeeName: 'John Doe',
                 attendeeEmail: 'john@example.com',
             },
