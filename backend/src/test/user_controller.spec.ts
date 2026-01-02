@@ -289,6 +289,13 @@ describe("User Controller", () => {
             const res = await request(app).get("/api/v1/user?q=  ");
             expect(res.status).toBe(400);
         });
+
+        it("should handle special regex characters in query safely", async () => {
+            // This would crash or behave unexpectedly if not escaped
+            const res = await request(app).get("/api/v1/user?q=(test");
+            expect(res.status).toBe(200); // Should treat "(" as a literal character, not regex group start
+            // If it returns 200, it means it didn't crash with SyntaxError: Invalid regular expression
+        });
     });
 });
 
