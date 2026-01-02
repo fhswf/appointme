@@ -49,7 +49,7 @@ export const searchUsers = (req: Request, res: Response): void => {
  * @returns {string} The escaped string.
  */
 function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); // $& means the whole matched string
 }
 
 /**
