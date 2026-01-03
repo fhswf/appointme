@@ -1,3 +1,16 @@
+# backend [1.37.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.2...backend@1.37.0-rc.3) (2026-01-02)
+
+
+### Bug Fixes
+
+* escape user search queries to prevent regular expression injection and add a corresponding test. ([2882036](https://github.com/fhswf/appointme/commit/28820365b906ae278d95905187a6b2a684b70474))
+* linting issues ([252dd0a](https://github.com/fhswf/appointme/commit/252dd0af4b8ff64308d36ce135fbf1e3f6476908))
+
+
+### Features
+
+* mcp server ([24103e6](https://github.com/fhswf/appointme/commit/24103e6b42e37c763beb8eaeee9c3f0cb85d9f19))
+
 # backend [1.37.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.1...backend@1.37.0-rc.2) (2025-12-31)
 
 
