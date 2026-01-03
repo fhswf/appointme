@@ -504,8 +504,23 @@ export const updateEventController = (req: Request, res: Response): void => {
     return;
   }
 
+  // Build a sanitized update object to avoid MongoDB operator injection
+  const updateData: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(event)) {
+    // Disallow MongoDB operator-style keys and dotted paths from user input
+    if (key.startsWith('$') || key.includes('.')) {
+      continue;
+    }
+    updateData[key] = value;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    res.status(400).json({ error: 'No valid fields to update' });
+    return;
+  }
+
   void EventModel
-    .findByIdAndUpdate(event_id, { $set: event })
+    .findByIdAndUpdate(event_id, { $set: updateData })
     .exec()
     .then((doc: EventDocument) => {
       res.status(200).json({ msg: "Update successful", event: doc })
