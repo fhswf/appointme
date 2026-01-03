@@ -1,3 +1,10 @@
+# mcp-server [1.0.0-rc.3](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.2...mcp-server@1.0.0-rc.3) (2026-01-03)
+
+
+### Features
+
+* improve `search_users` tool description and migrate HTTP/SSE transport to `StreamableHTTPServerTransport`. ([3cd5c80](https://github.com/fhswf/appointme/commit/3cd5c803c217885973a940706ae5570ca4d51ff2))
+
 # mcp-server [1.0.0-rc.2](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.1...mcp-server@1.0.0-rc.2) (2026-01-03)
 
 
