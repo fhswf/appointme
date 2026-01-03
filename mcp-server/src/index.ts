@@ -120,13 +120,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: "search_users",
-                description: "Search for users by name or email.",
+                description: "Search for users in the AppointMe system by partial name match or email address. This tool is useful for finding a user's ID to subsequently list their event types or availabilities.",
                 inputSchema: {
                     type: "object",
                     properties: {
                         query: {
                             type: "string",
-                            description: "Search query"
+                            description: "The search string to look for in user names or emails (e.g. 'John', 'john@example.com')"
                         }
                     },
                     required: ["query"]
@@ -232,7 +232,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 import express from "express";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
 
 // Start server
@@ -245,33 +245,20 @@ async function main() {
 
         app.use(cors());
 
-        // Store sse transports
-        const transports: { [sessionId: string]: SSEServerTransport } = {};
+        // Create transport
+        const transport = new StreamableHTTPServerTransport();
 
-        app.get("/sse", async (req, res) => {
-            console.log("New SSE connection");
-            const transport = new SSEServerTransport("/messages", res);
-            transports[transport.sessionId] = transport;
+        // Connect server to transport
+        await server.connect(transport);
 
-            // Clean up on close
-            res.on("close", () => {
-                console.log("SSE connection closed");
-                delete transports[transport.sessionId];
-            });
-
-            await server.connect(transport);
+        // Handle both GET (connection) and POST (message) on /sse
+        app.all("/sse", async (req, res) => {
+            await transport.handleRequest(req, res);
         });
 
-        app.post("/messages", express.json(), async (req, res) => {
-            const sessionId = req.query.sessionId as string;
-            const transport = transports[sessionId];
-
-            if (!transport) {
-                res.status(404).send("Session not found");
-                return;
-            }
-
-            await transport.handlePostMessage(req, res, req.body);
+        // Also handle legacy /messages for POST if needed, or just map everything to transport
+        app.post("/messages", async (req, res) => {
+            await transport.handleRequest(req, res);
         });
 
         app.get("/healthz", (req, res) => {
@@ -279,12 +266,12 @@ async function main() {
         });
 
         app.listen(port, () => {
-            console.log(`MCP Server running on SSE transport at http://localhost:${port}/sse`);
+            console.log(`MCP Server running on HTTP/SSE transport at http://localhost:${port}/sse`);
         });
     } else {
         const transport = new StdioServerTransport();
         await server.connect(transport);
-        console.error("BookMe MCP Server running on stdio");
+        console.error("AppointMe MCP Server running on stdio");
     }
 }
 
