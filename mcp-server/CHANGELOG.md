@@ -1,3 +1,11 @@
+# mcp-server [1.0.0-rc.4](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.3...mcp-server@1.0.0-rc.4) (2026-01-03)
+
+
+### Bug Fixes
+
+* replace deprecated types ([a818160](https://github.com/fhswf/appointme/commit/a818160387fd4fee5fa926c8e75650895526ccf3))
+* security updates of dependencies ([fabdec9](https://github.com/fhswf/appointme/commit/fabdec9bc67079b3898b794540e9a78508615ffd))
+
 # mcp-server [1.0.0-rc.3](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.2...mcp-server@1.0.0-rc.3) (2026-01-03)
 
 

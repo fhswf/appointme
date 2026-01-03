@@ -1,80 +1,80 @@
 {
-    "name": "mcp-server",
-    "version": "1.0.0",
-    "description": "MCP server for BookMe API",
-    "main": "build/index.js",
-    "type": "module",
-    "scripts": {
-        "build": "tsc",
-        "start": "node build/index.js",
-        "dev": "tsc --watch",
-        "test": "vitest run",
-        "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
-    },
-    "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.25.1",
-        "axios": "^1.13.2",
-        "common": "workspace:*",
-        "cors": "^2.8.5",
-        "dotenv": "^16.3.1",
-        "express": "^5.2.1",
-        "zod": "^3.22.4"
-    },
-    "devDependencies": {
-        "@types/cors": "^2.8.19",
-        "@types/express": "^5.0.6",
-        "@types/node": "^25.0.3",
-        "typescript": "^5.6.3",
-        "vitest": "^4.0.16"
-    },
-    "release": {
-        "plugins": [
-            "@semantic-release/commit-analyzer",
-            "@semantic-release/release-notes-generator",
-            "@semantic-release/changelog",
-            [
-                "@semantic-release/exec",
-                {
-                    "execCwd": "..",
-                    "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
-                }
-            ],
-            [
-                "@dmeents/semantic-release-yarn",
-                {
-                    "npmPublish": false,
-                    "changeVersion": true,
-                    "tarballDir": "build"
-                }
-            ],
-            [
-                "@semantic-release/exec",
-                {
-                    "execCwd": ".",
-                    "prepareCmd": "node ../utility/update-kustomize.js mcp-server mcp-server ${nextRelease.version}"
-                }
-            ],
-            "@semantic-release/github",
-            [
-                "@codedependant/semantic-release-docker",
-                {
-                    "dockerImage": "mcp-server",
-                    "dockerRegistry": "ghcr.io",
-                    "dockerProject": "fhswf/appointme",
-                    "dockerContext": ".."
-                }
-            ],
-            [
-                "@semantic-release/git",
-                {
-                    "assets": [
-                        "package.json",
-                        "CHANGELOG.md",
-                        "k8s/overlays/**/kustomization.yaml"
-                    ],
-                    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-                }
-            ]
-        ]
-    }
+  "name": "mcp-server",
+  "version": "1.0.0-rc.4",
+  "description": "MCP server for BookMe API",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1",
+    "axios": "^1.13.2",
+    "common": "workspace:*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^5.2.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.16"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": "..",
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+        }
+      ],
+      [
+        "@dmeents/semantic-release-yarn",
+        {
+          "npmPublish": false,
+          "changeVersion": true,
+          "tarballDir": "build"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": ".",
+          "prepareCmd": "node ../utility/update-kustomize.js mcp-server mcp-server ${nextRelease.version}"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "mcp-server",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/appointme",
+          "dockerContext": ".."
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md",
+            "k8s/overlays/**/kustomization.yaml"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  }
 }
