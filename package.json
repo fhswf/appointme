@@ -102,5 +102,9 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18"
   },
-  "stableVersion": "1.38.0"
+  "stableVersion": "1.38.0",
+  "resolutions": {
+    "lodash.template": "npm:lodash@4.17.21",
+    "glob": "^10.3.10"
+  }
 }
