@@ -7,7 +7,7 @@ import { z } from "zod";
 // Initialize server
 const server = new McpServer(
     {
-        name: "book-me-mcp",
+        name: "appoint-me-mcp",
         version: "1.0.0",
     }
 );
