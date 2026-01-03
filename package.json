@@ -105,6 +105,6 @@
   "stableVersion": "1.38.0",
   "resolutions": {
     "lodash.template": "npm:lodash@4.17.21",
-    "glob": "^10.3.10"
+    "glob": "^7.2.3"
   }
 }
