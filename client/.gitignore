@@ -8,3 +8,4 @@ playwright-report/
 test-results/
 public/logo_baked.svg
 public/logo_no_text_baked.svg
+.coverage-e2e

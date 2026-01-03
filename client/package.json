@@ -79,12 +79,11 @@
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
     "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
-    "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:patch && npm run coverage:merge",
-    "coverage:clean": "rm -rf .nyc_output coverage",
-    "coverage:copy-unit": "mkdir -p .nyc_output && cp coverage/coverage-final.json .nyc_output/unit-coverage.json",
-    "coverage:patch": "node scripts/patch-coverage-hash.cjs",
-    "coverage:merge": "rm -f .nyc_output/coverage-merged.json && nyc merge .nyc_output .nyc_output/coverage-merged.json && nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output",
-    "coverage:report": "nyc report --reporter=lcov --reporter=text --temp-dir .nyc_output"
+    "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:merge",
+    "coverage:clean": "rm -rf .coverage-e2e coverage coverage-merged",
+    "coverage:copy-unit": "mkdir -p .coverage-e2e && cp coverage/coverage-final.json .coverage-e2e/unit-coverage.json",
+    "coverage:merge": "node scripts/merge-coverage.mjs",
+    "coverage:report": "echo 'Run coverage:merge to generate report'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -115,7 +114,7 @@
     "i18next-parser": "9.3.0",
     "i18next-scanner": "4.5.0",
     "jsdom": "^27.2.0",
-    "nyc": "^17.1.0",
+    "monocart-coverage-reports": "^2.12.9",
     "opentype.js": "^1.3.4",
     "playwright-ctrf-json-reporter": "^0.0.27",
     "sharp-cli": "^5.2.0",
