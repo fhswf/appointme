@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.3...backend@1.37.0-rc.4) (2026-01-03)
+
+
+### Bug Fixes
+
+* Potential fix for code scanning alert no. 140: Database query built from user-controlled sources ([19c7644](https://github.com/fhswf/appointme/commit/19c76445e23899354de99a3e4aed6668eb7a0bb1))
+
 # backend [1.37.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.2...backend@1.37.0-rc.3) (2026-01-02)
 
 
