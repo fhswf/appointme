@@ -19,7 +19,7 @@ export const test = base.extend({
         await use(page);
         const coverage = await page.evaluate(() => (window as any).__coverage__);
         if (coverage) {
-            const coveragePath = path.join(process.cwd(), '.nyc_output');
+            const coveragePath = path.join(process.cwd(), '.coverage-e2e');
             if (!fs.existsSync(coveragePath)) {
                 fs.mkdirSync(coveragePath, { recursive: true });
             }
