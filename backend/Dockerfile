@@ -38,6 +38,7 @@ ENV APP_API_URL=${APP_API_URL}
 WORKDIR /usr/src/app 
 COPY --from=build /base/package.json .
 COPY --from=build /base/pnpm-lock.yaml .
+COPY --from=build /base/pnpm-workspace.yaml .
 COPY --from=build /base/backend backend
 COPY --from=build /base/common common
 
