@@ -104,11 +104,11 @@ jobs:
 
       # Run Common tests
       - name: Test Common
-        run: pnpm --filter common ci
+        run: pnpm --filter common run ci
 
       # Run Backend tests
       - name: Test Backend
-        run: pnpm --filter backend ci
+        run: pnpm --filter backend run ci
 
       # Run Playwright tests
       - name: Test Client
