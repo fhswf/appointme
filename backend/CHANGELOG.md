@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.4...backend@1.37.0-rc.5) (2026-01-04)
+
+
+### Bug Fixes
+
+* bump openid-client to v6 ([6afd919](https://github.com/fhswf/appointme/commit/6afd9199380bbff08e9e149e89715a68c404efdb))
+
 # backend [1.37.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.3...backend@1.37.0-rc.4) (2026-01-03)
 
 
