@@ -29,8 +29,8 @@ spec:
         - name: migrations
           image: ghcr.io/fhswf/appointme/backend:1.26.0
           command:
-            - yarn
-            - workspace
+            - pnpm
+            - --filter
             - backend
             - migrate
           env:
