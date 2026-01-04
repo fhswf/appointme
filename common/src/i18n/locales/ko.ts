@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants";
+
 export const ko = {
     "welcome_back": "다시 오신 것을 환영합니다",
     "login_subtitle": "계속하려면 로그인하십시오.",
@@ -252,7 +254,7 @@ export const ko = {
     "landing_footer_imprint": "법적 고지",
     "landing_footer_privacy": "개인정보 보호",
     "landing_footer_terms": "약관 및 조건",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "모두를 위한 간단한 약속 계획.",
     "Contact": "연락처",
     "footer_credits": "South Westphalia University of Applied Sciences에서 ❤️로 구현됨",

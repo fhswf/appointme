@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants";
+
 export const zh = {
     "welcome_back": "欢迎回来",
     "login_subtitle": "请登录以继续。",
@@ -252,7 +254,7 @@ export const zh = {
     "landing_footer_imprint": "印记",
     "landing_footer_privacy": "隐私",
     "landing_footer_terms": "条款和条件",
-    "landing_footer_copyright": "© 2023 Appoint Me.保留所有权利。",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "适合所有人的简单预约计划。",
     "Contact": "联系方式",
     "footer_credits": "由 South Westphalia University of Applied Sciences ❤️ 实现",

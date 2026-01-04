@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants";
+
 export const ja = {
     "welcome_back": "お帰りなさい",
     "login_subtitle": "続行するにはサインインしてください。",
@@ -252,7 +254,7 @@ export const ja = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "連絡先",
     "footer_credits": "南ヴェストファーレン応用科学大学で❤️を込めて実装されました",

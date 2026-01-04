@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants";
+
 export const en = {
     "application_title": "Appoint Me",
     "these_zesty_duck_nudge": "Basic Information",
@@ -237,7 +239,7 @@ export const en = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "Contact",
     "welcome_back": "Welcome back",
