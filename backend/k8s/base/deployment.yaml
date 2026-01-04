@@ -32,7 +32,7 @@ spec:
             - pnpm
             - --filter
             - backend
-            - migrate
+            - migrate:prod
           env:
             - name: MONGO_URI
               valueFrom:
