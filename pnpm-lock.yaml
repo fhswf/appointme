@@ -46,6 +46,9 @@ importers:
       dotenv-vault:
         specifier: ^1.27.0
         version: 1.27.0(@types/node@25.0.3)(typescript@5.9.3)
+      fast-xml-parser:
+        specifier: ^5.3.3
+        version: 5.3.3
       jest-ctrf-json-reporter:
         specifier: ^0.0.10
         version: 0.0.10
@@ -5208,6 +5211,10 @@ packages:
 
   fast-xml-parser@5.2.5:
     resolution: {integrity: sha512-pfX9uG9Ki0yekDHx2SiuRIyFdyAr1kMIMitPvb0YBo8SUfKvia7w7FIyd/l6av85pFYRhZscS75MwMnbvY+hcQ==}
+    hasBin: true
+
+  fast-xml-parser@5.3.3:
+    resolution: {integrity: sha512-2O3dkPAAC6JavuMm8+4+pgTk+5hoAs+CjZ+sWcQLkX9+/tHRuTkQh/Oaifr8qDmZ8iEHb771Ea6G8CdwkrgvYA==}
     hasBin: true
 
   fastest-levenshtein@1.0.16:
@@ -14800,6 +14807,10 @@ snapshots:
   fast-uri@3.1.0: {}
 
   fast-xml-parser@5.2.5:
+    dependencies:
+      strnum: 2.1.2
+
+  fast-xml-parser@5.3.3:
     dependencies:
       strnum: 2.1.2
 
