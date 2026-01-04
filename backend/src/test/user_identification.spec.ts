@@ -39,29 +39,24 @@ vi.mock("google-auth-library", () => {
 
 // Mock OIDC Client
 vi.mock("openid-client", () => {
-    const mockClient = {
-        authorizationUrl: vi.fn(),
-        callback: vi.fn().mockResolvedValue({
+    return {
+        Configuration: vi.fn().mockImplementation(function () {
+            return {
+                serverMetadata: () => ({}),
+                clientMetadata: () => ({}),
+            };
+        }),
+        buildAuthorizationUrl: vi.fn(),
+        authorizationCodeGrant: vi.fn().mockResolvedValue({
             claims: vi.fn().mockReturnValue({
                 sub: "oidc_id_456",
                 email: "test@example.com", // Same email as Google User
                 name: "OIDC User",
                 picture: "http://example.com/oidc_pic.jpg"
             })
-        })
-    };
-    return {
-        Issuer: class {
-            static discover(url) {
-                return Promise.resolve(new this() as any);
-            }
-            constructor() {
-                (this as any).Client = class {
-                    constructor() { return mockClient; }
-                }
-            }
-        },
-        Client: class { constructor() { return mockClient; } }
+        }),
+        ClientSecretBasic: vi.fn(),
+        None: vi.fn(),
     };
 });
 
