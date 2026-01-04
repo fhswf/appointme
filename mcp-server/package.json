@@ -36,7 +36,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "pnpm version ${nextRelease.version} --no-git-tag-version --allow-same-version"
+          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
         }
       ],
       [
