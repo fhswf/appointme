@@ -12,6 +12,7 @@ async function runMigrations() {
             throw new Error('MONGO_URI environment variable not set');
         }
 
+        logger.info('Starting migration process...');
         logger.info('Connecting to MongoDB...');
         await mongoose.connect(mongoUri);
         logger.info('Connected to MongoDB');
