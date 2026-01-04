@@ -103,6 +103,7 @@ jobs:
         uses: ctrf-io/github-test-reporter@v1
         with:
           report-path: '**/ctrf/*.json'
+          status-check: true
           pull-request-report: true
         if: always()
         env:
