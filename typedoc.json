@@ -1,0 +1,7 @@
+{
+    "entryPoints": [
+        "backend/src/server.ts",
+        "common/src/index.ts"
+    ],
+    "out": "docs"
+}

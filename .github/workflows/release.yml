@@ -39,9 +39,13 @@ jobs:
         run: yarn workspace common build
 
       - name: Generate Documentation
-        run: |
-          yarn workspace common doc
-          yarn workspace backend doc
+        run: yarn doc
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
 
       - name: Release
         id: release

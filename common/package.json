@@ -15,8 +15,7 @@
   "scripts": {
     "test": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage",
     "ci": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; yarn dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
-    "build": "yarn run -T tsc",
-    "doc": "yarn run -T typedoc --out docs src/index.ts"
+    "build": "yarn run -T tsc"
   },
   "contributors": [
     {
@@ -69,8 +68,7 @@
         {
           "assets": [
             "package.json",
-            "CHANGELOG.md",
-            "docs/**"
+            "CHANGELOG.md"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
