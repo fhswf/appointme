@@ -14,7 +14,8 @@
     "build:common": "yarn workspace common build",
     "build:backend": "yarn workspace backend build",
     "build:client": "yarn workspace client build",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "doc": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,7 @@
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
-    "@dmeents/semantic-release-yarn": "^1.1.13",
+    "@dmeents/semantic-release-yarn": "patch:@dmeents/semantic-release-yarn@npm%3A1.1.13#~/.yarn/patches/@dmeents-semantic-release-yarn-npm-1.1.13-65c44aa3b6.patch",
     "@qiwi/multi-semantic-release": "^7.1.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",

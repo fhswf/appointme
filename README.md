@@ -83,7 +83,32 @@ You can manage multiple environments (e.g., Staging, Production) using Kustomize
     kubectl apply -k k8s/overlays/staging
     ```
 
+
+### Deployment with ArgoCD
+
+To deploy with ArgoCD, you can use the following `Application` manifest example:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appointme-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/fhswf/appointme'
+    targetRevision: HEAD
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: appointme-prod
+  syncPolicy:
+    automated: {}
+```
+
 ### Configuration
+
 
 - provide details in `docker.env` and `.env`
 
