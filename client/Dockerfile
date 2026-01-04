@@ -10,8 +10,7 @@ ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
 
 WORKDIR /base
-# COPY .yarn .yarn
-# COPY .yarnrc.yml .
+
 RUN corepack enable
 
 COPY package.json .
