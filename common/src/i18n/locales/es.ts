@@ -1,4 +1,4 @@
-import { COPYRIGHT_ENGLISH } from "../constants";
+import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const es = {
     "welcome_back": "Bienvenido de nuevo",
