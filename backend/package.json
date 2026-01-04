@@ -103,7 +103,6 @@
           "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      "@semantic-release/npm",
       [
         "@semantic-release/exec",
         {
