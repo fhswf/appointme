@@ -16,6 +16,11 @@ jobs:
     # Only release on push to master
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/prod')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      issues: write
+      pull-requests: write
     #needs: [test]
     steps:
       - name: Checkout

@@ -356,7 +356,7 @@ eventRouter.get("/active/:userId", limiter, getActiveEventsController);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-eventRouter.get("/:id/slot", getAvailableTimes);
+eventRouter.get("/:id/slot", limiter, getAvailableTimes);
 
 /**
  * @openapi
@@ -393,7 +393,7 @@ eventRouter.get("/:id/slot", getAvailableTimes);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
+eventRouter.get("/:userId/:eventUrl", limiter, getEventByUrlController);
 
 /**
  * @openapi
