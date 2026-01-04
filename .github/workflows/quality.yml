@@ -90,7 +90,7 @@ jobs:
 
       # Run CI in all workspaces
       - name: Run CI
-        run: pnpm -r run ci
+        run: pnpm -r run ci --no-bail
         env:
           CI: true
           REACT_APP_API_URL: /api/v1

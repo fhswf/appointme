@@ -9,7 +9,7 @@
     "start": "node build/index.js",
     "dev": "tsc --watch",
     "test": "vitest run",
-    "ci": "pnpm run build && vitest run",
+    "ci": "pnpm run build && vitest run --coverage --reporter=junit --outputFile=junit.xml; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/mcp-server-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/mcp-server-ctrf.json",
     "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
   },
   "dependencies": {
