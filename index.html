@@ -1,0 +1,176 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="."><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>appointme</title><meta name="description" content="Documentation for appointme"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search"><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">appointme</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>appointme</h1></div><div class="tsd-panel tsd-typography"><p><a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release"></a>
+<img src="https://img.shields.io/github/issues/fhswf/appointme" alt="GitHub issues">
+<img src="https://img.shields.io/github/status/s/pulls/fhswf/appointme/10" alt="GitHub pull request check state">
+<a href="https://sonarqube.fh-swf.cloud/dashboard?id=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3"><img src="https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3&amp;metric=alert_status&amp;token=sqb_5deb3d670ea0a882f6563a07b9bea9dee035bcb6" alt="Quality Gate Status"></a></p>
+<a id="appointment" class="tsd-anchor"></a><h1 class="tsd-anchor-link">APPointment<a href="#appointment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>This web application helps you planning your appointments.</p>
+<p>As a <em>provider</em> of appointments (i.e. consultation hours) you can manage times when you are available for different types of appointments
+(online, in person, different durations) and integrate your Google calendar.</p>
+<p>As a <em>client</em>, you can search for available slots and book an appointment. You will receive an invitation from the calendar service of the provider.</p>
+<a id="deployment" class="tsd-anchor"></a><h2 class="tsd-anchor-link">Deployment<a href="#deployment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><a id="deployment-on-kubernetes" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Deployment on Kubernetes<a href="#deployment-on-kubernetes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>To deploy the application on Kubernetes, you need to create the necessary ConfigMap and Secret resources.</p>
+<ol>
+<li>
+<p><strong>Prepare Configuration:</strong>
+Detailed configuration templates are provided in <code>backend/k8s/</code>.</p>
+<ul>
+<li><code>backend/k8s/configmap.yaml.example</code>: Use this as a template. Rename it to <code>configmap.yaml</code> (or create a new one). <strong>This is the central configuration for both backend and client.</strong>
+<ul>
+<li>Updates to <code>API_URL</code> and <code>CLIENT_URL</code> here will configure the Backend.</li>
+<li>Updates to <code>REACT_APP_API_URL</code> and <code>REACT_APP_URL</code> here will be injected into the Client.</li>
+<li>Set <code>MONGO_URI</code> and <code>CORS_ALLOWED_ORIGINS</code> as needed.</li>
+</ul>
+</li>
+<li><code>backend/k8s/secret.yaml.example</code>: Use this as a template. Rename it to <code>secret.yaml</code> (or create a new one) and set sensitive secrets. <strong>Important:</strong> Replace the placeholder values (e.g., <code>changeme</code>) with your actual secrets before applying.</li>
+</ul>
+</li>
+<li>
+<p><strong>Apply Resources:</strong></p>
+<pre><code class="bash"><span class="hl-0"># Example command (after creating the actual files)</span><br/><span class="hl-1">kubectl</span><span class="hl-2"> </span><span class="hl-3">apply</span><span class="hl-2"> </span><span class="hl-4">-f</span><span class="hl-2"> </span><span class="hl-3">backend/k8s/configmap.yaml</span><br/><span class="hl-1">kubectl</span><span class="hl-2"> </span><span class="hl-3">apply</span><span class="hl-2"> </span><span class="hl-4">-f</span><span class="hl-2"> </span><span class="hl-3">backend/k8s/secret.yaml</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Deploy Application:</strong></p>
+<pre><code class="bash"><span class="hl-1">kubectl</span><span class="hl-2"> </span><span class="hl-3">apply</span><span class="hl-2"> </span><span class="hl-4">-f</span><span class="hl-2"> </span><span class="hl-3">backend/k8s/deployment.yaml</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Deploy MCP Server:</strong>
+The MCP server is a separate deployment that integrates with the backend.</p>
+<pre><code class="bash"><span class="hl-1">kubectl</span><span class="hl-2"> </span><span class="hl-3">apply</span><span class="hl-2"> </span><span class="hl-4">-k</span><span class="hl-2"> </span><span class="hl-3">mcp-server/k8s/base</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The Ingress handles routing:</p>
+<ul>
+<li><code>/</code> -&gt; Client</li>
+<li><code>/api</code> -&gt; Backend</li>
+<li><code>/mcp</code> -&gt; MCP Server</li>
+</ul>
+</li>
+</ol>
+<a id="environment-overlays-stagingproduction" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Environment Overlays (Staging/Production)<a href="#environment-overlays-stagingproduction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>You can manage multiple environments (e.g., Staging, Production) using Kustomize overlays located in <code>k8s/overlays/</code>.</p>
+<ol>
+<li>
+<p><strong>Create an Overlay:</strong>
+Copy an existing overlay (e.g., <code>k8s/overlays/dev</code>) to <code>k8s/overlays/staging</code> or <code>k8s/overlays/prod</code>.</p>
+</li>
+<li>
+<p><strong>Customize <code>kustomization.yaml</code>:</strong></p>
+<ul>
+<li>Set the <code>namespace</code> for the environment.</li>
+<li>Reference the base resources.</li>
+<li>Add patches for <code>Ingress</code> (to set the correct host) and <code>ConfigMap</code> (see below).</li>
+</ul>
+</li>
+<li>
+<p><strong>Patch <code>ConfigMap</code>:</strong>
+Create a <code>configmap-patch.yaml</code> in your overlay directory to override environment-specific values like module URLs.</p>
+<pre><code class="yaml"><span class="hl-5">apiVersion</span><span class="hl-2">: </span><span class="hl-6">v1</span><br/><span class="hl-5">kind</span><span class="hl-2">: </span><span class="hl-6">ConfigMap</span><br/><span class="hl-5">metadata</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">name</span><span class="hl-2">: </span><span class="hl-6">appointme</span><br/><span class="hl-5">data</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">CLIENT_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Deploy:</strong></p>
+<pre><code class="bash"><span class="hl-1">kubectl</span><span class="hl-2"> </span><span class="hl-3">apply</span><span class="hl-2"> </span><span class="hl-4">-k</span><span class="hl-2"> </span><span class="hl-3">k8s/overlays/staging</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+</ol>
+<a id="deployment-with-argocd" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Deployment with ArgoCD<a href="#deployment-with-argocd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>To deploy with ArgoCD, you can use the following <code>Application</code> manifest example:</p>
+<pre><code class="yaml"><span class="hl-5">apiVersion</span><span class="hl-2">: </span><span class="hl-6">argoproj.io/v1alpha1</span><br/><span class="hl-5">kind</span><span class="hl-2">: </span><span class="hl-6">Application</span><br/><span class="hl-5">metadata</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">name</span><span class="hl-2">: </span><span class="hl-6">appointme-prod</span><br/><span class="hl-2">  </span><span class="hl-5">namespace</span><span class="hl-2">: </span><span class="hl-6">argocd</span><br/><span class="hl-5">spec</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">project</span><span class="hl-2">: </span><span class="hl-6">default</span><br/><span class="hl-2">  </span><span class="hl-5">source</span><span class="hl-2">:</span><br/><span class="hl-2">    </span><span class="hl-5">repoURL</span><span class="hl-2">: </span><span class="hl-6">&#39;https://github.com/fhswf/appointme&#39;</span><br/><span class="hl-2">    </span><span class="hl-5">targetRevision</span><span class="hl-2">: </span><span class="hl-6">HEAD</span><br/><span class="hl-2">    </span><span class="hl-5">path</span><span class="hl-2">: </span><span class="hl-6">k8s/overlays/prod</span><br/><span class="hl-2">  </span><span class="hl-5">destination</span><span class="hl-2">:</span><br/><span class="hl-2">    </span><span class="hl-5">server</span><span class="hl-2">: </span><span class="hl-6">https://kubernetes.default.svc</span><br/><span class="hl-2">    </span><span class="hl-5">namespace</span><span class="hl-2">: </span><span class="hl-6">appointme-prod</span><br/><span class="hl-2">  </span><span class="hl-5">syncPolicy</span><span class="hl-2">:</span><br/><span class="hl-2">    </span><span class="hl-5">automated</span><span class="hl-2">: {}</span>
+</code><button type="button">Copy</button></pre>
+
+<a id="configuration" class="tsd-anchor"></a><h3 class="tsd-anchor-link">Configuration<a href="#configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>provide details in <code>docker.env</code> and <code>.env</code></li>
+</ul>
+<a id="environment-variables" class="tsd-anchor"></a><h4 class="tsd-anchor-link">Environment Variables<a href="#environment-variables" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Required</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MONGO_URI</code></td>
+<td>Connection string for MongoDB</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>CLIENT_URL</code></td>
+<td>URL of the frontend application (e.g., <code>https://example.com</code>)</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>API_URL</code></td>
+<td>URL of the backend API (e.g., <code>https://api.example.com/api/v1</code>)</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>JWT_SECRET</code></td>
+<td>Secret key for signing JWTs</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>CLIENT_ID</code></td>
+<td>Google OAuth2 Client ID</td>
+<td>No (if Google Login disabled)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>CLIENT_SECRET</code></td>
+<td>Google OAuth2 Client Secret</td>
+<td>No (if Google Login disabled)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>DISABLE_GOOGLE_LOGIN</code></td>
+<td>Set to <code>true</code> to disable Google Login</td>
+<td>No</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>OIDC_ISSUER</code></td>
+<td>OIDC Provider URL (e.g., Keycloak Realm URL)</td>
+<td>No (if OIDC disabled)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>OIDC_CLIENT_ID</code></td>
+<td>OIDC Client ID</td>
+<td>No (if OIDC disabled)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>OIDC_CLIENT_SECRET</code></td>
+<td>OIDC Client Secret (for Confidential clients)</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td><code>EMAIL_FROM</code></td>
+<td>Email address for sending notifications</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>EMAIL_PASSWORD</code></td>
+<td>Password for the email account</td>
+<td>Yes</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ENCRYPTION_KEY</code></td>
+<td>32-byte hex key for encrypting CalDAV passwords</td>
+<td>Yes</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#appointment"><span>APPointment</span></a><ul><li><a href="#deployment"><span>Deployment</span></a></li><li><ul><li><a href="#deployment-on-kubernetes"><span>Deployment on <wbr/>Kubernetes</span></a></li><li><a href="#environment-overlays-stagingproduction"><span>Environment <wbr/>Overlays (<wbr/>Staging/<wbr/>Production)</span></a></li><li><a href="#deployment-with-argocd"><span>Deployment with <wbr/>ArgoCD</span></a></li><li><a href="#configuration"><span>Configuration</span></a></li><li><ul><li><a href="#environment-variables"><span>Environment <wbr/>Variables</span></a></li></ul></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">appointme</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
