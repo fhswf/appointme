@@ -1,4 +1,4 @@
-import { COPYRIGHT_ENGLISH } from "../constants";
+import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const ja = {
     "welcome_back": "お帰りなさい",
