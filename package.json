@@ -40,12 +40,6 @@
     "url": "https://github.com/fhswf/appointme/issues"
   },
   "homepage": "https://github.com/fhswf/appointme#readme",
-  "workspaces": [
-    "common",
-    "backend",
-    "client",
-    "mcp-server"
-  ],
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
     "@qiwi/multi-semantic-release": "^7.1.2",

@@ -27,12 +27,10 @@ spec:
     spec:
       initContainers:
         - name: migrations
-          image: ghcr.io/fhswf/appointme/backend:1.26.0
+          image: ghcr.io/fhswf/appointme/backend:latest
           command:
-            - pnpm
-            - --filter
-            - backend
-            - migrate:prod
+            - node
+            - backend/build/scripts/run-migrations.js
           env:
             - name: MONGO_URI
               valueFrom:
