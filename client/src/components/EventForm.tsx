@@ -373,7 +373,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                     value={formData.recurrence.count || ''}
                     onChange={(e) => {
                       setChanged(true);
-                      const val = e.target.value ? parseInt(e.target.value) : undefined;
+                      const val = e.target.value ? Number.parseInt(e.target.value) : undefined;
                       setFormData({
                         ...formData,
                         recurrence: {
@@ -400,7 +400,7 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
                       value={formData.recurrence.span?.value || ''}
                       onChange={(e) => {
                         setChanged(true);
-                        const val = e.target.value ? parseInt(e.target.value) : 1;
+                        const val = e.target.value ? Number.parseInt(e.target.value) : 1;
                         setFormData({
                           ...formData,
                           recurrence: {
