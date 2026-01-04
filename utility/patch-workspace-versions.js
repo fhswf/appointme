@@ -8,9 +8,21 @@ const root = JSON.parse(fs.readFileSync(rootPath, 'utf8'));
 const packages = {};
 
 // Create a version map
+// Check if pnpm-workspace.yaml exists and use it
+const pnpmWorkspacePath = path.join(process.cwd(), 'pnpm-workspace.yaml');
+let workspaceDirs = [];
+
+if (fs.existsSync(pnpmWorkspacePath)) {
+  const yaml = require('js-yaml');
+  const pnpmWorkspace = yaml.load(fs.readFileSync(pnpmWorkspacePath, 'utf8'));
+  workspaceDirs = pnpmWorkspace.packages;
+} else if (root.workspaces) {
+  workspaceDirs = root.workspaces;
+}
+
 let versionMap = Object.assign(
   {},
-  ...root.workspaces.map((packageDir) => {
+  ...workspaceDirs.map((packageDir) => {
     const pkgJsonPath = path.join(process.cwd(), packageDir, 'package.json');
     const packageInfo = JSON.parse(
       fs.readFileSync(pkgJsonPath, 'utf8'),
