@@ -10,21 +10,21 @@ ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
 
 WORKDIR /base
-COPY .yarn .yarn
-COPY .yarnrc.yml .
-RUN yarn set version 4
+# COPY .yarn .yarn
+# COPY .yarnrc.yml .
+RUN corepack enable
 
 COPY package.json .
-COPY yarn.lock .
+COPY pnpm-lock.yaml .
 COPY ./common/package.json ./common/package.json 
 COPY ./client/package.json ./client/package.json 
-RUN yarn install && yarn --version
+RUN pnpm install --frozen-lockfile
 
 COPY ./common ./common
-RUN yarn workspace common build
+RUN pnpm --filter common build
 
 COPY ./client ./client
-RUN yarn workspace client build
+RUN pnpm --filter client build
 
 FROM nginx:1.21.3-alpine
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
