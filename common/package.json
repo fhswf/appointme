@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "1.15.0-rc.2",
+  "version": "1.15.0",
   "description": "Common types for backend and frontend",
   "repository": {
     "type": "git",
@@ -51,7 +51,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "pnpm version ${nextRelease.version} --no-git-tag-version --allow-same-version"
+          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
         }
       ],
       [
