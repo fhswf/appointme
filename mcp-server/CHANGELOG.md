@@ -1,3 +1,10 @@
+# mcp-server [1.0.0-rc.5](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.4...mcp-server@1.0.0-rc.5) (2026-01-04)
+
+
+### Features
+
+* centralize documentation generation ([976ac6d](https://github.com/fhswf/appointme/commit/976ac6db6123dbd19d1c31ab46737154b4f7b51a))
+
 # mcp-server [1.0.0-rc.4](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.3...mcp-server@1.0.0-rc.4) (2026-01-03)
 
 
