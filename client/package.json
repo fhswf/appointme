@@ -79,6 +79,7 @@
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
     "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; pnpm dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
+    "ci": "pnpm run build && pnpm run coverage",
     "coverage": "pnpm run coverage:clean && pnpm run test:unit && pnpm run coverage:copy-unit && pnpm run test:ci && pnpm run coverage:merge",
     "coverage:clean": "rm -rf .coverage-e2e coverage coverage-merged",
     "coverage:copy-unit": "mkdir -p .coverage-e2e && cp coverage/coverage-final.json .coverage-e2e/unit-coverage.json",

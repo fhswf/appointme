@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
-    "ci": "vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
+    "ci": "pnpm run build && vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
     "migrate": "node --import tsx src/scripts/run-migrations.ts",
     "start": "node build/server.js",
     "server": "node --import tsx --watch src/server.ts",

@@ -14,7 +14,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage",
-    "ci": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
+    "ci": "pnpm run build && TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
     "build": "tsc"
   },
   "contributors": [
