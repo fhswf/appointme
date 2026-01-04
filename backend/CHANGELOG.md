@@ -1,3 +1,15 @@
+# backend [1.37.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.5...backend@1.37.0-rc.6) (2026-01-04)
+
+
+### Bug Fixes
+
+* CodeQL issues ([617ad60](https://github.com/fhswf/appointme/commit/617ad60471c3daf7f1c4a23f4cd29ba8d4c14857))
+
+
+### Features
+
+* centralize documentation generation ([976ac6d](https://github.com/fhswf/appointme/commit/976ac6db6123dbd19d1c31ab46737154b4f7b51a))
+
 # backend [1.37.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.4...backend@1.37.0-rc.5) (2026-01-04)
 
 
