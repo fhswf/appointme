@@ -1,3 +1,10 @@
+# client [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.3...client@1.32.0-rc.4) (2026-01-04)
+
+
+### Bug Fixes
+
+* upgrade react-dom to match react version ([aefb3bc](https://github.com/fhswf/appointme/commit/aefb3bc95fbd2b793c286e793085d62d1836cfbd))
+
 # client [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.2...client@1.32.0-rc.3) (2025-12-31)
 
 
