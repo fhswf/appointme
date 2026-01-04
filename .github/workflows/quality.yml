@@ -70,13 +70,6 @@ jobs:
           mkdir -p ctrf
           mkdir -p client/ctrf
 
-      # Build
-      - name: Build Common
-        run: pnpm --filter common build
-
-      - name: Build Backend
-        run: pnpm --filter backend build
-
       - name: Get Playwright version
         id: playwright-version
         run: echo "version=$(node -e "console.log(require('./client/package.json').dependencies['@playwright/test'])")" >> $GITHUB_OUTPUT
@@ -90,33 +83,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
 
-      # Install Playwright browsers
+      # Install Playwright browsers (needed for client tests)
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: cd client && npx playwright install --with-deps chromium
 
-      # Clean old coverage data to ensure fresh reports
-      - name: Clean Coverage Data
-        run: |
-          rm -rf client/.nyc_output
-          rm -rf client/coverage
-          mkdir -p client/.nyc_output
-
-      # Run Common tests
-      - name: Test Common
-        run: pnpm --filter common run ci
-
-      # Run Backend tests
-      - name: Test Backend
-        run: pnpm --filter backend run ci
-
-      # Run Playwright tests
-      - name: Test Client
-        run: |
-          cd client
-          pnpm run test:unit
-          pnpm run coverage:copy-unit
-          pnpm run test:ci
+      # Run CI in all workspaces
+      - name: Run CI
+        run: pnpm -r run ci
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
@@ -124,11 +98,6 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           VITE_COVERAGE: true
-
-      - name: Generate Coverage Report
-        run: |
-          cd client
-          pnpm run coverage:merge
 
       - name: Publish Test Report with Pull Request Comment
         uses: ctrf-io/github-test-reporter@v1

@@ -9,6 +9,7 @@
     "start": "node build/index.js",
     "dev": "tsc --watch",
     "test": "vitest run",
+    "ci": "pnpm run build && vitest run",
     "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
   },
   "dependencies": {
