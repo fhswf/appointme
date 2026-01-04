@@ -10,22 +10,20 @@ ENV APP_URL=${APP_URL}
 ENV APP_API_URL=${APP_API_URL}
 
 WORKDIR /base
-COPY .yarn .yarn
-COPY .yarnrc.yml .
-
+RUN corepack enable
 
 COPY package.json .
-COPY yarn.lock .
+COPY pnpm-lock.yaml .
+# Copy workspace definitions if needed, or ensure package.json workspace structure is valid for pnpm
 COPY ./common/package.json ./common/package.json 
 COPY ./backend/package.json ./backend/package.json 
-RUN yarn install 
-RUN yarn --version
+RUN pnpm install --frozen-lockfile
 
 COPY ./common ./common
-RUN yarn workspace common build
+RUN pnpm --filter common build
 
 COPY ./backend ./backend
-RUN yarn workspace backend build
+RUN pnpm --filter backend build
 
 # Create backend container
 FROM node:22-bullseye as backend
@@ -38,16 +36,14 @@ ENV APP_API_URL=${APP_API_URL}
 
 WORKDIR /usr/src/app 
 COPY --from=build /base/package.json .
-COPY --from=build /base/yarn.lock .
+COPY --from=build /base/pnpm-lock.yaml .
 COPY --from=build /base/backend backend
 COPY --from=build /base/common common
-COPY --from=build /base/.yarn .yarn
-COPY --from=build /base/.yarnrc.yml .yarnrc.yml
 
-RUN yarn install
+RUN corepack enable && pnpm install --prod --frozen-lockfile
 
 RUN curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin \
     && syft . -o spdx-json=sbom.spdx.json
 
 EXPOSE 5000
-CMD [ "yarn", "workspace", "backend", "start"]
+CMD [ "pnpm", "--filter", "backend", "start"]
