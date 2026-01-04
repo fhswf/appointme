@@ -27,7 +27,7 @@ Object.entries(packages).forEach(([packageDir, packageInfo]) => {
     packageInfo.dependencies = Object.assign(
       packageInfo.dependencies,
       ...Object.entries(packageInfo.dependencies).map(([name, version]) => ({
-        [name]: versionMap[name] ? `workspace:*` : version,
+        [name]: versionMap[name] ? `file:../${name}` : version,
       })),
     );
   }
@@ -36,7 +36,7 @@ Object.entries(packages).forEach(([packageDir, packageInfo]) => {
     packageInfo.devDependencies = Object.assign(
       packageInfo.devDependencies,
       ...Object.entries(packageInfo.devDependencies).map(([name, version]) => ({
-        [name]: versionMap[name] ? `workspace:*` : version,
+        [name]: versionMap[name] ? `file:../${name}` : version,
       })),
     );
   }

@@ -120,7 +120,7 @@ export const EMPTY_EVENT: Event = {
   }
 };
 
-export interface GoogleTokens extends Document {
+export interface GoogleTokens {
   access_token?: string;
   refresh_token?: string;
   scope?: string;
