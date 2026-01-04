@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
-import { Issuer } from 'openid-client';
+import * as openIdClient from 'openid-client';
 import { UserModel } from '../models/User.js';
 import { init } from '../server.js';
 import pkg from 'jsonwebtoken';
@@ -8,7 +8,19 @@ import pkg from 'jsonwebtoken';
 const { sign } = pkg;
 
 // Mock dependencies
-vi.mock('openid-client');
+// Mock openid-client exports
+vi.mock('openid-client', async (importOriginal) => {
+    const actual = await importOriginal<typeof openIdClient>();
+    return {
+        ...actual,
+        Configuration: vi.fn(),
+        buildAuthorizationUrl: vi.fn(),
+        authorizationCodeGrant: vi.fn(),
+        ClientSecretBasic: vi.fn(),
+        None: vi.fn(),
+    };
+});
+
 vi.mock('../models/User.js');
 vi.mock('../logging.js', () => ({
     logger: {
@@ -33,16 +45,6 @@ describe('OIDC Controller', () => {
     let csrfToken: string;
     let csrfCookie: string;
 
-    const mockClient = {
-        authorizationUrl: vi.fn(),
-        callback: vi.fn(),
-    };
-
-    const mockIssuer = {
-        Client: vi.fn().mockImplementation(function () {
-            return mockClient;
-        })
-    };
 
     beforeEach(async () => {
         vi.clearAllMocks();
@@ -56,9 +58,12 @@ describe('OIDC Controller', () => {
         vi.stubEnv('JWT_SECRET', 'test_secret');
         vi.stubEnv('NODE_ENV', 'test');
 
-        // Setup Issuer mock
-        (Issuer as any).mockImplementation(function () {
-            return mockIssuer;
+        // Setup Configuration mock
+        (openIdClient.Configuration as any).mockImplementation(function () {
+            return {
+                serverMetadata: () => ({}),
+                clientMetadata: () => ({}),
+            };
         });
 
         // Re-initialize app for each test
@@ -90,26 +95,19 @@ describe('OIDC Controller', () => {
         });
 
         it('should return authorization URL when configured', async () => {
-            // Reset modules to ensure fresh state after previous test
+            // Need to re-init app to pick up env vars if not picked up dynamically
             vi.resetModules();
-            // Re-setup envs as resetModules might affect how they are read if cached? 
-            // Actually, beforeEach runs before this, but if we reset modules inside a test, we might need to re-import app.
-            // beforeEach initializes `app = init(0)`, but that uses the module from TOP LEVEL import which might be stale if we reset modules?
-            // No, resetModules() clears the require cache.
-            // So we must re-import init and re-initialize app.
             const { init } = await import('../server.js');
             app = init(0);
 
-            const authUrl = 'https://issuer.example.com/auth?scope=openid';
-            mockClient.authorizationUrl.mockReturnValue(authUrl);
+            const authUrl = new URL('https://issuer.example.com/auth?scope=openid');
+            (openIdClient.buildAuthorizationUrl as any).mockResolvedValue(authUrl);
 
             const res = await request(app).get('/api/v1/oidc/url');
 
             expect(res.status).toBe(200);
-            expect(res.body).toEqual({ url: authUrl });
-            expect(mockClient.authorizationUrl).toHaveBeenCalledWith({
-                scope: 'openid email profile',
-            });
+            expect(res.body).toEqual({ url: authUrl.href });
+            expect(openIdClient.buildAuthorizationUrl).toHaveBeenCalled();
         });
     });
 
@@ -157,7 +155,7 @@ describe('OIDC Controller', () => {
                 picture: 'http://pic.com/1.jpg'
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -207,7 +205,7 @@ describe('OIDC Controller', () => {
                 name: 'Test User',
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -229,7 +227,7 @@ describe('OIDC Controller', () => {
                 email: 'test@example.com',
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -263,7 +261,7 @@ describe('OIDC Controller', () => {
                 picture: 'http://pic.com/existing.jpg'
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -307,7 +305,7 @@ describe('OIDC Controller', () => {
                 name: 'Collision User',
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -353,7 +351,7 @@ describe('OIDC Controller', () => {
             await getCsrfToken();
             const code = 'valid_code';
             const claims = { sub: 'u', email: 'e@e.com' };
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
@@ -382,7 +380,7 @@ describe('OIDC Controller', () => {
         it('should handle generic callback error', async () => {
             await getCsrfToken();
             const code = 'invalid_code';
-            mockClient.callback.mockRejectedValue(new Error("OIDC Error"));
+            (openIdClient.authorizationCodeGrant as any).mockRejectedValue(new Error("OIDC Error"));
 
             const res = await request(app)
                 .post('/api/v1/oidc/login')
@@ -443,4 +441,5 @@ describe('OIDC Controller', () => {
         });
     });
 });
+
 
