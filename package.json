@@ -8,12 +8,13 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
-    "ci": "yarn workspaces foreach --all run ci; yarn dlx merge-ctrf -k ctrf",
-    "backend": "yarn workspace backend start",
-    "client": "yarn workspace client start",
-    "build:common": "yarn workspace common build",
-    "build:backend": "yarn workspace backend build",
-    "build:client": "yarn workspace client build",
+    "ci": "pnpm -r run ci; pnpm dlx merge-ctrf -k ctrf",
+    "backend": "pnpm --filter backend start",
+    "client": "pnpm --filter client start",
+    "build": "pnpm -r build",
+    "build:common": "pnpm --filter common build",
+    "build:backend": "pnpm --filter backend build",
+    "build:client": "pnpm --filter client build",
     "release": "semantic-release",
     "doc": "typedoc"
   },
@@ -50,7 +51,6 @@
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
-    "@dmeents/semantic-release-yarn": "patch:@dmeents/semantic-release-yarn@npm%3A1.1.13#~/.yarn/patches/@dmeents-semantic-release-yarn-npm-1.1.13-65c44aa3b6.patch",
     "@qiwi/multi-semantic-release": "^7.1.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",
@@ -74,17 +74,10 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       "@semantic-release/git",
       "@semantic-release/github"
     ],
@@ -101,7 +94,7 @@
     ],
     "noCi": true
   },
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "pnpm@10.27.0",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18"
   },
