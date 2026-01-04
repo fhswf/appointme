@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Issuer, Client } from 'openid-client';
+import { Configuration, buildAuthorizationUrl, authorizationCodeGrant, ClientSecretBasic, None } from 'openid-client';
 import { UserModel } from '../models/User.js';
 import pkg from 'jsonwebtoken';
 import { logger } from '../logging.js';
@@ -7,55 +7,68 @@ import { validateUrl } from './authentication_controller.js';
 
 const { sign } = pkg;
 
-let client: Client | null = null;
+let config: Configuration | null = null;
 
-const getClient = async (): Promise<Client | null> => {
-    if (client) return client;
-    if (!process.env.OIDC_ISSUER || !process.env.OIDC_CLIENT_ID) return null;
+const getConfig = async (): Promise<Configuration | null> => {
+    if (config) return config;
+    if (!process.env.OIDC_ISSUER || !process.env.OIDC_CLIENT_ID) {
+        return null;
+    }
     logger.info("OIDC Config: Issuer=%s, ClientID=%s", process.env.OIDC_ISSUER, process.env.OIDC_CLIENT_ID);
 
     try {
         const issuerUrl = process.env.OIDC_ISSUER.replace(/\/$/, ""); // Remove trailing slash if present
 
         // Manual construction to avoid discovery issues and strict validation
-        const issuer = new Issuer({
+        const serverMetadata = {
             issuer: issuerUrl,
             authorization_endpoint: `${issuerUrl}/protocol/openid-connect/auth`,
             token_endpoint: `${issuerUrl}/protocol/openid-connect/token`,
             userinfo_endpoint: `${issuerUrl}/protocol/openid-connect/userinfo`,
             jwks_uri: `${issuerUrl}/protocol/openid-connect/certs`,
-        });
-        client = new issuer.Client({
-            client_id: process.env.OIDC_CLIENT_ID,
-            client_secret: process.env.OIDC_CLIENT_SECRET,
-            redirect_uris: [`${process.env.BASE_URL}/oidc-callback`],
-            response_types: ['code'],
-            token_endpoint_auth_method: process.env.OIDC_CLIENT_SECRET ? 'client_secret_basic' : 'none',
-        });
-        return client;
+        };
+
+        const clientId = process.env.OIDC_CLIENT_ID;
+        const clientSecret = process.env.OIDC_CLIENT_SECRET;
+        const clientAuth = clientSecret ? ClientSecretBasic(clientSecret) : None();
+
+        config = new Configuration(
+            serverMetadata,
+            clientId,
+            {
+                client_id: clientId,
+                client_secret: clientSecret,
+                redirect_uris: [`${process.env.BASE_URL}/oidc-callback`],
+                response_types: ['code'],
+                token_endpoint_auth_method: clientSecret ? 'client_secret_basic' : 'none',
+            },
+            clientAuth
+        );
+        return config;
     } catch (err) {
         if (err instanceof Error) {
-            logger.error(`Failed to discover OIDC issuer: ${err.message}`);
+            logger.error(`Failed to configure OIDC: ${err.message}`);
         } else {
-            logger.error("Failed to discover OIDC issuer: %o", err);
+            logger.error("Failed to configure OIDC: %o", err);
         }
         return null;
     }
 };
 
 export const getAuthUrl = async (req: Request, res: Response): Promise<void> => {
-    const oidcClient = await getClient();
-    if (!oidcClient) {
+    const oidcConfig = await getConfig();
+    if (!oidcConfig) {
         res.status(503).json({ error: "OIDC not configured" });
         return;
     }
 
     // Generates the auth url that the frontend should redirect the user to
-    const url = oidcClient.authorizationUrl({
+    const url = await buildAuthorizationUrl(oidcConfig, {
         scope: 'openid email profile',
+        redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
     });
 
-    res.json({ url });
+    res.json({ url: url.href });
 };
 
 const updateExistingUser = async (user: any, name?: string, picture?: string) => {
@@ -157,9 +170,9 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         return;
     }
 
-    const oidcClient = await getClient();
+    const oidcConfig = await getConfig();
 
-    if (!oidcClient) {
+    if (!oidcConfig) {
         res.status(503).json({ error: "OIDC not configured" });
         return;
     }
@@ -167,9 +180,19 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
     try {
         // Exchange code for tokens
         // We must pass the same redirect_uri that was used in the authorization request
-        const tokenSet = await oidcClient.callback(
-            `${process.env.BASE_URL}/oidc-callback`,
-            { code }
+        // construct URL with code
+        const currentUrl = new URL(`${process.env.BASE_URL}/oidc-callback`);
+        currentUrl.searchParams.set('code', code);
+
+        const tokenSet = await authorizationCodeGrant(
+            oidcConfig,
+            currentUrl,
+            {
+                pkceCodeVerifier: undefined, // Add if we implement PKCE
+            },
+            {
+                redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
+            }
         );
 
         const claims = tokenSet.claims();
@@ -180,7 +203,7 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
             return;
         }
 
-        const user = await findOrCreateUser(sub, email, name, picture);
+        const user = await findOrCreateUser(sub as string, email as string, name as string | undefined, picture as string | undefined);
 
         if (!user) {
             throw new Error("User creation failed after retries");
