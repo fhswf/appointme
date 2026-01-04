@@ -1,3 +1,15 @@
+# common [1.15.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.1...common@1.15.0-rc.2) (2026-01-04)
+
+
+### Bug Fixes
+
+* import issue in localization files ([ec85802](https://github.com/fhswf/appointme/commit/ec85802686486ede05392cfa79a3320de3bf1bcc))
+
+
+### Features
+
+* centralize documentation generation ([976ac6d](https://github.com/fhswf/appointme/commit/976ac6db6123dbd19d1c31ab46737154b4f7b51a))
+
 # common [1.15.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0-rc.1) (2025-12-31)
 
 
