@@ -15,8 +15,8 @@
   "scripts": {
     "test": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage",
     "ci": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; yarn dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
-    "build": "tsc",
-    "doc": "jsdoc -c jsdoc.json"
+    "build": "yarn run -T tsc",
+    "doc": "yarn run -T typedoc --out docs src/index.ts"
   },
   "contributors": [
     {
@@ -36,13 +36,45 @@
     "@vitest/coverage-v8": "^4.0.16",
     "chai": "^4.2.0",
     "eslint": "^9.39.2",
-    "jsdoc": "^3.6.7",
     "jshint": "^2.12.0",
-    "typescript": "^5.6.3",
     "vitest": "^4.0.16"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": "..",
+          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+        }
+      ],
+      [
+        "@dmeents/semantic-release-yarn",
+        {
+          "npmPublish": true,
+          "changeVersion": true,
+          "tarballDir": "build"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md",
+            "docs/**"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
   }
 }

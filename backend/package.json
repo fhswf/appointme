@@ -15,8 +15,8 @@
     "start": "node build/server.js",
     "server": "node --import tsx --watch src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "tsc",
-    "doc": "jsdoc -c jsdoc.json"
+    "build": "yarn run -T tsc",
+    "doc": "yarn run -T typedoc --out docs src/server.ts"
   },
   "contributors": [
     {
@@ -81,7 +81,6 @@
     "supertest": "^7.0.0",
     "ts-node": "^10.9.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.6.2",
     "vitest": "^4.0.16"
   },
   "eslintConfig": {
@@ -132,7 +131,8 @@
           "assets": [
             "package.json",
             "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml"
+            "k8s/overlays/**/kustomization.yaml",
+            "docs/**"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
