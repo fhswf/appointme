@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.7...backend@1.37.0-rc.8) (2026-01-04)
+
+
+### Bug Fixes
+
+* **backend:** fix Dockerfile dependencies and trigger release ([acdf6c5](https://github.com/fhswf/appointme/commit/acdf6c54f95ad95a76a72f6240cfd64b8afed351))
+
 # backend [1.37.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.6...backend@1.37.0-rc.7) (2026-01-04)
 
 
