@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.6...backend@1.37.0-rc.7) (2026-01-04)
+
+
+### Bug Fixes
+
+* replace yarn in init container ([ff5f4a5](https://github.com/fhswf/appointme/commit/ff5f4a573129644aed8910d19b7a6dded48db5ea))
+
 # backend [1.37.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.5...backend@1.37.0-rc.6) (2026-01-04)
 
 
