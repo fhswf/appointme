@@ -1,4 +1,4 @@
-import { COPYRIGHT_ENGLISH } from "../constants";
+import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const zh = {
     "welcome_back": "欢迎回来",
