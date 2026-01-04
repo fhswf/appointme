@@ -14,9 +14,8 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage",
-    "ci": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; yarn dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
-    "build": "yarn run -T tsc",
-    "doc": "yarn run -T typedoc --out docs src/index.ts"
+    "ci": "pnpm run build && TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/common-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/common-ctrf.json",
+    "build": "tsc"
   },
   "contributors": [
     {
@@ -33,6 +32,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/expect": "^24.3.0",
+    "@types/node": "^25.0.3",
     "@vitest/coverage-v8": "^4.0.16",
     "chai": "^4.2.0",
     "eslint": "^9.39.2",
@@ -52,25 +52,17 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": true,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       "@semantic-release/github",
       [
         "@semantic-release/git",
         {
           "assets": [
             "package.json",
-            "CHANGELOG.md",
-            "docs/**"
+            "CHANGELOG.md"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
