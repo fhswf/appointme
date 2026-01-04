@@ -14,6 +14,7 @@ RUN corepack enable
 
 COPY package.json .
 COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
 # Copy workspace definitions if needed, or ensure package.json workspace structure is valid for pnpm
 COPY ./common/package.json ./common/package.json 
 COPY ./backend/package.json ./backend/package.json 

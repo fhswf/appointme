@@ -7,6 +7,7 @@ RUN corepack enable
 
 COPY package.json .
 COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
 COPY ./common/package.json ./common/package.json
 COPY ./mcp-server/package.json ./mcp-server/package.json
 

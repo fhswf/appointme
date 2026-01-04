@@ -12,6 +12,8 @@ As a _provider_ of appointments (i.e. consultation hours) you can manage times w
 
 As a _client_, you can search for available slots and book an appointment. You will receive an invitation from the calendar service of the provider.
 
+Full documentation is available at [https://fhswf.github.io/appointme/](https://fhswf.github.io/appointme/).
+
 ## Deployment
 
 ### Deployment on Kubernetes
