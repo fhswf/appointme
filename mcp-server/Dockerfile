@@ -28,6 +28,7 @@ WORKDIR /usr/src/app
 COPY --from=build /base/package.json .
 COPY --from=build /base/pnpm-lock.yaml .
 COPY --from=build /base/mcp-server mcp-server
+COPY --from=build /base/pnpm-workspace.yaml .
 COPY --from=build /base/common common
 
 
