@@ -1,8 +1,7 @@
 FROM node:22-bullseye as build
 
 WORKDIR /base
-# COPY .yarn .yarn
-# COPY .yarnrc.yml .
+
 RUN corepack enable
 
 COPY package.json .
@@ -30,8 +29,7 @@ COPY --from=build /base/package.json .
 COPY --from=build /base/pnpm-lock.yaml .
 COPY --from=build /base/mcp-server mcp-server
 COPY --from=build /base/common common
-# COPY --from=build /base/.yarn .yarn
-# COPY --from=build /base/.yarnrc.yml .yarnrc.yml
+
 
 RUN corepack enable && pnpm install --prod --frozen-lockfile
 
