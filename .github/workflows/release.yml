@@ -33,6 +33,11 @@ jobs:
       - name: Build
         run: yarn workspace common build
 
+      - name: Generate Documentation
+        run: |
+          yarn workspace common doc
+          yarn workspace backend doc
+
       - name: Release
         id: release
         run: yarn exec multi-semantic-release

@@ -60,7 +60,9 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "dotenv-vault": "^1.27.0",
     "jest-ctrf-json-reporter": "^0.0.10",
-    "semantic-release": "^25.0.2"
+    "semantic-release": "^25.0.2",
+    "typedoc": "^0.27.0",
+    "typescript": "^5.9.3"
   },
   "release": {
     "plugins": [
