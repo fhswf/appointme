@@ -10,13 +10,12 @@
   "type": "module",
   "scripts": {
     "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
-    "ci": "vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; yarn dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
+    "ci": "pnpm run build && vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
     "migrate": "node --import tsx src/scripts/run-migrations.ts",
     "start": "node build/server.js",
     "server": "node --import tsx --watch src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "yarn run -T tsc",
-    "doc": "yarn run -T typedoc --out docs src/server.ts"
+    "build": "tsc"
   },
   "contributors": [
     {
@@ -29,7 +28,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.1",
     "common": "workspace:*",
     "concurrently": "^9.2.1",
@@ -39,7 +37,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^17.2.3",
-    "express": "^4.18.2",
+    "express": "^5.0.1",
     "express-jwt": "^8.4.1",
     "express-rate-limit": "^7.4.1",
     "express-validator": "^7.0.1",
@@ -64,8 +62,7 @@
     "@babel/core": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@types/babel__core": "^7",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/express": "^4.17.11",
+    "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/node": "^25.0.3",
     "@types/nodemailer": "^7.0.4",
@@ -97,17 +94,10 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       [
         "@semantic-release/exec",
         {
@@ -131,8 +121,7 @@
           "assets": [
             "package.json",
             "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml",
-            "docs/**"
+            "k8s/overlays/**/kustomization.yaml"
           ],
           "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }

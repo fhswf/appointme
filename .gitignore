@@ -1,6 +1,7 @@
 **/node_modules/**
 **/test-results/**
 **/build/**
+**/coverage/**
 types.js
 types.js.map
 docker.env
@@ -37,4 +38,6 @@ backend/debug_output.txt
 # k8s secrets
 backend/k8s/configmap.yaml
 backend/k8s/secret.yaml
+
+/docs
 

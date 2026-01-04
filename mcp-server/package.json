@@ -5,10 +5,11 @@
   "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "build": "yarn run -T tsc",
+    "build": "tsc",
     "start": "node build/index.js",
-    "dev": "yarn run -T tsc --watch",
+    "dev": "tsc --watch",
     "test": "vitest run",
+    "ci": "pnpm run build && vitest run --coverage --reporter=junit --outputFile=junit.xml; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/mcp-server-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/mcp-server-ctrf.json",
     "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
     "vitest": "^4.0.16"
   },
   "release": {
@@ -35,17 +37,10 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       [
         "@semantic-release/exec",
         {

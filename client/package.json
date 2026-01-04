@@ -78,8 +78,9 @@
     "test:ui": "playwright test --ui",
     "test:coverage": "playwright test --reporter=html --reporter=json",
     "test:ci": "TZ=Europe/Berlin playwright test",
-    "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; yarn dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
-    "coverage": "npm run coverage:clean && npm run test:unit && npm run coverage:copy-unit && npm run test:ci && npm run coverage:merge",
+    "test:unit": "vitest run --coverage; node ../utility/patch-junit-xml.js test-results/junit-report.xml; pnpm dlx junit-to-ctrf -o ctrf/client-unit-ctrf.json test-results/junit-report.xml; node ../utility/patch-ctrf.js ctrf/client-unit-ctrf.json",
+    "ci": "pnpm run build && pnpm run coverage",
+    "coverage": "pnpm run coverage:clean && pnpm run test:unit && pnpm run coverage:copy-unit && pnpm run test:ci && pnpm run coverage:merge",
     "coverage:clean": "rm -rf .coverage-e2e coverage coverage-merged",
     "coverage:copy-unit": "mkdir -p .coverage-e2e && cp coverage/coverage-final.json .coverage-e2e/unit-coverage.json",
     "coverage:merge": "node scripts/merge-coverage.mjs",
@@ -133,17 +134,10 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       [
         "@semantic-release/exec",
         {
