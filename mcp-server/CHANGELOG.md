@@ -1,3 +1,10 @@
+# mcp-server [1.0.0-rc.6](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.5...mcp-server@1.0.0-rc.6) (2026-01-04)
+
+
+### Bug Fixes
+
+* **mcp-server:** fix docker build for mcp-server ([72b0d60](https://github.com/fhswf/appointme/commit/72b0d60ce7cadc3b1931b980f37e5e343464bbd1))
+
 # mcp-server [1.0.0-rc.5](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.4...mcp-server@1.0.0-rc.5) (2026-01-04)
 
 
