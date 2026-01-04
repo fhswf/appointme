@@ -68,8 +68,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       common:
-        specifier: workspace:*
-        version: link:../common
+        specifier: '*'
+        version: 0.2.5
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
@@ -285,8 +285,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       common:
-        specifier: workspace:*
-        version: link:../common
+        specifier: '*'
+        version: 0.2.5
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -485,8 +485,8 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
       common:
-        specifier: workspace:*
-        version: link:../common
+        specifier: '*'
+        version: 0.2.5
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -4358,6 +4358,9 @@ packages:
   commander@9.5.0:
     resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
     engines: {node: ^12.20.0 || >=14}
+
+  common@0.2.5:
+    resolution: {integrity: sha512-bjuztiY8Wcz2V9dPpa0XdF0unGWqAGsnyKDGV7g6xDcaZfpufRrxV35qhuhjwv1h0jEPeiCHWKAQFLj702jGnA==}
 
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
@@ -13677,6 +13680,8 @@ snapshots:
   commander@6.2.0: {}
 
   commander@9.5.0: {}
+
+  common@0.2.5: {}
 
   compare-func@2.0.0:
     dependencies:
