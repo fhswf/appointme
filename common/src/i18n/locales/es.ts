@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants";
+
 export const es = {
     "welcome_back": "Bienvenido de nuevo",
     "login_subtitle": "Por favor inicie sesión para continuar.",
@@ -252,7 +254,7 @@ export const es = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "Contacto",
     "footer_credits": "Programado con ❤️ en la Universidad de Ciencias Aplicadas de South Westphalia",

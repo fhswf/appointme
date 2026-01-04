@@ -1,0 +1,1 @@
+export const COPYRIGHT_ENGLISH = "© 2026 South Westphalia University of Applied Sciences";
