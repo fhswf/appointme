@@ -51,15 +51,19 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: 'pnpm'
 
       # Install package dependencies
       - name: Install
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Create CTRF Directories
         run: |
@@ -68,10 +72,10 @@ jobs:
 
       # Build
       - name: Build Common
-        run: yarn workspace common build
+        run: pnpm --filter common build
 
       - name: Build Backend
-        run: yarn workspace backend build
+        run: pnpm --filter backend build
 
       - name: Get Playwright version
         id: playwright-version
@@ -100,19 +104,19 @@ jobs:
 
       # Run Common tests
       - name: Test Common
-        run: yarn workspace common ci
+        run: pnpm --filter common ci
 
       # Run Backend tests
       - name: Test Backend
-        run: yarn workspace backend ci
+        run: pnpm --filter backend ci
 
       # Run Playwright tests
       - name: Test Client
         run: |
           cd client
-          npm run test:unit
-          npm run coverage:copy-unit
-          npm run test:ci
+          pnpm run test:unit
+          pnpm run coverage:copy-unit
+          pnpm run test:ci
         env:
           CI: true
           REACT_APP_API_URL: /api/v1
@@ -124,7 +128,7 @@ jobs:
       - name: Generate Coverage Report
         run: |
           cd client
-          npm run coverage:merge
+          pnpm run coverage:merge
 
       - name: Publish Test Report with Pull Request Comment
         uses: ctrf-io/github-test-reporter@v1
