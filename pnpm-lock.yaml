@@ -261,8 +261,8 @@ importers:
         specifier: ^10.32.1
         version: 10.32.1(react@19.2.3)
       '@sentry/tracing':
-        specifier: ^6.5.1
-        version: 6.19.7
+        specifier: ^7.120.4
+        version: 7.120.4
       '@stepperize/react':
         specifier: ^5.1.9
         version: 5.1.9(react@19.2.3)(typescript@5.9.3)
@@ -2982,6 +2982,10 @@ packages:
     resolution: {integrity: sha512-KKmLUgIaLRM0VjrMA1ByQTawZyRDYSkG2evvEOVpEtR9F0sumidAQdi7UY71QEKE1RYe/Jcp/3WoaqsMh8tbnQ==}
     engines: {node: '>=18'}
 
+  '@sentry-internal/tracing@7.120.4':
+    resolution: {integrity: sha512-Fz5+4XCg3akeoFK+K7g+d7HqGMjmnLoY2eJlpONJmaeT9pXY7yfUyXKZMmMajdE2LxxKJgQ2YKvSCaGVamTjHw==}
+    engines: {node: '>=8'}
+
   '@sentry/browser@10.32.1':
     resolution: {integrity: sha512-NPNCXTZ05ZGTFyJdKNqjykpFm+urem0ebosILQiw3C4BxNVNGH4vfYZexyl6prRhmg91oB6GjVNiVDuJiap1gg==}
     engines: {node: '>=18'}
@@ -2990,13 +2994,9 @@ packages:
     resolution: {integrity: sha512-PH2ldpSJlhqsMj2vCTyU0BI2Fx1oIDhm7Izo5xFALvjVCS0gmlqHt1udu6YlKn8BtpGH6bGzssvv5APrk+OdPQ==}
     engines: {node: '>=18'}
 
-  '@sentry/hub@6.19.7':
-    resolution: {integrity: sha512-y3OtbYFAqKHCWezF0EGGr5lcyI2KbaXW2Ik7Xp8Mu9TxbSTuwTe4rTntwg8ngPjUQU3SUHzgjqVB8qjiGqFXCA==}
-    engines: {node: '>=6'}
-
-  '@sentry/minimal@6.19.7':
-    resolution: {integrity: sha512-wcYmSJOdvk6VAPx8IcmZgN08XTXRwRtB1aOLZm+MVHjIZIhHoBGZJYTVQS/BWjldsamj2cX3YGbGXNunaCfYJQ==}
-    engines: {node: '>=6'}
+  '@sentry/core@7.120.4':
+    resolution: {integrity: sha512-TXu3Q5kKiq8db9OXGkWyXUbIxMMuttB5vJ031yolOl5T/B69JRyAoKuojLBjRv1XX583gS1rSSoX8YXX7ATFGA==}
+    engines: {node: '>=8'}
 
   '@sentry/react@10.32.1':
     resolution: {integrity: sha512-/tX0HeACbAmVP57x8txTrGk/U3fa9pDBaoAtlOrnPv5VS/aC5SGkehXWeTGSAa+ahlOWwp3IF8ILVXRiOoG/Vg==}
@@ -3004,17 +3004,17 @@ packages:
     peerDependencies:
       react: ^16.14.0 || 17.x || 18.x || 19.x
 
-  '@sentry/tracing@6.19.7':
-    resolution: {integrity: sha512-ol4TupNnv9Zd+bZei7B6Ygnr9N3Gp1PUrNI761QSlHtPC25xXC5ssSD3GMhBgyQrcvpuRcCFHVNNM97tN5cZiA==}
-    engines: {node: '>=6'}
+  '@sentry/tracing@7.120.4':
+    resolution: {integrity: sha512-cAtpLh23qW3hoqZJ6c36EvFki5NhFWUSK71ALHefqDXEocMlfDc9I+IGn3B/ola2D2TDEDamCy3x32vctKqOag==}
+    engines: {node: '>=8'}
 
-  '@sentry/types@6.19.7':
-    resolution: {integrity: sha512-jH84pDYE+hHIbVnab3Hr+ZXr1v8QABfhx39KknxqKWr2l0oEItzepV0URvbEhB446lk/S/59230dlUUIBGsXbg==}
-    engines: {node: '>=6'}
+  '@sentry/types@7.120.4':
+    resolution: {integrity: sha512-cUq2hSSe6/qrU6oZsEP4InMI5VVdD86aypE+ENrQ6eZEVLTCYm1w6XhW1NvIu3UuWh7gZec4a9J7AFpYxki88Q==}
+    engines: {node: '>=8'}
 
-  '@sentry/utils@6.19.7':
-    resolution: {integrity: sha512-z95ECmE3i9pbWoXQrD/7PgkBAzJYR+iXtPuTkpBjDKs86O3mT+PXOT3BAn79w2wkn7/i3vOGD2xVr1uiMl26dA==}
-    engines: {node: '>=6'}
+  '@sentry/utils@7.120.4':
+    resolution: {integrity: sha512-zCKpyDIWKHwtervNK2ZlaK8mMV7gVUijAgFeJStH+CU/imcdquizV3pFLlSQYRswG+Lbyd6CT/LGRh3IbtkCFw==}
+    engines: {node: '>=8'}
 
   '@shikijs/engine-oniguruma@1.29.2':
     resolution: {integrity: sha512-7iiOx3SG8+g1MnlzZVDYiaeHe7Ez2Kf2HrJzdmGwkRisT7r4rak0e655AcM/tF9JG/kg5fMNYlLLKglbN7gBqA==}
@@ -12035,6 +12035,12 @@ snapshots:
       '@sentry-internal/browser-utils': 10.32.1
       '@sentry/core': 10.32.1
 
+  '@sentry-internal/tracing@7.120.4':
+    dependencies:
+      '@sentry/core': 7.120.4
+      '@sentry/types': 7.120.4
+      '@sentry/utils': 7.120.4
+
   '@sentry/browser@10.32.1':
     dependencies:
       '@sentry-internal/browser-utils': 10.32.1
@@ -12045,17 +12051,10 @@ snapshots:
 
   '@sentry/core@10.32.1': {}
 
-  '@sentry/hub@6.19.7':
+  '@sentry/core@7.120.4':
     dependencies:
-      '@sentry/types': 6.19.7
-      '@sentry/utils': 6.19.7
-      tslib: 1.14.1
-
-  '@sentry/minimal@6.19.7':
-    dependencies:
-      '@sentry/hub': 6.19.7
-      '@sentry/types': 6.19.7
-      tslib: 1.14.1
+      '@sentry/types': 7.120.4
+      '@sentry/utils': 7.120.4
 
   '@sentry/react@10.32.1(react@19.2.3)':
     dependencies:
@@ -12064,20 +12063,15 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: 19.2.3
 
-  '@sentry/tracing@6.19.7':
+  '@sentry/tracing@7.120.4':
     dependencies:
-      '@sentry/hub': 6.19.7
-      '@sentry/minimal': 6.19.7
-      '@sentry/types': 6.19.7
-      '@sentry/utils': 6.19.7
-      tslib: 1.14.1
+      '@sentry-internal/tracing': 7.120.4
 
-  '@sentry/types@6.19.7': {}
+  '@sentry/types@7.120.4': {}
 
-  '@sentry/utils@6.19.7':
+  '@sentry/utils@7.120.4':
     dependencies:
-      '@sentry/types': 6.19.7
-      tslib: 1.14.1
+      '@sentry/types': 7.120.4
 
   '@shikijs/engine-oniguruma@1.29.2':
     dependencies:
