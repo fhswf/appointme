@@ -418,8 +418,8 @@ importers:
         specifier: 9.3.0
         version: 9.3.0
       i18next-scanner:
-        specifier: 4.5.0
-        version: 4.5.0(typescript@5.9.3)
+        specifier: 4.6.0
+        version: 4.6.0(typescript@5.9.3)
       jsdom:
         specifier: ^27.2.0
         version: 27.4.0
@@ -5999,8 +5999,8 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || ^22.0.0, npm: '>=6', yarn: '>=1'}
     hasBin: true
 
-  i18next-scanner@4.5.0:
-    resolution: {integrity: sha512-5QMRUkQA6zvsOjwVzBCm7HRyzgrFJH1QsbuSMZCk0GDLRCJG6IL4i/5aYyzH695toXUkJ/rx4PCK/yvBw2i8Vw==}
+  i18next-scanner@4.6.0:
+    resolution: {integrity: sha512-I/xKcwKfii3L3is3bUvfaIU0QA/wYhpZnjppfrzyb61QQddxkcpspASEtmfnxSYvE6yIaAxDlIxg0EHV7mxssg==}
     engines: {node: '>=12'}
     hasBin: true
 
@@ -16163,7 +16163,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  i18next-scanner@4.5.0(typescript@5.9.3):
+  i18next-scanner@4.6.0(typescript@5.9.3):
     dependencies:
       acorn: 8.15.0
       acorn-jsx: 5.3.2(acorn@8.15.0)
