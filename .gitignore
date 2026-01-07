@@ -42,3 +42,4 @@ backend/k8s/secret.yaml
 
 /docs
 
+backend/k8s/base/secret.yaml
