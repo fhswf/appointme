@@ -29,6 +29,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@sentry/node": "10.32.1",
+    "@sentry/profiling-node": "10.32.1",
     "body-parser": "^2.2.1",
     "common": "file:../common",
     "concurrently": "^9.2.1",

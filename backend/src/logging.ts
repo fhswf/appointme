@@ -30,6 +30,36 @@ if (process.env.MONGODB_LOG_URI) {
     }));
 }
 
+// 4. Sentry Logging Configuration
+import * as Sentry from "@sentry/node";
+if (process.env.SENTRY_DSN) {
+    // Custom Sentry Transport
+    const SentryTransport = class extends transports.Console {
+        log(info, callback) {
+            setImmediate(() => {
+                this.emit('logged', info);
+            });
+
+            if (info.level === 'error') {
+                // Determine if it's an Error object or just a message
+                const meta = info.metadata || info;
+                const err = meta instanceof Error ? meta : (meta.error instanceof Error ? meta.error : new Error(info.message));
+
+                // Copy internal stack if available and didn't match
+                if (info.stack && !err.stack) {
+                    err.stack = info.stack;
+                }
+
+                Sentry.captureException(err, {
+                    extra: info
+                });
+            }
+            callback();
+        }
+    };
+    logTransports.push(new SentryTransport({ level: 'error' }));
+}
+
 // 3. Remote Logging (HTTP) Configuration
 if (process.env.REMOTE_LOG_URL) {
     const remoteUrl = new URL(process.env.REMOTE_LOG_URL);
