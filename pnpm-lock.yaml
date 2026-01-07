@@ -71,8 +71,8 @@ importers:
         specifier: 10.32.1
         version: 10.32.1
       body-parser:
-        specifier: ^2.2.1
-        version: 2.2.1
+        specifier: ^2.2.2
+        version: 2.2.2
       common:
         specifier: file:../common
         version: link:../common
@@ -4317,6 +4317,10 @@ packages:
 
   body-parser@2.2.1:
     resolution: {integrity: sha512-nfDwkulwiZYQIGwxdy0RUmowMhKcFVcYXUU7m4QlKYim1rUtg83xm2yjZ40QjDuc291AJjjeSc9b++AWHSgSHw==}
+    engines: {node: '>=18'}
+
+  body-parser@2.2.2:
+    resolution: {integrity: sha512-oP5VkATKlNwcgvxi0vM0p/D3n2C3EReYVX+DNYs5TjZFn/oQt2j+4sVJtSMr18pdRr8wjTcBl6LoV+FUwzPmNA==}
     engines: {node: '>=18'}
 
   boolbase@1.0.0:
@@ -14029,6 +14033,20 @@ snapshots:
   blork@9.3.0: {}
 
   body-parser@2.2.1:
+    dependencies:
+      bytes: 3.1.2
+      content-type: 1.0.5
+      debug: 4.4.3
+      http-errors: 2.0.1
+      iconv-lite: 0.7.1
+      on-finished: 2.4.1
+      qs: 6.14.1
+      raw-body: 3.0.2
+      type-is: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  body-parser@2.2.2:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
