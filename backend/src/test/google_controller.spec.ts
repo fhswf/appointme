@@ -47,6 +47,12 @@ vi.mock('googleapis', () => ({
     }
 }));
 
+vi.mock('../utility/mailer', () => ({
+    sendEmail: vi.fn().mockResolvedValue({})
+}));
+
+import { sendEmail } from '../utility/mailer';
+
 vi.mock('google-auth-library', () => {
     return {
         OAuth2Client: vi.fn().mockImplementation(function () {
@@ -695,6 +701,53 @@ describe('google_controller', () => {
             // The OAuth2Client mock in this file captures setCredentials in mockSetCredentials
             // We expect it to be called with old_token, then new_token.
             // Note: createOAuthClient is called inside freeBusy.
+        });
+        it('should invalidate tokens on invalid_grant if token has NOT changed', async () => {
+            const userId = 'user_abort_retry_test';
+
+            // Mock UserModel.findOne to return SAME tokens
+            const userToken = {
+                _id: userId,
+                email: userId + '@example.com',
+                google_tokens: { access_token: 'token', refresh_token: 'refresh' },
+                pull_calendars: ['cal1']
+            };
+
+            const execMock = vi.fn()
+                .mockResolvedValueOnce(userToken) // First call
+                .mockResolvedValueOnce(userToken); // Second call (check for update)
+
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({ exec: execMock });
+
+            const mockQuery = vi.fn()
+                .mockRejectedValue({
+                    code: 400,
+                    message: "invalid_grant",
+                    response: { data: { error: "invalid_grant" } }
+                });
+
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            // Expect it to throw the error eventually
+            await expect(freeBusy(userId, '2025-01-01', '2025-01-02')).rejects.toThrow();
+
+            // Verify deleteTokens called (via UserModel.findOneAndUpdate)
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: { $eq: userId } },
+                { $unset: { google_tokens: "" } }
+            );
+
+            // Verify email notification sent
+            expect(sendEmail).toHaveBeenCalledWith(
+                userId + '@example.com', // Assuming freshUser has this email
+                expect.stringContaining('Calendar Connection Failed'),
+                expect.any(String)
+            );
         });
     });
 });

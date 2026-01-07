@@ -270,7 +270,10 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       // Now query freeBusy service and CalDAV
       return Promise.all([
         (user.google_tokens && user.google_tokens.access_token) ?
-          freeBusy(event.user, timeMin.toISOString(), checkMax.toISOString()) :
+          freeBusy(event.user, timeMin.toISOString(), checkMax.toISOString()).catch(err => {
+            logger.error('Google freeBusy failed in getAvailableTimes (non-fatal): %s', err.message);
+            return { data: { calendars: {} } };
+          }) :
           Promise.resolve({ data: { calendars: {} } }),
         getBusySlots(event.user, timeMin.toISOString(), checkMax.toISOString()).catch(err => {
           logger.error('CalDAV getBusySlots failed', err);
