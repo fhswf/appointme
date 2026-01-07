@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.9...backend@1.37.0-rc.10) (2026-01-07)
+
+
+### Bug Fixes
+
+* **backend:** upgrade Docker base image from Bullseye to Bookworm. ([49895b3](https://github.com/fhswf/appointme/commit/49895b3300227bf9a951a382afec4770a7dd00ba))
+
 # backend [1.37.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.8...backend@1.37.0-rc.9) (2026-01-07)
 
 
