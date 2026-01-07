@@ -149,13 +149,13 @@ app.get("/healthz", async (req, res) => {
 });
 
 
+app.use("/api/v1", router);
+
 // Sentry error handler must be before any other error middleware and after all controllers
 import * as Sentry from "@sentry/node";
 if (process.env.SENTRY_DSN) {
   Sentry.setupExpressErrorHandler(app);
 }
-
-app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 5000;
 
