@@ -17,6 +17,7 @@ import { getBusySlots } from './caldav_controller.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { generateRRule } from '../utility/ical.js';
+import { sendEmail } from '../utility/mailer.js';
 
 
 
@@ -164,14 +165,24 @@ export const freeBusy = async (user_id: string, timeMin: string, timeMax: string
           logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
           return await performQuery(freshUser.google_tokens);
         } else {
-          logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted.`);
+          logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted. Invalidating tokens.`);
+          await deleteTokens(user_id);
+
+          await sendEmail(freshUser.email, 'AppointMe: Action Required - Calendar Connection Failed',
+            `<p>Hello ${freshUser.name || 'User'},</p>
+             <p>We are unable to access your Google Calendar. Your connection has expired or was revoked.</p>
+             <p><strong>Please log in to AppointMe and reconnect your calendar to ensure appointments can be booked.</strong></p>`);
         }
       }
     }
 
-    logger.error('freeBusy failed inside: %o', err);
-    if (err instanceof Error) {
-      logger.error(err.stack);
+    if (isInvalidGrant) {
+      logger.warn(`freeBusy failed with invalid_grant for user ${user_id}.`);
+    } else {
+      logger.error('freeBusy failed inside: %o', err);
+      if (err instanceof Error) {
+        logger.error(err.stack);
+      }
     }
     throw err;
   }
@@ -367,7 +378,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string, calend
 }
 
 function deleteTokens(userid: string) {
-  UserModel.findOneAndUpdate(
+  return UserModel.findOneAndUpdate(
     { _id: { $eq: userid } },
     { $unset: { google_tokens: "" } }
   ).then(res => {

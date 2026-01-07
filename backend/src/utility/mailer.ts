@@ -63,3 +63,30 @@ export const sendEventInvitation = (to: string, subject: string, html: string, i
         });
     });
 };
+
+/**
+ * Generic function to send an email
+ * @param to Recipient email
+ * @param subject Email subject
+ * @param html Email body (HTML)
+ */
+export const sendEmail = (to: string, subject: string, html: string) => {
+    const mailOptions = {
+        from: process.env.EMAIL_FROM,
+        to,
+        subject,
+        html
+    };
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                logger.error("Error sending email: %o", error);
+                // We resolve with null instead of rejecting to avoid crashing callers
+                resolve(null);
+            } else {
+                logger.debug("Email sent: %o", info);
+                resolve(info);
+            }
+        });
+    });
+};

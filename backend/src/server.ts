@@ -1,3 +1,4 @@
+import "./config/instrument.js";
 import "./config/env.js";
 import express from "express";
 import bodyParser from "body-parser";
@@ -147,7 +148,14 @@ app.get("/healthz", async (req, res) => {
   res.status(200).send("OK")
 });
 
+
 app.use("/api/v1", router);
+
+// Sentry error handler must be before any other error middleware and after all controllers
+import * as Sentry from "@sentry/node";
+if (process.env.SENTRY_DSN) {
+  Sentry.setupExpressErrorHandler(app);
+}
 
 const PORT = process.env.PORT || 5000;
 
