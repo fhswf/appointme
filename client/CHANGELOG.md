@@ -1,3 +1,10 @@
+# client [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.5...client@1.32.0-rc.6) (2026-01-08)
+
+
+### Bug Fixes
+
+* **client:** use absolute path for favicon ([25174d7](https://github.com/fhswf/appointme/commit/25174d74639784b176dca3133f5f5d0335e5d37e))
+
 # client [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.4...client@1.32.0-rc.5) (2026-01-07)
 
 
