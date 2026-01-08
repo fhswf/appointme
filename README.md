@@ -88,7 +88,9 @@ You can manage multiple environments (e.g., Staging, Production) using Kustomize
 
 ### Deployment with ArgoCD
 
-To deploy with ArgoCD, you can use the following `Application` manifest example:
+To deploy with ArgoCD, you can use the Application manifests provided in `k8s/argocd/`.
+
+Example `k8s/argocd/prod.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -107,6 +109,11 @@ spec:
     namespace: appointme-prod
   syncPolicy:
     automated: {}
+  orphanedResources:
+    warn: true # Warn about other unknown resources
+    ignore:
+      - kind: Secret
+        name: "argocd-secret"
 ```
 
 ### Configuration
