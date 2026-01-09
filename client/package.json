@@ -104,7 +104,7 @@
     "@types/jsdom": "^27",
     "@types/opentype.js": "^1",
     "@types/react-router-dom": "latest",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-istanbul": "^4.0.15",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
