@@ -47,16 +47,21 @@ vi.mock('sonner', () => ({
     },
 }));
 
-const mockDropdown = {
+vi.mock('@/components/ui/dropdown-menu', () => ({
     DropdownMenu: ({ children }: any) => <div>{children}</div>,
-    DropdownMenuTrigger: ({ children }: any) => <div data-testid="dropdown-trigger">{children}</div>,
+    DropdownMenuTrigger: ({ children, asChild, ...props }: any) => <div data-testid="dropdown-trigger" {...props}>{children}</div>,
     DropdownMenuContent: ({ children }: any) => <div data-testid="dropdown-content">{children}</div>,
-    DropdownMenuItem: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+    DropdownMenuItem: ({ children, onClick, ...props }: any) => <button onClick={onClick} {...props}>{children}</button>,
     DropdownMenuSeparator: () => <hr />,
-};
+}));
 
-vi.mock('@/components/ui/dropdown-menu', () => mockDropdown);
-vi.mock('../ui/dropdown-menu', () => mockDropdown);
+vi.mock('../ui/dropdown-menu', () => ({
+    DropdownMenu: ({ children }: any) => <div>{children}</div>,
+    DropdownMenuTrigger: ({ children, asChild, ...props }: any) => <div data-testid="dropdown-trigger" {...props}>{children}</div>,
+    DropdownMenuContent: ({ children }: any) => <div data-testid="dropdown-content">{children}</div>,
+    DropdownMenuItem: ({ children, onClick, ...props }: any) => <button onClick={onClick} {...props}>{children}</button>,
+    DropdownMenuSeparator: () => <hr />,
+}));
 
 import userEvent from '@testing-library/user-event';
 
@@ -126,7 +131,9 @@ describe('AppNavbar Component', () => {
         );
 
         expect(screen.getByText('My Event Types')).toBeInTheDocument();
-        expect(screen.getByText('my_appointments')).toBeInTheDocument();
+        const appointmentsLinks = screen.getAllByText('my_appointments');
+        expect(appointmentsLinks.length).toBeGreaterThan(0);
+        appointmentsLinks.forEach(link => expect(link).toBeInTheDocument());
     });
 
     it('renders logout and handles logout', async () => {
