@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.10...backend@1.37.0-rc.11) (2026-01-09)
+
+
+### Bug Fixes
+
+* issues due to mongoose version bump ([cdcf89b](https://github.com/fhswf/appointme/commit/cdcf89bacaede9be877344d5b8dc15f8d4cc3d67))
+
 # backend [1.37.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.9...backend@1.37.0-rc.10) (2026-01-07)
 
 
