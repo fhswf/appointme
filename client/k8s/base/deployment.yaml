@@ -52,6 +52,11 @@ spec:
                 configMapKeyRef:
                   key: TZ
                   name: appointme
+            - name: REACT_APP_SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  key: SENTRY_DSN
+                  name: appointme-secret                  
           image: ghcr.io/fhswf/appointme/frontend:latest
           imagePullPolicy: Always
           name: client
