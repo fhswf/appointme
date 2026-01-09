@@ -1,3 +1,10 @@
+# client [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.7...client@1.32.0-rc.8) (2026-01-09)
+
+
+### Bug Fixes
+
+* **client:** sentry config ([47718b2](https://github.com/fhswf/appointme/commit/47718b254e580e538bed042e0bb5d446dabbb518))
+
 # client [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.6...client@1.32.0-rc.7) (2026-01-09)
 
 
