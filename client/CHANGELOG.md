@@ -1,3 +1,15 @@
+# client [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.6...client@1.32.0-rc.7) (2026-01-09)
+
+
+### Bug Fixes
+
+* **client:** security updates for react-router-dom ([b3b6be7](https://github.com/fhswf/appointme/commit/b3b6be7f1f5c8406d316e5605a21218690af1f39))
+
+
+### Features
+
+* **client:** sentry integration ([f9f99c7](https://github.com/fhswf/appointme/commit/f9f99c7d8d8a21c2265624cd00af7c3913b6e3a4))
+
 # client [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.5...client@1.32.0-rc.6) (2026-01-08)
 
 
