@@ -10,6 +10,7 @@ import { PublicEventCard } from "../components/PublicEventCard";
 import { toast } from "sonner";
 import { User, Event } from "common";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { FabSpeedDial } from "../components/FabSpeedDial";
 import { Button } from "@/components/ui/button";
 
 const Planning = () => {
@@ -172,10 +173,9 @@ const Planning = () => {
         </div>
       </div>
 
-      {/* Floating Dark Mode Toggle */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <ThemeToggle className="rounded-full shadow-lg h-12 w-12 bg-white dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-[#334155] hover:scale-110 transition-transform" />
-      </div>
+      <FabSpeedDial
+        className="bg-white dark:bg-[#1e293b] border border-[#e5e7eb] dark:border-[#334155] hover:scale-110 hover:bg-gray-50 dark:hover:bg-[#334155] text-foreground"
+      />
     </div>
   );
 };
