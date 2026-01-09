@@ -299,5 +299,6 @@ export const ja = {
     "biweekly": "隔週",
     "triweekly": "3週間ごと",
     "monthly": "毎月",
-    "Series Booking Note: Students will book all occurrences at once.": "定期予約の注記：学生はすべての回を一括で予約します。"
+    "Series Booking Note: Students will book all occurrences at once.": "定期予約の注記：学生はすべての回を一括で予約します。",
+    "Feedback": "フィードバック",
 };

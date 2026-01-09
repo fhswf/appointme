@@ -299,5 +299,6 @@ export const es = {
     "biweekly": "Quincenal",
     "triweekly": "Cada 3 semanas",
     "monthly": "Mensual",
-    "Series Booking Note: Students will book all occurrences at once.": "Nota de reserva en serie: Los estudiantes reservarán todas las ocurrencias a la vez."
+    "Series Booking Note: Students will book all occurrences at once.": "Nota de reserva en serie: Los estudiantes reservarán todas las ocurrencias a la vez.",
+    "Feedback": "Comentarios",
 };

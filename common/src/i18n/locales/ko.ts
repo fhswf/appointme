@@ -299,5 +299,6 @@ export const ko = {
     "biweekly": "격주",
     "triweekly": "3주마다",
     "monthly": "매월",
-    "Series Booking Note: Students will book all occurrences at once.": "연속 예약 참고: 학생들은 모든 일정을 한 번에 예약합니다."
+    "Series Booking Note: Students will book all occurrences at once.": "연속 예약 참고: 학생들은 모든 일정을 한 번에 예약합니다.",
+    "Feedback": "피드백",
 };
