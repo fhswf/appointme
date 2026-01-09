@@ -115,7 +115,7 @@ async function validateAllSlotsAvailable(
 ): Promise<{ available: boolean; conflictDate?: Date }> {
   for (const startTime of instances) {
     const endTime = addMinutes(startTime, eventDoc.duration);
-    const isFree = await checkFree(eventDoc, userId, startTime, endTime);
+    const isFree = await checkFree(eventDoc as unknown as Event, userId, startTime, endTime);
 
     if (!isFree) {
       return { available: false, conflictDate: startTime };
