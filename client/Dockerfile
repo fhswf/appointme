@@ -8,6 +8,7 @@ ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
 ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
+ENV REACT_APP_SENTRY_DSN=${SENTRY_DSN}
 
 WORKDIR /base
 
@@ -31,11 +32,13 @@ ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleuserconte
 ARG BASE_PATH=/
 ARG APP_URL=https://appointme.example.com
 ARG API_URL=https://appointme.example.com/api/v1
+ARG SENTRY_DSN
 
 ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
 ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
+ENV REACT_APP_SENTRY_DSN=${SENTRY_DSN}
 
 COPY --from=build /base/client/build /usr/share/nginx/html/meeting
 COPY ./client/nginx/default.conf /etc/nginx/conf.d/default.conf
