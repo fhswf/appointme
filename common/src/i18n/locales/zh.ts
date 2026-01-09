@@ -299,5 +299,6 @@ export const zh = {
     "biweekly": "每两周",
     "triweekly": "每三周",
     "monthly": "每月",
-    "Series Booking Note: Students will book all occurrences at once.": "系列预订说明：学生将一次性预订所有事件。"
+    "Series Booking Note: Students will book all occurrences at once.": "系列预订说明：学生将一次性预订所有事件。",
+    "Feedback": "反馈",
 };

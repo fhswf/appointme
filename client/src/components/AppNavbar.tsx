@@ -10,8 +10,10 @@ import {
   LogOut,
   User,
   Scale,
-  HelpCircle
+  HelpCircle,
+  MessageSquare
 } from "lucide-react";
+import * as Sentry from "@sentry/react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -60,6 +62,15 @@ const AppNavbar = () => {
   };
 
   const handleOnClick = (target: string) => () => navigate(target);
+
+  const handleFeedback = async () => {
+    const feedback = Sentry.getFeedback();
+    if (feedback) {
+      const form = await feedback?.createForm();
+      form.appendToDom();
+      form.open();
+    }
+  };
 
   const loginOut = isAuthenticated ? (
     <DropdownMenuItem onClick={handleLogout} data-testid="logout-button">
@@ -170,6 +181,10 @@ const AppNavbar = () => {
                   <HelpCircle className="mr-2 h-4 w-4" />
                   <span>{t("about")}</span>
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleFeedback}>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                <span>{t("Feedback")}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {loginOut}

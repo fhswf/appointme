@@ -299,5 +299,6 @@ export const fr = {
     "biweekly": "Bi-hebdomadaire",
     "triweekly": "Tri-hebdomadaire",
     "monthly": "Mensuel",
-    "Series Booking Note: Students will book all occurrences at once.": "Note de réservation de série : Les étudiants réserveront toutes les occurrences en une seule fois."
+    "Series Booking Note: Students will book all occurrences at once.": "Note de réservation de série : Les étudiants réserveront toutes les occurrences en une seule fois.",
+    "Feedback": "Retour d'information",
 };

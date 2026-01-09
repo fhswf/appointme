@@ -247,7 +247,7 @@ export async function insertGoogleEvent(user: UserDocument, event: Schema$Event,
     throw new Error("No Google account connected");
   }
 
-  const oAuth2Client = createOAuthClient(user._id.toString());
+  const oAuth2Client = createOAuthClient(user._id as unknown as string);
   oAuth2Client.setCredentials(user.google_tokens);
   oAuth2Client.setCredentials(user.google_tokens);
 
