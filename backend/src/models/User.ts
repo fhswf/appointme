@@ -4,7 +4,8 @@ import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
 import { User, DEFAULT_AVAILABILITY } from "common";
 
-export interface UserDocument extends Document, User {
+export interface UserDocument extends Document<string>, Omit<User, '_id'> {
+  _id: string;
   google_picture_url?: string;
   use_gravatar?: boolean;
   push_calendars: string[];
