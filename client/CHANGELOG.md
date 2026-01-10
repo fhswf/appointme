@@ -1,3 +1,10 @@
+# client [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.8...client@1.32.0-rc.9) (2026-01-10)
+
+
+### Bug Fixes
+
+* improve sentry instrumentation ([2166525](https://github.com/fhswf/appointme/commit/2166525393c6e066ce2e9f9a9f44e153689c8e61))
+
 # client [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.7...client@1.32.0-rc.8) (2026-01-09)
 
 
