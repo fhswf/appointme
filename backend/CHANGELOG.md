@@ -1,3 +1,11 @@
+# backend [1.37.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.11...backend@1.37.0-rc.12) (2026-01-10)
+
+
+### Bug Fixes
+
+* improve sentry instrumentation ([2166525](https://github.com/fhswf/appointme/commit/2166525393c6e066ce2e9f9a9f44e153689c8e61))
+* update ical generation ([c138a25](https://github.com/fhswf/appointme/commit/c138a25dc7143de2f12d7ccab52ae35379d9bfb9))
+
 # backend [1.37.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.10...backend@1.37.0-rc.11) (2026-01-09)
 
 
