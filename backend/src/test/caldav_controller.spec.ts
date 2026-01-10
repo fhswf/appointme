@@ -601,7 +601,7 @@ END:VCALENDAR` }
                         { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
                     ]),
                     createCalendarObject: createObjectMock,
-                    fetchCalendarObjects: vi.fn()
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([])
                 });
             })
 
@@ -633,7 +633,7 @@ END:VCALENDAR` }
 
             // Check if the generated ICS content in the call includes the custom email
             const createCall = createObjectMock.mock.calls[0][0];
-            expect(createCall.iCalString).toContain("ORGANIZER;CN=Org:mailto:custom@example.com");
+            expect(createCall.iCalString).toContain('ORGANIZER;CN="Org":mailto:custom@example.com');
         });
 
         it("should verify successfully even if fetch returns many objects", async () => {
