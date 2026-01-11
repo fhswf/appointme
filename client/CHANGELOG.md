@@ -1,3 +1,10 @@
+# client [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.9...client@1.32.0-rc.10) (2026-01-11)
+
+
+### Bug Fixes
+
+* **client:** i18n issue ([73a9a4d](https://github.com/fhswf/appointme/commit/73a9a4d4e343288a82cb7d8a4afe1665be8bd0cd))
+
 # client [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.8...client@1.32.0-rc.9) (2026-01-10)
 
 
