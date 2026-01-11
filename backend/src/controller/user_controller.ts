@@ -1,9 +1,6 @@
 /**
  * @module user_controller
  */
-import { ValidationError, validationResult } from "express-validator";
-import validator from "validator";
-import { errorHandler } from "../handlers/errorhandler.js";
 
 class HttpError extends Error {
   status: number;

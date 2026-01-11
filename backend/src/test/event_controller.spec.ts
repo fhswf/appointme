@@ -710,5 +710,100 @@ describe("Event Controller", () => {
             expect(res.body.error).toEqual(expect.objectContaining({}));
         });
     });
-});
+    describe("Recurrence and Complex Insertions", () => {
+        it("should handle recurring event insertion (valid slots)", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery({
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                recurrence: { enabled: true, frequency: 'weekly', interval: 1, count: 3 }
+            }));
 
+            (UserModel.findOne as any).mockImplementation(() => mockQuery({
+                ...USER,
+                push_calendars: ["google_calendar_id"]
+            }));
+
+            // Mock checkFree to return true for all slots
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(true);
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body.success).toBe(true);
+            expect(res.body.instancesCreated).toBe(3);
+            expect(res.body.seriesId).toBeDefined();
+        });
+
+        it("should fail recurring event if one slot is busy", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery({
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                recurrence: { enabled: true, frequency: 'weekly', interval: 1, count: 3 }
+            }));
+
+            // Mock checkFree to return false for the second call
+            const { checkFree } = await import("../controller/google_controller.js");
+            let callCount = 0;
+            (checkFree as any).mockImplementation(async () => {
+                callCount++;
+                return callCount !== 2; // 2nd slot is busy
+            });
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: Date.now().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(400);
+            expect(res.body.error).toMatch(/recurring series is not available/i);
+        });
+
+        it("should fallback to Google Primary if no push calendars configured", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery({
+                ...EVENT,
+                duration: 60,
+                user: USER._id
+            }));
+
+            (UserModel.findOne as any).mockImplementation(() => mockQuery({
+                ...USER,
+                push_calendars: [] // No calendars
+            }));
+
+            // Force insertGoogleEvent logic to run via processGoogleBooking fallback path
+            // The controller calls processGoogleBooking directly when no calendars are set.
+            const { insertGoogleEvent } = await import("../controller/google_controller.js");
+            (insertGoogleEvent as any).mockResolvedValue({ status: "confirmed", id: "google_id" });
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: Date.now().toString(),
+                    attendeeName: "Fallback Guest",
+                    attendeeEmail: "guest@example.com"
+                });
+
+            expect(res.status).toBe(200);
+            expect(insertGoogleEvent).toHaveBeenCalledWith(
+                expect.objectContaining({ _id: expect.any(String) }), // user object
+                expect.objectContaining({ summary: expect.stringContaining("Fallback Guest") }), // event object
+                'primary',
+                undefined
+            );
+        });
+    });
+});
