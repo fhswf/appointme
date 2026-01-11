@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.12...backend@1.37.0-rc.13) (2026-01-11)
+
+
+### Bug Fixes
+
+* **backend:** use dynamic import for instrumentation ([0199f2a](https://github.com/fhswf/appointme/commit/0199f2a403b3eab8c7afa458e0a087900564d3b7))
+
 # backend [1.37.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.11...backend@1.37.0-rc.12) (2026-01-10)
 
 
