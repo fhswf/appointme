@@ -80,7 +80,7 @@ export const PublicEventCard = ({ event, onClick, index = 0 }: PublicEventCardPr
                     <div className="flex items-center text-sm text-foreground">
                         <Clock className="w-4 h-4 text-muted-foreground mr-2" />
                         <span>
-                            {event.duration} {t("Minutes")}
+                            {event.duration} {t("minutes")}
                             {event.recurrence?.enabled && (
                                 <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
                             )}

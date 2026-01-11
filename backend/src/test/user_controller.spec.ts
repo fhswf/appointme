@@ -39,6 +39,44 @@ vi.mock("csrf-csrf", () => {
     };
 });
 
+// Helper for dynamic imports
+const mockGoogleApis = {
+    google: {
+        calendar: vi.fn().mockReturnValue({
+            calendarList: { list: vi.fn().mockResolvedValue({ data: { items: [] } }) },
+            events: { list: vi.fn().mockResolvedValue({ data: { items: [] } }) }
+        })
+    }
+};
+
+const mockAuthLibrary = {
+    OAuth2Client: class {
+        constructor() { }
+        setCredentials = vi.fn();
+        getToken = vi.fn().mockResolvedValue({ tokens: {} });
+        verifyIdToken = vi.fn().mockResolvedValue({ getAttributes: () => ({ payload: {} }) });
+    }
+};
+
+// Mock dynamic imports for googleapis/auth
+vi.mock('googleapis', () => mockGoogleApis);
+vi.mock('google-auth-library', () => mockAuthLibrary);
+
+// Mock utility imports using vi.mock for static imports or standard module mocking
+// Since user_controller uses dynamic imports, we might need to intercept those.
+// Vitest hoisting allows us to mock modules even if they are imported dynamically later.
+vi.mock('../utility/dav_client.js', () => ({
+    createConfiguredDAVClient: vi.fn().mockReturnValue({
+        login: vi.fn().mockResolvedValue(true),
+        fetchCalendars: vi.fn().mockResolvedValue([]),
+        fetchCalendarObjects: vi.fn().mockResolvedValue([])
+    })
+}));
+
+vi.mock('../utility/encryption.js', () => ({
+    decrypt: vi.fn(s => s)
+}));
+
 describe("User Controller", () => {
     let app: any;
 
@@ -133,6 +171,34 @@ describe("User Controller", () => {
             const updateArg = updateCall[1];
             expect(updateArg.$set.use_gravatar).toBe(false);
             expect(updateArg.$set.picture_url).toBe("google_pic_url");
+        });
+
+        it("should ignore restricted fields in update", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
+            (UserModel.findByIdAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
+
+            const res = await request(app)
+                .put("/api/v1/user/me")
+                .send({
+                    data: {
+                        name: "New Name",
+                        google_tokens: { access_token: "hacked" },
+                        _id: "new_id",
+                        unknown_field: "value"
+                    }
+                });
+
+            expect(res.status).toBe(200);
+            const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
+            const updateArg = updateCall[1];
+            expect(updateArg.$set.name).toBe("New Name");
+            expect(updateArg.$set.google_tokens).toBeUndefined();
+            expect(updateArg.$set._id).toBeUndefined();
+            expect(updateArg.$set.unknown_field).toBeUndefined();
         });
     });
 
@@ -257,9 +323,165 @@ describe("User Controller", () => {
             expect(res.body).toEqual([]);
         });
 
+        it("should return Google calendars if present", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: { access_token: "tok" },
+                    caldav_accounts: []
+                })
+            });
+
+            const listMock = vi.fn().mockResolvedValue({
+                data: {
+                    items: [
+                        { id: "cal1", summary: "My Calendar", primary: true, backgroundColor: "#000000" }
+                    ]
+                }
+            });
+
+            mockGoogleApis.google.calendar.mockReturnValue({
+                calendarList: { list: listMock }
+            });
+
+            const res = await request(app).get("/api/v1/user/me/calendar");
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(res.body[0].id).toBe("cal1");
+            expect(res.body[0].type).toBe("google");
+        });
+
+        it("should return CalDAV calendars if present", async () => {
+            const accId = "666f6f2d6261722d62617a2d717578"; // valid hex id like
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: null,
+                    caldav_accounts: [
+                        { _id: accId, serverUrl: "http://dav.com", username: "u", password: "p", name: "My DAV" }
+                    ]
+                })
+            });
+
+            const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+            (createConfiguredDAVClient as any).mockReturnValue({
+                login: vi.fn(),
+                fetchCalendars: vi.fn().mockResolvedValue([{
+                    url: "http://dav.com/cal1", displayName: "Dav Cal 1", color: "#ffffff"
+                }])
+            });
+
+            const res = await request(app).get("/api/v1/user/me/calendar");
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(2);
+            expect(res.body[0].id).toBe("http://dav.com/cal1");
+            expect(res.body[0].type).toBe("caldav");
+        });
+
+        it("should fallback to direct calendar if discovery fails but account is valid", async () => {
+            const accId = "507f1f77bcf86cd799439011";
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: null,
+                    caldav_accounts: [
+                        { _id: accId, serverUrl: "http://dav.com/fallback", username: "u", password: "p", name: "Fallback DAV" }
+                    ]
+                })
+            });
+
+            const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+            (createConfiguredDAVClient as any).mockReturnValue({
+                login: vi.fn().mockRejectedValue(new Error("Connection failed")),
+                fetchCalendars: vi.fn()
+            });
+
+            const res = await request(app).get("/api/v1/user/me/calendar");
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(res.body[0].id).toBe("http://dav.com/fallback");
+            expect(res.body[0].summary).toBe("Fallback DAV");
+            expect(res.body[0].type).toBe("caldav");
+        });
+
         it("should return 403 if accessing other user calendars", async () => {
             const res = await request(app).get("/api/v1/user/otheruser/calendar");
             expect(res.status).toBe(403);
+        });
+    });
+
+    describe("getCalendarEvents", () => {
+        it("should fetch Google calendar events", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: { access_token: "tok" }
+                })
+            });
+
+            const listMock = vi.fn().mockResolvedValue({
+                data: {
+                    items: [
+                        { id: "evt1", summary: "Event 1" }
+                    ]
+                }
+            });
+
+            mockGoogleApis.google.calendar.mockReturnValue({
+                events: { list: listMock }
+            });
+
+            const res = await request(app)
+                .get("/api/v1/user/me/calendar/primary/event")
+                .query({ timeMin: "2024-01-01T00:00:00Z", timeMax: "2024-01-02T00:00:00Z" });
+
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(res.body[0].id).toBe("evt1");
+        });
+
+        it("should return 401 if Google token missing", async () => {
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: null
+                })
+            });
+
+            const res = await request(app)
+                .get("/api/v1/user/me/calendar/primary/event");
+
+            expect(res.status).toBe(401);
+        });
+
+        it("should fetch CalDAV calendar events", async () => {
+            const accId = "666f6f2d6261722d62617a2d717578";
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    caldav_accounts: [
+                        { _id: accId, serverUrl: "http://dav.com", username: "u", password: "p" }
+                    ]
+                })
+            });
+
+            const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+            (createConfiguredDAVClient as any).mockReturnValue({
+                login: vi.fn(),
+                fetchCalendars: vi.fn().mockResolvedValue([
+                    { url: "http://dav.com/cal1", displayName: "Cal 1" }
+                ]),
+                fetchCalendarObjects: vi.fn().mockResolvedValue([
+                    { url: "evt1.ics", data: "BEGIN:VCALENDAR..." }
+                ])
+            });
+
+            const res = await request(app)
+                .get(`/api/v1/user/me/calendar/${accId}/http%3A%2F%2Fdav.com%2Fcal1/event`);
+
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(res.body[0].format).toBe("ical");
         });
     });
 
