@@ -38,7 +38,7 @@ describe('PublicEventCard', () => {
         render(<PublicEventCard event={mockEvent} onClick={vi.fn()} />);
 
         expect(screen.getByText('Public Event')).toBeInTheDocument();
-        expect(screen.getByText('60 Minutes')).toBeInTheDocument();
+        expect(screen.getByText('60 minutes')).toBeInTheDocument();
         expect(screen.getByText('Public Description')).toBeInTheDocument();
         expect(screen.getByText('PublicTag')).toBeInTheDocument();
     });
