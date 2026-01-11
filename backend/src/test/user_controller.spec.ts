@@ -379,7 +379,29 @@ describe("User Controller", () => {
         });
 
         it("should fallback to direct calendar if discovery fails but account is valid", async () => {
-            // ... existing failure/fallback logic test
+            const accId = "507f1f77bcf86cd799439011";
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    google_tokens: null,
+                    caldav_accounts: [
+                        { _id: accId, serverUrl: "http://dav.com/fallback", username: "u", password: "p", name: "Fallback DAV" }
+                    ]
+                })
+            });
+
+            const { createConfiguredDAVClient } = await import('../utility/dav_client.js');
+            (createConfiguredDAVClient as any).mockReturnValue({
+                login: vi.fn().mockRejectedValue(new Error("Connection failed")),
+                fetchCalendars: vi.fn()
+            });
+
+            const res = await request(app).get("/api/v1/user/me/calendar");
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveLength(1);
+            expect(res.body[0].id).toBe("http://dav.com/fallback");
+            expect(res.body[0].summary).toBe("Fallback DAV");
+            expect(res.body[0].type).toBe("caldav");
         });
 
         it("should return 403 if accessing other user calendars", async () => {
