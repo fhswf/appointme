@@ -116,6 +116,56 @@ export const googleCallback = (req: Request, res: Response): void => {
   });
 };
 
+const performFreeBusyQuery = async (user_id: string, tokens: any, timeMin: string, timeMax: string, items: any[]) => {
+  const oAuth2Client = createOAuthClient(user_id);
+  oAuth2Client.setCredentials(tokens);
+  const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+  return calendar.freebusy.query({
+    requestBody: {
+      timeMin,
+      timeMax,
+      items
+    }
+  });
+};
+
+const handleFreeBusyError = async (err: any, user_id: string, current_tokens: any, timeMin: string, timeMax: string, items: any[], retry: boolean) => {
+  const isInvalidGrant = err.message === 'invalid_grant' ||
+    err.response?.data?.error === 'invalid_grant' ||
+    err.code === 400; // invalid_grant often comes as 400
+
+  if (retry && isInvalidGrant) {
+    logger.warn(`freeBusy failed with invalid_grant for user ${user_id}. Checking for updated tokens...`);
+    // Re-fetch user to check for updated tokens (bypass cache if any, though Mongoose default is fresh)
+    const freshUser = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
+
+    if (freshUser && freshUser.google_tokens && freshUser.google_tokens.access_token) {
+      if (freshUser.google_tokens.access_token !== current_tokens.access_token) {
+        logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
+        return await performFreeBusyQuery(user_id, freshUser.google_tokens, timeMin, timeMax, items);
+      } else {
+        logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted. Invalidating tokens.`);
+        await deleteTokens(user_id);
+
+        await sendEmail(freshUser.email, 'AppointMe: Action Required - Calendar Connection Failed',
+          `<p>Hello ${freshUser.name || 'User'},</p>
+             <p>We are unable to access your Google Calendar. Your connection has expired or was revoked.</p>
+             <p><strong>Please log in to AppointMe and reconnect your calendar to ensure appointments can be booked.</strong></p>`);
+      }
+    }
+  }
+
+  if (isInvalidGrant) {
+    logger.warn(`freeBusy failed with invalid_grant for user ${user_id}.`);
+  } else {
+    logger.error('freeBusy failed inside: %o', err);
+    if (err instanceof Error) {
+      logger.error(err.stack);
+    }
+  }
+  throw err;
+};
+
 export const freeBusy = async (user_id: string, timeMin: string, timeMax: string, retry = true) => {
   const user = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
   if (!user) throw new Error("User not found");
@@ -135,56 +185,10 @@ export const freeBusy = async (user_id: string, timeMin: string, timeMax: string
     return { data: { calendars: {} } } as any;
   }
 
-  const performQuery = async (tokens) => {
-    const oAuth2Client = createOAuthClient(user_id);
-    oAuth2Client.setCredentials(tokens);
-    const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
-    return calendar.freebusy.query({
-      requestBody: {
-        timeMin,
-        timeMax,
-        items
-      }
-    });
-  };
-
   try {
-    return await performQuery(google_tokens);
+    return await performFreeBusyQuery(user_id, google_tokens, timeMin, timeMax, items);
   } catch (err: any) {
-    const isInvalidGrant = err.message === 'invalid_grant' ||
-      err.response?.data?.error === 'invalid_grant' ||
-      err.code === 400; // invalid_grant often comes as 400
-
-    if (retry && isInvalidGrant) {
-      logger.warn(`freeBusy failed with invalid_grant for user ${user_id}. Checking for updated tokens...`);
-      // Re-fetch user to check for updated tokens (bypass cache if any, though Mongoose default is fresh)
-      const freshUser = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
-
-      if (freshUser && freshUser.google_tokens && freshUser.google_tokens.access_token) {
-        if (freshUser.google_tokens.access_token !== google_tokens.access_token) {
-          logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
-          return await performQuery(freshUser.google_tokens);
-        } else {
-          logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted. Invalidating tokens.`);
-          await deleteTokens(user_id);
-
-          await sendEmail(freshUser.email, 'AppointMe: Action Required - Calendar Connection Failed',
-            `<p>Hello ${freshUser.name || 'User'},</p>
-             <p>We are unable to access your Google Calendar. Your connection has expired or was revoked.</p>
-             <p><strong>Please log in to AppointMe and reconnect your calendar to ensure appointments can be booked.</strong></p>`);
-        }
-      }
-    }
-
-    if (isInvalidGrant) {
-      logger.warn(`freeBusy failed with invalid_grant for user ${user_id}.`);
-    } else {
-      logger.error('freeBusy failed inside: %o', err);
-      if (err instanceof Error) {
-        logger.error(err.stack);
-      }
-    }
-    throw err;
+    return await handleFreeBusyError(err, user_id, google_tokens, timeMin, timeMax, items, retry);
   }
 }
 
