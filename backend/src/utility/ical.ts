@@ -91,15 +91,13 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
         }
     });
 
-    if (options?.comment) {
-        // COMMENT property is not directly supported by ical-generator ICalEvent
-        // and X- properties must start with X-.
-        // Since logic elsewhere appends comment to description, we can skip explicit COMMENT field
-        // to maintain cleaner code and library compatibility.
-        // If X-COMMENT is desired: icsEvent.x('X-COMMENT', options.comment);
-    }
+    addAttendees(icsEvent, event);
+    addRecurrence(icsEvent, event);
 
-    // Attendees
+    return calendar.toString();
+};
+
+const addAttendees = (icsEvent: any, event: IcsEventData) => {
     if (event.attendees) {
         event.attendees.forEach(a => {
             icsEvent.createAttendee({
@@ -114,9 +112,10 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
             });
         });
     }
+};
 
-    // Recurrence
-    if (event.recurrence && event.recurrence.enabled) {
+const addRecurrence = (icsEvent: any, event: IcsEventData) => {
+    if (event.recurrence?.enabled) {
         const { frequency, interval, count, until } = event.recurrence;
         let freq: ICalEventRepeatingFreq;
         let actualInterval = interval || 1;
@@ -140,6 +139,4 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
             until: until ? new Date(until) : undefined
         });
     }
-
-    return calendar.toString();
 };
