@@ -65,7 +65,7 @@ if (process.env.REMOTE_LOG_URL) {
     const remoteUrl = new URL(process.env.REMOTE_LOG_URL);
     logTransports.push(new transports.Http({
         host: remoteUrl.hostname,
-        port: remoteUrl.port ? parseInt(remoteUrl.port) : (remoteUrl.protocol === 'https:' ? 443 : 80),
+        port: remoteUrl.port ? Number.parseInt(remoteUrl.port) : (remoteUrl.protocol === 'https:' ? 443 : 80),
         path: remoteUrl.pathname,
         ssl: remoteUrl.protocol === 'https:'
     }));
