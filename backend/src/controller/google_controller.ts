@@ -139,11 +139,8 @@ const handleFreeBusyError = async (err: any, user_id: string, current_tokens: an
     // Re-fetch user to check for updated tokens (bypass cache if any, though Mongoose default is fresh)
     const freshUser = await UserModel.findOne({ _id: { $eq: user_id } }).exec();
 
-    if (freshUser && freshUser.google_tokens && freshUser.google_tokens.access_token) {
-      if (freshUser.google_tokens.access_token !== current_tokens.access_token) {
-        logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
-        return await performFreeBusyQuery(user_id, freshUser.google_tokens, timeMin, timeMax, items);
-      } else {
+    if (freshUser?.google_tokens?.access_token) {
+      if (freshUser.google_tokens.access_token === current_tokens.access_token) {
         logger.warn(`Tokens for user ${user_id} have not changed. Retry aborted. Invalidating tokens.`);
         await deleteTokens(user_id);
 
@@ -151,6 +148,9 @@ const handleFreeBusyError = async (err: any, user_id: string, current_tokens: an
           `<p>Hello ${freshUser.name || 'User'},</p>
              <p>We are unable to access your Google Calendar. Your connection has expired or was revoked.</p>
              <p><strong>Please log in to AppointMe and reconnect your calendar to ensure appointments can be booked.</strong></p>`);
+      } else {
+        logger.info(`Found updated tokens for user ${user_id}. Retrying freeBusy...`);
+        return await performFreeBusyQuery(user_id, freshUser.google_tokens, timeMin, timeMax, items);
       }
     }
   }

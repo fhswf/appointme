@@ -1,6 +1,17 @@
 /**
  * @module user_controller
  */
+import { ValidationError, validationResult } from "express-validator";
+import validator from "validator";
+import { errorHandler } from "../handlers/errorhandler.js";
+
+class HttpError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
 import { UserModel } from "../models/User.js";
 import { AppointmentModel } from "../models/Appointment.js";
 import { User } from "common";
@@ -404,7 +415,7 @@ export const getCalendars = async (req: Request, res: Response): Promise<void> =
  */
 const fetchGoogleEvents = async (user: any, calendarId: string, timeMin: string, timeMax: string): Promise<any[]> => {
   if (!user.google_tokens?.access_token) {
-    throw { status: 401, error: "Google authentication required" };
+    throw new HttpError(401, "Google authentication required");
   }
 
   try {
@@ -431,7 +442,7 @@ const fetchGoogleEvents = async (user: any, calendarId: string, timeMin: string,
     return response.data.items || [];
   } catch (err: any) {
     console.error("Error fetching Google calendar events:", err);
-    throw { status: 500, error: "Failed to fetch Google calendar events" };
+    throw new HttpError(500, "Failed to fetch Google calendar events");
   }
 };
 
@@ -449,7 +460,7 @@ const fetchCalDavEvents = async (user: any, accountId: string, calendarId: strin
   }
 
   if (!account) {
-    throw { status: 404, error: "CalDAV account not found for this calendar" };
+    throw new HttpError(404, "CalDAV account not found for this calendar");
   }
 
   try {
@@ -482,7 +493,7 @@ const fetchCalDavEvents = async (user: any, accountId: string, calendarId: strin
           currentUserPrivilegeSet: [] // Dummy
         } as any;
       } else {
-        throw { status: 404, error: "Calendar not found" };
+        throw new HttpError(404, "Calendar not found");
       }
     }
 
@@ -499,9 +510,9 @@ const fetchCalDavEvents = async (user: any, accountId: string, calendarId: strin
         data: obj.data
       }));
   } catch (err: any) {
-    if (err.status) throw err; // Re-throw handled errors
+    if (err instanceof HttpError) throw err; // Re-throw handled errors
     console.error("Error fetching CalDAV calendar events:", err);
-    throw { status: 500, error: "Failed to fetch CalDAV calendar events" };
+    throw new HttpError(500, "Failed to fetch CalDAV calendar events");
   }
 };
 
@@ -540,8 +551,8 @@ export const getCalendarEvents = async (req: Request, res: Response): Promise<vo
 
     res.status(200).json(events);
   } catch (err: any) {
-    if (err.status) {
-      res.status(err.status).json({ error: err.error });
+    if (err instanceof HttpError) {
+      res.status(err.status).json({ error: err.message });
     } else {
       console.error("Error in getCalendarEvents:", err);
       res.status(500).json({ error: "Failed to fetch calendar events" });

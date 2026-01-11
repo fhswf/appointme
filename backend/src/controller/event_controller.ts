@@ -593,16 +593,17 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       const googleResult = results.find(r => r.type === 'google' && r.success);
       const caldavResult = results.find(r => r.type === 'caldav' && r.success);
 
-      const { seriesId } = await persistAppointments(
+      const { seriesId } = await persistAppointments({
         userId,
         eventId,
         instances,
         eventDoc,
-        req.body,
+        attendeeName: req.body.attendeeName,
+        attendeeEmail: req.body.attendeeEmail,
         userComment,
-        googleResult?.event?.id,
-        caldavResult?.event?.uid
-      );
+        googleId: googleResult?.event?.id,
+        caldavUid: caldavResult?.event?.uid
+      });
 
       const firstSuccess = results.find(r => r.success);
       res.json({
@@ -622,16 +623,16 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       try {
         const result = await processGoogleBooking(user, userComment, event, 'primary', eventDoc.recurrence);
 
-        const { seriesId } = await persistAppointments(
+        const { seriesId } = await persistAppointments({
           userId,
           eventId,
           instances,
           eventDoc,
-          req.body,
+          attendeeName: req.body.attendeeName,
+          attendeeEmail: req.body.attendeeEmail,
           userComment,
-          result?.event?.id,
-          undefined
-        );
+          googleId: result?.event?.id
+        });
 
         res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
       } catch (err) {
@@ -718,16 +719,31 @@ function constructGoogleEvent(eventDoc: EventDocument, user: any, starttime: Dat
   };
 }
 
-async function persistAppointments(
-  userId: string,
-  eventId: string,
-  instances: Date[],
-  eventDoc: EventDocument,
-  body: any,
-  userComment: string,
-  googleId?: string | null,
-  caldavUid?: string | null
-) {
+interface PersistAppointmentsParams {
+  userId: string;
+  eventId: string;
+  instances: Date[];
+  eventDoc: EventDocument;
+  attendeeName: string;
+  attendeeEmail: string;
+  userComment: string;
+  googleId?: string | null;
+  caldavUid?: string | null;
+}
+
+async function persistAppointments(params: PersistAppointmentsParams) {
+  const {
+    userId,
+    eventId,
+    instances,
+    eventDoc,
+    attendeeName,
+    attendeeEmail,
+    userComment,
+    googleId,
+    caldavUid
+  } = params;
+
   const seriesId = instances.length > 1 ? crypto.randomUUID() : undefined;
 
   for (let i = 0; i < instances.length; i++) {
@@ -739,8 +755,8 @@ async function persistAppointments(
       event: eventId,
       start: instanceStart,
       end: instanceEnd,
-      attendeeName: body.attendeeName,
-      attendeeEmail: body.attendeeEmail,
+      attendeeName: attendeeName,
+      attendeeEmail: attendeeEmail,
       description: userComment,
       location: eventDoc.location,
       googleId: i === 0 ? googleId : undefined,  // Only first instance gets googleId (it's a recurring event)
