@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi, beforeEach, afterEach } 
 import request from "supertest";
 import { EVENT } from './EVENT.js';
 import { USER } from './USER.js';
+import { AppointmentModel } from "../models/Appointment.js";
 import { EventModel } from "../models/Event.js";
 import { UserModel } from "../models/User.js";
 
@@ -741,6 +742,60 @@ describe("Event Controller", () => {
             expect(res.body.success).toBe(true);
             expect(res.body.instancesCreated).toBe(3);
             expect(res.body.seriesId).toBeDefined();
+        });
+
+        it("should create appointments with specific dates for weekly recurrence", async () => {
+            // Regression test: verify that created appointments correspond to exact expected dates
+            const startDate = "2025-12-01T09:00:00.000Z"; // Monday
+            const recurringEvent = {
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                recurrence: { enabled: true, frequency: 'weekly', interval: 1, count: 3 }
+            };
+
+            (EventModel.findById as any).mockImplementation(() => mockQuery(recurringEvent));
+            (UserModel.findOne as any).mockImplementation(() => mockQuery({
+                ...USER,
+                push_calendars: ["google_calendar_id"]
+            }));
+
+            // Mock checkFree to return true for all slots
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(true);
+
+            // Clear previous calls to AppointmentModel
+            (AppointmentModel as any).mockClear();
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: new Date(startDate).getTime().toString(),
+                    attendeeName: "Guest",
+                    attendeeEmail: "guest@example.com",
+                    description: "Notes"
+                });
+
+            expect(res.status).toBe(200);
+            expect(res.body.instancesCreated).toBe(3);
+
+            // Verify AppointmentModel was initialized with correct dates
+            const calls = (AppointmentModel as any).mock.calls;
+            expect(calls.length).toBeGreaterThanOrEqual(3);
+
+            // Filter calls related to this insertion (checking start time or user/event)
+            // The calls arg is [data], so check data.start
+            const appointments = calls
+                .map((call: any) => call[0])
+                .filter((data: any) => data.event === "123")
+                .sort((a: any, b: any) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+            expect(appointments).toHaveLength(3);
+
+            // Expected: Dec 1, Dec 8, Dec 15
+            expect(appointments[0].start.toISOString()).toContain("2025-12-01");
+            expect(appointments[1].start.toISOString()).toContain("2025-12-08");
+            expect(appointments[2].start.toISOString()).toContain("2025-12-15");
         });
 
         it("should fail recurring event if one slot is busy", async () => {
