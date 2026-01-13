@@ -63,7 +63,7 @@
     "winston-mongodb": "7.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.28.6",
     "@babel/preset-typescript": "^7.23.3",
     "@types/babel__core": "^7",
     "@types/express": "^5.0.0",
