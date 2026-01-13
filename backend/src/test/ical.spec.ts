@@ -233,4 +233,41 @@ describe('ICS Generation', () => {
         expect(ics).toContain('INTERVAL=2');
         expect(ics).toContain('UNTIL=20250101');
     });
+
+    it('should generate valid RRULE that can be parsed by node-ical', async () => {
+        const start = new Date('2024-01-01T10:00:00Z');
+        const end = new Date('2024-01-01T11:00:00Z');
+        const event = {
+            start,
+            end,
+            summary: 'Regression RRule',
+            organizer: { displayName: 'Org', email: 'org@test.com' },
+            attendees: [],
+            recurrence: {
+                enabled: true,
+                frequency: 'weekly' as const,
+                interval: 1,
+                count: 3
+            }
+        };
+
+        const ics = generateIcsContent(event);
+
+        // We use node-ical (which is in dependencies) to verify the output is parseable
+        const ical = await import('node-ical');
+        const parsed = await ical.async.parseICS(ics);
+
+        const eventKey = Object.keys(parsed).find(k => parsed[k].type === 'VEVENT');
+        expect(eventKey).toBeDefined();
+        if (!eventKey) return;
+
+        const parsedEvent = parsed[eventKey];
+        expect(parsedEvent.rrule).toBeDefined();
+        // node-ical (rrule) should parse this correctly
+        // The rrule object has options
+        // Recent node-ical / rrule versions return string frequencies
+        // Use RRule.WEEKLY or integer 2 if it's the old object, but here we see "WEEKLY"
+        expect(parsedEvent.rrule?.options.freq).toBe('WEEKLY');
+        expect(parsedEvent.rrule?.options.count).toBe(3);
+    });
 });
