@@ -125,8 +125,8 @@ importers:
         specifier: ^2.29.1
         version: 2.30.1
       mongoose:
-        specifier: ^9.1.2
-        version: 9.1.2(socks@2.8.7)
+        specifier: ^9.1.3
+        version: 9.1.3(socks@2.8.7)
       node-ical:
         specifier: ^0.22.1
         version: 0.22.1
@@ -6992,8 +6992,8 @@ packages:
       socks:
         optional: true
 
-  mongoose@9.1.2:
-    resolution: {integrity: sha512-EdxZ/l+wLIPymy/ODxulg13CaUPpt8RenGmuoNAuRhA5Dgk/QERkUm3U0wOEbAi6ULG08bGDo9sy2tKX0KwxIg==}
+  mongoose@9.1.3:
+    resolution: {integrity: sha512-vIKt/qjdgXt0C/75g8/ROLY+o5rrVsjqwmo1C9qpGYIpJQI9KLZjuBXJTyL+8RXH2cGFumADCd7PIE3mry3ibw==}
     engines: {node: '>=20.19.0'}
 
   monocart-coverage-reports@2.12.9:
@@ -16943,7 +16943,7 @@ snapshots:
     optionalDependencies:
       socks: 2.8.7
 
-  mongoose@9.1.2(socks@2.8.7):
+  mongoose@9.1.3(socks@2.8.7):
     dependencies:
       kareem: 3.0.0
       mongodb: 7.0.0(socks@2.8.7)
