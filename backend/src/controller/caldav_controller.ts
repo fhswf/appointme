@@ -129,6 +129,32 @@ export const listAccounts = async (req: Request, res: Response) => {
     }
 };
 
+const getDateMilliseconds = (date: any): number => {
+    if (date instanceof Date) {
+        return date.getTime();
+    }
+    if (typeof date.getTime === 'function') {
+        return date.getTime();
+    }
+    if (typeof date.epochMilliseconds === 'number') {
+        return date.epochMilliseconds;
+    }
+    if (typeof date.toInstant === 'function') {
+        return date.toInstant().epochMilliseconds;
+    }
+    return new Date(date.toString()).getTime();
+};
+
+const processRecurringEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
+    const dates = event.rrule.between(startRange, endRange);
+    const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
+
+    for (const date of dates) {
+        const startTime = getDateMilliseconds(date);
+        busySlots.push({ start: new Date(startTime), end: new Date(startTime + duration) });
+    }
+};
+
 export const processParsedEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
     if (event.type !== 'VEVENT') return;
 
@@ -144,32 +170,7 @@ export const processParsedEvent = (event: any, startRange: Date, endRange: Date,
 
     // Handle recurrence if rrule exists
     if (event.rrule) {
-        // rrule.between can return Date[] or Temporal.ZonedDateTime[] depending on version/config
-        const dates = event.rrule.between(startRange, endRange);
-        const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
-        for (const date of dates) {
-            let startTime: number;
-            // Check if it's a legacy Date object
-            if (date instanceof Date) {
-                startTime = date.getTime();
-            } else if (typeof date.getTime === 'function') {
-                // Some custom objects might mimic Date
-                startTime = date.getTime();
-            } else {
-                // Must be a Temporal object
-                // Temporal.ZonedDateTime or PlainDateTime usually have epochMilliseconds
-                // or we can convert to instant
-                if (typeof date.epochMilliseconds === 'number') {
-                    startTime = date.epochMilliseconds;
-                } else if (typeof date.toInstant === 'function') {
-                    startTime = date.toInstant().epochMilliseconds;
-                } else {
-                    // Fallback: try standard string conversion
-                    startTime = new Date(date.toString()).getTime();
-                }
-            }
-            busySlots.push({ start: new Date(startTime), end: new Date(startTime + duration) });
-        }
+        processRecurringEvent(event, startRange, endRange, busySlots);
     }
 };
 

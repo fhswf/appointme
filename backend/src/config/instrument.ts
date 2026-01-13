@@ -1,5 +1,9 @@
 
 import * as Sentry from "@sentry/node";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const packageJson = require("../../package.json");
 
 console.log("SENTRY_PROFILING_ENABLED", process.env.SENTRY_PROFILING_ENABLED);
 
@@ -19,6 +23,7 @@ if (process.env.SENTRY_DSN) {
     }
 
     Sentry.init({
+        release: "appointme-backend@" + packageJson.version,
         dsn: process.env.SENTRY_DSN,
         integrations,
         // Tracing
