@@ -19,6 +19,7 @@ if (process.env.SENTRY_DSN) {
     }
 
     Sentry.init({
+        release: "appointme-backend@" + process.env.npm_package_version,
         dsn: process.env.SENTRY_DSN,
         integrations,
         // Tracing
