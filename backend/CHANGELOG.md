@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.14](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.13...backend@1.37.0-rc.14) (2026-01-13)
+
+
+### Bug Fixes
+
+* **backend:** handle changes in `rrule.between()` ([9b375d5](https://github.com/fhswf/appointme/commit/9b375d5d165da3eb08ff8940cc3c33315ab48af0))
+
 # backend [1.37.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.12...backend@1.37.0-rc.13) (2026-01-11)
 
 
