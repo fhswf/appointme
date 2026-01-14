@@ -94,5 +94,10 @@
   "resolutions": {
     "lodash.template": "npm:lodash@4.17.21",
     "glob": "11.1.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "hono": "4.11.4"
+    }
   }
 }
