@@ -1,3 +1,10 @@
+# mcp-server [1.0.0-rc.7](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.6...mcp-server@1.0.0-rc.7) (2026-01-14)
+
+
+### Bug Fixes
+
+* **mcp-server:** replace insecure version of hono ([4931d7d](https://github.com/fhswf/appointme/commit/4931d7dcfeb6510d4772e43220752e6c5c37a0eb))
+
 # mcp-server [1.0.0-rc.6](https://github.com/fhswf/appointme/compare/mcp-server@1.0.0-rc.5...mcp-server@1.0.0-rc.6) (2026-01-04)
 
 
