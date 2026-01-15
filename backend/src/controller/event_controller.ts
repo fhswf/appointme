@@ -589,6 +589,9 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     }
 
     const userComment = req.body.description as string;
+    const eventDescription = String(eventDoc.description);
+
+    const userComment = req.body.description as string;
     const event = constructGoogleEvent(eventDoc, user, starttime, req.body);
 
     // Determine target calendars
