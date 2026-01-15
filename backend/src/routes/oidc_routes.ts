@@ -70,6 +70,52 @@ oidcRouter.get("/config", (req, res) => {
  *               $ref: '#/components/schemas/Error'
  */
 oidcRouter.get("/url", oidcUrlRateLimiter, getAuthUrl);
+/**
+ * @openapi
+ * /api/v1/oidc/init:
+ *   get:
+ *     summary: Initiate OIDC Login (LTI Launch)
+ *     description: Endpoint for Third-Party Initiated Login (e.g., LTI 1.3 Launch from LMS). Redirects to OIDC Provider.
+ *     tags:
+ *       - OIDC
+ *     parameters:
+ *       - in: query
+ *         name: login_hint
+ *         schema:
+ *           type: string
+ *         description: Login hint provided by the platform
+ *       - in: query
+ *         name: lti_message_hint
+ *         schema:
+ *           type: string
+ *         description: LTI message hint provided by the platform
+ *     responses:
+ *       302:
+ *         description: Redirect to OIDC Provider Authorization URL
+ *   post:
+ *     summary: Initiate OIDC Login (LTI Launch)
+ *     description: Endpoint for Third-Party Initiated Login (e.g., LTI 1.3 Launch from LMS). Redirects to OIDC Provider.
+ *     tags:
+ *       - OIDC
+ *     requestBody:
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               login_hint:
+ *                 type: string
+ *               lti_message_hint:
+ *                 type: string
+ *               iss:
+ *                 type: string
+ *               target_link_uri:
+ *                 type: string
+ *     responses:
+ *       302:
+ *         description: Redirect to OIDC Provider Authorization URL
+ */
+oidcRouter.all("/init", oidcUrlRateLimiter, getAuthUrl);
 
 /**
  * @openapi
