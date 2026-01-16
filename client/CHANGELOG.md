@@ -1,3 +1,20 @@
+# client [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.10...client@1.32.0-rc.11) (2026-01-16)
+
+
+### Features
+
+* introduce role-based access control for events and OIDC user role integration ([84a7db7](https://github.com/fhswf/appointme/commit/84a7db7b8a034a5747a0ab8777be9472f1bafa75))
+* introduce role-based access control for events and OIDC user role integration ([2e3ebfb](https://github.com/fhswf/appointme/commit/2e3ebfb6ad95a0cdea32cfab35c74930c66e22b6))
+* introduce role-based access control for events and OIDC user role integration ([afac97c](https://github.com/fhswf/appointme/commit/afac97cc6960c8f0c64409b3d2910777d3810bf8))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.0-rc.4
+
 # client [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.9...client@1.32.0-rc.10) (2026-01-11)
 
 
