@@ -1,3 +1,10 @@
+# common [1.15.0-rc.4](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.3...common@1.15.0-rc.4) (2026-01-16)
+
+
+### Features
+
+* introduce role-based access control for events and OIDC user role integration ([afac97c](https://github.com/fhswf/appointme/commit/afac97cc6960c8f0c64409b3d2910777d3810bf8))
+
 # common [1.15.0-rc.3](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.2...common@1.15.0-rc.3) (2026-01-07)
 
 
