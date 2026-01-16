@@ -53,6 +53,9 @@ vi.mock("../handlers/middleware.js", () => {
                 req.user_id = USER._id;
                 req['user_id'] = USER._id;
                 next();
+            }),
+            optionalAuth: vi.fn((req, res, next) => {
+                next();
             })
         }
     }

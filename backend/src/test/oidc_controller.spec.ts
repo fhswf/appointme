@@ -206,7 +206,7 @@ describe('OIDC Controller', () => {
                 roles: ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner']
             };
 
-            mockClient.callback.mockResolvedValue({
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
             });
 
