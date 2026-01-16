@@ -478,7 +478,7 @@ eventRouter.get("/:userId/:eventUrl", limiter, getEventByUrlController);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-eventRouter.post("/:id/slot", limiter, insertEvent);
+eventRouter.post("/:id/slot", limiter, middleware.optionalAuth, insertEvent);
 
 export default eventRouter;
 
