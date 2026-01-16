@@ -166,7 +166,11 @@ const updateUserRoles = async (user: any, roles: string[]) => {
 };
 
 const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
-    const user = await UserModel.findOne({ email }).exec();
+    let user = await UserModel.findById(sub).exec();
+
+    if (!user) {
+        user = await UserModel.findOne({ email }).exec();
+    }
 
     if (user) {
         return await updateUserRoles(user, roles);
