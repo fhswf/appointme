@@ -238,7 +238,10 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         );
 
         const claims = tokenSet.claims();
-        const { sub, email, name, picture } = claims;
+        const sub = claims.sub as string;
+        const email = claims.email as string;
+        const name = claims.name as string | undefined;
+        const picture = claims.picture as string | undefined;
         const roles = mapRoles(claims);
 
         if (!email) {

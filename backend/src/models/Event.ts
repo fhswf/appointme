@@ -6,7 +6,9 @@ import { Event, DEFAULT_AVAILABILITY } from 'common'
 
 
 
-export interface EventDocument extends Omit<Event, '_id'>, Document { }
+export interface EventDocument extends Omit<Event, '_id'>, Document {
+  allowed_roles?: string[];
+}
 
 const eventSchema = new Schema<EventDocument>({
   user: {
