@@ -73,6 +73,8 @@ vi.mock("../models/User.js", () => {
 
     (UserModelMock as any).findOne = vi.fn();
     (UserModelMock as any).findOneAndUpdate = vi.fn();
+    (UserModelMock as any).findById = vi.fn();
+    (UserModelMock as any).updateOne = vi.fn();
 
     return {
         UserModel: UserModelMock,
@@ -127,7 +129,13 @@ describe("User Identification by Email", () => {
             name: "Google User",
             picture_url: "http://example.com/pic.jpg",
             save: vi.fn(),
+            roles: []
         };
+
+        // Mock UserModel.findById to return null (not found by OIDC sub)
+        (UserModel.findById as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue(null)
+        });
 
         // Mock UserModel.findOne to return this user when searched by email OR _id
         (UserModel.findOne as any).mockReturnValue({
@@ -171,8 +179,13 @@ describe("User Identification by Email", () => {
             name: "OIDC User",
             picture_url: "http://example.com/oidc.jpg",
             save: vi.fn(),
-            use_gravatar: false
+            use_gravatar: false,
+            roles: []
         };
+
+        (UserModel.findById as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue(null)
+        });
 
         (UserModel.findOne as any).mockReturnValue({
             exec: vi.fn().mockResolvedValue(existingUser)
