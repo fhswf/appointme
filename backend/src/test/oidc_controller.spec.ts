@@ -159,7 +159,12 @@ describe('OIDC Controller', () => {
                 claims: vi.fn().mockReturnValue(claims)
             });
 
-            // Mock findOne to return null (user not found, proceed to create)
+            // Mock findById to return null (user not found by ID)
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            // Mock findOne to return null (user not found by email)
             (UserModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue(null)
             });
@@ -208,6 +213,11 @@ describe('OIDC Controller', () => {
 
             (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // Mock findById to return null
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
             });
 
             // Mock findOne to return null
@@ -278,6 +288,10 @@ describe('OIDC Controller', () => {
                 claims: vi.fn().mockReturnValue(claims)
             });
 
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
             (UserModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue(null)
             });
@@ -312,14 +326,20 @@ describe('OIDC Controller', () => {
                 claims: vi.fn().mockReturnValue(claims)
             });
 
-            // Mock findOne to return an existing user
+            // Mock findById to return null (not found by ID)
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            // Mock findOne to return an existing user (found by email)
             (UserModel.findOne as any).mockReturnValue({
                 exec: vi.fn().mockResolvedValue({
                     _id: 'existing_user_id',
                     name: 'Existing User',
                     email: 'existing@example.com',
                     picture_url: 'http://pic.com/existing.jpg',
-                    save: vi.fn()
+                    save: vi.fn(),
+                    roles: []
                 })
             });
 
@@ -339,7 +359,8 @@ describe('OIDC Controller', () => {
                 _id: 'existing_user_id',
                 email: 'existing@example.com',
                 name: 'Existing User',
-                picture_url: 'http://pic.com/existing.jpg'
+                picture_url: 'http://pic.com/existing.jpg',
+                roles: []
             });
         });
 
@@ -354,6 +375,11 @@ describe('OIDC Controller', () => {
 
             (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
+            });
+
+            // first findById returns null
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
             });
 
             // first findOne returns null (user not found)
@@ -400,6 +426,10 @@ describe('OIDC Controller', () => {
             const claims = { sub: 'u', email: 'e@e.com' };
             (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
                 claims: vi.fn().mockReturnValue(claims)
+            });
+
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
             });
 
             (UserModel.findOne as any).mockReturnValue({

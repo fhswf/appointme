@@ -173,7 +173,10 @@ const findOrCreateUser = async (sub: string, email: string, name?: string, pictu
     }
 
     if (user) {
-        return await updateUserRoles(user, roles);
+        // Update roles first (atomic)
+        user = await updateUserRoles(user, roles);
+        // Then update profile info (name, picture)
+        return await updateExistingUser(user, name, picture);
     }
 
     return await createNewUser(sub, email, name, picture, roles);
