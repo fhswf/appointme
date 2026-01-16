@@ -10,6 +10,7 @@ export interface UserDocument extends Omit<Document, '_id'>, User {
   use_gravatar?: boolean;
   push_calendars: string[];
   agenda_visible_calendars?: string[];
+  roles?: string[];
 }
 
 
@@ -108,7 +109,11 @@ const userSchema = new Schema<UserDocument>(
       type: Boolean,
       default: false
     },
-    defaultAvailable: DEFAULT_AVAILABILITY
+    defaultAvailable: DEFAULT_AVAILABILITY,
+    roles: {
+      type: [String],
+      default: []
+    },
   },
   {
     timestamps: true,

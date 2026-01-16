@@ -568,7 +568,29 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
+    // Check for role restrictions
+    if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
+      if (!req["user"] && req["user_id"]) {
+        try {
+          const user = await UserModel.findById(req["user_id"]).exec();
+          if (user) {
+            req["user"] = user;
+          }
+        } catch (err) {
+          logger.error("Failed to fetch user for role check", err);
+        }
+      }
+
+      // Check if current user is authenticated and has required role
+      const currentUser = req["user"]; // Assuming middleware populates this
+      if (!currentUser || !currentUser.roles || !eventDoc.allowed_roles.some(r => currentUser.roles.includes(r))) {
+        res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
+        return;
+      }
+    }
+
     const userComment = req.body.description as string;
+    const eventDescription = String(eventDoc.description);
     const event = constructGoogleEvent(eventDoc, user, starttime, req.body);
 
     // Determine target calendars

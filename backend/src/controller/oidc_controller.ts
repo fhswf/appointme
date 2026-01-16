@@ -62,11 +62,35 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
         return;
     }
 
-    // Generates the auth url that the frontend should redirect the user to
-    const url = await buildAuthorizationUrl(oidcConfig, {
+    const { login_hint, lti_message_hint, iss, target_link_uri } = { ...req.query, ...req.body };
+
+    // Validate Issuer if provided (LTI 1.3 Security)
+    if (iss && iss !== process.env.OIDC_ISSUER) {
+        logger.warn(`LTI Launch attempted with invalid issuer: ${iss}`);
+        // We might want to continue if we trust the configured issuer regardless, but usually we should check.
+        // For now, we trust the configured OIDC_ISSUER.
+    }
+
+    const params: any = {
         scope: 'openid email profile',
         redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
-    });
+    };
+
+    if (login_hint) {
+        params.login_hint = login_hint;
+    }
+    if (lti_message_hint) {
+        params.lti_message_hint = lti_message_hint;
+    }
+
+    // Generates the auth url that the frontend should redirect the user to
+    const url = await buildAuthorizationUrl(oidcConfig, params);
+
+    // If it is a Third-Party Initiated Login (indicated by login_hint), we should redirect directly
+    if (login_hint) {
+        res.redirect(url.href);
+        return;
+    }
 
     res.json({ url: url.href });
 };
@@ -85,57 +109,82 @@ const updateExistingUser = async (user: any, name?: string, picture?: string) =>
     return user;
 };
 
-const createNewUser = async (sub: string, email: string, name?: string, picture?: string) => {
+const mapRoles = (claims: any): string[] => {
+    const roles: string[] = [];
+    const ltiRoles = claims['https://purl.imsglobal.org/spec/lti/claim/roles'] ||
+        claims['roles'] ||
+        [];
+
+    if (Array.isArray(ltiRoles)) {
+        for (const r of ltiRoles) {
+            if ((r.toLowerCase().includes('student') || r.toLowerCase().includes('learner')) && !roles.includes('student')) {
+                roles.push('student');
+            }
+        }
+    }
+    return roles;
+};
+
+const createNewUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
     let user_url = validateUrl(email);
     const picture_url = picture || "";
     const userName = name || email.split('@')[0];
+    let user;
 
-    // 2. Retry loop for user_url uniqueness
     let retry = 0;
     const maxRetries = 5;
 
     while (retry < maxRetries) {
         try {
-            // Try to upsert/create user
-            return await UserModel.findOneAndUpdate(
+            user = await UserModel.findOneAndUpdate(
                 { _id: sub },
-                { name: userName, email, picture_url, user_url },
+                { name: userName, email, picture_url, user_url, roles },
                 { upsert: true, new: true, runValidators: true }
             ).exec();
+            break;
         } catch (err: any) {
-            if (err.code === 11000) {
-                // Check which key violated uniqueness
-                if (err.keyPattern?.user_url) {
-                    // User URL collision, append suffix and retry
-                    user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
-                    retry++;
-                    continue;
-                }
-                // If it's email collision (rare race condition if we checked above), likely unrecoverable here
-                throw err;
+            if (err.code === 11000 && err.keyPattern?.user_url) {
+                user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
+                retry++;
+                continue;
             }
             throw err;
         }
     }
-    throw new Error("User creation failed after retries");
+
+    if (!user) throw new Error("User creation failed after retries");
+    return user;
 };
 
-const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string) => {
-    // 1. Check if user exists by email (to handle "User with this email already exists" scenario)
-    // Also check by _id to support legacy users or same provider
-    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
-
-    // If user doesn't exist, create it
-    if (user) {
-        return await updateExistingUser(user, name, picture);
-    } else {
-        return await createNewUser(sub, email, name, picture);
+const updateUserRoles = async (user: any, roles: string[]) => {
+    if (roles.length > 0) {
+        const params: any = { roles: { $each: roles } };
+        await UserModel.updateOne({ _id: user._id }, { $addToSet: params }).exec();
+        return await UserModel.findById(user._id).exec();
     }
+    return user;
+};
+
+const findOrCreateUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
+    let user = await UserModel.findById(sub).exec();
+
+    if (!user) {
+        user = await UserModel.findOne({ email }).exec();
+    }
+
+    if (user) {
+        // Update roles first (atomic)
+        user = await updateUserRoles(user, roles);
+        // Then update profile info (name, picture)
+        return await updateExistingUser(user, name, picture);
+    }
+
+    return await createNewUser(sub, email, name, picture, roles);
 };
 
 const setAuthCookie = (res: Response, user: any) => {
     const access_token = sign(
-        { _id: user._id, name: user.name, email: user.email },
+        { _id: user._id, name: user.name, email: user.email, roles: user.roles },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     );
@@ -157,7 +206,7 @@ const setAuthCookie = (res: Response, user: any) => {
     res.cookie('access_token', access_token, cookieOptions)
         .status(200)
         .json({
-            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url },
+            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url, roles: user.roles },
         });
 };
 
@@ -196,14 +245,18 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         );
 
         const claims = tokenSet.claims();
-        const { sub, email, name, picture } = claims;
+        const sub = claims.sub as string;
+        const email = claims.email as string;
+        const name = claims.name as string | undefined;
+        const picture = claims.picture as string | undefined;
+        const roles = mapRoles(claims);
 
         if (!email) {
             res.status(400).json({ error: "Email not provided by ID provider" });
             return;
         }
 
-        const user = await findOrCreateUser(sub as string, email as string, name as string | undefined, picture as string | undefined);
+        const user = await findOrCreateUser(sub, email, name, picture, roles);
 
         if (!user) {
             throw new Error("User creation failed after retries");

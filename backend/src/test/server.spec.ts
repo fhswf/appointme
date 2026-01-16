@@ -35,6 +35,10 @@ describe("Server routes", () => {
           else {
             res.status(status).json({ error: "Unauthorized" });
           }
+        }),
+        optionalAuth: vi.fn((req: Request, res: Response, next: NextFunction) => {
+          console.log("mocked optionalAuth");
+          next();
         })
       }
     }
