@@ -1,3 +1,29 @@
+# backend [1.37.0-rc.15](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.14...backend@1.37.0-rc.15) (2026-01-16)
+
+
+### Bug Fixes
+
+* avoid silent change of email address ([674f212](https://github.com/fhswf/appointme/commit/674f21219f744960d4c2cdf03f59eb747f9d5e8f))
+* avoid silent change of email address ([b648c1b](https://github.com/fhswf/appointme/commit/b648c1be78924104539fc879855f943ada2618da))
+* ci build errors ([1668269](https://github.com/fhswf/appointme/commit/1668269bd933f8ca2ef21cbf94d8fe3803227006))
+* handle optional authorization for `insertEvent` endpoint ([09795fd](https://github.com/fhswf/appointme/commit/09795fdbd496abba323a58aa44fbb745d641b4ea))
+
+
+### Features
+
+* add LTI tool endpoints ([c11e9b7](https://github.com/fhswf/appointme/commit/c11e9b7557b2dac4e5565c5c5bdac8e4d967773f))
+* introduce role-based access control for events and OIDC user role integration ([84a7db7](https://github.com/fhswf/appointme/commit/84a7db7b8a034a5747a0ab8777be9472f1bafa75))
+* introduce role-based access control for events and OIDC user role integration ([afac97c](https://github.com/fhswf/appointme/commit/afac97cc6960c8f0c64409b3d2910777d3810bf8))
+* introduce role-based access control for events and OIDC user role integration ([50defd5](https://github.com/fhswf/appointme/commit/50defd589dbcd93608d0337c79637db401086d94))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.0-rc.4
+
 # backend [1.37.0-rc.14](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.13...backend@1.37.0-rc.14) (2026-01-13)
 
 
