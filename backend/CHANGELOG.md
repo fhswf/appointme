@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.17](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.16...backend@1.37.0-rc.17) (2026-01-17)
+
+
+### Bug Fixes
+
+* lti login configuration ([23aa70b](https://github.com/fhswf/appointme/commit/23aa70b1bdf4788b1ae911f7f21cd6a3c5b572d8))
+
 # backend [1.37.0-rc.16](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.15...backend@1.37.0-rc.16) (2026-01-17)
 
 
