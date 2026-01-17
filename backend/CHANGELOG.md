@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.16](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.15...backend@1.37.0-rc.16) (2026-01-17)
+
+
+### Bug Fixes
+
+* exempt lti login from csrf ([e7f9fbd](https://github.com/fhswf/appointme/commit/e7f9fbd6cb7fc8009de29d105a8159e4d6e58002))
+
 # backend [1.37.0-rc.15](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.14...backend@1.37.0-rc.15) (2026-01-16)
 
 
