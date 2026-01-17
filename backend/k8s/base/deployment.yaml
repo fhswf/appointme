@@ -131,6 +131,31 @@ spec:
                 secretKeyRef:
                   key: SENTRY_DSN
                   name: appointme-secret
+            - name: LTI_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  key: LTI_CLIENT_ID
+                  name: appointme
+            - name: LTI_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  key: LTI_ISSUER
+                  name: appointme
+            - name: LTI_AUTH_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: LTI_AUTH_ENDPOINT
+                  name: appointme
+            - name: LTI_TOKEN_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: LTI_TOKEN_ENDPOINT
+                  name: appointme
+            - name: LTI_JWKS_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: LTI_JWKS_URI
+                  name: appointme
           image: ghcr.io/fhswf/appointme/backend:latest
           name: appointme
           ports:
