@@ -1,3 +1,18 @@
+# backend [1.37.0-rc.21](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.20...backend@1.37.0-rc.21) (2026-01-19)
+
+
+### Bug Fixes
+
+* make sure LTI users cannot access protected routes ([7817eec](https://github.com/fhswf/appointme/commit/7817eec7118cd1682d4079d00395a9ac82f13d12))
+* use correct booking page deep link ([c11e1e8](https://github.com/fhswf/appointme/commit/c11e1e8efb82df4245e68e471e6633b24935e553))
+
+
+### Features
+
+* LTI integration ([91b02dc](https://github.com/fhswf/appointme/commit/91b02dc0b7d3f66066576ed880dc8df0d0a483dc))
+* LTI integration ([e877ff1](https://github.com/fhswf/appointme/commit/e877ff150167c225075fa4d51e2c2c7b2cdbf852))
+* LTI integration ([194bedc](https://github.com/fhswf/appointme/commit/194bedc13a1bf0dbe267a2c9f46ecf6b1e55b45a))
+
 # backend [1.37.0-rc.20](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.19...backend@1.37.0-rc.20) (2026-01-19)
 
 
