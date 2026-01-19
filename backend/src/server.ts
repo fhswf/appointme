@@ -52,7 +52,9 @@ app.use(
 app.use(cookieParser(process.env.CSRF_SECRET));
 
 //Connecting to the database
-dataBaseConn();
+if (process.env.NODE_ENV !== "test") {
+  dataBaseConn();
+}
 
 //Bodyparser
 app.use(bodyParser.json());
