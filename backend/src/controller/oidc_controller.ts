@@ -244,8 +244,25 @@ const findOrCreateUser = async (sub: string, email: string, name?: string, pictu
 };
 
 const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Request) => {
+    const payload: any = {
+        name: user.name,
+        email: user.email,
+        roles: user.roles,
+        picture_url: user.picture_url,
+    };
+
+    if (user._id) {
+        payload._id = user._id;
+    }
+    if (user.sub) {
+        payload.sub = user.sub;
+    }
+    if (user.lti_context_id) {
+        payload.lti_context_id = user.lti_context_id;
+    }
+
     const access_token = sign(
-        { _id: user._id, name: user.name, email: user.email, roles: user.roles },
+        payload,
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     );
@@ -278,7 +295,7 @@ const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Req
         res.redirect(redirectUrl);
     } else {
         res.status(200).json({
-            user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url, roles: user.roles },
+            user: payload,
         });
     }
 };
@@ -337,17 +354,44 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
         return;
     }
 
-    const user = await findOrCreateUser(sub, email, name, picture, roles);
-
-    if (!user) {
-        throw new Error("User creation failed after retries");
-    }
-
     if (isLti) {
-        // LTI Launch: Redirect to Frontend
+        // LTI Launch: Transient user, check for existing by email
+        let user: any = {
+            sub,
+            email,
+            name,
+            picture_url: picture,
+            roles,
+        };
+
+        const existingUser = await UserModel.findOne({ email }).exec();
+        if (existingUser) {
+            user._id = existingUser._id;
+            // Merge roles if needed, or just use LTI roles? 
+            // User request: "helps teachers who want to administrate...". 
+            // Implication: they need their internal permissions.
+            // But LTI roles might be context specific. 
+            // Safest: Use LTI roles for this session, or merge?
+            // "The LTI token should *not* be translated to lokal users... for booking of restricted event types only"
+            // "However... add the (internal) _id"
+            // If I add _id, the system might treat them as the user.
+            // I will strictly follow: Add _id. Keep roles from LTI (as calculated by mapRoles).
+        }
+
+        const ltiContext = claims['https://purl.imsglobal.org/spec/lti/claim/context'];
+        if (ltiContext && ltiContext.id) {
+            user.lti_context_id = ltiContext.id;
+        }
+
         setAuthCookie(res, user, process.env.BASE_URL || '/', req);
     } else {
-        // Standard OIDC Login: Return JSON
+        // Standard OIDC Login: Persistent user
+        const user = await findOrCreateUser(sub, email, name, picture, roles);
+
+        if (!user) {
+            throw new Error("User creation failed after retries");
+        }
+        // Standard users have _id from DB.
         setAuthCookie(res, user, undefined, req);
     }
 };

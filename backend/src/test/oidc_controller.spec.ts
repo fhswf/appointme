@@ -555,7 +555,7 @@ describe('OIDC Controller', () => {
             vi.stubEnv('LTI_JWKS_URI', 'https://lti.example.com/jwks');
         });
 
-        it('should verify LTI token and login successfully', async () => {
+        it('should verify LTI token and login successfully (transient user)', async () => {
             await getCsrfToken();
             const id_token = 'valid_lti_token';
             const claims = {
@@ -563,7 +563,8 @@ describe('OIDC Controller', () => {
                 email: 'lti@example.com',
                 name: 'LTI User',
                 iss: 'https://lti.example.com',
-                aud: 'lti_client_id'
+                aud: 'lti_client_id',
+                'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-123' },
             };
 
             const jwtVerifyMock = vi.fn().mockResolvedValue({ payload: claims });
@@ -573,15 +574,76 @@ describe('OIDC Controller', () => {
             (jose.jwtVerify as any).mockImplementation(jwtVerifyMock);
             (jose.createRemoteJWKSet as any).mockImplementation(createRemoteJWKSetMock);
 
-            // Mock User finding/creation
-            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            // Mock User finding - return NULL for transient user
             (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
-            (UserModel.findOneAndUpdate as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue({
-                    _id: 'lti_user',
+
+            // Should NOT try to create/update user
+            const findOneAndUpdateMock = vi.fn();
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: findOneAndUpdateMock });
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            expect(res.status).toBe(302);
+            expect(res.header.location).toBeDefined(); // Redirects
+
+            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/jwks'));
+            expect(jose.jwtVerify).toHaveBeenCalledWith(id_token, expect.anything(), {
+                issuer: 'https://lti.example.com',
+                audience: 'lti_client_id'
+            });
+
+            // Ensure NO database writes for LTI user
+            expect(findOneAndUpdateMock).not.toHaveBeenCalled();
+
+            // Verify the token payload contains LTI specific fields and NO _id
+            expect(sign).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sub: 'lti_user',
                     email: 'lti@example.com',
                     name: 'LTI User',
-                    roles: []
+                    lti_context_id: 'course-123',
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+            // Should NOT have _id
+            const signCall = (sign as any).mock.calls[0][0];
+            expect(signCall._id).toBeUndefined();
+
+            // Should set cookie
+            const cookies = res.headers['set-cookie'];
+            expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
+        });
+
+        it('should include _id if local user exists for LTI', async () => {
+            await getCsrfToken();
+            const id_token = 'valid_lti_token_existing';
+            const claims = {
+                sub: 'lti_user_2',
+                email: 'existing@example.com',
+                name: 'LTI User 2',
+                iss: 'https://lti.example.com',
+                aud: 'lti_client_id',
+                'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-456' },
+            };
+
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockResolvedValue({ payload: claims });
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            // Mock User finding - return EXISTING user
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: 'local_user_id',
+                    email: 'existing@example.com',
+                    name: 'Local User',
+                    roles: ['admin'] // Local roles
                 })
             });
 
@@ -594,15 +656,18 @@ describe('OIDC Controller', () => {
                 .send({ id_token });
 
             expect(res.status).toBe(302);
-            expect(res.header.location).toBeDefined();
-            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/jwks'));
-            expect(jose.jwtVerify).toHaveBeenCalledWith(id_token, expect.anything(), {
-                issuer: 'https://lti.example.com',
-                audience: 'lti_client_id'
-            });
-            // Should set cookie
-            const cookies = res.headers['set-cookie'];
-            expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
+
+            // Verify payload HAS _id from local user, but also LTI data
+            expect(sign).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sub: 'lti_user_2',
+                    email: 'existing@example.com',
+                    lti_context_id: 'course-456',
+                    _id: 'local_user_id',
+                }),
+                expect.anything(),
+                expect.anything()
+            );
         });
 
         it('should fall back to constructed JWKS URI if valid issuer present', async () => {
