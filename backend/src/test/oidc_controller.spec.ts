@@ -36,6 +36,11 @@ vi.mock('jsonwebtoken', () => ({
     }
 }));
 
+vi.mock('jose', () => ({
+    createRemoteJWKSet: vi.fn(),
+    jwtVerify: vi.fn(),
+}));
+
 vi.mock('express-rate-limit', () => ({
     default: vi.fn(() => (req: any, res: any, next: any) => next()),
 }));
@@ -94,6 +99,7 @@ describe('OIDC Controller', () => {
             expect(res.body).toEqual({ error: "OIDC not configured" });
         });
 
+
         it('should return authorization URL when configured', async () => {
             // Need to re-init app to pick up env vars if not picked up dynamically
             vi.resetModules();
@@ -109,6 +115,30 @@ describe('OIDC Controller', () => {
             expect(res.body).toEqual({ url: authUrl.href });
             expect(openIdClient.buildAuthorizationUrl).toHaveBeenCalled();
         });
+
+        it('should handle LTI launch params and generate valid URL', async () => {
+            vi.resetModules();
+            vi.stubEnv('LTI_ISSUER', 'https://lti.example.com');
+            vi.stubEnv('LTI_CLIENT_ID', 'lti_client');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const authUrl = new URL('https://lti.example.com/auth');
+            (openIdClient.buildAuthorizationUrl as any).mockResolvedValue(authUrl);
+
+            const res = await request(app).get('/api/v1/oidc/url?iss=https://lti.example.com');
+
+            expect(res.status).toBe(200);
+            // This checks that we reached the crypto use without crashing
+            expect(openIdClient.buildAuthorizationUrl).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    nonce: expect.any(String),
+                    state: expect.any(String),
+                    response_mode: 'form_post'
+                })
+            );
+        });
     });
 
     describe('oidcLoginController', () => {
@@ -121,7 +151,7 @@ describe('OIDC Controller', () => {
                 .send({}); // No code
 
             expect(res.status).toBe(400);
-            expect(res.body).toEqual({ error: "Authorization code missing" });
+            expect(res.body).toEqual({ error: "Authorization code or id_token missing" });
         });
 
         it('should return 503 if OIDC not configured', async () => {
@@ -517,6 +547,125 @@ describe('OIDC Controller', () => {
             expect(res.body).toEqual({ enabled: false });
         });
     });
+
+    describe('LTI Launch (Implicit Flow)', () => {
+        beforeEach(() => {
+            vi.stubEnv('LTI_ISSUER', 'https://lti.example.com');
+            vi.stubEnv('LTI_CLIENT_ID', 'lti_client_id');
+            vi.stubEnv('LTI_JWKS_URI', 'https://lti.example.com/jwks');
+        });
+
+        it('should verify LTI token and login successfully', async () => {
+            await getCsrfToken();
+            const id_token = 'valid_lti_token';
+            const claims = {
+                sub: 'lti_user',
+                email: 'lti@example.com',
+                name: 'LTI User',
+                iss: 'https://lti.example.com',
+                aud: 'lti_client_id'
+            };
+
+            const jwtVerifyMock = vi.fn().mockResolvedValue({ payload: claims });
+            const createRemoteJWKSetMock = vi.fn().mockReturnValue({});
+
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockImplementation(jwtVerifyMock);
+            (jose.createRemoteJWKSet as any).mockImplementation(createRemoteJWKSetMock);
+
+            // Mock User finding/creation
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: 'lti_user',
+                    email: 'lti@example.com',
+                    name: 'LTI User',
+                    roles: []
+                })
+            });
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            expect(res.status).toBe(302);
+            expect(res.header.location).toBeDefined();
+            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/jwks'));
+            expect(jose.jwtVerify).toHaveBeenCalledWith(id_token, expect.anything(), {
+                issuer: 'https://lti.example.com',
+                audience: 'lti_client_id'
+            });
+            // Should set cookie
+            const cookies = res.headers['set-cookie'];
+            expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
+        });
+
+        it('should fall back to constructed JWKS URI if valid issuer present', async () => {
+            await getCsrfToken();
+            vi.stubEnv('LTI_JWKS_URI', ''); // Unset explicit URI
+
+            const id_token = 'valid_lti_token';
+            const claims = { sub: 'u', email: 'e@e.com' };
+
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockResolvedValue({ payload: claims });
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            // Mock User
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({ _id: 'u', email: 'e@e.com', roles: [] })
+            });
+            (sign as any).mockReturnValue('t');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            expect(res.status).toBe(302);
+            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/certs'));
+        });
+
+        it('should fail if JWKS URI cannot be determined', async () => {
+            await getCsrfToken();
+            vi.stubEnv('LTI_JWKS_URI', '');
+            vi.stubEnv('LTI_ISSUER', ''); // Unset issuer too
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token: 'token' });
+
+            expect(res.status).toBe(401);
+            expect(res.body.details).toContain("Missing LTI_JWKS_URI");
+        });
+
+        it('should fail if token verification fails', async () => {
+            await getCsrfToken();
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockRejectedValue(new Error("Signature validation failed"));
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token: 'bad_token' });
+
+            expect(res.status).toBe(401);
+            expect(res.body.details).toContain("Signature validation failed");
+        });
+    });
 });
+
 
 

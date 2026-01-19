@@ -111,7 +111,7 @@ app.use('/api/docs', swaggerUi.serve as any, swaggerUi.setup(swaggerSpec, {
 const csrfProtection = (req, res, next) => {
   // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
   if (req.method === 'POST') {
-    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init') {
+    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
       return next();
     }
   }

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Configuration, buildAuthorizationUrl, authorizationCodeGrant, ClientSecretBasic, None } from 'openid-client';
-import crypto from 'node:crypto';
+import { jwtVerify, createRemoteJWKSet } from 'jose';
+import crypto from 'crypto';
 import { UserModel } from '../models/User.js';
 import pkg from 'jsonwebtoken';
 import { logger } from '../logging.js';
@@ -102,6 +103,7 @@ const getConfig = async (issuer?: string): Promise<Configuration | null> => {
 
 export const getAuthUrl = async (req: Request, res: Response): Promise<void> => {
     const { login_hint, lti_message_hint, iss, target_link_uri } = { ...req.query, ...req.body };
+    logger.info("getAuthUrl called with: login_hint=%s, lti_message_hint=%s, iss=%s", login_hint, lti_message_hint, iss);
 
     const oidcConfig = await getConfig(iss);
     if (!oidcConfig) {
@@ -119,7 +121,14 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
         redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
     };
 
+    // For LTI, we must redirect to the backend because the frontend cannot handle the POST request
     if (iss && process.env.LTI_ISSUER && iss === process.env.LTI_ISSUER) {
+        // Use BASE_URL (frontend) + /api proxy path so we don't need to expose backend port directly
+        // Vite proxy in client/vite.config.ts forwards /api to backend
+        const baseUrl = process.env.BASE_URL || 'http://localhost:5173';
+        params.redirect_uri = `${baseUrl}/api/v1/oidc/login`;
+
+        params.scope = 'openid'; // Moodle auth.php requires strict 'openid' scope
         params.response_type = 'id_token';
         params.response_mode = 'form_post';
         params.nonce = crypto.randomUUID();
@@ -234,7 +243,7 @@ const findOrCreateUser = async (sub: string, email: string, name?: string, pictu
     return await createNewUser(sub, email, name, picture, roles);
 };
 
-const setAuthCookie = (res: Response, user: any) => {
+const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Request) => {
     const access_token = sign(
         { _id: user._id, name: user.name, email: user.email, roles: user.roles },
         process.env.JWT_SECRET,
@@ -242,58 +251,44 @@ const setAuthCookie = (res: Response, user: any) => {
     );
 
     const isDev = process.env.NODE_ENV === 'development';
+    const isLocalhost = req?.hostname === 'localhost' || req?.hostname === '127.0.0.1';
+
+    // Warn if NODE_ENV is mismatching expectation
+    if (!isDev && isLocalhost) {
+        logger.warn("Running on localhost but NODE_ENV is not development. Cookies might be Secure.");
+    }
+
     const domain = process.env.DOMAIN;
     const sameSite = isDev ? 'lax' : 'strict';
 
     const cookieOptions: any = {
         maxAge: 60 * 60 * 24 * 1000,
         httpOnly: true,
-        secure: true,
+        // Force non-secure on localhost to avoid issues with HTTP, regardless of NODE_ENV
+        secure: !isLocalhost && !isDev,
         sameSite
     };
     if (domain) {
         cookieOptions.domain = domain;
     }
 
-    res.cookie('access_token', access_token, cookieOptions)
-        .status(200)
-        .json({
+    res.cookie('access_token', access_token, cookieOptions);
+
+    if (redirectUrl) {
+        res.redirect(redirectUrl);
+    } else {
+        res.status(200).json({
             user: { _id: user._id, email: user.email, name: user.name, picture_url: user.picture_url, roles: user.roles },
         });
+    }
 };
 
 export const oidcLoginController = async (req: Request, res: Response): Promise<void> => {
-    // Frontend sends the code it received
-    const { code, iss } = req.body; // Assuming frontend might pass `iss` or we detect it? 
-    // Actually, for the callback, the `iss` might not be readily available unless we passed it through state or session.
-    // But typically, the token endpoint exchange needs the same client_id/secret.
-    // If we have multiple issuers, we need to know which one to use for the exchange.
-    // For LTI/OIDC, the initial launch (getAuthUrl) redirects to the provider. The provider redirects back with `code`.
-    // The frontend intercepts this and calls `oidcLoginController`.
-    // The frontend needs to know which issuer was used OR `oidcLoginController` needs to try both or infer.
-    // Ideally, the frontend should pass the `issuer` if it knows it, or we infer it.
+    // Frontend sends the code (Code Flow) or id_token (Implicit Flow/LTI)
+    const { code, id_token } = req.body;
 
-    // Simplification: We can try to decode the `code` if it's a JWT (some providers do this), but standard OIDC code is opaque.
-    // Standard approach: Use `state` parameter to store the issuer, or try all configured issuers.
-    // Since we only have two (OIDC and LTI), we can try to guess or require frontend to pass it.
-    // But `getAuthUrl` doesn't pass state to frontend in a way it can easily send back, unless we rely on the redirect URL params.
-
-    // For now, let's assume `oidcLoginController` tries the default first, or we assume the `iss` comes from the context?
-    // Wait, `oidcLoginController` is called by the frontend after receiving the callback.
-    // The frontend should ideally pass `iss` if it was in the query params of the callback? 
-    // Standard OIDC callback query params: `code`, `state`, `session_state`.
-    // We didn't set `state` in `getAuthUrl`. We should probably set `state` with the issuer info.
-
-    // For this iteration, let's stick to the prompt's scope. The user issue is the REDIRECT (getAuthUrl).
-    // The login/token exchange is a subsequent step.
-    // However, if we redirect to Moodle, Moodle will redirect back with a code.
-    // When exchanging that code, we MUST use the Moodle config (Client ID/Secret).
-    // If `oidcLoginController` uses the default config, it will fail.
-
-    // Let's first implementation `getAuthUrl` correct behavior.
-
-    if (!code) {
-        res.status(400).json({ error: "Authorization code missing" });
+    if (!code && !id_token) {
+        res.status(400).json({ error: "Authorization code or id_token missing" });
         return;
     }
 
@@ -321,28 +316,55 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
     }
 
     try {
-        // Exchange code for tokens
-        // We must pass the same redirect_uri that was used in the authorization request
-        // construct URL with code
-        const currentUrl = new URL(`${process.env.BASE_URL}/oidc-callback`);
-        currentUrl.searchParams.set('code', code);
+        let claims: any;
 
-        const tokenSet = await authorizationCodeGrant(
-            oidcConfig,
-            currentUrl,
-            {
-                pkceCodeVerifier: undefined, // Add if we implement PKCE
-            },
-            {
-                redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
+        if (id_token) {
+
+            // Implicit Flow (LTI 1.3): Verify id_token
+            let jwksUri = process.env.LTI_JWKS_URI;
+            // Fallback to constructing from issuer if not explicitly set, 
+            // but only if we have an LTI_ISSUER to base it on.
+            if (!jwksUri && process.env.LTI_ISSUER) {
+                jwksUri = `${process.env.LTI_ISSUER}/certs`;
             }
-        );
 
-        const claims = tokenSet.claims();
+            if (!jwksUri) {
+                throw new Error("Cannot verify LTI token: Missing LTI_JWKS_URI configuration");
+            }
+
+            const JWKS = createRemoteJWKSet(new URL(jwksUri));
+
+            const { payload } = await jwtVerify(id_token as string, JWKS, {
+                issuer: process.env.LTI_ISSUER, // Strict issuer check
+                audience: process.env.LTI_CLIENT_ID, // Strict audience check
+            });
+
+            claims = payload;
+            logger.debug("LTI Token Verified. Claims: %o", claims);
+
+        } else {
+            // Authorization Code Flow
+            const currentUrl = new URL(`${process.env.BASE_URL}/oidc-callback`);
+            currentUrl.searchParams.set('code', code as string);
+
+            const tokenSet = await authorizationCodeGrant(
+                oidcConfig,
+                currentUrl,
+                {
+                    pkceCodeVerifier: undefined,
+                },
+                {
+                    redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
+                }
+            );
+            claims = tokenSet.claims();
+        }
+
         const sub = claims.sub as string;
         const email = claims.email as string;
         const name = claims.name as string | undefined;
         const picture = claims.picture as string | undefined;
+        // Check both 'roles' and LTI-specific roles
         const roles = mapRoles(claims);
 
         if (!email) {
@@ -356,7 +378,13 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
             throw new Error("User creation failed after retries");
         }
 
-        setAuthCookie(res, user);
+        if (id_token) {
+            // LTI Launch: Redirect to Frontend
+            setAuthCookie(res, user, process.env.BASE_URL || '/', req);
+        } else {
+            // Standard OIDC Login: Return JSON
+            setAuthCookie(res, user, undefined, req);
+        }
 
     } catch (err: any) {
         logger.error("OIDC Login failed: %o", err);
