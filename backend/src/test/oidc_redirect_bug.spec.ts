@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 import { init } from "../server";
-import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
 // Mock dependencies
@@ -13,6 +12,23 @@ vi.mock("csrf-csrf", () => {
         })
     };
 });
+
+// Mock Mongoose Models to avoid real DB connection
+vi.mock("../models/User.js", () => {
+    const UserModelMock = vi.fn();
+    (UserModelMock as any).findOne = vi.fn().mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+    (UserModelMock as any).findById = vi.fn().mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+    return { UserModel: UserModelMock };
+});
+
+vi.mock("../models/Event.js", () => ({
+    EventModel: vi.fn()
+}));
+
+// Mock DB Connection
+vi.mock("../config/dbConn.js", () => ({
+    dataBaseConn: vi.fn()
+}));
 
 vi.mock("jose", () => {
     return {
@@ -42,17 +58,12 @@ describe("OIDC Redirect Bug Reproduction", () => {
         process.env.LTI_CLIENT_ID = "client_id";
         process.env.LTI_JWKS_URI = "https://issuer.com/jwks";
 
+        // No need to connect to mongoose if we mock it
         app = init(0);
-
-        if (mongoose.connection.readyState !== 0) {
-            await mongoose.disconnect();
-        }
-        await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/appointme-test");
-    }, 30000);
+    });
 
     afterAll(async () => {
         process.env.BASE_URL = originalBaseUrl;
-        await mongoose.disconnect();
         if (app) app.close();
     });
 
@@ -62,12 +73,6 @@ describe("OIDC Redirect Bug Reproduction", () => {
             .send({
                 id_token: "mock_id_token" // Triggers LTI flow
             });
-
-        // Current buggy behavior: returns 200 JSON because redirectUrl becomes ""
-        // Expected behavior: returns 302 redirect to "/"
-        if (res.status === 200) {
-            console.log("Bug reproduced: Server returned 200 OK (JSON) instead of Redirect");
-        }
 
         expect(res.status).toBe(302);
         expect(res.header.location).toBe("/");

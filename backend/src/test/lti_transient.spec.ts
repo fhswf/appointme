@@ -1,12 +1,11 @@
-
-import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi, beforeEach } from "vitest";
 import request from "supertest";
 import { init } from "../server.js";
 import { UserModel } from "../models/User.js";
 import { EventModel } from "../models/Event.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 
+// Mock dependencies
 vi.mock("csrf-csrf", () => {
     return {
         doubleCsrf: () => ({
@@ -16,44 +15,64 @@ vi.mock("csrf-csrf", () => {
     };
 });
 
+// Mock Mongoose Models
+vi.mock("../models/User.js", () => {
+    const UserModelMock = vi.fn();
+    (UserModelMock as any).findOne = vi.fn();
+    (UserModelMock as any).findById = vi.fn();
+    return { UserModel: UserModelMock };
+});
+
+vi.mock("../models/Event.js", () => {
+    const EventModelMock = vi.fn();
+    (EventModelMock as any).findById = vi.fn();
+    return { EventModel: EventModelMock };
+});
+
+// Mock AppointmentModel
+vi.mock("../models/Appointment.js", () => {
+    const AppointmentModelMock = vi.fn().mockImplementation(function (data) {
+        return {
+            ...data,
+            save: vi.fn().mockResolvedValue(data)
+        };
+    });
+    return { AppointmentModel: AppointmentModelMock };
+});
+
+// Mock Mailer
+vi.mock("../utility/mailer.js", () => ({
+    sendEventInvitation: vi.fn().mockResolvedValue({})
+}));
+
+// Mock DB Connection
+vi.mock("../config/dbConn.js", () => ({
+    dataBaseConn: vi.fn()
+}));
+
+// Mock Google Controller to assume success
+vi.mock("../controller/google_controller.js", () => ({
+    checkFree: vi.fn().mockResolvedValue(true),
+    insertGoogleEvent: vi.fn().mockResolvedValue({ status: "confirmed" }),
+    events: vi.fn().mockResolvedValue([]),
+    freeBusy: vi.fn().mockResolvedValue({ data: { calendars: {} } }),
+    revokeScopes: vi.fn().mockResolvedValue({}),
+    generateAuthUrl: vi.fn().mockReturnValue("http://auth.url"),
+    getCalendarList: vi.fn().mockResolvedValue([]),
+    googleCallback: vi.fn().mockResolvedValue({})
+}));
+
+
 describe("LTI Transient User Support", () => {
     let app: any;
-    let persistentUser;
-    let restrictedEvent;
-    let transientToken;
-    let transientTokenRecruiter;
+    let transientToken: string;
+    let transientTokenRecruiter: string;
+    const mockEventId = "mock_event_id_unique";
+    const mockUserId = "mock_user_id_unique";
 
     beforeAll(async () => {
         app = init(0);
-
-        if (mongoose.connection.readyState !== 0) {
-            await mongoose.disconnect();
-        }
-        await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/appointme-test");
-
-        const uniqueId = new mongoose.Types.ObjectId().toString();
-
-        // Create a persistent user who owns the event
-        persistentUser = new UserModel({
-            _id: uniqueId,
-            name: "EventManager",
-            email: `manager_${uniqueId}@example.com`,
-            user_url: `manager_${uniqueId}`,
-            picture_url: `http://example.com/${uniqueId}.jpg`
-        });
-        await persistentUser.save();
-
-        // Create a restricted event
-        const startDate = new Date();
-        startDate.setMinutes(0, 0, 0); // Start of hour
-        restrictedEvent = new EventModel({
-            user: persistentUser._id,
-            name: "Restricted Interview",
-            url: `interview_${uniqueId}`,
-            duration: 30,
-            allowed_roles: ["recruiter"] // Only recruiters can book
-        });
-        await restrictedEvent.save();
+        process.env.JWT_SECRET = "test_secret";
 
         // Create transient token (no _id) - Student role
         const payloadStudent = {
@@ -74,14 +93,22 @@ describe("LTI Transient User Support", () => {
             picture: "http://example.com/pic_recruiter.jpg"
         };
         transientTokenRecruiter = jwt.sign(payloadRecruiter, process.env.JWT_SECRET as string);
-    }, 30000);
+    });
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
 
     afterAll(async () => {
-        await UserModel.deleteMany({});
-        await EventModel.deleteMany({});
-        await mongoose.disconnect();
         if (app) app.close();
     });
+
+    const mockQuery = (result: any) => {
+        return {
+            exec: vi.fn().mockResolvedValue(result),
+            select: vi.fn().mockReturnThis(),
+        };
+    };
 
     describe("GET /api/v1/user/me", () => {
         it("should return transient user data for LTI token without _id", async () => {
@@ -108,11 +135,32 @@ describe("LTI Transient User Support", () => {
         });
     });
 
-    describe("POST /api/v1/event/:id/slot (insertEvent)", () => {
-        it("should allow transient user with correct role to book ", async () => {
-            // Recruiter role required
+    describe("POST /api/v1/event/:id/slot (insertEvent) with Roles", () => {
+        const mockPersistentUser = {
+            _id: mockUserId,
+            name: "EventManager",
+            email: "manager@example.com",
+            push_calendars: []
+        };
+
+        const mockRestrictedEvent = {
+            _id: mockEventId,
+            user: mockPersistentUser._id,
+            name: "Restricted Interview",
+            duration: 30,
+            allowed_roles: ["recruiter"]
+        };
+
+        it("should allow transient user with correct role to book", async () => {
+            // Mock Event finding
+            (EventModel.findById as any).mockImplementation(() => mockQuery(mockRestrictedEvent));
+
+            // Mock User finding (for event owner)
+            (UserModel.findOne as any).mockImplementation(() => mockQuery(mockPersistentUser));
+            (UserModel.findById as any).mockImplementation(() => mockQuery(mockPersistentUser));
+
             const res = await request(app)
-                .post(`/api/v1/event/${restrictedEvent._id}/slot`)
+                .post(`/api/v1/event/${mockEventId}/slot`)
                 .set("Authorization", `Bearer ${transientTokenRecruiter}`)
                 .send({
                     start: new Date().toISOString(),
@@ -121,16 +169,18 @@ describe("LTI Transient User Support", () => {
                     description: "Interview"
                 });
 
-            // We expect success or at least passing the role check (failed due to other reasons e.g. calendar push is fine)
-            // But here we mock minimal dependencies only if needed. 
-            // Ideally it should pass role check. Status might be 200 or 400 depending on downstream services.
-            expect([200, 201, 400]).toContain(res.status);
+
+
+            expect(res.status).toBe(200);
+            expect(res.body.success).toBe(true);
         });
 
         it("should deny transient user with incorrect role", async () => {
-            // Student role, but 'recruiter' required
+            // Mock Event finding
+            (EventModel.findById as any).mockImplementation(() => mockQuery(mockRestrictedEvent));
+
             const res = await request(app)
-                .post(`/api/v1/event/${restrictedEvent._id}/slot`)
+                .post(`/api/v1/event/${mockEventId}/slot`)
                 .set("Authorization", `Bearer ${transientToken}`)
                 .send({
                     start: new Date().toISOString(),

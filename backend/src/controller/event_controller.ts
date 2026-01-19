@@ -665,7 +665,9 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 
         res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
       } catch (err) {
-        res.status(400).json({ error: err });
+        const msg = err instanceof Error ? err.message : String(err);
+        logger.error("Fallback booking failed", err);
+        res.status(400).json({ error: msg, details: err });
       }
     }
   } catch (err) {
