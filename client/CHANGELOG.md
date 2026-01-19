@@ -1,3 +1,10 @@
+# client [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.11...client@1.32.0-rc.12) (2026-01-19)
+
+
+### Features
+
+* LTI integration ([194bedc](https://github.com/fhswf/appointme/commit/194bedc13a1bf0dbe267a2c9f46ecf6b1e55b45a))
+
 # client [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.10...client@1.32.0-rc.11) (2026-01-16)
 
 
