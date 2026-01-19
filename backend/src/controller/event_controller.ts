@@ -555,6 +555,34 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     const { eventDoc, user } = context;
     const userId = eventDoc.user;
 
+    // Check for role restrictions
+    if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
+      let userRoles: string[] = [];
+
+      if (!req["user"] && req["user_id"]) {
+        try {
+          const user = await UserModel.findById(req["user_id"]).exec();
+          if (user) {
+            req["user"] = user;
+            userRoles = user.roles || [];
+          }
+        } catch (err) {
+          logger.error("Failed to fetch user for role check", err);
+        }
+      } else if (req["user"]) {
+        userRoles = req["user"].roles || [];
+      } else if (req['user_claims']) {
+        // Fallback to claims for transient users
+        userRoles = req['user_claims'].roles || [];
+      }
+
+      // Check if current user is authenticated and has required role
+      if (!eventDoc.allowed_roles.some(r => userRoles.includes(r))) {
+        res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
+        return;
+      }
+    }
+
     // Check if this is a recurring event and calculate all instances
     const instances = calculateRecurrenceInstances(starttime, eventDoc.recurrence || { enabled: false, frequency: 'weekly', interval: 1 });
     logger.debug("Recurring instances: %o", instances);
@@ -566,27 +594,6 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
         conflictDate: availability.conflictDate
       });
       return;
-    }
-
-    // Check for role restrictions
-    if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
-      if (!req["user"] && req["user_id"]) {
-        try {
-          const user = await UserModel.findById(req["user_id"]).exec();
-          if (user) {
-            req["user"] = user;
-          }
-        } catch (err) {
-          logger.error("Failed to fetch user for role check", err);
-        }
-      }
-
-      // Check if current user is authenticated and has required role
-      const currentUser = req["user"]; // Assuming middleware populates this
-      if (!currentUser || !currentUser.roles || !eventDoc.allowed_roles.some(r => currentUser.roles.includes(r))) {
-        res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
-        return;
-      }
     }
 
     const userComment = req.body.description as string;
@@ -658,7 +665,9 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 
         res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
       } catch (err) {
-        res.status(400).json({ error: err });
+        const msg = err instanceof Error ? err.message : String(err);
+        logger.error("Fallback booking failed", err);
+        res.status(400).json({ error: msg, details: err });
       }
     }
   } catch (err) {

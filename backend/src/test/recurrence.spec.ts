@@ -1,5 +1,6 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import mongoose from 'mongoose';
 import request from "supertest";
 import { EVENT } from './EVENT.js';
 import { USER } from './USER.js';
@@ -126,8 +127,11 @@ describe("Recurrence Availability", () => {
         vi.useRealTimers();
     });
 
+
+
     afterAll(async () => {
         if (app?.close) await app.close();
+        await mongoose.disconnect();
     });
 
     it("should return slots for weekly recurrence when all instances are free", async () => {

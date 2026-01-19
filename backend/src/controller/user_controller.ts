@@ -68,39 +68,52 @@ function escapeRegExp(string: string): string {
  */
 export const getUser = (req: Request, res: Response): void => {
   const userid = req['user_id'];
-  if (typeof userid !== 'string') {
-    res.status(400).json({ error: "Invalid user id" });
-    return;
-  }
   res.set("Cache-Control", "no-store");
-  void UserModel.findOne({ _id: userid },
-    {
-      "_id": 1,
-      "email": 1,
-      "name": 1,
-      "picture_url": 1,
-      "pull_calendars": 1,
-      "push_calendars": 1,
-      "user_url": 1,
-      "agenda_visible_calendars": 1,
-      "welcome": 1,
-      "updatedAt": 1,
-      "send_invitation_email": 1,
-      "google_tokens.access_token": 1,
-      "use_gravatar": 1,
-      "defaultAvailable": 1
-    })
-    .exec()
-    .then(user => {
-      if (!user) {
-        res.status(404).json({ error: "User not found" });
-        return;
-      }
-      res.status(200).json(user);
-    })
-    .catch(err => {
-      res.status(400).json({ error: err });
-    });
+
+  if (typeof userid === 'string') {
+    void UserModel.findOne({ _id: userid },
+      {
+        "_id": 1,
+        "email": 1,
+        "name": 1,
+        "picture_url": 1,
+        "pull_calendars": 1,
+        "push_calendars": 1,
+        "user_url": 1,
+        "agenda_visible_calendars": 1,
+        "welcome": 1,
+        "updatedAt": 1,
+        "send_invitation_email": 1,
+        "google_tokens.access_token": 1,
+        "use_gravatar": 1,
+        "defaultAvailable": 1
+      })
+      .exec()
+      .then(user => {
+        if (!user) {
+          res.status(404).json({ error: "User not found" });
+          return;
+        }
+        res.status(200).json(user);
+      })
+      .catch(err => {
+        res.status(400).json({ error: err });
+      });
+  } else if (req['user_claims']) {
+    // Transient user (LTI)
+    const claims = req['user_claims'];
+    const user = {
+      name: claims.name,
+      email: claims.email,
+      picture_url: claims.picture_url || claims.picture,
+      roles: claims.roles || [],
+      isTransient: true // Flag for client
+    };
+    res.status(200).json(user);
+  } else {
+    // optionalAuth fell through without a token
+    res.status(401).json({ error: "Not authenticated" });
+  }
 };
 
 /** Filter out the google_tokens key from user.
