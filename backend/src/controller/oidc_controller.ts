@@ -379,7 +379,7 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
         }
 
         const ltiContext = claims['https://purl.imsglobal.org/spec/lti/claim/context'];
-        if (ltiContext && ltiContext.id) {
+        if (ltiContext?.id) {
             user.lti_context_id = ltiContext.id;
         }
 

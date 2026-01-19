@@ -621,7 +621,7 @@ describe('OIDC Controller', () => {
             expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
         });
 
-        it('should include _id if local user exists for LTI', async () => {
+        it('should include _id if local user exists for LTI and preserve google_tokens', async () => {
             await getCsrfToken();
             const id_token = 'valid_lti_token_existing';
             const claims = {
@@ -637,15 +637,26 @@ describe('OIDC Controller', () => {
             (jose.jwtVerify as any).mockResolvedValue({ payload: claims });
             (jose.createRemoteJWKSet as any).mockReturnValue({});
 
+            const mockUser = {
+                _id: 'local_user_id',
+                email: 'existing@example.com',
+                name: 'Local User',
+                roles: ['admin'],
+                google_tokens: {
+                    access_token: 'abc',
+                    refresh_token: 'def'
+                },
+                save: vi.fn() // Should not be called for LTI
+            };
+
             // Mock User finding - return EXISTING user
             (UserModel.findOne as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue({
-                    _id: 'local_user_id',
-                    email: 'existing@example.com',
-                    name: 'Local User',
-                    roles: ['admin'] // Local roles
-                })
+                exec: vi.fn().mockResolvedValue(mockUser)
             });
+
+            // Ensure NO database writes for LTI user
+            const findOneAndUpdateMock = vi.fn();
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: findOneAndUpdateMock });
 
             (sign as any).mockReturnValue('mock_access_token');
 
@@ -668,6 +679,74 @@ describe('OIDC Controller', () => {
                 expect.anything(),
                 expect.anything()
             );
+
+            // Verify DB integrity
+            expect(findOneAndUpdateMock).not.toHaveBeenCalled();
+            expect(mockUser.save).not.toHaveBeenCalled();
+        });
+
+        it('should preserve google_tokens during Standard OIDC login for existing user', async () => {
+            await getCsrfToken();
+            const code = 'valid_code_google_user';
+            const claims = {
+                sub: 'oidc_sub',
+                email: 'existing@example.com',
+                name: 'OIDC Update',
+                picture: 'http://pic.com/new.jpg'
+            };
+
+            (openIdClient.authorizationCodeGrant as any).mockResolvedValue({
+                claims: vi.fn().mockReturnValue(claims)
+            });
+
+            const mockUser = {
+                _id: 'local_user_id',
+                email: 'existing@example.com',
+                name: 'Old Name',
+                roles: ['user'],
+                google_tokens: {
+                    access_token: 'preserve_me',
+                    refresh_token: 'keep_me'
+                },
+                save: vi.fn().mockResolvedValue(true)
+            };
+
+            // Mock findById to return null (match by email)
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            });
+
+            // Mock findOne to return existing user
+            (UserModel.findOne as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(mockUser)
+            });
+
+            // Mock update for roles
+            (UserModel.updateOne as any).mockReturnValue({ exec: vi.fn() });
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(mockUser) // Return same user after role update
+            });
+
+            (sign as any).mockReturnValue('mock_access_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ code });
+
+            expect(res.status).toBe(200);
+
+            // Check that save was called (updating name/picture)
+            expect(mockUser.save).toHaveBeenCalled();
+
+            // Check that google_tokens were NOT modified
+            expect(mockUser.google_tokens).toEqual({
+                access_token: 'preserve_me',
+                refresh_token: 'keep_me'
+            });
+            // name should be updated
+            expect(mockUser.name).toBe('OIDC Update');
         });
 
         it('should fall back to constructed JWKS URI if valid issuer present', async () => {
