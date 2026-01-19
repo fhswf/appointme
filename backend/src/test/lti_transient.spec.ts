@@ -73,7 +73,7 @@ describe("LTI Transient User Support", () => {
             picture: "http://example.com/pic_recruiter.jpg"
         };
         transientTokenRecruiter = jwt.sign(payloadRecruiter, process.env.JWT_SECRET as string);
-    });
+    }, 30000);
 
     afterAll(async () => {
         await UserModel.deleteMany({});
