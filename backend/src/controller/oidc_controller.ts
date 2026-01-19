@@ -414,6 +414,10 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
             redirectUrl = `${baseUrl}/users/${userSlug}`;
         }
 
+        if (!redirectUrl) {
+            redirectUrl = '/';
+        }
+
         setAuthCookie(res, user, redirectUrl, req);
     } else {
         // Standard OIDC Login: Persistent user
