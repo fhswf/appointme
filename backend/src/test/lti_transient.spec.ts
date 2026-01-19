@@ -26,9 +26,10 @@ describe("LTI Transient User Support", () => {
     beforeAll(async () => {
         app = init(0);
 
-        if (mongoose.connection.readyState === 0) {
-            await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/appointme-test");
+        if (mongoose.connection.readyState !== 0) {
+            await mongoose.disconnect();
         }
+        await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/appointme-test");
 
         const uniqueId = new mongoose.Types.ObjectId().toString();
 
@@ -78,6 +79,7 @@ describe("LTI Transient User Support", () => {
     afterAll(async () => {
         await UserModel.deleteMany({});
         await EventModel.deleteMany({});
+        await mongoose.disconnect();
         if (app) app.close();
     });
 
