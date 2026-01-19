@@ -42,8 +42,8 @@ export const middleware = {
         });
     } else {
       verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-          logger.error("Invalid token: ", err);
+        if (err || !decoded?.["_id"]) {
+          logger.error("Invalid token or missing _id: ", err || "No _id in payload");
           return res
             .status(401)
             .set("WWW-Authenticate", 'Bearer')
