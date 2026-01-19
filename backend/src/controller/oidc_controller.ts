@@ -383,7 +383,38 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
             user.lti_context_id = ltiContext.id;
         }
 
-        setAuthCookie(res, user, process.env.BASE_URL || '/', req);
+        let baseUrl = process.env.BASE_URL || '/';
+        const customClaims = claims['https://purl.imsglobal.org/spec/lti/claim/custom'];
+        const targetLinkUri = claims['https://purl.imsglobal.org/spec/lti/claim/target_link_uri'];
+
+        let userSlug = customClaims?.u || customClaims?.user;
+        let eventSlug = customClaims?.e || customClaims?.event || customClaims?.url;
+
+        if (targetLinkUri) {
+            try {
+                const url = new URL(targetLinkUri);
+                // Use target_link_uri as base, stripping query params
+                baseUrl = url.origin + url.pathname;
+                // Remove trailing slash to avoid double slashes when appending
+                if (baseUrl.endsWith('/')) {
+                    baseUrl = baseUrl.slice(0, -1);
+                }
+
+                if (!userSlug) userSlug = url.searchParams.get('u') || url.searchParams.get('user');
+                if (!eventSlug) eventSlug = url.searchParams.get('e') || url.searchParams.get('event') || url.searchParams.get('url');
+            } catch (err) {
+                logger.warn("Failed to parse target_link_uri: %s", targetLinkUri);
+            }
+        }
+
+        let redirectUrl = baseUrl;
+        if (userSlug && eventSlug) {
+            redirectUrl = `${baseUrl}/${userSlug}/${eventSlug}`;
+        } else if (userSlug) {
+            redirectUrl = `${baseUrl}/${userSlug}`;
+        }
+
+        setAuthCookie(res, user, redirectUrl, req);
     } else {
         // Standard OIDC Login: Persistent user
         const user = await findOrCreateUser(sub, email, name, picture, roles);
