@@ -1,3 +1,11 @@
+# backend [1.37.0-rc.18](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.17...backend@1.37.0-rc.18) (2026-01-19)
+
+
+### Bug Fixes
+
+* LTI authentication ([2e3fba3](https://github.com/fhswf/appointme/commit/2e3fba33905102a1b56a12afcdfd778c3e048042))
+* LTI authentication ([09e638b](https://github.com/fhswf/appointme/commit/09e638b18bf5bd4a144f48b9c32975de885c6e80))
+
 # backend [1.37.0-rc.17](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.16...backend@1.37.0-rc.17) (2026-01-17)
 
 
