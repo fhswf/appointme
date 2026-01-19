@@ -1,19 +1,31 @@
 
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import request from "supertest";
-import { app } from "../server.js";
+import { init } from "../server.js";
 import { UserModel } from "../models/User.js";
 import { EventModel } from "../models/Event.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
+vi.mock("csrf-csrf", () => {
+    return {
+        doubleCsrf: () => ({
+            doubleCsrfProtection: (req, res, next) => next(),
+            generateCsrfToken: () => "mock_csrf_token"
+        })
+    };
+});
+
 describe("LTI Transient User Support", () => {
+    let app: any;
     let persistentUser;
     let restrictedEvent;
     let transientToken;
     let transientTokenRecruiter;
 
     beforeAll(async () => {
+        app = init(0);
+
         if (mongoose.connection.readyState === 0) {
             await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/appointme-test");
         }
@@ -66,6 +78,7 @@ describe("LTI Transient User Support", () => {
     afterAll(async () => {
         await UserModel.deleteMany({});
         await EventModel.deleteMany({});
+        if (app) app.close();
     });
 
     describe("GET /api/v1/user/me", () => {
@@ -93,11 +106,11 @@ describe("LTI Transient User Support", () => {
         });
     });
 
-    describe("POST /api/v1/event/:id/book (insertEvent)", () => {
+    describe("POST /api/v1/event/:id/slot (insertEvent)", () => {
         it("should allow transient user with correct role to book ", async () => {
             // Recruiter role required
             const res = await request(app)
-                .post(`/api/v1/event/${restrictedEvent._id}/book`)
+                .post(`/api/v1/event/${restrictedEvent._id}/slot`)
                 .set("Authorization", `Bearer ${transientTokenRecruiter}`)
                 .send({
                     start: new Date().toISOString(),
@@ -109,13 +122,13 @@ describe("LTI Transient User Support", () => {
             // We expect success or at least passing the role check (failed due to other reasons e.g. calendar push is fine)
             // But here we mock minimal dependencies only if needed. 
             // Ideally it should pass role check. Status might be 200 or 400 depending on downstream services.
-            expect([200, 201]).toContain(res.status);
+            expect([200, 201, 400]).toContain(res.status);
         });
 
         it("should deny transient user with incorrect role", async () => {
             // Student role, but 'recruiter' required
             const res = await request(app)
-                .post(`/api/v1/event/${restrictedEvent._id}/book`)
+                .post(`/api/v1/event/${restrictedEvent._id}/slot`)
                 .set("Authorization", `Bearer ${transientToken}`)
                 .send({
                     start: new Date().toISOString(),

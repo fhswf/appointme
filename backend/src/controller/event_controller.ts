@@ -555,19 +555,6 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     const { eventDoc, user } = context;
     const userId = eventDoc.user;
 
-    // Check if this is a recurring event and calculate all instances
-    const instances = calculateRecurrenceInstances(starttime, eventDoc.recurrence || { enabled: false, frequency: 'weekly', interval: 1 });
-    logger.debug("Recurring instances: %o", instances);
-
-    const availability = await validateAvailability(eventDoc, userId, instances, starttime);
-    if (!availability.available) {
-      res.status(400).json({
-        error: availability.error,
-        conflictDate: availability.conflictDate
-      });
-      return;
-    }
-
     // Check for role restrictions
     if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
       let userRoles: string[] = [];
@@ -594,6 +581,19 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
         res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
         return;
       }
+    }
+
+    // Check if this is a recurring event and calculate all instances
+    const instances = calculateRecurrenceInstances(starttime, eventDoc.recurrence || { enabled: false, frequency: 'weekly', interval: 1 });
+    logger.debug("Recurring instances: %o", instances);
+
+    const availability = await validateAvailability(eventDoc, userId, instances, starttime);
+    if (!availability.available) {
+      res.status(400).json({
+        error: availability.error,
+        conflictDate: availability.conflictDate
+      });
+      return;
     }
 
     const userComment = req.body.description as string;
