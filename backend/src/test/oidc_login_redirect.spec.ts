@@ -125,7 +125,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://myschool.moodle.com/mod/lti/launch/myslug/myevent');
+        expect(res.header.location).toBe('https://myschool.moodle.com/mod/lti/launch/users/myslug/myevent');
     });
 
     it('should parse user and event parameters and redirect to /user/event', async () => {
@@ -145,7 +145,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://myschool.moodle.com/mod/lti/launch/biguser/bigevent');
+        expect(res.header.location).toBe('https://myschool.moodle.com/mod/lti/launch/users/biguser/bigevent');
     });
 
     it('should handle just user parameter', async () => {
@@ -165,7 +165,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://lms.com/justuser');
+        expect(res.header.location).toBe('https://lms.com/users/justuser');
     });
 
     it('should handle url parameter as alias for event', async () => {
@@ -185,7 +185,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://lms.com/user1/event1');
+        expect(res.header.location).toBe('https://lms.com/users/user1/event1');
     });
 
     it('should ignore target_link_uri if parsing fails', async () => {
@@ -225,7 +225,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://lms.com/short/ev');
+        expect(res.header.location).toBe('https://lms.com/users/short/ev');
     });
 
     it('should use custom claims for redirection', async () => {
@@ -249,7 +249,7 @@ describe('OIDC Login Redirect', () => {
             .send({ id_token: 'token' });
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://custom-host.com/launch/customUser/customEvent');
+        expect(res.header.location).toBe('https://custom-host.com/launch/users/customUser/customEvent');
     });
 
     it('should prioritize custom claims over target_link_uri', async () => {
@@ -280,6 +280,6 @@ describe('OIDC Login Redirect', () => {
         // if (!eventSlug) -> takes from uri -> 'uriEvent'
 
         expect(res.status).toBe(302);
-        expect(res.header.location).toBe('https://lms.com/customUser/uriEvent');
+        expect(res.header.location).toBe('https://lms.com/users/customUser/uriEvent');
     });
 });

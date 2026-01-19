@@ -409,9 +409,9 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
 
         let redirectUrl = baseUrl;
         if (userSlug && eventSlug) {
-            redirectUrl = `${baseUrl}/${userSlug}/${eventSlug}`;
+            redirectUrl = `${baseUrl}/users/${userSlug}/${eventSlug}`;
         } else if (userSlug) {
-            redirectUrl = `${baseUrl}/${userSlug}`;
+            redirectUrl = `${baseUrl}/users/${userSlug}`;
         }
 
         setAuthCookie(res, user, redirectUrl, req);
