@@ -570,20 +570,27 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
 
     // Check for role restrictions
     if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
+      let userRoles: string[] = [];
+
       if (!req["user"] && req["user_id"]) {
         try {
           const user = await UserModel.findById(req["user_id"]).exec();
           if (user) {
             req["user"] = user;
+            userRoles = user.roles || [];
           }
         } catch (err) {
           logger.error("Failed to fetch user for role check", err);
         }
+      } else if (req["user"]) {
+        userRoles = req["user"].roles || [];
+      } else if (req['user_claims']) {
+        // Fallback to claims for transient users
+        userRoles = req['user_claims'].roles || [];
       }
 
       // Check if current user is authenticated and has required role
-      const currentUser = req["user"]; // Assuming middleware populates this
-      if (!currentUser || !currentUser.roles || !eventDoc.allowed_roles.some(r => currentUser.roles.includes(r))) {
+      if (!eventDoc.allowed_roles.some(r => userRoles.includes(r))) {
         res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
         return;
       }

@@ -37,7 +37,7 @@ export const userRouter = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-userRouter.get("/me", userRateLimiter, requireAuth, getUser);
+userRouter.get("/me", userRateLimiter, middleware.optionalAuth, getUser);
 
 /**
  * @openapi

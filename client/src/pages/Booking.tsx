@@ -32,6 +32,8 @@ import { ChevronLeft, Globe, Clock, MapPin, Video } from "lucide-react";
 
 
 
+import { useAuth } from "../components/AuthProvider";
+
 const { useStepper, steps } = defineStepper(
   { id: "schedule", title: "Schedule Appointment" },
   { id: "details", title: "Provide details" }
@@ -45,6 +47,7 @@ const Booking = () => {
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
   const stepper = useStepper();
+  const auth = useAuth(); // Get auth context
 
   const [user, setUser] = useState<UserDocument>();
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
@@ -55,6 +58,17 @@ const Booking = () => {
   const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
   const [, startTransition] = useTransition();
+
+  // Pre-fill details from auth user (LTI or regular)
+  useEffect(() => {
+    if (auth.user && !details) {
+      setDetails({
+        name: auth.user.name || "",
+        email: auth.user.email || "",
+        description: "" // User can add more info
+      });
+    }
+  }, [auth.user, details]);
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(
@@ -435,6 +449,7 @@ const Booking = () => {
                     <BookDetails
                       errors={{}}
                       onChange={handleDetailChange}
+                      initialValues={details}
                     />
                   )}
                   {/* Desktop Submit Button Position */}

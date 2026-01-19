@@ -23,6 +23,8 @@ vi.mock("../handlers/middleware.js", () => {
                 next();
             }),
             optionalAuth: vi.fn((req, res, next) => {
+                req['user_id'] = USER._id;
+                req['user_claims'] = {};
                 next();
             })
         }
@@ -263,14 +265,15 @@ describe("User Controller", () => {
             const req = { user_id: 123 } as any;
             const res = {
                 status: vi.fn().mockReturnThis(),
-                json: vi.fn()
+                json: vi.fn(),
+                set: vi.fn()
             } as any;
 
             const { getUser } = await import("../controller/user_controller.js");
             await getUser(req, res);
 
-            expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith({ error: "Invalid user id" });
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledWith({ error: "Not authenticated" });
         });
 
         it("should return user data if found", async () => {

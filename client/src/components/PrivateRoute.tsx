@@ -21,8 +21,8 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
 
   if (isAuthenticated === undefined) {
     return null; // Or a loading spinner
-  } else if (!isAuthenticated) {
-    console.log("PrivateRoute: not authenticated, redirecting to /landing");
+  } else if (!isAuthenticated || (user && !user._id)) {
+    console.log("PrivateRoute: not authenticated or transient user, redirecting to /landing");
     return <Navigate to={"/landing"} state={{ from: location }} />;
   }
 

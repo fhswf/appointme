@@ -16,7 +16,7 @@ import OidcCallback from "./pages/OidcCallback";
 import Legal from "./pages/Legal";
 import About from "./pages/About";
 import Appointments from "./pages/Appointments";
-import { AuthLayout } from "./components/AuthLayout";
+import { AuthProvider } from "./components/AuthProvider";
 
 import "./i18n";
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -63,18 +63,18 @@ const Main = () => {
   return (<StrictMode>
     <Suspense fallback="loading">
       <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <BrowserRouter basename={BASE_PATH}>
-          <Routes>
-            {/* Public Routes - No Auth Context */}
-            <Route path="/users/:user_url" element={<Planning />} />
-            <Route path="/users/:user_url/:url" element={<Booking />} />
-            <Route path="/booked" element={<Finished />} />
-            <Route path="/legal" element={<Legal />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/notfound" element={<NotFound />} />
+        <AuthProvider>
+          <BrowserRouter basename={BASE_PATH}>
+            <Routes>
+              {/* Public Routes - Global Auth Context Available */}
+              <Route path="/users/:user_url" element={<Planning />} />
+              <Route path="/users/:user_url/:url" element={<Booking />} />
+              <Route path="/booked" element={<Finished />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/notfound" element={<NotFound />} />
 
-            {/* Routes with Auth Context */}
-            <Route element={<AuthLayout />}>
+              {/* Protected Routes */}
               <Route path="/" element={
                 <PrivateRoute>
                   <App />
@@ -124,12 +124,12 @@ const Main = () => {
                 element={<Landing />}
               />
 
-              {/* Catch-all with Auth context to check if user needs redirect or really 404 */}
+              {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-          <Toaster />
-        </BrowserRouter>
+            </Routes>
+            <Toaster />
+          </BrowserRouter>
+        </AuthProvider>
       </GoogleOAuthProvider>
     </Suspense >
   </StrictMode >

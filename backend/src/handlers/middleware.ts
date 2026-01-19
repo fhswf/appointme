@@ -81,7 +81,10 @@ export const middleware = {
 
     verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (!err && decoded) {
-        req['user_id'] = decoded["_id"] as string;
+        req['user_claims'] = decoded;
+        if (decoded["_id"]) {
+          req['user_id'] = decoded["_id"] as string;
+        }
       } else {
         logger.warn("Optional auth token invalid:", err);
       }
