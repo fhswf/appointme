@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Configuration, buildAuthorizationUrl, authorizationCodeGrant, ClientSecretBasic, None } from 'openid-client';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { UserModel } from '../models/User.js';
 import pkg from 'jsonwebtoken';
 import { logger } from '../logging.js';
@@ -283,6 +283,75 @@ const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Req
     }
 };
 
+const verifyLtiToken = async (id_token: string): Promise<any> => {
+    let jwksUri = process.env.LTI_JWKS_URI;
+    // Fallback to constructing from issuer if not explicitly set, 
+    // but only if we have an LTI_ISSUER to base it on.
+    if (!jwksUri && process.env.LTI_ISSUER) {
+        jwksUri = `${process.env.LTI_ISSUER}/certs`;
+    }
+
+    if (!jwksUri) {
+        throw new Error("Cannot verify LTI token: Missing LTI_JWKS_URI configuration");
+    }
+
+    const JWKS = createRemoteJWKSet(new URL(jwksUri));
+
+    const { payload } = await jwtVerify(id_token, JWKS, {
+        issuer: process.env.LTI_ISSUER, // Strict issuer check
+        audience: process.env.LTI_CLIENT_ID, // Strict audience check
+    });
+
+    logger.debug("LTI Token Verified. Claims: %o", payload);
+    return payload;
+};
+
+const exchangeCodeForToken = async (code: string, oidcConfig: Configuration): Promise<any> => {
+    const currentUrl = new URL(`${process.env.BASE_URL}/oidc-callback`);
+    currentUrl.searchParams.set('code', code);
+
+    const tokenSet = await authorizationCodeGrant(
+        oidcConfig,
+        currentUrl,
+        {
+            pkceCodeVerifier: undefined,
+        },
+        {
+            redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
+        }
+    );
+    return tokenSet.claims();
+};
+
+const completeLogin = async (req: Request, res: Response, claims: any, isLti: boolean) => {
+    const sub = claims.sub as string;
+    const email = claims.email as string;
+    const name = claims.name as string | undefined;
+    const picture = claims.picture as string | undefined;
+
+    // Check both 'roles' and LTI-specific roles
+    const roles = mapRoles(claims);
+
+    if (!email) {
+        res.status(400).json({ error: "Email not provided by ID provider" });
+        return;
+    }
+
+    const user = await findOrCreateUser(sub, email, name, picture, roles);
+
+    if (!user) {
+        throw new Error("User creation failed after retries");
+    }
+
+    if (isLti) {
+        // LTI Launch: Redirect to Frontend
+        setAuthCookie(res, user, process.env.BASE_URL || '/', req);
+    } else {
+        // Standard OIDC Login: Return JSON
+        setAuthCookie(res, user, undefined, req);
+    }
+};
+
 export const oidcLoginController = async (req: Request, res: Response): Promise<void> => {
     // Frontend sends the code (Code Flow) or id_token (Implicit Flow/LTI)
     const { code, id_token } = req.body;
@@ -291,22 +360,6 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         res.status(400).json({ error: "Authorization code or id_token missing" });
         return;
     }
-
-    // We need to know which config to use. attempt logic: 
-    // If we are solving for LTI launch redirect, `getAuthUrl` is key.
-    // For `oidcLoginController`, we might need to iterate or guess.
-    // Let's try default `getConfig()` first. If it fails (invalid_grant), maybe try LTI? 
-    // Or better: The prompt didn't explicitly ask to fix the token exchange yet, but it's implied.
-    // However, I can't easily change the frontend to pass `iss`.
-    // I'll stick to `getConfig()` (default) for now in `oidcLoginController` unless I can reliably determine the issuer.
-    // ACTUALLY: The user's request is "redirect to keycloak" vs "redirect to moodle".
-    // I am fixing the redirect.
-    // I will use `getConfig()` without issuer for the login for now, as I don't have `iss` in the body.
-    // This *might* fail the token exchange later, but one step at a time.
-
-    // Update: If I use `state` in `getAuthUrl`, I can retrieve it here. 
-    // But `buildAuthorizationUrl` builds the URL for the user.
-    // Let's implement dynamic config selection in `getConfig` as requested. 
 
     const oidcConfig = await getConfig(); // Uses default for now if no arg
 
@@ -317,74 +370,15 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
 
     try {
         let claims: any;
+        const isLti = !!id_token;
 
-        if (id_token) {
-
-            // Implicit Flow (LTI 1.3): Verify id_token
-            let jwksUri = process.env.LTI_JWKS_URI;
-            // Fallback to constructing from issuer if not explicitly set, 
-            // but only if we have an LTI_ISSUER to base it on.
-            if (!jwksUri && process.env.LTI_ISSUER) {
-                jwksUri = `${process.env.LTI_ISSUER}/certs`;
-            }
-
-            if (!jwksUri) {
-                throw new Error("Cannot verify LTI token: Missing LTI_JWKS_URI configuration");
-            }
-
-            const JWKS = createRemoteJWKSet(new URL(jwksUri));
-
-            const { payload } = await jwtVerify(id_token as string, JWKS, {
-                issuer: process.env.LTI_ISSUER, // Strict issuer check
-                audience: process.env.LTI_CLIENT_ID, // Strict audience check
-            });
-
-            claims = payload;
-            logger.debug("LTI Token Verified. Claims: %o", claims);
-
+        if (isLti) {
+            claims = await verifyLtiToken(id_token as string);
         } else {
-            // Authorization Code Flow
-            const currentUrl = new URL(`${process.env.BASE_URL}/oidc-callback`);
-            currentUrl.searchParams.set('code', code as string);
-
-            const tokenSet = await authorizationCodeGrant(
-                oidcConfig,
-                currentUrl,
-                {
-                    pkceCodeVerifier: undefined,
-                },
-                {
-                    redirect_uri: `${process.env.BASE_URL}/oidc-callback`,
-                }
-            );
-            claims = tokenSet.claims();
+            claims = await exchangeCodeForToken(code as string, oidcConfig);
         }
 
-        const sub = claims.sub as string;
-        const email = claims.email as string;
-        const name = claims.name as string | undefined;
-        const picture = claims.picture as string | undefined;
-        // Check both 'roles' and LTI-specific roles
-        const roles = mapRoles(claims);
-
-        if (!email) {
-            res.status(400).json({ error: "Email not provided by ID provider" });
-            return;
-        }
-
-        const user = await findOrCreateUser(sub, email, name, picture, roles);
-
-        if (!user) {
-            throw new Error("User creation failed after retries");
-        }
-
-        if (id_token) {
-            // LTI Launch: Redirect to Frontend
-            setAuthCookie(res, user, process.env.BASE_URL || '/', req);
-        } else {
-            // Standard OIDC Login: Return JSON
-            setAuthCookie(res, user, undefined, req);
-        }
+        await completeLogin(req, res, claims, isLti);
 
     } catch (err: any) {
         logger.error("OIDC Login failed: %o", err);

@@ -13,8 +13,8 @@
     "ci": "pnpm run build && vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
     "migrate": "node --import tsx src/scripts/run-migrations.ts",
     "migrate:prod": "node build/scripts/run-migrations.js",
-    "start": "node build/server.js",
-    "server": "node --import tsx --watch src/server.ts",
+    "start": "node --import ./build/config/instrument.js build/server.js",
+    "server": "node --import tsx --import ./src/config/instrument.ts --watch src/server.ts",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "tsc"
   },
