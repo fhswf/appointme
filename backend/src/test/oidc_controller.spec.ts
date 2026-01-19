@@ -99,6 +99,7 @@ describe('OIDC Controller', () => {
             expect(res.body).toEqual({ error: "OIDC not configured" });
         });
 
+
         it('should return authorization URL when configured', async () => {
             // Need to re-init app to pick up env vars if not picked up dynamically
             vi.resetModules();
@@ -113,6 +114,30 @@ describe('OIDC Controller', () => {
             expect(res.status).toBe(200);
             expect(res.body).toEqual({ url: authUrl.href });
             expect(openIdClient.buildAuthorizationUrl).toHaveBeenCalled();
+        });
+
+        it('should handle LTI launch params and generate valid URL', async () => {
+            vi.resetModules();
+            vi.stubEnv('LTI_ISSUER', 'https://lti.example.com');
+            vi.stubEnv('LTI_CLIENT_ID', 'lti_client');
+            const { init } = await import('../server.js');
+            app = init(0);
+
+            const authUrl = new URL('https://lti.example.com/auth');
+            (openIdClient.buildAuthorizationUrl as any).mockResolvedValue(authUrl);
+
+            const res = await request(app).get('/api/v1/oidc/url?iss=https://lti.example.com');
+
+            expect(res.status).toBe(200);
+            // This checks that we reached the crypto use without crashing
+            expect(openIdClient.buildAuthorizationUrl).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    nonce: expect.any(String),
+                    state: expect.any(String),
+                    response_mode: 'form_post'
+                })
+            );
         });
     });
 
@@ -641,5 +666,6 @@ describe('OIDC Controller', () => {
         });
     });
 });
+
 
 

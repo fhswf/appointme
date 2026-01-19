@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Configuration, buildAuthorizationUrl, authorizationCodeGrant, ClientSecretBasic, None } from 'openid-client';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
+import crypto from 'crypto';
 import { UserModel } from '../models/User.js';
 import pkg from 'jsonwebtoken';
 import { logger } from '../logging.js';
