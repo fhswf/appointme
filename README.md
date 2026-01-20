@@ -126,9 +126,14 @@ spec:
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
 | `MONGO_URI` | Connection string for MongoDB | Yes | |
-| `CLIENT_URL` | URL of the frontend application (e.g., `https://example.com`) | Yes | |
+| `BASE_URL` | URL of the frontend application (e.g., `https://example.com`) | Yes | |
 | `API_URL` | URL of the backend API (e.g., `https://api.example.com/api/v1`) | Yes | |
+| `BASE_PATH` | Base path of the application | No | `/` |
+| `DOMAIN` | Domain for cookie scoping (e.g. `example.com`) | No | |
 | `JWT_SECRET` | Secret key for signing JWTs | Yes | |
+| `CSRF_SECRET` | Secret key for CSRF protection | Yes | |
+| `ADMIN_API_KEY` | API Key for admin/cron operations | Yes | |
+| `SENTRY_DSN` | Sentry DSN for error tracking | No | |
 | `CLIENT_ID` | Google OAuth2 Client ID | No (if Google Login disabled) | |
 | `CLIENT_SECRET` | Google OAuth2 Client Secret | No (if Google Login disabled) | |
 | `DISABLE_GOOGLE_LOGIN`| Set to `true` to disable Google Login | No | `false` |
@@ -138,6 +143,9 @@ spec:
 | `EMAIL_FROM` | Email address for sending notifications | Yes | |
 | `EMAIL_PASSWORD` | Password for the email account | Yes | |
 | `ENCRYPTION_KEY` | 32-byte hex key for encrypting CalDAV passwords | Yes | |
+| `CONTACT_INFO` | Contact information (Markdown supported) | No | |
+| `REACT_APP_API_URL` | Public API URL for the React Client | Yes | |
+| `REACT_APP_URL` | Public URL of the React Client | Yes | |
 
 ## LTI Integration
 
@@ -183,6 +191,12 @@ To enable LTI/OIDC authentication, configure the following environment variables
 | `OIDC_CLIENT_SECRET` | Client Secret (for confidential clients) | `your-secret-here` |
 | `OIDC_NAME` | Display name for the login button (optional) | `Campus-ID` |
 | `OIDC_ICON` | Icon path for the login button (optional) | `/fh-swf.svg` |
+| `LTI_ISSUER` | LTI Issuer URL (Overrides OIDC_ISSUER for LTI) | `https://moodle.example.com` |
+| `LTI_CLIENT_ID` | LTI Client ID (Overrides OIDC_CLIENT_ID for LTI) | `client-123` |
+| `LTI_CLIENT_SECRET` | LTI Client Secret (Overrides OIDC_CLIENT_SECRET) | `secret-456` |
+| `LTI_AUTH_ENDPOINT` | LTI Authorization Endpoint | `https://moodle.example.com/mod/lti/auth.php` |
+| `LTI_TOKEN_ENDPOINT` | LTI Token Endpoint | `https://moodle.example.com/mod/lti/token.php` |
+| `LTI_JWKS_URI` | LTI JWKS URI | `https://moodle.example.com/mod/lti/certs.php` |
 
 ### Setting Up with Keycloak
 
