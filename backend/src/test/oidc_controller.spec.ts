@@ -565,6 +565,9 @@ describe('OIDC Controller', () => {
                 iss: 'https://lti.example.com',
                 aud: 'lti_client_id',
                 'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-123' },
+                'https://purl.imsglobal.org/spec/lti/claim/roles': ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner'],
+                'https://purl.imsglobal.org/spec/lti/claim/resource_link': { id: 'link-1' },
+                'https://purl.imsglobal.org/spec/lti/claim/tool_platform': { guid: 'tool-1' },
             };
 
             const jwtVerifyMock = vi.fn().mockResolvedValue({ payload: claims });
@@ -608,6 +611,9 @@ describe('OIDC Controller', () => {
                     email: 'lti@example.com',
                     name: 'LTI User',
                     lti_context_id: 'course-123',
+                    'https://purl.imsglobal.org/spec/lti/claim/roles': ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner'],
+                    'https://purl.imsglobal.org/spec/lti/claim/resource_link': { id: 'link-1' },
+                    'https://purl.imsglobal.org/spec/lti/claim/tool_platform': { guid: 'tool-1' },
                 }),
                 expect.anything(),
                 expect.anything()
@@ -618,7 +624,49 @@ describe('OIDC Controller', () => {
 
             // Should set cookie
             const cookies = res.headers['set-cookie'];
-            expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
+            expect(cookies.some((c: string) => c.startsWith('lti_token='))).toBe(true);
+        });
+
+        it('should login successfully for LTI user without email (transient)', async () => {
+            await getCsrfToken();
+            const id_token = 'valid_lti_token_no_email';
+            const claims = {
+                sub: 'lti_user_no_email',
+                // no email
+                name: 'LTI No Email',
+                iss: 'https://lti.example.com',
+                aud: 'lti_client_id',
+                'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-123' },
+            };
+
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockResolvedValue({ payload: claims });
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            // Mock User finding - return NULL
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: vi.fn() });
+
+            (sign as any).mockReturnValue('mock_lti_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            // Currently fails with 400, but we want 302/200
+            expect(res.status).toBe(302);
+
+            expect(sign).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sub: 'lti_user_no_email',
+                    name: 'LTI No Email',
+                    // email should be undefined or not present
+                }),
+                expect.anything(),
+                expect.anything()
+            );
         });
 
         it('should include _id if local user exists for LTI and preserve google_tokens', async () => {

@@ -111,10 +111,10 @@ describe("LTI Transient User Support", () => {
     };
 
     describe("GET /api/v1/user/me", () => {
-        it("should return transient user data for LTI token without _id", async () => {
+        it("should return transient user data for LTI token in cookie", async () => {
             const res = await request(app)
                 .get("/api/v1/user/me")
-                .set("Authorization", `Bearer ${transientToken}`);
+                .set("Cookie", [`lti_token=${transientToken}`]);
 
             expect(res.status).toBe(200);
             expect(res.body).toMatchObject({
@@ -129,7 +129,17 @@ describe("LTI Transient User Support", () => {
         it("should return 401 for invalid token", async () => {
             const res = await request(app)
                 .get("/api/v1/user/me")
-                .set("Authorization", `Bearer invalid.token`);
+                .set("Cookie", [`lti_token=invalid.token`]);
+
+            expect(res.status).toBe(401);
+        });
+    });
+
+    describe("GET /api/v1/event/ (Restricted Route)", () => {
+        it("should deny access to transient user with only lti_token", async () => {
+            const res = await request(app)
+                .get("/api/v1/event/")
+                .set("Cookie", [`lti_token=${transientToken}`]);
 
             expect(res.status).toBe(401);
         });
