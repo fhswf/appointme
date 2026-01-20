@@ -29,12 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const res = await getUser();
             console.log("AuthProvider: getUser response status=%d data=%o", res.status, res.data);
 
-            if (res.data?.success === false || res.status === 401) {
-                console.log("AuthProvider: not authenticated (logic/401)");
-                setIsAuthenticated(false);
-                setUser(null);
-                Sentry.setUser(null);
-            } else if (res.data) {
+            if (res.data) {
                 console.log("AuthProvider: authenticated user %o", res.data);
                 setIsAuthenticated(true);
                 setUser(res.data);

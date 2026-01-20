@@ -60,12 +60,32 @@ const Booking = () => {
   const [, startTransition] = useTransition();
 
   // Pre-fill details from auth user (LTI or regular)
+  // Pre-fill details from auth user (LTI or regular)
   useEffect(() => {
-    if (auth.user && !details) {
-      setDetails({
-        name: auth.user.name || "",
-        email: auth.user.email || "",
-        description: "" // User can add more info
+    if (auth.user) {
+      if (!details) {
+        setDetails({
+          name: auth.user.name || "",
+          email: auth.user.email || "",
+          description: ""
+        });
+      }
+    } else {
+      // Check for transient user if not authenticated
+      import("../helpers/services/user_services").then(services => {
+        services.getTransientUser()
+          .then(res => {
+            if (res.data && !details) {
+              setDetails({
+                name: res.data.name || "",
+                email: res.data.email || "",
+                description: ""
+              });
+            }
+          })
+          .catch(err => {
+            // Ignore 401, just means no transient user
+          });
       });
     }
   }, [auth.user, details]);

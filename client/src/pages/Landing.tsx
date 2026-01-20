@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { useAuth } from "../components/AuthProvider";
 
 const Landing = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { t } = useTranslation();
 
   if (isAuthenticated) {

@@ -99,7 +99,20 @@ export const getUser = (req: Request, res: Response): void => {
       .catch(err => {
         res.status(400).json({ error: err });
       });
-  } else if (req['user_claims']) {
+  } else {
+    // optionalAuth fell through without a token or with a non-persistent token
+    res.status(401).json({ error: "Not authenticated" });
+  }
+};
+
+/**
+ * Middleware to get the transient user (LTI)
+ * @function 
+ * @param {request} req
+ * @param {response} res
+ */
+export const getTransientUser = (req: Request, res: Response): void => {
+  if (req['user_claims']) {
     // Transient user (LTI)
     const claims = req['user_claims'];
     const user = {
@@ -111,7 +124,6 @@ export const getUser = (req: Request, res: Response): void => {
     };
     res.status(200).json(user);
   } else {
-    // optionalAuth fell through without a token
     res.status(401).json({ error: "Not authenticated" });
   }
 };
