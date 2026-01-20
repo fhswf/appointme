@@ -1,3 +1,10 @@
+# client [1.33.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.32.0...client@1.33.0-rc.1) (2026-01-20)
+
+
+### Features
+
+* separate access token from "transient" lti token ([a8d1482](https://github.com/fhswf/appointme/commit/a8d1482b1429a3b8b6a0710183d2f24f67c6798a))
+
 # client [1.32.0](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0) (2026-01-20)
 
 
