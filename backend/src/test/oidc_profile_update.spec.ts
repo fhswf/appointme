@@ -95,12 +95,16 @@ describe("OIDC Profile Update Regression", () => {
         await oidcLoginController(req, res);
 
         // Verifications
-        // 1. updateUserRoles should be called (implied, but we assume it is)
-        // 2. We specifically want to check if the user object was updated with new name/picture
-        // Since we mocked `save`, we can check if the mockUser object was mutated before save was called.
+        // The implementation uses UserModel.findOneAndUpdate to update the user details.
+        // It does NOT mutate the user object in memory and call save().
 
-        expect(mockUser.name).toBe("New Name");
-        expect(mockUser.picture_url).toBe("new_pic.jpg");
-        expect(mockUser.save).toHaveBeenCalled();
+        expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+            { _id: "google-123" },
+            { $set: { name: "New Name", picture_url: "new_pic.jpg" } },
+            { new: true, runValidators: true }
+        );
+
+        // save() is not called in this flow
+        expect(mockUser.save).not.toHaveBeenCalled();
     });
 });
