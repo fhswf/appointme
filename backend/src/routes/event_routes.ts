@@ -295,7 +295,7 @@ eventRouter.get("/:id", limiter, middleware.requireAuth, getEventByIdController)
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-eventRouter.get("/active/:userId", limiter, getActiveEventsController);
+eventRouter.get("/active/:userId", limiter, middleware.optionalAuth, getActiveEventsController);
 
 /**
  * @openapi
