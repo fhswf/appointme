@@ -1,3 +1,10 @@
+# backend [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0-rc.1) (2026-01-20)
+
+
+### Features
+
+* separate access token from "transient" lti token ([a8d1482](https://github.com/fhswf/appointme/commit/a8d1482b1429a3b8b6a0710183d2f24f67c6798a))
+
 # backend [1.37.0](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0) (2026-01-20)
 
 
