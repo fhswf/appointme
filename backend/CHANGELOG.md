@@ -1,3 +1,10 @@
+# backend [1.38.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.3...backend@1.38.0-rc.4) (2026-01-20)
+
+
+### Bug Fixes
+
+* avoid accidentally overwriting google tokens on oidc login ([e075f07](https://github.com/fhswf/appointme/commit/e075f07b0b5f77300a6bc405dd451018a331f682))
+
 # backend [1.38.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.2...backend@1.38.0-rc.3) (2026-01-20)
 
 
