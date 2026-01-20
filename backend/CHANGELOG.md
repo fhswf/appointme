@@ -1,3 +1,17 @@
+# backend [1.38.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.1...backend@1.38.0-rc.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* authentication handling ([e25b793](https://github.com/fhswf/appointme/commit/e25b7938be4225be4bf3851de036fe3b79da8c4a))
+* authentication handling ([264b701](https://github.com/fhswf/appointme/commit/264b701d3aa38d680879ea214e77f208f05f958b))
+* improve csrf handling ([8660929](https://github.com/fhswf/appointme/commit/8660929e419d7b0f693cd9820c1247213dc54c1f))
+
+
+### Features
+
+* separate access token from "transient" lti token ([da9e2e7](https://github.com/fhswf/appointme/commit/da9e2e7a6362ab65fd2c07b6cc12c685fc349d1e))
+
 # backend [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0-rc.1) (2026-01-20)
 
 
