@@ -68,12 +68,11 @@ export const middleware = {
    */
   optionalAuth: (req: Request, res: Response, next: NextFunction): void => {
     const header = req.headers.authorization;
-    const cookie = req.cookies["access_token"];
-    if (!header && !cookie) {
-      next();
-      return;
-    }
-    const token = cookie || (header && header.startsWith("Bearer ") ? header.split(" ")[1] : null);
+    const accessCookie = req.cookies["access_token"];
+    const ltiCookie = req.cookies["lti_token"];
+
+    const token = accessCookie || ltiCookie || (header && header.startsWith("Bearer ") ? header.split(" ")[1] : null);
+
     if (!token) {
       next();
       return;
