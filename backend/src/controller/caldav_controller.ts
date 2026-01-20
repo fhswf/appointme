@@ -129,7 +129,33 @@ export const listAccounts = async (req: Request, res: Response) => {
     }
 };
 
-const processParsedEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
+const getDateMilliseconds = (date: any): number => {
+    if (date instanceof Date) {
+        return date.getTime();
+    }
+    if (typeof date.getTime === 'function') {
+        return date.getTime();
+    }
+    if (typeof date.epochMilliseconds === 'number') {
+        return date.epochMilliseconds;
+    }
+    if (typeof date.toInstant === 'function') {
+        return date.toInstant().epochMilliseconds;
+    }
+    return new Date(date.toString()).getTime();
+};
+
+const processRecurringEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
+    const dates = event.rrule.between(startRange, endRange);
+    const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
+
+    for (const date of dates) {
+        const startTime = getDateMilliseconds(date);
+        busySlots.push({ start: new Date(startTime), end: new Date(startTime + duration) });
+    }
+};
+
+export const processParsedEvent = (event: any, startRange: Date, endRange: Date, busySlots: { start: Date, end: Date }[]) => {
     if (event.type !== 'VEVENT') return;
 
     // Handle simple events
@@ -144,11 +170,7 @@ const processParsedEvent = (event: any, startRange: Date, endRange: Date, busySl
 
     // Handle recurrence if rrule exists
     if (event.rrule) {
-        const dates = event.rrule.between(startRange, endRange);
-        const duration = (new Date(event.end).getTime()) - (new Date(event.start).getTime());
-        for (const date of dates) {
-            busySlots.push({ start: date, end: new Date(date.getTime() + duration) });
-        }
+        processRecurringEvent(event, startRange, endRange, busySlots);
     }
 };
 
@@ -331,7 +353,7 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string): Promise<any> => {
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any): Promise<any> => {
     const calendarUrl = targetCalendarUrl;
     if (!calendarUrl) {
         throw new Error('Target calendar URL is required');
@@ -435,7 +457,8 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
             email: a.mailto,
             partstat: a.partstat,
             rsvp: a.rsvp
-        }))
+        })),
+        recurrence: recurrence
     }, { comment: userComment });
 
     const createdEvent = await client.createCalendarObject({

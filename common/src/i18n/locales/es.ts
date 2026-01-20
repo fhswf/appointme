@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants.js";
+
 export const es = {
     "welcome_back": "Bienvenido de nuevo",
     "login_subtitle": "Por favor inicie sesión para continuar.",
@@ -85,6 +87,7 @@ export const es = {
     "teal_lofty_hawk_peek": "Cancelar",
     "mild_raw_elk_delight": "Guardar cambios",
     "Choose date": "Elegir fecha",
+    "Please select a date": "Por favor seleccione una fecha",
     "Choose time": "Elegir hora",
     "Provide details": "Proporcionar detalles",
     "Confirmation": "Confirmación",
@@ -251,7 +254,7 @@ export const es = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "Contacto",
     "footer_credits": "Programado con ❤️ en la Universidad de Ciencias Aplicadas de South Westphalia",
@@ -273,5 +276,29 @@ export const es = {
     "more": "más",
     "next": "Siguiente",
     "back": "Atrás",
-    "n_more": "{{count}} más ..."
+    "n_more": "{{count}} más ...",
+
+    // Recurrence
+    "Recurrence": "Recurrencia",
+    "Enable Recurring Event": "Habilitar evento recurrente",
+    "Frequency": "Frecuencia",
+    "Weekly": "Semanal",
+    "Bi-weekly": "Quincenal",
+    "Tri-weekly": "Cada 3 semanas",
+    "Monthly": "Mensual",
+    "End Condition": "Condición de finalización",
+    "Occurrences": "Ocurrencias",
+    "OR": "O",
+    "Until Date": "Hasta la fecha",
+    "Time Span": "Lapso de tiempo",
+    "Months": "Meses",
+    "Weeks": "Semanas",
+    "Recurring Event": "Evento recurrente",
+    "Recurring": "Recurrente",
+    "weekly": "Semanal",
+    "biweekly": "Quincenal",
+    "triweekly": "Cada 3 semanas",
+    "monthly": "Mensual",
+    "Series Booking Note: Students will book all occurrences at once.": "Nota de reserva en serie: Los estudiantes reservarán todas las ocurrencias a la vez.",
+    "Feedback": "Comentarios",
 };

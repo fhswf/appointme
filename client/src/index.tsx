@@ -25,6 +25,34 @@ import "./index.css";
 
 import { CONFIG } from "./helpers/config";
 
+import * as Sentry from "@sentry/react";
+
+if (CONFIG.SENTRY_DSN) {
+  Sentry.init({
+    release: "appointme-client@" + CONFIG.VERSION,
+    dsn: CONFIG.SENTRY_DSN,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration(),
+      Sentry.feedbackIntegration({
+        colorScheme: "system",
+        autoInject: false,
+      }),
+      Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
+
+    ],
+    // Tracing
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: ["localhost", "appointme.gawron.cloud", /^\//],
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+    enableTracing: true,
+    enableLogs: true,
+  });
+}
+
 const CLIENT_ID = CONFIG.CLIENT_ID;
 const BASE_PATH = CONFIG.BASE_PATH;
 
@@ -38,13 +66,20 @@ const Main = () => {
         <AuthProvider>
           <BrowserRouter basename={BASE_PATH}>
             <Routes>
+              {/* Public Routes - Global Auth Context Available */}
+              <Route path="/users/:user_url" element={<Planning />} />
+              <Route path="/users/:user_url/:url" element={<Booking />} />
+              <Route path="/booked" element={<Finished />} />
+              <Route path="/legal" element={<Legal />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/notfound" element={<NotFound />} />
+
+              {/* Protected Routes */}
               <Route path="/" element={
                 <PrivateRoute>
                   <App />
                 </PrivateRoute>
               } />
-
-
 
               <Route path="/addevent" element={
                 <PrivateRoute>
@@ -77,11 +112,6 @@ const Main = () => {
               />
 
               <Route
-                path="/booked"
-                element={<Finished />}
-              />
-
-              <Route
                 path="/oidc-callback"
                 element={<OidcCallback />}
               />
@@ -93,16 +123,9 @@ const Main = () => {
                 path="/landing"
                 element={<Landing />}
               />
-              <Route
-                path="/users/:user_url"
-                element={<Planning />}
-              />
-              <Route path="/users/:user_url" element={<Planning />} />
-              <Route path="/users/:user_url/:url" element={<Booking />} />
-              <Route path="/legal" element={<Legal />} />
-              <Route path="/about" element={<About />} />
+
+              {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
-              <Route path="/notfound" element={<NotFound />} />
             </Routes>
             <Toaster />
           </BrowserRouter>

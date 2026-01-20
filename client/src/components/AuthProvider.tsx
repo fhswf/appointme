@@ -17,6 +17,7 @@ export const AuthContext = React.createContext<AuthContextType>({
 });
 
 import { signout } from "../helpers/helpers";
+import * as Sentry from "@sentry/react";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<UserDocument | null>(null);
@@ -32,14 +33,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 console.log("AuthProvider: not authenticated (logic/401)");
                 setIsAuthenticated(false);
                 setUser(null);
+                Sentry.setUser(null);
             } else if (res.data) {
                 console.log("AuthProvider: authenticated user %o", res.data);
                 setIsAuthenticated(true);
                 setUser(res.data);
+                Sentry.setUser({
+                    id: res.data._id,
+                    email: res.data.email,
+                    username: res.data.name,
+                });
             } else {
                 console.log("AuthProvider: response 200 OK but no user data found (null/empty)");
                 setIsAuthenticated(false);
                 setUser(null);
+                Sentry.setUser(null);
             }
         } catch (error: any) {
             // Axios wraps the response in error.response for HTTP errors
@@ -47,6 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.log("AuthProvider: error: %d, full error: %o", status, error);
             setIsAuthenticated(false);
             setUser(null);
+            Sentry.setUser(null);
         }
     }, []);
 
@@ -61,6 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await signout();
         setIsAuthenticated(false);
         setUser(null);
+        Sentry.setUser(null);
     }, []);
 
     const value = React.useMemo(() => ({ user, isAuthenticated, refreshAuth, logout }), [user, isAuthenticated, refreshAuth, logout]);

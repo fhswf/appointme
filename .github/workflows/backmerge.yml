@@ -9,6 +9,8 @@ on:
 jobs:
   back-merge:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: >
       github.event.workflow_run.head_branch == 'prod' &&
       github.event.workflow_run.conclusion == 'success' &&

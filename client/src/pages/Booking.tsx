@@ -32,6 +32,8 @@ import { ChevronLeft, Globe, Clock, MapPin, Video } from "lucide-react";
 
 
 
+import { useAuth } from "../components/AuthProvider";
+
 const { useStepper, steps } = defineStepper(
   { id: "schedule", title: "Schedule Appointment" },
   { id: "details", title: "Provide details" }
@@ -45,15 +47,28 @@ const Booking = () => {
   const data = useParams<{ user_url: string; url: string }>();
   const navigate = useNavigate();
   const stepper = useStepper();
+  const auth = useAuth(); // Get auth context
 
   const [user, setUser] = useState<UserDocument>();
   const [event, setEvent] = useState<Event>(EMPTY_EVENT);
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
   const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
   const [, startTransition] = useTransition();
+
+  // Pre-fill details from auth user (LTI or regular)
+  useEffect(() => {
+    if (auth.user && !details) {
+      setDetails({
+        name: auth.user.name || "",
+        email: auth.user.email || "",
+        description: "" // User can add more info
+      });
+    }
+  }, [auth.user, details]);
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(
@@ -72,14 +87,10 @@ const Booking = () => {
 
           // Simple loop to find first day with availability
           while (iterator < end) {
-            // Re-using check logic similar to checkDay but we need to check if slots actually exist for this day
-            const dayOfWeek = iterator.getDay() as Day;
-            if (
-              event.available[dayOfWeek] &&
-              event.available[dayOfWeek].length > 0 &&
-              slots.overlapping({ start: startOfDay(iterator), end: endOfDay(iterator) }).length > 0
-            ) {
-              setSelectedDate(new Date(iterator));
+            if (hasAvailableSlots(iterator, slots)) {
+              const newDate = new Date(iterator);
+              setSelectedDate(newDate);
+              setCurrentMonth(newDate);
               break;
             }
             iterator = addDays(iterator, 1);
@@ -136,17 +147,23 @@ const Booking = () => {
     // No stepper navigation needed on date change anymore as it is same step
   };
 
-  const checkDay = (date: Date) => {
-    if (event.available) {
-      return (
-        date > new Date() &&
-        event.available[date.getDay() as Day].length > 0 &&
-        event.available[date.getDay() as Day][0].start !== "" &&
-        slots?.overlapping({ start: startOfDay(date), end: endOfDay(date) }).length > 0
-      );
-    } else {
-      return false;
+  const hasAvailableSlots = (date: Date, slots: IntervalSet | undefined) => {
+    if (!slots) return false;
+
+    const daySlots = slots.intersect(new IntervalSet(startOfDay(date), endOfDay(date)));
+    for (const slot of daySlots) {
+      const start = new Date(slot.start);
+      const end = new Date(slot.end);
+      // Check if at least one event of duration fits in this slot
+      if (addMinutes(start, event.duration) <= end) {
+        return true;
+      }
     }
+    return false;
+  };
+
+  const checkDay = (date: Date) => {
+    return date > new Date() && hasAvailableSlots(date, slots);
   };
 
   const getTimes = (day: Date) => {
@@ -157,7 +174,8 @@ const Booking = () => {
         const start = new Date(slot.start);
         const end = new Date(slot.end);
         let s = start;
-        while (s < addMinutes(end, -event.duration)) {
+        // Fix loop condition to include the last valid slot
+        while (s <= addMinutes(end, -event.duration)) {
           times.push(s);
           s = addMinutes(s, event.duration);
         }
@@ -306,7 +324,12 @@ const Booking = () => {
               <div className="flex items-center gap-3 text-muted-foreground text-sm">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>{event?.duration} Min</span>
+                  <span>
+                    {event?.duration} Min
+                    {event?.recurrence?.enabled && (
+                      <span> • {t("Recurring")}: {t(event.recurrence.frequency)}</span>
+                    )}
+                  </span>
                 </div>
                 {/* Location placeholder - add to Event type later if needed */}
                 <div className="flex items-center gap-1">
@@ -367,6 +390,8 @@ const Booking = () => {
                       mode="single"
                       selected={selectedDate}
                       onSelect={handleDateChange}
+                      month={currentMonth}
+                      onMonthChange={setCurrentMonth}
                       disabled={(date) => !checkDay(date)}
                       className="rounded-md border"
                     />
@@ -424,6 +449,7 @@ const Booking = () => {
                     <BookDetails
                       errors={{}}
                       onChange={handleDetailChange}
+                      initialValues={details}
                     />
                   )}
                   {/* Desktop Submit Button Position */}

@@ -299,4 +299,95 @@ describe('Booking Page', () => {
             expect(mockNavigate).not.toHaveBeenCalledWith('/booked', expect.any(Object));
         });
     });
+
+    it('should NOT select a date if the available slot is shorter than event duration', async () => {
+        const { getAvailableTimes, getEventByUrlAndUser } = await import('../helpers/services/event_services');
+
+        // Mock a slot that is only 15 minutes long (shorter than event duration of 30)
+        const shortSlotStart = new Date();
+        shortSlotStart.setHours(10, 0, 0, 0);
+        const shortSlotEnd = new Date(shortSlotStart);
+        shortSlotEnd.setMinutes(15);
+
+        const mockSlotsImpl = {
+            overlapping: () => ['something'],
+            intersect: () => [
+                { start: shortSlotStart, end: shortSlotEnd }
+            ]
+        };
+
+        // @ts-ignore
+        (getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(getEventByUrlAndUser).toHaveBeenCalled();
+            expect(getAvailableTimes).toHaveBeenCalled();
+        });
+
+        // The date should NOT be selected because the slot (15m) < duration (30m)
+        // If selected, "Available Times" would appear.
+        expect(screen.queryByText(/Available Times/i)).not.toBeInTheDocument();
+
+        // "Please select a date" should be present
+        expect(screen.getByText(/Please select a date/i)).toBeInTheDocument();
+
+
+    });
+
+    it('should switch calendar view to the month of the first available slot', async () => {
+        const { getAvailableTimes, getEventByUrlAndUser } = await import('../helpers/services/event_services');
+        const { addMonths, format, startOfMonth } = await import('date-fns');
+
+        // Setup a slot one month in the future
+        const nextMonthDate = addMonths(new Date(), 1);
+        const slotStart = new Date(nextMonthDate);
+        slotStart.setHours(10, 0, 0, 0);
+        const slotEnd = new Date(slotStart);
+        slotEnd.setHours(11, 0, 0, 0); // 1 hour duration (ok for 30min event)
+
+        const mockSlotsImpl = {
+            overlapping: () => ['something'],
+            intersect: (range: any) => {
+                // range is the IntervalSet passed from Booking.tsx (startOfDay to endOfDay) which is an array-like
+                if (!range || range.length === 0) return [];
+                const r = range[0];
+                // Check if our slot overlaps with the requested range
+                if (r.start <= slotEnd && r.end >= slotStart) {
+                    return [{ start: slotStart, end: slotEnd }];
+                }
+                return [];
+            }
+        };
+
+        // @ts-ignore
+        (getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);
+
+        render(
+            <MemoryRouter>
+                <Booking />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(getEventByUrlAndUser).toHaveBeenCalled();
+            expect(getAvailableTimes).toHaveBeenCalled();
+        });
+
+        // The logic we added sets checkDay(iterator) -> hasAvailableSlots -> returns true for this day.
+        // It then sets selectedDate AND currentMonth.
+        // The calendar header should display the month name of nextMonthDate.
+
+        const expectedMonthName = format(nextMonthDate, 'MMMM yyyy'); // e.g. "January 2026"
+
+        // Check if the calendar header displays the expected month
+        // We use findByText to wait for the state update and re-render
+        expect(await screen.findByText(expectedMonthName, {}, { timeout: 3000 })).toBeInTheDocument();
+    });
 });
+

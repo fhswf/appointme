@@ -4,6 +4,7 @@ resources:
   - ../../base
   - ../../../backend/k8s/overlays/prod
   - ../../../client/k8s/overlays/prod
+  - ../../../mcp-server/k8s/overlays/prod
 namespace: appointme-prod
 patches:
   - path: ingress-patch.yaml

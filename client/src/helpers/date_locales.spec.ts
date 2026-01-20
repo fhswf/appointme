@@ -39,5 +39,13 @@ describe('date_locales', () => {
         it('should return US English locale for empty string', () => {
             expect(getLocale('')).toBe(enUS);
         });
+
+        it('should return German locale for "de-DE"', () => {
+            expect(getLocale('de-DE')).toBe(de);
+        });
+
+        it('should return French locale for "fr-CA"', () => {
+            expect(getLocale('fr-CA')).toBe(fr);
+        });
     });
 });

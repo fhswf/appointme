@@ -5,6 +5,24 @@ import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 import { UserModel } from '../models/User';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+
+// Mock jsonwebtoken
+vi.mock('jsonwebtoken', () => ({
+    default: {
+        sign: vi.fn(),
+        verify: vi.fn(),
+        decode: vi.fn() // Add decode if needed
+    }
+}));
+
+// Mock crypto
+vi.mock('crypto', () => ({
+    default: {
+        randomBytes: vi.fn().mockReturnValue({ toString: () => 'mock_nonce' })
+    }
+}));
 
 // Mock dependencies
 vi.mock('../models/User', () => ({
@@ -29,6 +47,12 @@ vi.mock('googleapis', () => ({
     }
 }));
 
+vi.mock('../utility/mailer', () => ({
+    sendEmail: vi.fn().mockResolvedValue({})
+}));
+
+import { sendEmail } from '../utility/mailer';
+
 vi.mock('google-auth-library', () => {
     return {
         OAuth2Client: vi.fn().mockImplementation(function () {
@@ -48,7 +72,8 @@ vi.mock('../logging', () => ({
     logger: {
         info: vi.fn(),
         debug: vi.fn(),
-        error: vi.fn()
+        error: vi.fn(),
+        warn: vi.fn()
     }
 }));
 
@@ -61,15 +86,24 @@ describe('google_controller', () => {
         const req = {
             query: {
                 code: 'auth_code',
-                state: 'user_id'
+                state: 'signed_state_token'
+            },
+            cookies: {
+                'google_auth_state': 'mock_nonce'
             }
         } as unknown as Request;
 
         const res = {
             redirect: vi.fn(),
             status: vi.fn().mockReturnThis(),
-            json: vi.fn()
+            json: vi.fn(),
+            clearCookie: vi.fn()
         } as unknown as Response;
+
+        // Mock JWT verification success
+        (jwt.verify as any).mockImplementation((token, secret, cb) => {
+            cb(null, { id: 'user_id', nonce: 'mock_nonce' });
+        });
 
         mockGetToken.mockResolvedValue({
             tokens: {
@@ -84,6 +118,10 @@ describe('google_controller', () => {
         // Wait for promises to resolve
         await new Promise(resolve => setTimeout(resolve, 10));
 
+        expect(jwt.verify).toHaveBeenCalledWith('signed_state_token', process.env.JWT_SECRET, expect.any(Function));
+
+        expect(res.clearCookie).toHaveBeenCalledWith('google_auth_state');
+
         expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
             { _id: { $eq: 'user_id' } },
             {
@@ -96,11 +134,14 @@ describe('google_controller', () => {
         );
     });
 
-    it('should create a new OAuth2Client instance', async () => {
+    it('should reject callback with invalid state signature', async () => {
         const req = {
             query: {
                 code: 'auth_code',
-                state: 'user_id'
+                state: 'invalid_token'
+            },
+            cookies: {
+                'google_auth_state': 'mock_nonce'
             }
         } as unknown as Request;
 
@@ -110,11 +151,72 @@ describe('google_controller', () => {
             json: vi.fn()
         } as unknown as Response;
 
+        (jwt.verify as any).mockImplementation((token, secret, cb) => {
+            cb(new Error('Invalid signature'), null);
+        });
+
+        await googleCallback(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: "Invalid state parameter" }));
+    });
+
+    it('should reject callback with mismatched nonce', async () => {
+        const req = {
+            query: {
+                code: 'auth_code',
+                state: 'signed_state_token'
+            },
+            cookies: {
+                'google_auth_state': 'wrong_nonce'
+            }
+        } as unknown as Request;
+
+        const res = {
+            redirect: vi.fn(),
+            status: vi.fn().mockReturnThis(),
+            json: vi.fn()
+        } as unknown as Response;
+
+        (jwt.verify as any).mockImplementation((token, secret, cb) => {
+            cb(null, { id: 'user_id', nonce: 'mock_nonce' });
+        });
+
+        await googleCallback(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: "Invalid state parameter" }));
+    });
+
+    it('should create a new OAuth2Client instance', async () => {
+        const req = {
+            query: {
+                code: 'auth_code',
+                state: 'signed_state_token'
+            },
+            cookies: {
+                'google_auth_state': 'mock_nonce'
+            }
+        } as unknown as Request;
+
+        const res = {
+            redirect: vi.fn(),
+            status: vi.fn().mockReturnThis(),
+            json: vi.fn(),
+            clearCookie: vi.fn()
+        } as unknown as Response;
+
+        (jwt.verify as any).mockImplementation((token, secret, cb) => {
+            cb(null, { id: 'user_id', nonce: 'mock_nonce' });
+        });
+
         mockGetToken.mockResolvedValue({ tokens: {} });
 
         await googleCallback(req, res);
 
-        expect(OAuth2Client).toHaveBeenCalled();
+        expect(OAuth2Client).toHaveBeenCalledWith(expect.objectContaining({
+            redirectUri: expect.stringMatching(/.*\/api\/v1\/google\/oauthcallback/)
+        }));
     });
 
     it('should generate auth url', () => {
@@ -123,12 +225,26 @@ describe('google_controller', () => {
         } as unknown as Request;
 
         const res = {
-            json: vi.fn()
+            json: vi.fn(),
+            cookie: vi.fn()
         } as unknown as Response;
 
         mockGenerateAuthUrl.mockReturnValue('http://auth.url');
+        (jwt.sign as any).mockReturnValue('signed_state_token');
 
         generateAuthUrl(req, res);
+
+        expect(jwt.sign).toHaveBeenCalledWith(
+            expect.objectContaining({ id: 'user_id', nonce: 'mock_nonce' }),
+            process.env.JWT_SECRET,
+            { expiresIn: '10m' }
+        );
+
+        expect(res.cookie).toHaveBeenCalledWith('google_auth_state', 'mock_nonce', {
+            httpOnly: true,
+            secure: true,
+            maxAge: 600000
+        });
 
         expect(mockGenerateAuthUrl).toHaveBeenCalledWith({
             access_type: "offline",
@@ -137,7 +253,7 @@ describe('google_controller', () => {
                 "https://www.googleapis.com/auth/calendar",
                 "https://www.googleapis.com/auth/calendar.events",
             ],
-            state: 'user_id',
+            state: 'signed_state_token',
         });
         expect(res.json).toHaveBeenCalledWith({ url: 'http://auth.url' });
     });
@@ -530,6 +646,108 @@ describe('google_controller', () => {
             const result = await freeBusy('user_id', '2023-01-01', '2023-01-02');
             expect(result).toEqual({ data: { calendars: {} } });
             expect(mockQuery).not.toHaveBeenCalled();
+        });
+
+        it('should retry on invalid_grant if token has changed', async () => {
+            const userId = 'user_retry_test';
+
+            // Mock UserModel.findOne to return different tokens on sequential calls
+            const userOldToken = {
+                _id: userId,
+                google_tokens: { access_token: 'old_token', refresh_token: 'old_refresh' },
+                pull_calendars: ['cal1']
+            };
+            const userNewToken = {
+                _id: userId,
+                google_tokens: { access_token: 'new_token', refresh_token: 'new_refresh' },
+                pull_calendars: ['cal1']
+            };
+
+            const execMock = vi.fn()
+                .mockResolvedValueOnce(userOldToken) // First call
+                .mockResolvedValueOnce(userNewToken); // Second call (retry)
+
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({ exec: execMock });
+
+            // Mock Google API to fail first, then succeed
+            const mockQuery = vi.fn()
+                .mockRejectedValueOnce({
+                    code: 400,
+                    message: "invalid_grant",
+                    response: { data: { error: "invalid_grant" } }
+                })
+                .mockResolvedValueOnce({
+                    data: { calendars: { cal1: { busy: [] } } }
+                });
+
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            const result = await freeBusy(userId, '2025-01-01', '2025-01-02');
+
+            // Verify result matches the success response
+            expect(result).toEqual({ data: { calendars: { cal1: { busy: [] } } } });
+
+            // Verify retry logic
+            expect(execMock).toHaveBeenCalledTimes(2); // Initial fetch + Retry fetch
+            expect(mockQuery).toHaveBeenCalledTimes(2); // Initial attempt + Retry attempt
+
+            // Verify second call used new credentials
+            // (We can check if setCredentials was called with new tokens)
+            // The OAuth2Client mock in this file captures setCredentials in mockSetCredentials
+            // We expect it to be called with old_token, then new_token.
+            // Note: createOAuthClient is called inside freeBusy.
+        });
+        it('should invalidate tokens on invalid_grant if token has NOT changed', async () => {
+            const userId = 'user_abort_retry_test';
+
+            // Mock UserModel.findOne to return SAME tokens
+            const userToken = {
+                _id: userId,
+                email: userId + '@example.com',
+                google_tokens: { access_token: 'token', refresh_token: 'refresh' },
+                pull_calendars: ['cal1']
+            };
+
+            const execMock = vi.fn()
+                .mockResolvedValueOnce(userToken) // First call
+                .mockResolvedValueOnce(userToken); // Second call (check for update)
+
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({ exec: execMock });
+
+            const mockQuery = vi.fn()
+                .mockRejectedValue({
+                    code: 400,
+                    message: "invalid_grant",
+                    response: { data: { error: "invalid_grant" } }
+                });
+
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            // Expect it to throw the error eventually
+            await expect(freeBusy(userId, '2025-01-01', '2025-01-02')).rejects.toThrow();
+
+            // Verify deleteTokens called (via UserModel.findOneAndUpdate)
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: { $eq: userId } },
+                { $unset: { google_tokens: "" } }
+            );
+
+            // Verify email notification sent
+            expect(sendEmail).toHaveBeenCalledWith(
+                userId + '@example.com', // Assuming freshUser has this email
+                expect.stringContaining('Calendar Connection Failed'),
+                expect.any(String)
+            );
         });
     });
 });

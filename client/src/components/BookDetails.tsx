@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ export type BookingFormData = {
 export type BookDetailsProps = {
   errors: any;
   onChange: (form: BookingFormData) => void;
+  initialValues?: BookingFormData;
 };
 
 const BookDetails = (props: BookDetailsProps) => {
@@ -24,6 +25,17 @@ const BookDetails = (props: BookDetailsProps) => {
     email: "",
     description: "",
   });
+
+  useEffect(() => {
+    if (props.initialValues) {
+      setFormData(prev => ({
+        ...prev,
+        ...props.initialValues,
+        description: prev.description || props.initialValues?.description || ""
+      }));
+      props.onChange(props.initialValues);
+    }
+  }, [props.initialValues]); // Only run when initialValues provided by parent change
 
   const handleOnChange = (text: keyof BookingFormData) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newData = { ...formData, [text]: event.target.value };

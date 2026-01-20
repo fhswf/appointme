@@ -37,6 +37,94 @@ function min<T>(a: T, b: T): T {
   return a < b ? a : b;
 }
 
+/**
+ * Calculate all instance dates for a recurring event
+ * @param startTime First occurrence start time
+ * @param recurrence Recurrence rule configuration
+ * @returns Array of Date objects for each instance
+ */
+function calculateRecurrenceInstances(
+  startTime: Date,
+  recurrence: { enabled: boolean; frequency: string; interval: number; count?: number; until?: string; span?: { value: number; unit: 'weeks' | 'months' } }
+): Date[] {
+  if (!recurrence?.enabled) {
+    return [startTime];
+  }
+
+  const instances: Date[] = [];
+  let current = new Date(startTime);
+  const maxInstances = recurrence.count || 52; // Default max 52 if no count/until/span
+  let untilDate = recurrence.until ? new Date(recurrence.until) : null;
+
+  if (recurrence.span) {
+    const spanDate = new Date(startTime);
+    if (recurrence.span.unit === 'months') {
+      spanDate.setMonth(spanDate.getMonth() + recurrence.span.value);
+    } else {
+      spanDate.setDate(spanDate.getDate() + (recurrence.span.value * 7));
+    }
+    // If until date is also set, use the earlier one, otherwise use calculated span date
+    untilDate = untilDate ? min(untilDate, spanDate) : spanDate;
+  }
+
+  // Calculate interval in days based on frequency
+  let intervalDays: number;
+  switch (recurrence.frequency) {
+    case 'weekly':
+      intervalDays = 7;
+      break;
+    case 'biweekly':
+      intervalDays = 14;
+      break;
+    case 'triweekly':
+      intervalDays = 21;
+      break;
+    case 'monthly':
+      intervalDays = 30; // Approximate for monthly
+      break;
+    default:
+      intervalDays = recurrence.interval * 7; // Fallback to weeks
+  }
+
+  for (let i = 0; i < maxInstances; i++) {
+    // Stop if we've passed the until date
+    if (untilDate && current > untilDate) {
+      break;
+    }
+
+    instances.push(new Date(current));
+
+    // Calculate next occurrence
+    current = addDays(current, intervalDays);
+  }
+
+  return instances;
+}
+
+/**
+ * Validate that all slots in a recurring series are available
+ * @param eventDoc Event document
+ * @param userId User ID
+ * @param instances Array of instance start times
+ * @returns Promise<boolean> true if all slots are available
+ */
+async function validateAllSlotsAvailable(
+  eventDoc: EventDocument,
+  userId: string,
+  instances: Date[]
+): Promise<{ available: boolean; conflictDate?: Date }> {
+  for (const startTime of instances) {
+    const endTime = addMinutes(startTime, eventDoc.duration);
+    const isFree = await checkFree(eventDoc as unknown as Event, userId, startTime, endTime);
+
+    if (!isFree) {
+      return { available: false, conflictDate: startTime };
+    }
+  }
+
+  return { available: true };
+}
+
 export function calculateBlocked(events, event, timeMin, timeMax) {
   const eventsPerDay = {};
   const blocked = new IntervalSet([{ start: new Date(timeMin), end: new Date(timeMin) }, { start: new Date(timeMax), end: new Date(timeMax) }]);
@@ -87,6 +175,25 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
 }
 
 /**
+ * Helper function to shift an IntervalSet by a specific duration.
+ * Used for checking availability of recurring event instances.
+ * 
+ * @param intervalSet - The set of intervals to shift
+ * @param shiftMs - The number of milliseconds to shift (positive or negative)
+ * @returns A new IntervalSet with shifted start/end times
+ */
+const shiftIntervalSet = (intervalSet: IntervalSet, shiftMs: number): IntervalSet => {
+  const result = new IntervalSet();
+  for (const range of intervalSet) {
+    result.push({
+      start: new Date(range.start.getTime() + shiftMs),
+      end: new Date(range.end.getTime() + shiftMs)
+    });
+  }
+  return result;
+}
+
+/**
  * Middleware to get available times for one weekday of a given user
  * @function
  * @param {request} req
@@ -100,7 +207,7 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
   logger.debug('getAvailableTimes: %s %s %s', timeMin, timeMax, eventId);
   EventModel
     .findById(eventId)
-    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user availabilityMode")
+    .select("available bufferbefore duration bufferafter minFuture maxFuture maxPerDay user availabilityMode recurrence")
     .exec()
     .then(event => {
       if (!event) {
@@ -117,29 +224,115 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
       timeMax = min(timeMax, startOfHour(Date.now() + 1000 * event.maxFuture));
       logger.debug("Event: %o; timeMin: %s, timeMax: %s", event, timeMin, timeMax);
 
+      // Determine the check range. For recurring events, we need to check future instances.
+      let checkMax = new Date(timeMax);
+      let recurrenceCount = 1;
+      let recurrenceIntervalMs = 0;
+
+      if (event.recurrence?.enabled) {
+        const count = event.recurrence.count || 12; // Check up to 12 instances if not specified, to be safe/performant
+        recurrenceCount = count;
+
+        // Calculate interval in ms
+        let intervalDays = 7;
+        switch (event.recurrence.frequency) {
+          case 'daily': intervalDays = 1; break;
+          case 'weekly': intervalDays = 7; break;
+          case 'biweekly': intervalDays = 14; break;
+          case 'triweekly': intervalDays = 21; break;
+          case 'monthly': intervalDays = 30; break;
+          default: intervalDays = event.recurrence.interval * 7;
+        }
+        recurrenceIntervalMs = intervalDays * 24 * 60 * 60 * 1000;
+
+        // Extend checkMax to cover the recurrence period
+        const addedTime = (count - 1) * recurrenceIntervalMs;
+        // Safety cap for checkMax (e.g. 1 year from now) to avoid performance issues
+        const limitDate = addDays(new Date(), 365);
+
+        const potentialMax = new Date(checkMax.getTime() + addedTime);
+        checkMax = min(potentialMax, limitDate);
+
+        if (event.recurrence.until) {
+          checkMax = min(checkMax, new Date(event.recurrence.until));
+        }
+      }
+
       // Request currently booked events. We need them for the maxPerDay restriction
-      return events(event.user, timeMin.toISOString(), timeMax.toISOString())
-        .then(events => ({ events, event, user }));
+      return events(event.user, timeMin.toISOString(), checkMax.toISOString())
+        .then(events => ({ events, event, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }));
     })
-    .then(({ events, event, user }) => {
-      const blocked = calculateBlocked(events, event, timeMin, timeMax);
+    .then(({ events, event, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }) => {
+      const blocked = calculateBlocked(events, event, timeMin, checkMax);
       logger.debug("blocked: %o", blocked);
       logger.debug("free: %o", blocked.inverse());
 
       // Now query freeBusy service and CalDAV
       return Promise.all([
-        freeBusy(event.user, timeMin.toISOString(), timeMax.toISOString()),
-        getBusySlots(event.user, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
+        (user.google_tokens && user.google_tokens.access_token) ?
+          freeBusy(event.user, timeMin.toISOString(), checkMax.toISOString()).catch(err => {
+            logger.error('Google freeBusy failed in getAvailableTimes (non-fatal): %s', err.message);
+            return { data: { calendars: {} } };
+          }) :
+          Promise.resolve({ data: { calendars: {} } }),
+        getBusySlots(event.user, timeMin.toISOString(), checkMax.toISOString()).catch(err => {
           logger.error('CalDAV getBusySlots failed', err);
           return [];
         })
-      ]).then(([freeBusyResponse, calDavSlots]) => ({ freeBusyResponse, calDavSlots, event, blocked, user }));
+      ]).then(([freeBusyResponse, calDavSlots]) => ({
+        freeBusyResponse,
+        calDavSlots,
+        event,
+        blocked,
+        user,
+        timeMin,
+        timeMax,
+        checkMax,
+        recurrenceCount,
+        recurrenceIntervalMs
+      }));
     })
-    .then(({ freeBusyResponse, calDavSlots, event, blocked, user }) => {
-      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, timeMax, blocked, user);
-      logger.debug('freeSlots before filtering: %j', freeSlots);
+    .then(({ freeBusyResponse, calDavSlots, event, blocked, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }) => {
+      let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, checkMax, blocked, user);
+
+      // Filter slots by duration first
       freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
-      logger.debug('freeSlots after filtering: %j', freeSlots);
+
+      // Handle recurrence validation
+      if (event.recurrence?.enabled && recurrenceCount > 1 && recurrenceIntervalMs > 0) {
+        let validatedSlots = new IntervalSet(freeSlots);
+
+        for (let i = 1; i < recurrenceCount; i++) {
+          const shiftAmount = -1 * i * recurrenceIntervalMs;
+          const shifted = shiftIntervalSet(freeSlots, shiftAmount);
+
+          // We intersect the current candidates with the available slots of the i-th instance (shifted back to base time)
+          validatedSlots = validatedSlots.intersect(shifted);
+        }
+        freeSlots = validatedSlots;
+      }
+
+      // Finally clip to the requested view range
+      const viewRange = new IntervalSet(timeMin, timeMax);
+      freeSlots = freeSlots.intersect(viewRange);
+
+      if (req.query.slots === 'true') {
+        const slots: string[] = [];
+        for (const slot of freeSlots) {
+          let s = new Date(slot.start);
+          const end = new Date(slot.end);
+          // Check if at least one duration fits
+          while (s.getTime() + event.duration * 60000 <= end.getTime()) {
+            slots.push(s.toISOString());
+            s = addMinutes(s, event.duration);
+          }
+        }
+        res.status(200).json(slots);
+        return;
+      }
+
+      logger.debug('freeSlots after filtering and recurrence check: %j', freeSlots);
+
       res.status(200).json(freeSlots);
     })
     .catch((err: unknown) => {
@@ -314,8 +507,23 @@ export const updateEventController = (req: Request, res: Response): void => {
     return;
   }
 
+  // Build a sanitized update object to avoid MongoDB operator injection
+  const updateData: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(event)) {
+    // Disallow MongoDB operator-style keys and dotted paths from user input
+    if (key.startsWith('$') || key.includes('.')) {
+      continue;
+    }
+    updateData[key] = value;
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    res.status(400).json({ error: 'No valid fields to update' });
+    return;
+  }
+
   void EventModel
-    .findByIdAndUpdate(event_id, { $set: event })
+    .findByIdAndUpdate(event_id, { $set: updateData })
     .exec()
     .then((doc: EventDocument) => {
       res.status(200).json({ msg: "Update successful", event: doc })
@@ -333,64 +541,64 @@ export const updateEventController = (req: Request, res: Response): void => {
  */
 
 export const insertEvent = async (req: Request, res: Response): Promise<void> => {
-  const starttime = new Date(Number.parseInt(req.body.start));
+  const startInput = req.body.start;
+  const starttime = Number.isNaN(Number(startInput)) ? new Date(startInput) : new Date(Number(startInput));
   const eventId = req.params.id;
   logger.debug("insertEvent: %s %o", req.body.start, starttime);
 
   try {
-    const eventDoc = await EventModel.findById(eventId).exec();
-    if (!eventDoc) {
-      res.status(404).json({ error: "Event not found" });
+    const context = await fetchEventAndUser(eventId);
+    if ('error' in context) {
+      res.status(404).json({ error: context.error });
       return;
     }
-    const endtime = addMinutes(starttime, eventDoc.duration);
+    const { eventDoc, user } = context;
     const userId = eventDoc.user;
 
-    const free = await checkFree(eventDoc, userId, starttime, endtime);
-    if (!free) {
-      res.status(400).json({ error: "requested slot not available" });
-      return;
+    // Check for role restrictions
+    if (eventDoc.allowed_roles && eventDoc.allowed_roles.length > 0) {
+      let userRoles: string[] = [];
+
+      if (!req["user"] && req["user_id"]) {
+        try {
+          const user = await UserModel.findById(req["user_id"]).exec();
+          if (user) {
+            req["user"] = user;
+            userRoles = user.roles || [];
+          }
+        } catch (err) {
+          logger.error("Failed to fetch user for role check", err);
+        }
+      } else if (req["user"]) {
+        userRoles = req["user"].roles || [];
+      } else if (req['user_claims']) {
+        // Fallback to claims for transient users
+        userRoles = req['user_claims'].roles || [];
+      }
+
+      // Check if current user is authenticated and has required role
+      if (!eventDoc.allowed_roles.some(r => userRoles.includes(r))) {
+        res.status(403).json({ error: "Access denied. RESTRICTED_TO_ROLES" });
+        return;
+      }
     }
 
-    const user = await UserModel.findOne({ _id: { $eq: userId } }).exec();
-    if (!user) {
-      res.status(404).json({ error: "User not found" });
+    // Check if this is a recurring event and calculate all instances
+    const instances = calculateRecurrenceInstances(starttime, eventDoc.recurrence || { enabled: false, frequency: 'weekly', interval: 1 });
+    logger.debug("Recurring instances: %o", instances);
+
+    const availability = await validateAvailability(eventDoc, userId, instances, starttime);
+    if (!availability.available) {
+      res.status(400).json({
+        error: availability.error,
+        conflictDate: availability.conflictDate
+      });
       return;
     }
 
     const userComment = req.body.description as string;
     const eventDescription = String(eventDoc.description);
-
-    const event: Schema$Event = {
-      summary: eventDoc.name + " mit " + (req.body.attendeeName),
-      location: eventDoc.location,
-      description: eventDescription, // Description only contains the service description
-      start: {
-        dateTime: starttime.toISOString(),
-        timeZone: "Europe/Berlin",
-      },
-      end: {
-        dateTime: endtime.toISOString(),
-        timeZone: "Europe/Berlin",
-      },
-      organizer: {
-        displayName: user.name,
-        email: user.email,
-        id: user._id as string
-      },
-      attendees: [
-        {
-          displayName: req.body.attendeeName as string,
-          email: req.body.attendeeEmail as string,
-        }
-      ],
-      source: (process.env.BASE_URL?.startsWith('http')) ? {
-        title: "Appoint Me",
-        url: process.env.BASE_URL,
-      } : undefined,
-      guestsCanModify: true,
-      guestsCanInviteOthers: true,
-    };
+    const event = constructGoogleEvent(eventDoc, user, starttime, req.body);
 
     // Determine target calendars
     const targetCalendars = user.push_calendars || [];
@@ -398,6 +606,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     const attendeeName = validator.escape(req.body.attendeeName as string);
     const attendeeEmail = req.body.attendeeEmail as string;
 
+    // For recurring events, pass recurrence info to calendar creation
     const { results, successCount } = await pushEventToCalendars({
       user,
       event,
@@ -405,55 +614,192 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       targetCalendars,
       locale,
       attendeeName,
-      attendeeEmail
+      attendeeEmail,
+      recurrence: eventDoc.recurrence?.enabled ? eventDoc.recurrence : undefined
     });
 
     if (successCount > 0) {
       const googleResult = results.find(r => r.type === 'google' && r.success);
       const caldavResult = results.find(r => r.type === 'caldav' && r.success);
 
-      const appointment = new AppointmentModel({
-        user: userId,
-        event: eventId,
-        start: starttime,
-        end: endtime,
+      const { seriesId } = await persistAppointments({
+        userId,
+        eventId,
+        instances,
+        eventDoc,
         attendeeName: req.body.attendeeName,
         attendeeEmail: req.body.attendeeEmail,
-        description: userComment,
-        location: eventDoc.location,
+        userComment,
         googleId: googleResult?.event?.id,
         caldavUid: caldavResult?.event?.uid
       });
-      await appointment.save();
 
-      // If at least one succeeded, we return success.
-      // We return the result of the first successful one for backward compatibility with simple clients,
-      // but also include full results.
       const firstSuccess = results.find(r => r.success);
-      res.json({ ...firstSuccess, results });
+      res.json({
+        ...firstSuccess,
+        results,
+        instancesCreated: instances.length,
+        seriesId: seriesId
+      });
     } else if (targetCalendars.length > 0) {
       // All attempted failed
       const firstError = results[0]?.error || "Failed to create event on any calendar";
-      // Extract message if it's an error object
       const errorMsg = firstError instanceof Error ? firstError.message : String(firstError);
       res.status(400).json({ error: errorMsg, results });
     } else {
-      // No calendars configured.
-      // If no push calendars, we might default to Google Primary if that was the old behavior?
-      // Old behavior: if (push_calendar set) { try caldav } else { try google }.
-      // If push_calendar was null, it tried google.
-      // So if list is empty, we should fallback to Google Primary.
+      // No calendars configured - fallback
       logger.info("No push calendars configured, falling back to Google Primary");
       try {
-        const result = await processGoogleBooking(user, userComment, event, 'primary');
-        res.json(result);
+        const result = await processGoogleBooking(user, userComment, event, 'primary', eventDoc.recurrence);
+
+        const { seriesId } = await persistAppointments({
+          userId,
+          eventId,
+          instances,
+          eventDoc,
+          attendeeName: req.body.attendeeName,
+          attendeeEmail: req.body.attendeeEmail,
+          userComment,
+          googleId: result?.event?.id
+        });
+
+        res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
       } catch (err) {
-        res.status(400).json({ error: err });
+        const msg = err instanceof Error ? err.message : String(err);
+        logger.error("Fallback booking failed", err);
+        res.status(400).json({ error: msg, details: err });
       }
     }
   } catch (err) {
     res.status(400).json({ error: err });
   }
+}
+
+async function fetchEventAndUser(eventId: string) {
+  const eventDoc = await EventModel.findById(eventId).exec();
+  if (!eventDoc) return { error: "Event not found" };
+
+  const user = await UserModel.findOne({ _id: { $eq: eventDoc.user } }).exec();
+  if (!user) return { error: "User not found" };
+
+  return { eventDoc, user };
+}
+
+async function validateAvailability(eventDoc: EventDocument, userId: string, instances: Date[], starttime: Date): Promise<{ available: boolean, error?: string, conflictDate?: Date }> {
+  // For recurring events, validate ALL slots are available
+  if (eventDoc.recurrence?.enabled && instances.length > 1) {
+    const validation = await validateAllSlotsAvailable(eventDoc, userId, instances);
+    if (!validation.available) {
+      const conflictDateStr = validation.conflictDate?.toLocaleDateString('de-DE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      return {
+        available: false,
+        error: `This recurring series is not available. Slot on ${conflictDateStr} is already booked.`,
+        conflictDate: validation.conflictDate
+      };
+    }
+  } else {
+    // Single event - check just the first slot
+    const endtime = addMinutes(starttime, eventDoc.duration);
+    const free = await checkFree(eventDoc as unknown as Event, userId, starttime, endtime);
+    if (!free) {
+      return { available: false, error: "requested slot not available" };
+    }
+  }
+  return { available: true };
+}
+
+function constructGoogleEvent(eventDoc: EventDocument, user: any, starttime: Date, body: any): Schema$Event {
+  const eventDescription = String(eventDoc.description);
+  const endtime = addMinutes(starttime, eventDoc.duration);
+
+  return {
+    summary: eventDoc.name + " mit " + (body.attendeeName),
+    location: eventDoc.location,
+    description: eventDescription,
+    start: {
+      dateTime: starttime.toISOString(),
+      timeZone: "Europe/Berlin",
+    },
+    end: {
+      dateTime: endtime.toISOString(),
+      timeZone: "Europe/Berlin",
+    },
+    organizer: {
+      displayName: user.name,
+      email: user.email,
+      id: user._id as string
+    },
+    attendees: [
+      {
+        displayName: body.attendeeName as string,
+        email: body.attendeeEmail as string,
+      }
+    ],
+    source: (process.env.BASE_URL?.startsWith('http')) ? {
+      title: "Appoint Me",
+      url: process.env.BASE_URL,
+    } : undefined,
+    guestsCanModify: true,
+    guestsCanInviteOthers: true,
+  };
+}
+
+interface PersistAppointmentsParams {
+  userId: string;
+  eventId: string;
+  instances: Date[];
+  eventDoc: EventDocument;
+  attendeeName: string;
+  attendeeEmail: string;
+  userComment: string;
+  googleId?: string | null;
+  caldavUid?: string | null;
+}
+
+async function persistAppointments(params: PersistAppointmentsParams) {
+  const {
+    userId,
+    eventId,
+    instances,
+    eventDoc,
+    attendeeName,
+    attendeeEmail,
+    userComment,
+    googleId,
+    caldavUid
+  } = params;
+
+  const seriesId = instances.length > 1 ? crypto.randomUUID() : undefined;
+
+  for (let i = 0; i < instances.length; i++) {
+    const instanceStart = instances[i];
+    const instanceEnd = addMinutes(instanceStart, eventDoc.duration);
+
+    const appointment = new AppointmentModel({
+      user: userId,
+      event: eventId,
+      start: instanceStart,
+      end: instanceEnd,
+      attendeeName: attendeeName,
+      attendeeEmail: attendeeEmail,
+      description: userComment,
+      location: eventDoc.location,
+      googleId: i === 0 ? googleId : undefined,  // Only first instance gets googleId (it's a recurring event)
+      caldavUid: i === 0 ? caldavUid : undefined,
+      seriesId: seriesId,
+      isRecurring: instances.length > 1,
+      recurrenceIndex: i
+    });
+    await appointment.save();
+  }
+
+  return { seriesId };
 }
 
 async function pushEventToCalendars(params: {
@@ -464,8 +810,9 @@ async function pushEventToCalendars(params: {
   locale: Locale;
   attendeeName: string;
   attendeeEmail: string;
+  recurrence?: any;
 }) {
-  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail } = params;
+  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail, recurrence } = params;
   const results = [];
   let successCount = 0;
 
@@ -481,12 +828,13 @@ async function pushEventToCalendars(params: {
           locale,
           attendeeName,
           attendeeEmail,
-          sendInvitation: user.send_invitation_email
+          sendInvitation: user.send_invitation_email,
+          recurrence
         });
         successCount++;
         results.push({ calendar, success: true, type: 'caldav', event: res.event });
       } else {
-        const res = await processGoogleBooking(user, userComment, event, calendar);
+        const res = await processGoogleBooking(user, userComment, event, calendar, recurrence);
         successCount++;
         results.push({ calendar, success: true, type: 'google', event: res.event });
       }
@@ -508,9 +856,10 @@ async function processCalDavBooking(
     attendeeName: string;
     attendeeEmail: string;
     sendInvitation: boolean;
+    recurrence?: any;
   }
 ) {
-  const { user, event, userComment, calendarUrl, locale, attendeeName, attendeeEmail, sendInvitation } = params;
+  const { user, event, userComment, calendarUrl, locale, attendeeName, attendeeEmail, sendInvitation, recurrence } = params;
   const calDavAccount = findAccountForCalendar(user, calendarUrl);
   if (calDavAccount) {
     if (validator.isEmail(calDavAccount.username)) {
@@ -523,7 +872,7 @@ async function processCalDavBooking(
 
   try {
     // Pass userComment and calendarUrl to CalDAV interaction
-    const evt = await createCalDavEvent(user, event, userComment, calendarUrl);
+    const evt = await createCalDavEvent(user, event, userComment, calendarUrl, recurrence);
     logger.debug('CalDav insert returned %j', evt);
 
     const randomStr = crypto.randomBytes(8).toString('hex');
@@ -578,7 +927,7 @@ async function processCalDavBooking(
   }
 }
 
-async function processGoogleBooking(user: any, userComment: string, event: Schema$Event, calendarUrl: string) {
+async function processGoogleBooking(user: any, userComment: string, event: Schema$Event, calendarUrl: string, recurrence?: any) {
   // Fallback to Google Calendar
   try {
     const googleEvent = { ...event };
@@ -586,9 +935,9 @@ async function processGoogleBooking(user: any, userComment: string, event: Schem
       googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
     }
 
-    const evt = await insertGoogleEvent(user, googleEvent, calendarUrl);
+    const evt = await insertGoogleEvent(user, googleEvent, calendarUrl, recurrence);
     logger.debug('insert returned %j', evt)
-    return { success: true, message: "Event wurde gebucht", event: evt };
+    return { success: true, message: "Event wurde gebucht", event: evt.data };
   } catch (error) {
     logger.error('Google insert failed: %o', error);
     throw error;

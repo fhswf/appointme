@@ -30,6 +30,15 @@ export type Slot = {
 
 export type Slots = Record<Day, Slot[]>;
 
+/** Recurrence rule for recurring events */
+export type RecurrenceRule = {
+  enabled: boolean;
+  frequency: 'weekly' | 'biweekly' | 'triweekly' | 'monthly';
+  interval: number;  // 1 for weekly, 2 for biweekly, 3 for triweekly, etc.
+  count?: number;  // Number of occurrences
+  until?: string;  // ISO date string for end date
+};
+
 /** Event describes a type of appointment */
 export type Event = {
   _id?: string;
@@ -40,6 +49,7 @@ export type Event = {
   duration: number;
   isActive: boolean;
   url: string;
+  allowed_roles?: string[];
   tags?: string[];
 
   bufferafter: number;
@@ -57,6 +67,9 @@ export type Event = {
 
   /** How compilation of availability slots is handled */
   availabilityMode?: 'define' | 'default';
+
+  /** Recurrence configuration for recurring events */
+  recurrence?: RecurrenceRule;
 };
 
 export interface Appointment {
@@ -71,6 +84,11 @@ export interface Appointment {
   location?: string;
   googleId?: string;
   caldavUid?: string;
+
+  /** Series tracking for recurring appointments */
+  seriesId?: string;  // Links appointments in the same recurring series
+  isRecurring?: boolean;  // Indicates this is part of a recurring series
+  recurrenceIndex?: number;  // Which instance in the series (0-based)
 }
 
 export const EMPTY_EVENT: Event = {
@@ -95,10 +113,15 @@ export const EMPTY_EVENT: Event = {
   minFuture: 2 * 86400,
   maxFuture: 60 * 86400,
   maxPerDay: 2,
-  availabilityMode: 'define'
+  availabilityMode: 'define',
+  recurrence: {
+    enabled: false,
+    frequency: 'biweekly',
+    interval: 2,
+  }
 };
 
-export interface GoogleTokens extends Document {
+export interface GoogleTokens {
   access_token?: string;
   refresh_token?: string;
   scope?: string;
@@ -127,6 +150,7 @@ export interface User {
   agenda_visible_calendars?: string[];
   welcome?: string;
   send_invitation_email?: boolean;
+  roles?: string[];
   defaultAvailable?: Slots;
 };
 

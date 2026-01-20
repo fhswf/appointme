@@ -1,5 +1,6 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi, beforeEach } from 'vitest';
+import mongoose from 'mongoose';
 import request from "supertest";
 import { UserModel } from "../models/User.js";
 import { USER } from './USER.js';
@@ -32,11 +33,11 @@ vi.mock("csrf-csrf", () => {
 describe("GET /api/v1/user/me Reproduction", () => {
     let app: any;
     const JWT_SECRET = "test_secret";
-    
+
     beforeAll(async () => {
         process.env.JWT_SECRET = JWT_SECRET;
         // Ensure env var logic matches
-        process.env.DOMAIN = "localhost"; 
+        process.env.DOMAIN = "localhost";
 
         const { init } = await import("../server.js");
         app = init(0);
@@ -46,8 +47,11 @@ describe("GET /api/v1/user/me Reproduction", () => {
         vi.clearAllMocks();
     });
 
+
+
     afterAll(async () => {
         if (app?.close) await app.close();
+        await mongoose.disconnect();
     });
 
     it("should return 200 and user data when authenticated and user exists", async () => {
@@ -91,13 +95,13 @@ describe("GET /api/v1/user/me Reproduction", () => {
             .set("Cookie", [`access_token=${token}`]);
 
         // Middleware should block this
-        expect(res.status).toBe(401); 
+        expect(res.status).toBe(401);
     });
 
     it("should return 401 when access_token is missing", async () => {
-         const res = await request(app)
+        const res = await request(app)
             .get("/api/v1/user/me");
-            // No cookie set
+        // No cookie set
 
         expect(res.status).toBe(401);
     });

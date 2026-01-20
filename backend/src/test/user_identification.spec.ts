@@ -39,29 +39,24 @@ vi.mock("google-auth-library", () => {
 
 // Mock OIDC Client
 vi.mock("openid-client", () => {
-    const mockClient = {
-        authorizationUrl: vi.fn(),
-        callback: vi.fn().mockResolvedValue({
+    return {
+        Configuration: vi.fn().mockImplementation(function () {
+            return {
+                serverMetadata: () => ({}),
+                clientMetadata: () => ({}),
+            };
+        }),
+        buildAuthorizationUrl: vi.fn(),
+        authorizationCodeGrant: vi.fn().mockResolvedValue({
             claims: vi.fn().mockReturnValue({
                 sub: "oidc_id_456",
                 email: "test@example.com", // Same email as Google User
                 name: "OIDC User",
                 picture: "http://example.com/oidc_pic.jpg"
             })
-        })
-    };
-    return {
-        Issuer: class {
-            static discover(url) {
-                return Promise.resolve(new this() as any);
-            }
-            constructor() {
-                (this as any).Client = class {
-                    constructor() { return mockClient; }
-                }
-            }
-        },
-        Client: class { constructor() { return mockClient; } }
+        }),
+        ClientSecretBasic: vi.fn(),
+        None: vi.fn(),
     };
 });
 
@@ -78,6 +73,8 @@ vi.mock("../models/User.js", () => {
 
     (UserModelMock as any).findOne = vi.fn();
     (UserModelMock as any).findOneAndUpdate = vi.fn();
+    (UserModelMock as any).findById = vi.fn();
+    (UserModelMock as any).updateOne = vi.fn();
 
     return {
         UserModel: UserModelMock,
@@ -132,7 +129,13 @@ describe("User Identification by Email", () => {
             name: "Google User",
             picture_url: "http://example.com/pic.jpg",
             save: vi.fn(),
+            roles: []
         };
+
+        // Mock UserModel.findById to return null (not found by OIDC sub)
+        (UserModel.findById as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue(null)
+        });
 
         // Mock UserModel.findOne to return this user when searched by email OR _id
         (UserModel.findOne as any).mockReturnValue({
@@ -176,8 +179,13 @@ describe("User Identification by Email", () => {
             name: "OIDC User",
             picture_url: "http://example.com/oidc.jpg",
             save: vi.fn(),
-            use_gravatar: false
+            use_gravatar: false,
+            roles: []
         };
+
+        (UserModel.findById as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue(null)
+        });
 
         (UserModel.findOne as any).mockReturnValue({
             exec: vi.fn().mockResolvedValue(existingUser)

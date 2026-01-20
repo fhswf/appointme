@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../components/AuthProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { FabSpeedDial } from "@/components/FabSpeedDial";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -124,9 +125,9 @@ const Login = () => {
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))] pointer-events-none -z-10 opacity-20"></div>
       </main>
 
-      <div className="absolute bottom-4 right-4 z-50">
-        <ThemeToggle className="rounded-full shadow-lg h-12 w-12 bg-white dark:bg-card border border-gray-200 dark:border-gray-700 hover:scale-110 transition-transform" />
-      </div>
+      <FabSpeedDial
+        className="bg-white dark:bg-card border border-gray-200 dark:border-gray-700 hover:scale-110 hover:bg-gray-50 dark:hover:bg-gray-800 text-foreground"
+      />
     </div>
   );
 };

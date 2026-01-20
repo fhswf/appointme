@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants.js";
+
 export const ja = {
     "welcome_back": "お帰りなさい",
     "login_subtitle": "続行するにはサインインしてください。",
@@ -85,6 +87,7 @@ export const ja = {
     "teal_lofty_hawk_peek": "キャンセル",
     "mild_raw_elk_delight": "変更を保存",
     "Choose date": "日付を選択",
+    "Please select a date": "日付を選択してください",
     "Choose time": "時間を選択",
     "Provide details": "詳細を提供",
     "Confirmation": "確認",
@@ -251,7 +254,7 @@ export const ja = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "連絡先",
     "footer_credits": "南ヴェストファーレン応用科学大学で❤️を込めて実装されました",
@@ -273,5 +276,29 @@ export const ja = {
     "more": "もっと",
     "next": "次へ",
     "back": "Back",
-    "n_more": "他 {{count}} 件 ..."
+    "n_more": "他 {{count}} 件 ...",
+
+    // Recurrence
+    "Recurrence": "繰り返し",
+    "Enable Recurring Event": "繰り返しイベントを有効にする",
+    "Frequency": "頻度",
+    "Weekly": "毎週",
+    "Bi-weekly": "隔週",
+    "Tri-weekly": "3週間ごと",
+    "Monthly": "毎月",
+    "End Condition": "終了条件",
+    "Occurrences": "回数",
+    "OR": "または",
+    "Until Date": "終了日",
+    "Time Span": "期間",
+    "Months": "ヶ月",
+    "Weeks": "週間",
+    "Recurring Event": "定期イベント",
+    "Recurring": "定期",
+    "weekly": "毎週",
+    "biweekly": "隔週",
+    "triweekly": "3週間ごと",
+    "monthly": "毎月",
+    "Series Booking Note: Students will book all occurrences at once.": "定期予約の注記：学生はすべての回を一括で予約します。",
+    "Feedback": "フィードバック",
 };

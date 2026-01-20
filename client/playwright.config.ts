@@ -26,7 +26,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'VITE_COVERAGE=true npm start -- --port 5173',
+        command: 'VITE_COVERAGE=true pnpm start -- --port 5173',
         url: 'http://localhost:5173',
         reuseExistingServer: !process.env.CI,
     },

@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
-import { Day, Event } from 'common'
+import { Event, DEFAULT_AVAILABILITY } from 'common'
 
 
 
 
-export interface EventDocument extends Omit<Event, '_id'>, Document { }
+export interface EventDocument extends Omit<Event, '_id'>, Document {
+  allowed_roles?: string[];
+}
 
 const eventSchema = new Schema<EventDocument>({
   user: {
@@ -42,6 +44,11 @@ const eventSchema = new Schema<EventDocument>({
     required: true,
   },
 
+  allowed_roles: {
+    type: [String],
+    default: [],
+  },
+
   isActive: {
     type: Boolean,
     default: false,
@@ -59,36 +66,7 @@ const eventSchema = new Schema<EventDocument>({
     default: 0,
   },
 
-  available: {
-    [Day.SUNDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.MONDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.TUESDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.WEDNESDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.THURSDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.FRIDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-    [Day.SATURDAY]: {
-      type: Array,
-      default: [{ start: "8:00", end: "17:00" }],
-    },
-  },
+  available: DEFAULT_AVAILABILITY,
 
   minFuture: {
     type: Number,
@@ -111,6 +89,28 @@ const eventSchema = new Schema<EventDocument>({
   tags: {
     type: [String],
     default: [],
+  },
+
+  recurrence: {
+    enabled: {
+      type: Boolean,
+      default: false,
+    },
+    frequency: {
+      type: String,
+      enum: ['weekly', 'biweekly', 'triweekly', 'monthly'],
+      default: 'biweekly',
+    },
+    interval: {
+      type: Number,
+      default: 2,
+    },
+    count: {
+      type: Number,
+    },
+    until: {
+      type: String,  // ISO date string
+    }
   },
 
 });

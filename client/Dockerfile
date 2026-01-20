@@ -8,34 +8,37 @@ ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
 ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
+ENV REACT_APP_SENTRY_DSN=${SENTRY_DSN}
 
 WORKDIR /base
-COPY .yarn .yarn
-COPY .yarnrc.yml .
-RUN yarn set version 4
+
+RUN corepack enable
 
 COPY package.json .
-COPY yarn.lock .
+COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
 COPY ./common/package.json ./common/package.json 
 COPY ./client/package.json ./client/package.json 
-RUN yarn install && yarn --version
+RUN pnpm install --frozen-lockfile
 
 COPY ./common ./common
-RUN yarn workspace common build
+RUN pnpm --filter common build
 
 COPY ./client ./client
-RUN yarn workspace client build
+RUN pnpm --filter client build
 
 FROM nginx:1.21.3-alpine
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
 ARG BASE_PATH=/
 ARG APP_URL=https://appointme.example.com
 ARG API_URL=https://appointme.example.com/api/v1
+ARG SENTRY_DSN
 
 ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
 ENV REACT_APP_URL=${APP_URL}
 ENV REACT_APP_API_URL=${API_URL}
+ENV REACT_APP_SENTRY_DSN=${SENTRY_DSN}
 
 COPY --from=build /base/client/build /usr/share/nginx/html/meeting
 COPY ./client/nginx/default.conf /etc/nginx/conf.d/default.conf

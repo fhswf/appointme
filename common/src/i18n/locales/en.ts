@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants.js";
+
 export const en = {
     "application_title": "Appoint Me",
     "these_zesty_duck_nudge": "Basic Information",
@@ -74,6 +76,7 @@ export const en = {
     "teal_lofty_hawk_peek": "Cancel",
     "mild_raw_elk_delight": "Save Changes",
     "Choose date": "Choose date",
+    "Please select a date": "Please select a date",
     "Choose time": "Choose time",
     "Provide details": "Provide details",
     "Confirmation": "Confirmation",
@@ -138,6 +141,7 @@ export const en = {
     "login_successful": "Login successful",
     "login_failed": "Login failed",
     "google_login_failed": "Google login failed",
+    "Feedback": "Feedback",
     "Add": "Add",
     "Close": "Close",
     "I acknowledge that my password will be stored encrypted in the database.": "I acknowledge that my password will be stored encrypted in the database.",
@@ -178,8 +182,8 @@ export const en = {
     "GO HOME": "GO HOME",
     "Impressum": "Imprint",
     "Datenschutzhinweise": "Privacy Policy",
-    "privacy_content": "# Privacy Policy\n\n## Storage and processing of personal data\n\nThis application stores and processes the following personal data, which is necessary for the function of the application:\n\n*   **User profile:** Name, email address, profile picture URL.\n*   **Authentication data:** OAuth tokens (for Google Calendar integration) and/or credentials for CalDAV calendars (username, password).\n*   **Calendar data:** Configuration of the calendars to be linked, created event types (name, description, location) and appointment bookings.\n*   **Log data:** Your IP address is temporarily stored in the server log files.\n\n## Cookies and third-party providers\n\nThe application uses cookies for session management.\n\nSome of the applications use components hosted on content delivery networks such as Cloudflare, and/or web services from third-party providers such as Mapbox or Google Calendar API. When using the applications, your browser or the server accesses these components and services, whereby your IP address and possibly other data are transmitted to the respective providers.",
-    "privacy_content_public": "# Privacy Policy\n\n## Data Processing\n\nFor the purpose of booking an appointment, this application processes the data you provide (name, email address, description, date, and time of the appointment). This data is stored to manage the appointment and may be synced to the organizer's calendar.",
+    "privacy_content": "# Privacy Policy\n\n## Storage and processing of personal data\n\nThis application stores and processes the following personal data, which is necessary for the function of the application:\n\n*   **User profile:** Name, email address, profile picture URL.\n*   **Authentication data:** OAuth tokens (for Google Calendar integration) and/or credentials for CalDAV calendars (username, password).\n*   **Calendar data:** Configuration of the calendars to be linked, created event types (name, description, location) and appointment bookings.\n*   **Log data:** Your IP address is temporarily stored in the server log files.\n*   **Telemetry data:** Anonymous usage data and error reports are collected using Sentry.\n\n## Cookies and third-party providers\n\nThe application uses cookies for session management.\n\nSome of the applications use components hosted on content delivery networks such as Cloudflare, and/or web services from third-party providers such as Mapbox, Sentry or Google Calendar API. When using the applications, your browser or the server accesses these components and services, whereby your IP address and possibly other data are transmitted to the respective providers.",
+    "privacy_content_public": "# Privacy Policy\n\n## Data Processing\n\nFor the purpose of booking an appointment, this application processes the data you provide (name, email address, description, date, and time of the appointment). This data is stored to manage the appointment and may be synced to the organizer's calendar.\n\n## Telemetry\n\nWe use Sentry to collect anonymous telemetry data and error reports to improve the application stability.",
     "impressum_content": "# Imprint\n\n## Disclaimer\nThe content on this server is not part of the official online offer of the South Westphalia University of Applied Sciences.",
     "CalDav Calendar": "CalDav Calendar",
     "loading": "Loading...",
@@ -236,7 +240,7 @@ export const en = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "Contact": "Contact",
     "welcome_back": "Welcome back",
@@ -269,5 +273,28 @@ export const en = {
     "more": "more",
     "next": "Next",
     "back": "Back",
-    "n_more": "{{count}} more ..."
+    "n_more": "{{count}} more ...",
+
+    // Recurrence
+    "Recurrence": "Recurrence",
+    "Enable Recurring Event": "Enable Recurring Event",
+    "Frequency": "Frequency",
+    "Weekly": "Weekly",
+    "Bi-weekly": "Bi-weekly",
+    "Tri-weekly": "Tri-weekly",
+    "Monthly": "Monthly",
+    "End Condition": "End Condition",
+    "Occurrences": "Occurrences",
+    "OR": "OR",
+    "Until Date": "Until Date",
+    "Time Span": "Time Span",
+    "Months": "Months",
+    "Weeks": "Weeks",
+    "Recurring Event": "Recurring Event",
+    "Recurring": "Recurring",
+    "weekly": "Weekly",
+    "biweekly": "Bi-weekly",
+    "triweekly": "Tri-weekly",
+    "monthly": "Monthly",
+    "Series Booking Note: Students will book all occurrences at once.": "Series Booking Note: Students will book all occurrences at once."
 };

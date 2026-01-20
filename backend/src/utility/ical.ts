@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import ical, { ICalEventRepeatingFreq } from 'ical-generator';
 
 export interface IcsEventData {
     start: Date;
@@ -17,45 +17,126 @@ export interface IcsEventData {
         rsvp?: boolean;
     }[];
     uid?: string;
+    recurrence?: RecurrenceRule;
 }
+
+export type RecurrenceRule = {
+    enabled: boolean;
+    frequency: 'weekly' | 'biweekly' | 'triweekly' | 'monthly';
+    interval: number;
+    count?: number;
+    until?: string;
+};
 
 export interface IcsOptions {
     comment?: string;
 }
 
-export const formatICalDate = (d: Date) => d.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z';
+export const generateRRule = (recurrence: RecurrenceRule): string => {
+    if (!recurrence.enabled) return '';
 
-export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): string => {
-    const uid = event.uid || `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
+    const parts = ['RRULE:FREQ=WEEKLY']; // Default to WEEKLY base frequency
 
-    // Ensure description handles newlines for ICS
-    const icsDescription = event.description?.replaceAll('\n', String.raw`\n`) || '';
-    const icsComment = options?.comment ? options.comment.replaceAll('\n', String.raw`\n`) : '';
-
-    let attendeesContent = '';
-    if (event.attendees && event.attendees.length > 0) {
-        attendeesContent = event.attendees.map(a => {
-            const partstat = a.partstat || 'NEEDS-ACTION';
-            const rsvp = a.rsvp === undefined ? 'TRUE' : String(a.rsvp).toUpperCase();
-            return `ATTENDEE;CN=${a.displayName};PARTSTAT=${partstat};RSVP=${rsvp}:mailto:${a.email}`;
-        }).join('\n');
+    // Map custom frequencies to WEEKLY with interval
+    let interval = recurrence.interval;
+    switch (recurrence.frequency) {
+        case 'weekly':
+            interval = 1;
+            break;
+        case 'biweekly':
+            interval = 2;
+            break;
+        case 'triweekly':
+            interval = 3;
+            break;
+        case 'monthly':
+            parts[0] = 'RRULE:FREQ=MONTHLY';
+            interval = 1; // Standard monthly interval
+            break;
+        default:
+            interval = recurrence.interval || 1;
     }
 
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//BookMe//EN
-BEGIN:VEVENT
-UID:${uid}
-DTSTAMP:${formatICalDate(new Date())}
-DTSTART:${formatICalDate(event.start)}
-DTEND:${formatICalDate(event.end)}
-SUMMARY:${event.summary}
-DESCRIPTION:${icsDescription}
-${icsComment ? `COMMENT:${icsComment}\n` : ''}LOCATION:${event.location || ''}
-ORGANIZER;CN=${event.organizer.displayName}:mailto:${event.organizer.email}
-${attendeesContent}
-END:VEVENT
-END:VCALENDAR`;
+    if (interval > 1) {
+        parts.push(`INTERVAL=${interval}`);
+    }
 
-    return icsContent;
+    if (recurrence.until) {
+        const untilDate = new Date(recurrence.until);
+        // Set to end of day UTC for until date
+        untilDate.setUTCHours(23, 59, 59, 999);
+        parts.push(`UNTIL=${untilDate.toISOString().replaceAll(/[-:]/g, '').split('.')[0] + 'Z'}`);
+    } else if (recurrence.count) {
+        parts.push(`COUNT=${recurrence.count}`);
+    }
+
+    return parts.join(';');
+};
+
+export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): string => {
+    const calendar = ical({
+        prodId: '//AppointMe//EN',
+    });
+
+    const icsEvent = calendar.createEvent({
+        id: event.uid, // ical-generator uses 'id' for UID
+        start: event.start,
+        end: event.end,
+        summary: event.summary,
+        description: event.description || undefined,
+        location: event.location,
+        organizer: {
+            name: event.organizer.displayName,
+            email: event.organizer.email
+        }
+    });
+
+    addAttendees(icsEvent, event);
+    addRecurrence(icsEvent, event);
+
+    return calendar.toString();
+};
+
+const addAttendees = (icsEvent: any, event: IcsEventData) => {
+    if (event.attendees) {
+        event.attendees.forEach(a => {
+            icsEvent.createAttendee({
+                name: a.displayName,
+                email: a.email,
+                rsvp: a.rsvp,
+                // partstat mapping: ical-generator uses ICalAttendeeStatus
+                // we pass the string directly, assuming it matches or library handles it loosely.
+                // ical-generator types might be strict.
+                // 'NEEDS-ACTION' is standard.
+                status: a.partstat as any
+            });
+        });
+    }
+};
+
+const addRecurrence = (icsEvent: any, event: IcsEventData) => {
+    if (event.recurrence?.enabled) {
+        const { frequency, interval, count, until } = event.recurrence;
+        let freq: ICalEventRepeatingFreq;
+        let actualInterval = interval || 1;
+
+        if (frequency === 'monthly') {
+            freq = ICalEventRepeatingFreq.MONTHLY;
+            actualInterval = 1;
+        } else {
+            freq = ICalEventRepeatingFreq.WEEKLY;
+            if (frequency === 'biweekly') actualInterval = 2;
+            if (frequency === 'triweekly') actualInterval = 3;
+            if (frequency === 'weekly') {
+                actualInterval = interval || 1;
+            }
+        }
+
+        icsEvent.repeating({
+            freq,
+            interval: actualInterval,
+            count,
+            until: until ? new Date(until) : undefined
+        });
+    }
 };

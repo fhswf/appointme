@@ -1,0 +1,80 @@
+{
+  "name": "mcp-server",
+  "version": "1.0.0-rc.8",
+  "description": "MCP server for BookMe API",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "ci": "pnpm run build && vitest run --coverage --reporter=junit --outputFile=junit.xml; node ../utility/patch-junit-xml.js junit.xml; pnpm dlx junit-to-ctrf -o ../ctrf/mcp-server-ctrf.json junit.xml; node ../utility/patch-ctrf.js ../ctrf/mcp-server-ctrf.json",
+    "inspector": "npx @modelcontextprotocol/inspector node build/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "axios": "^1.13.2",
+    "common": "file:../common",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "hono": "^4.11.4",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.9",
+    "@vitest/coverage-v8": "^4.0.17",
+    "vitest": "^4.0.17"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": "..",
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "execCwd": ".",
+          "prepareCmd": "node ../utility/update-kustomize.js mcp-server mcp-server ${nextRelease.version}"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@codedependant/semantic-release-docker",
+        {
+          "dockerImage": "mcp-server",
+          "dockerRegistry": "ghcr.io",
+          "dockerProject": "fhswf/appointme",
+          "dockerContext": ".."
+        }
+      ],
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "CHANGELOG.md",
+            "k8s/overlays/**/kustomization.yaml"
+          ],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  }
+}

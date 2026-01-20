@@ -601,7 +601,7 @@ END:VCALENDAR` }
                         { url: "https://caldav.example.com/calendar-1", displayName: "Main Calendar" }
                     ]),
                     createCalendarObject: createObjectMock,
-                    fetchCalendarObjects: vi.fn()
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([])
                 });
             })
 
@@ -633,7 +633,7 @@ END:VCALENDAR` }
 
             // Check if the generated ICS content in the call includes the custom email
             const createCall = createObjectMock.mock.calls[0][0];
-            expect(createCall.iCalString).toContain("ORGANIZER;CN=Org:mailto:custom@example.com");
+            expect(createCall.iCalString).toContain('ORGANIZER;CN="Org":mailto:custom@example.com');
         });
 
         it("should verify successfully even if fetch returns many objects", async () => {
@@ -914,6 +914,110 @@ END:VCALENDAR` }
             // @ts-ignore
             const account = await caldavController.findAccountForCalendar(user, "https://caldav.example.com/calendars/u/cal");
             expect(account).toBeUndefined();
+        });
+    });
+
+    describe("processParsedEvent", () => {
+        it("should handle recurrences returning Temporal-like objects (epochMilliseconds)", () => {
+            const startRange = new Date("2024-01-01T00:00:00Z");
+            const endRange = new Date("2024-01-02T00:00:00Z");
+            const busySlots: { start: Date, end: Date }[] = [];
+
+            const event = {
+                type: 'VEVENT',
+                // Main event outside range
+                start: new Date("2023-12-01T10:00:00Z"),
+                end: new Date("2023-12-01T11:00:00Z"),
+                rrule: {
+                    between: vi.fn().mockReturnValue([
+                        {
+                            epochMilliseconds: new Date("2024-01-01T10:00:00Z").getTime(),
+                            toString: () => "2024-01-01T10:00:00Z"
+                        }
+                    ])
+                }
+            };
+
+            caldavController.processParsedEvent(event, startRange, endRange, busySlots);
+
+            expect(busySlots.length).toBe(1);
+            expect(busySlots[0].start.toISOString()).toBe("2024-01-01T10:00:00.000Z");
+        });
+
+        it("should handle recurrences returning Temporal-like objects (toInstant)", () => {
+            const startRange = new Date("2024-01-01T00:00:00Z");
+            const endRange = new Date("2024-01-02T00:00:00Z");
+            const busySlots: { start: Date, end: Date }[] = [];
+
+            const event = {
+                type: 'VEVENT',
+                // Main event outside range
+                start: new Date("2023-12-01T10:00:00Z"),
+                end: new Date("2023-12-01T11:00:00Z"),
+                rrule: {
+                    between: vi.fn().mockReturnValue([
+                        {
+                            toInstant: () => ({ epochMilliseconds: new Date("2024-01-01T10:00:00Z").getTime() }),
+                            toString: () => "2024-01-01T10:00:00Z"
+                        }
+                    ])
+                }
+            };
+
+            caldavController.processParsedEvent(event, startRange, endRange, busySlots);
+
+            expect(busySlots.length).toBe(1);
+            expect(busySlots[0].start.toISOString()).toBe("2024-01-01T10:00:00.000Z");
+        });
+
+        it("should handle recurrences returning objects using toString fallback", () => {
+            const startRange = new Date("2024-01-01T00:00:00Z");
+            const endRange = new Date("2024-01-02T00:00:00Z");
+            const busySlots: { start: Date, end: Date }[] = [];
+
+            const event = {
+                type: 'VEVENT',
+                // Main event outside range
+                start: new Date("2023-12-01T10:00:00Z"),
+                end: new Date("2023-12-01T11:00:00Z"),
+                rrule: {
+                    between: vi.fn().mockReturnValue([
+                        {
+                            toString: () => "2024-01-01T10:00:00.000Z"
+                        }
+                    ])
+                }
+            };
+
+            caldavController.processParsedEvent(event, startRange, endRange, busySlots);
+
+            expect(busySlots.length).toBe(1);
+            expect(busySlots[0].start.toISOString()).toBe("2024-01-01T10:00:00.000Z");
+        });
+
+        it("should handle recurrences returning custom objects with getTime", () => {
+            const startRange = new Date("2024-01-01T00:00:00Z");
+            const endRange = new Date("2024-01-02T00:00:00Z");
+            const busySlots: { start: Date, end: Date }[] = [];
+
+            const event = {
+                type: 'VEVENT',
+                // Main event outside range
+                start: new Date("2023-12-01T10:00:00Z"),
+                end: new Date("2023-12-01T11:00:00Z"),
+                rrule: {
+                    between: vi.fn().mockReturnValue([
+                        {
+                            getTime: () => new Date("2024-01-01T10:00:00Z").getTime()
+                        }
+                    ])
+                }
+            };
+
+            caldavController.processParsedEvent(event, startRange, endRange, busySlots);
+
+            expect(busySlots.length).toBe(1);
+            expect(busySlots[0].start.toISOString()).toBe("2024-01-01T10:00:00.000Z");
         });
     });
 });

@@ -1,3 +1,4 @@
+
 import "./config/env.js";
 import express from "express";
 import bodyParser from "body-parser";
@@ -15,6 +16,7 @@ import { oidcRouter } from "./routes/oidc_routes.js";
 
 // Swagger documentation
 import swaggerUi from "swagger-ui-express";
+import rateLimit from "express-rate-limit";
 import { swaggerSpec } from "./config/swagger.js";
 
 // logger
@@ -50,10 +52,13 @@ app.use(
 app.use(cookieParser(process.env.CSRF_SECRET));
 
 //Connecting to the database
-dataBaseConn();
+if (process.env.NODE_ENV !== "test") {
+  dataBaseConn();
+}
 
 //Bodyparser
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 import { doubleCsrf } from "csrf-csrf";
 
@@ -73,6 +78,18 @@ const {
   getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
   getSessionIdentifier: (req) => req.cookies['access_token'] || "",
 });
+
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
+  if (req.method === 'POST') {
+    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+      return next();
+    }
+  }
+  doubleCsrfProtection(req, res, next);
+};
+
+app.use(csrfProtection);
 
 /**
  * @openapi
@@ -105,16 +122,7 @@ app.use('/api/docs', swaggerUi.serve as any, swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'Appoint Me API Documentation'
 }) as any);
 
-const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot from CSRF protection
-  if (req.method === 'POST' && /^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path)) {
-    next();
-  } else {
-    doubleCsrfProtection(req, res, next);
-  }
-};
 
-app.use(csrfProtection);
 
 //Use routes
 const router = express.Router();
@@ -124,6 +132,18 @@ router.use("/google/", googleRouter);
 router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);
 router.use("/oidc/", oidcRouter);
+
+import { validateGoogleTokens } from "./controller/cron_controller.js";
+
+const cronLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // limit each IP to 5 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
+
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
 })
@@ -133,7 +153,14 @@ app.get("/healthz", async (req, res) => {
   res.status(200).send("OK")
 });
 
+
 app.use("/api/v1", router);
+
+// Sentry error handler must be before any other error middleware and after all controllers
+import * as Sentry from "@sentry/node";
+if (process.env.SENTRY_DSN) {
+  Sentry.setupExpressErrorHandler(app);
+}
 
 const PORT = process.env.PORT || 5000;
 

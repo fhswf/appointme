@@ -2,7 +2,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
-export function ThemeToggle({ className }: Readonly<{ className?: string }>) {
+export function useTheme() {
     const [theme, setTheme] = useState<"light" | "dark">("light");
 
     useEffect(() => {
@@ -21,6 +21,12 @@ export function ThemeToggle({ className }: Readonly<{ className?: string }>) {
         localStorage.setItem("theme", newTheme);
         document.documentElement.classList.toggle("dark", newTheme === "dark");
     };
+
+    return { theme, toggleTheme };
+}
+
+export function ThemeToggle({ className }: Readonly<{ className?: string }>) {
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <Button

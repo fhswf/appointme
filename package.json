@@ -1,6 +1,6 @@
 {
   "name": "appointme",
-  "version": "1.37.0",
+  "version": "1.51.1",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
   "directories": {
@@ -8,13 +8,15 @@
   },
   "scripts": {
     "test": "echo \"no tests yet\" && exit 0",
-    "ci": "yarn workspaces foreach --all run ci; yarn dlx merge-ctrf -k ctrf",
-    "backend": "yarn workspace backend start",
-    "client": "yarn workspace client start",
-    "build:common": "yarn workspace common build",
-    "build:backend": "yarn workspace backend build",
-    "build:client": "yarn workspace client build",
-    "release": "semantic-release"
+    "ci": "pnpm -r run ci; pnpm dlx merge-ctrf -k ctrf",
+    "backend": "pnpm --filter backend start",
+    "client": "pnpm --filter client start",
+    "build": "pnpm -r build",
+    "build:common": "pnpm --filter common build",
+    "build:backend": "pnpm --filter backend build",
+    "build:client": "pnpm --filter client build",
+    "release": "semantic-release",
+    "doc": "typedoc"
   },
   "repository": {
     "type": "git",
@@ -38,28 +40,22 @@
     "url": "https://github.com/fhswf/appointme/issues"
   },
   "homepage": "https://github.com/fhswf/appointme#readme",
-  "workspaces": [
-    "common",
-    "backend",
-    "client"
-  ],
-  "engines": {
-    "yarn": "4.3.0"
-  },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^5.0.3",
-    "@dmeents/semantic-release-yarn": "^1.1.13",
     "@qiwi/multi-semantic-release": "^7.1.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^10.3.5",
+    "@semantic-release/github": "^12.0.2",
     "@semantic-release/npm": "^13.1.3",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "dotenv-vault": "^1.27.0",
+    "fast-xml-parser": "^5.3.3",
     "jest-ctrf-json-reporter": "^0.0.10",
-    "semantic-release": "^25.0.2"
+    "semantic-release": "^25.0.2",
+    "typedoc": "^0.28.16",
+    "typescript": "^5.9.3"
   },
   "release": {
     "plugins": [
@@ -70,17 +66,10 @@
         "@semantic-release/exec",
         {
           "execCwd": "..",
-          "prepareCmd": "yarn exec node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
+          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
         }
       ],
-      [
-        "@dmeents/semantic-release-yarn",
-        {
-          "npmPublish": false,
-          "changeVersion": true,
-          "tarballDir": "build"
-        }
-      ],
+      "@semantic-release/npm",
       "@semantic-release/git",
       "@semantic-release/github"
     ],
@@ -97,8 +86,18 @@
     ],
     "noCi": true
   },
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "pnpm@10.27.0",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18"
+  },
+  "stableVersion": "1.38.0",
+  "resolutions": {
+    "lodash.template": "npm:lodash@4.17.21",
+    "glob": "11.1.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "hono": "4.11.4"
+    }
   }
 }

@@ -1,3 +1,5 @@
+import { COPYRIGHT_ENGLISH } from "../constants.js";
+
 export const fr = {
     "welcome_back": "Bon retour",
     "login_subtitle": "Veuillez vous connecter pour continuer.",
@@ -98,6 +100,7 @@ export const fr = {
     "teal_lofty_hawk_peek": "Annuler",
     "mild_raw_elk_delight": "Enregistrer les modifications",
     "Choose date": "Choisir une date",
+    "Please select a date": "Veuillez sélectionner une date",
     "Choose time": "Choisir une heure",
     "Provide details": "Fournir des détails",
     "Confirmation": "Confirmation",
@@ -252,7 +255,7 @@ export const fr = {
     "landing_footer_imprint": "Imprint",
     "landing_footer_privacy": "Privacy",
     "landing_footer_terms": "Terms & Conditions",
-    "landing_footer_copyright": "© 2023 Appoint Me. All rights reserved.",
+    "landing_footer_copyright": COPYRIGHT_ENGLISH,
     "landing_footer_tagline": "Simple appointment planning for everyone.",
     "footer_credits": "Mis en œuvre avec ❤️ à l'Université des Sciences Appliquées de South Westphalia",
     "terms_of_use_title": "Terms of Use",
@@ -273,5 +276,29 @@ export const fr = {
     "more": "plus",
     "next": "Suivant",
     "back": "Retour",
-    "n_more": "{{count}} autres ..."
+    "n_more": "{{count}} autres ...",
+
+    // Recurrence
+    "Recurrence": "Récurrence",
+    "Enable Recurring Event": "Activer l'événement récurrent",
+    "Frequency": "Fréquence",
+    "Weekly": "Hebdomadaire",
+    "Bi-weekly": "Bi-hebdomadaire",
+    "Tri-weekly": "Tri-hebdomadaire",
+    "Monthly": "Mensuel",
+    "End Condition": "Condition de fin",
+    "Occurrences": "Occurrences",
+    "OR": "OU",
+    "Until Date": "Date de fin",
+    "Time Span": "Durée",
+    "Months": "Mois",
+    "Weeks": "Semaines",
+    "Recurring Event": "Événement récurrent",
+    "Recurring": "Récurrent",
+    "weekly": "Hebdomadaire",
+    "biweekly": "Bi-hebdomadaire",
+    "triweekly": "Tri-hebdomadaire",
+    "monthly": "Mensuel",
+    "Series Booking Note: Students will book all occurrences at once.": "Note de réservation de série : Les étudiants réserveront toutes les occurrences en une seule fois.",
+    "Feedback": "Retour d'information",
 };

@@ -1,0 +1,70 @@
+backend/src/routes/event_routes.ts:396 
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+eventRouter.get("/:userId/:eventUrl", getEventByUrlController);
+This route handler performs a database access
+, but is not rate-limited.
+CodeQL
+
+/**
+ * @openapi
+Rule
+Tool
+CodeQL
+Rule ID
+js/missing-rate-limiting
+Query
+View source
+Description
+HTTP request handlers should not perform expensive operations such as accessing the file system, executing an operating system command or interacting with a database without limiting the rate at which requests are accepted. Otherwise, the application becomes vulnerable to denial-of-service attacks where an attacker can cause the application to crash or become unresponsive by issuing a large number of requests at the same time.
+
+backend/src/routes/event_routes.ts:359 
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+eventRouter.get("/:id/slot", getAvailableTimes);
+This route handler performs a database access
+, but is not rate-limited.
+CodeQL
+
+/**
+ * @openapi
+Rule
+Tool
+CodeQL
+Rule ID
+js/missing-rate-limiting
+Query
+View source
+Description
+HTTP request handlers should not perform expensive operations such as accessing the file system, executing an operating system command or interacting with a database without limiting the rate at which requests are accepted. Otherwise, the application becomes vulnerable to denial-of-service attacks where an attacker can cause the application to crash or become unresponsive by issuing a large number of requests at the same time.
+
+
+.github/workflows/backmerge.yml:11 
+
+jobs:
+  back-merge:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.head_branch == 'prod' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.sender.login != 'semantic-release-bot'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Git Config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Merge prod into main
+        run: |
+          git checkout main
+          git merge origin/prod --no-edit || (git merge origin/prod -X theirs --no-edit)
+          git push origin main
+Actions job or workflow does not limit the permissions of the GITHUB_TOKEN. Consider setting an explicit permissions block, using the following as a minimal starting point: {contents: read}
+CodeQL
