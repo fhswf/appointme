@@ -260,6 +260,9 @@ const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Req
     if (user.lti_context_id) {
         payload.lti_context_id = user.lti_context_id;
     }
+    if (user.lti_claims) {
+        Object.assign(payload, user.lti_claims);
+    }
 
     const access_token = sign(
         payload,
@@ -289,7 +292,10 @@ const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Req
         cookieOptions.domain = domain;
     }
 
-    res.cookie('access_token', access_token, cookieOptions);
+    // Use 'lti_token' for transient users (no _id), 'access_token' for persistent users
+    const cookieName = user._id ? 'access_token' : 'lti_token';
+
+    res.cookie(cookieName, access_token, cookieOptions);
 
     if (redirectUrl) {
         res.redirect(redirectUrl);
@@ -349,7 +355,7 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
     // Check both 'roles' and LTI-specific roles
     const roles = mapRoles(claims);
 
-    if (!email) {
+    if (!email && !isLti) {
         res.status(400).json({ error: "Email not provided by ID provider" });
         return;
     }
@@ -362,9 +368,19 @@ const completeLogin = async (req: Request, res: Response, claims: any, isLti: bo
             name,
             picture_url: picture,
             roles,
+            lti_claims: {
+                "https://purl.imsglobal.org/spec/lti/claim/roles": claims["https://purl.imsglobal.org/spec/lti/claim/roles"],
+                "https://purl.imsglobal.org/spec/lti/claim/context": claims["https://purl.imsglobal.org/spec/lti/claim/context"],
+                "https://purl.imsglobal.org/spec/lti/claim/resource_link": claims["https://purl.imsglobal.org/spec/lti/claim/resource_link"],
+                "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": claims["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"],
+                "https://purl.imsglobal.org/spec/lti/claim/tool_platform": claims["https://purl.imsglobal.org/spec/lti/claim/tool_platform"],
+                "https://purl.imsglobal.org/spec/lti/claim/custom": claims["https://purl.imsglobal.org/spec/lti/claim/custom"],
+                "https://purl.imsglobal.org/spec/lti/claim/message_type": claims["https://purl.imsglobal.org/spec/lti/claim/message_type"],
+                "https://purl.imsglobal.org/spec/lti/claim/version": claims["https://purl.imsglobal.org/spec/lti/claim/version"]
+            }
         };
 
-        const existingUser = await UserModel.findOne({ email }).exec();
+        const existingUser = email ? await UserModel.findOne({ email }).exec() : null;
         if (existingUser) {
             user._id = existingUser._id;
             // Merge roles if needed, or just use LTI roles? 
