@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: appointme-prod
   namespace: argocd
+  annotations:
+    # Format: notifications.argoproj.io/subscribe.<trigger>.<service>: ""
+    notifications.argoproj.io/subscribe.on-deployed.github: ""
 spec:
   project: default
   source:
