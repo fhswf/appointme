@@ -483,8 +483,8 @@ importers:
   mcp-server:
     dependencies:
       '@modelcontextprotocol/sdk':
-        specifier: ^1.25.2
-        version: 1.25.2(hono@4.11.4)(zod@4.3.5)
+        specifier: ^1.25.3
+        version: 1.25.3(hono@4.11.4)(zod@4.3.5)
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1899,8 +1899,8 @@ packages:
   '@hapi/topo@6.0.2':
     resolution: {integrity: sha512-KR3rD5inZbGMrHmgPxsJ9dbi6zEK+C3ZwUwTa+eMwWLz7oijWUTWD2pMSNNYJAU6Qq+65NkxXjqHr/7LM2Xkqg==}
 
-  '@hono/node-server@1.19.7':
-    resolution: {integrity: sha512-vUcD0uauS7EU2caukW8z5lJKtoGMokxNbJtBiwHgpqxEXokaHCBkQUmCHhjFB1VUTWdqj25QoMkMKzgjq+uhrw==}
+  '@hono/node-server@1.19.9':
+    resolution: {integrity: sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: 4.11.4
@@ -2092,8 +2092,8 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@modelcontextprotocol/sdk@1.25.2':
-    resolution: {integrity: sha512-LZFeo4F9M5qOhC/Uc1aQSrBHxMrvxett+9KLHt7OhcExtoiRN9DKgbZffMP/nxjutWDQpfMDfP3nkHI4X9ijww==}
+  '@modelcontextprotocol/sdk@1.25.3':
+    resolution: {integrity: sha512-vsAMBMERybvYgKbg/l4L1rhS7VXV1c0CtyJg72vwxONVX0l4ZfKVAnZEWTQixJGTzKnELjQ59e4NbdFDALRiAQ==}
     engines: {node: '>=18'}
     peerDependencies:
       '@cfworker/json-schema': ^4.1.1
@@ -5988,6 +5988,10 @@ packages:
 
   iconv-lite@0.7.1:
     resolution: {integrity: sha512-2Tth85cXwGFHfvRgZWszZSvdo+0Xsqmw8k8ZwxScfcBneNUraK+dxRxRm24nszx80Y0TVio8kKLt5sLE7ZCLlw==}
+    engines: {node: '>=0.10.0'}
+
+  iconv-lite@0.7.2:
+    resolution: {integrity: sha512-im9DjEDQ55s9fL4EYzOAv0yMqmMBSZp6G0VvFyTMPKWxiSBHUj9NW/qqLmXUwXrrM7AvqSlTCfvqRb0cM8yYqw==}
     engines: {node: '>=0.10.0'}
 
   ieee754@1.2.1:
@@ -11052,7 +11056,7 @@ snapshots:
     dependencies:
       '@hapi/hoek': 11.0.7
 
-  '@hono/node-server@1.19.7(hono@4.11.4)':
+  '@hono/node-server@1.19.9(hono@4.11.4)':
     dependencies:
       hono: 4.11.4
 
@@ -11151,7 +11155,7 @@ snapshots:
   '@inquirer/external-editor@1.0.3(@types/node@25.0.9)':
     dependencies:
       chardet: 2.1.1
-      iconv-lite: 0.7.1
+      iconv-lite: 0.7.2
     optionalDependencies:
       '@types/node': 25.0.9
 
@@ -11210,9 +11214,9 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@modelcontextprotocol/sdk@1.25.2(hono@4.11.4)(zod@4.3.5)':
+  '@modelcontextprotocol/sdk@1.25.3(hono@4.11.4)(zod@4.3.5)':
     dependencies:
-      '@hono/node-server': 1.19.7(hono@4.11.4)
+      '@hono/node-server': 1.19.9(hono@4.11.4)
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
       content-type: 1.0.5
@@ -16000,6 +16004,10 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  iconv-lite@0.7.2:
+    dependencies:
+      safer-buffer: 2.1.2
+
   ieee754@1.2.1: {}
 
   ignore-by-default@1.0.1: {}
@@ -17691,7 +17699,7 @@ snapshots:
     dependencies:
       bytes: 3.1.2
       http-errors: 2.0.1
-      iconv-lite: 0.7.1
+      iconv-lite: 0.7.2
       unpipe: 1.0.0
 
   rc@1.2.8:
