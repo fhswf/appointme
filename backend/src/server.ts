@@ -4,6 +4,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { doubleCsrf } from "csrf-csrf";
 import { dataBaseConn } from "./config/dbConn.js";
 
 //Load routes
@@ -31,6 +32,8 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
+app.use(cookieParser(process.env.CSRF_SECRET));
+
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
   ORIGINS.push("http://localhost:5173");
@@ -49,8 +52,6 @@ app.use(
   })
 );
 
-app.use(cookieParser(process.env.CSRF_SECRET));
-
 //Connecting to the database
 if (process.env.NODE_ENV !== "test") {
   dataBaseConn();
@@ -60,7 +61,7 @@ if (process.env.NODE_ENV !== "test") {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-import { doubleCsrf } from "csrf-csrf";
+
 
 const {
   doubleCsrfProtection,
