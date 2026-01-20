@@ -18,7 +18,7 @@ Detailed configuration templates are provided in <code>backend/k8s/</code>.</p>
 <ul>
 <li><code>backend/k8s/configmap.yaml.example</code>: Use this as a template. Rename it to <code>configmap.yaml</code> (or create a new one). <strong>This is the central configuration for both backend and client.</strong>
 <ul>
-<li>Updates to <code>API_URL</code> and <code>CLIENT_URL</code> here will configure the Backend.</li>
+<li>Updates to <code>API_URL</code> and <code>BASE_URL</code> here will configure the Backend.</li>
 <li>Updates to <code>REACT_APP_API_URL</code> and <code>REACT_APP_URL</code> here will be injected into the Client.</li>
 <li>Set <code>MONGO_URI</code> and <code>CORS_ALLOWED_ORIGINS</code> as needed.</li>
 </ul>
@@ -70,7 +70,7 @@ Copy an existing overlay (e.g., <code>k8s/overlays/dev</code>) to <code>k8s/over
 <li>
 <p><strong>Patch <code>ConfigMap</code>:</strong>
 Create a <code>configmap-patch.yaml</code> in your overlay directory to override environment-specific values like module URLs.</p>
-<pre><code class="yaml"><span class="hl-5">apiVersion</span><span class="hl-2">: </span><span class="hl-6">v1</span><br/><span class="hl-5">kind</span><span class="hl-2">: </span><span class="hl-6">ConfigMap</span><br/><span class="hl-5">metadata</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">name</span><span class="hl-2">: </span><span class="hl-6">appointme</span><br/><span class="hl-5">data</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">CLIENT_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span>
+<pre><code class="yaml"><span class="hl-5">apiVersion</span><span class="hl-2">: </span><span class="hl-6">v1</span><br/><span class="hl-5">kind</span><span class="hl-2">: </span><span class="hl-6">ConfigMap</span><br/><span class="hl-5">metadata</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">name</span><span class="hl-2">: </span><span class="hl-6">appointme</span><br/><span class="hl-5">data</span><span class="hl-2">:</span><br/><span class="hl-2">  </span><span class="hl-5">API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">BASE_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_API_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com/api/v1&quot;</span><br/><span class="hl-2">  </span><span class="hl-5">REACT_APP_URL</span><span class="hl-2">: </span><span class="hl-3">&quot;https://staging.example.com&quot;</span>
 </code><button type="button">Copy</button></pre>
 
 </li>
@@ -91,7 +91,7 @@ Create a <code>configmap-patch.yaml</code> in your overlay directory to override
 <ul>
 <li>provide details in <code>docker.env</code> and <code>.env</code></li>
 </ul>
-<h4 id="environment-variables" class="tsd-anchor-link">Environment Variables<a href="#environment-variables" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<h4 id="configuration-values" class="tsd-anchor-link">Configuration Values<a href="#configuration-values" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4>
 <table>
 <thead>
 <tr>
@@ -99,6 +99,7 @@ Create a <code>configmap-patch.yaml</code> in your overlay directory to override
 <th>Description</th>
 <th>Required</th>
 <th>Default</th>
+<th>Source</th>
 </tr>
 </thead>
 <tbody>
@@ -107,78 +108,147 @@ Create a <code>configmap-patch.yaml</code> in your overlay directory to override
 <td>Connection string for MongoDB</td>
 <td>Yes</td>
 <td></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
-<td><code>CLIENT_URL</code></td>
+<td><code>BASE_URL</code></td>
 <td>URL of the frontend application (e.g., <code>https://example.com</code>)</td>
 <td>Yes</td>
 <td></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>API_URL</code></td>
 <td>URL of the backend API (e.g., <code>https://api.example.com/api/v1</code>)</td>
 <td>Yes</td>
 <td></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>BASE_PATH</code></td>
+<td>Base path of the application</td>
+<td>No</td>
+<td><code>/</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>DOMAIN</code></td>
+<td>Domain for cookie scoping (e.g. <code>example.com</code>)</td>
+<td>No</td>
+<td></td>
+<td>ConfigMap: <code>appointme</code> (implied)</td>
 </tr>
 <tr>
 <td><code>JWT_SECRET</code></td>
 <td>Secret key for signing JWTs</td>
 <td>Yes</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
+</tr>
+<tr>
+<td><code>CSRF_SECRET</code></td>
+<td>Secret key for CSRF protection</td>
+<td>Yes</td>
+<td></td>
+<td>Secret: <code>appointme-secret</code></td>
+</tr>
+<tr>
+<td><code>ADMIN_API_KEY</code></td>
+<td>API Key for admin/cron operations</td>
+<td>Yes</td>
+<td></td>
+<td>Secret: <code>appointme-secret</code></td>
+</tr>
+<tr>
+<td><code>SENTRY_DSN</code></td>
+<td>Sentry DSN for error tracking</td>
+<td>No</td>
+<td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>CLIENT_ID</code></td>
 <td>Google OAuth2 Client ID</td>
 <td>No (if Google Login disabled)</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>CLIENT_SECRET</code></td>
 <td>Google OAuth2 Client Secret</td>
 <td>No (if Google Login disabled)</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>DISABLE_GOOGLE_LOGIN</code></td>
 <td>Set to <code>true</code> to disable Google Login</td>
 <td>No</td>
 <td><code>false</code></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_ISSUER</code></td>
 <td>OIDC Provider URL (e.g., Keycloak Realm URL)</td>
 <td>No (if OIDC disabled)</td>
 <td></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_CLIENT_ID</code></td>
 <td>OIDC Client ID</td>
 <td>No (if OIDC disabled)</td>
 <td></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_CLIENT_SECRET</code></td>
 <td>OIDC Client Secret (for Confidential clients)</td>
 <td>No</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>EMAIL_FROM</code></td>
 <td>Email address for sending notifications</td>
 <td>Yes</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>EMAIL_PASSWORD</code></td>
 <td>Password for the email account</td>
 <td>Yes</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>ENCRYPTION_KEY</code></td>
 <td>32-byte hex key for encrypting CalDAV passwords</td>
 <td>Yes</td>
 <td></td>
+<td>Secret: <code>appointme-secret</code></td>
+</tr>
+<tr>
+<td><code>CONTACT_INFO</code></td>
+<td>Contact information (Markdown supported)</td>
+<td>No</td>
+<td></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>REACT_APP_API_URL</code></td>
+<td>Public API URL for the React Client</td>
+<td>Yes</td>
+<td></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>REACT_APP_URL</code></td>
+<td>Public URL of the React Client</td>
+<td>Yes</td>
+<td></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 </tbody>
 </table>
@@ -233,6 +303,7 @@ The application automatically maps LTI roles from the OIDC claims to internal ap
 <th>Variable</th>
 <th>Description</th>
 <th>Example</th>
+<th>Source</th>
 </tr>
 </thead>
 <tbody>
@@ -240,26 +311,67 @@ The application automatically maps LTI roles from the OIDC claims to internal ap
 <td><code>OIDC_ISSUER</code></td>
 <td>OIDC Provider/LTI Platform URL</td>
 <td><code>https://keycloak.example.com/realms/myrealm</code></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_CLIENT_ID</code></td>
 <td>OIDC Client ID registered with the provider</td>
 <td><code>appointme</code></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_CLIENT_SECRET</code></td>
 <td>Client Secret (for confidential clients)</td>
 <td><code>your-secret-here</code></td>
+<td>Secret: <code>appointme-secret</code></td>
 </tr>
 <tr>
 <td><code>OIDC_NAME</code></td>
 <td>Display name for the login button (optional)</td>
 <td><code>Campus-ID</code></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 <tr>
 <td><code>OIDC_ICON</code></td>
 <td>Icon path for the login button (optional)</td>
 <td><code>/fh-swf.svg</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>LTI_ISSUER</code></td>
+<td>LTI Issuer URL (Overrides OIDC_ISSUER for LTI)</td>
+<td><code>https://moodle.example.com</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>LTI_CLIENT_ID</code></td>
+<td>LTI Client ID (Overrides OIDC_CLIENT_ID for LTI)</td>
+<td><code>client-123</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>LTI_CLIENT_SECRET</code></td>
+<td>LTI Client Secret (Overrides OIDC_CLIENT_SECRET)</td>
+<td><code>secret-456</code></td>
+<td>Secret (Implicit?)</td>
+</tr>
+<tr>
+<td><code>LTI_AUTH_ENDPOINT</code></td>
+<td>LTI Authorization Endpoint</td>
+<td><code>https://moodle.example.com/mod/lti/auth.php</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>LTI_TOKEN_ENDPOINT</code></td>
+<td>LTI Token Endpoint</td>
+<td><code>https://moodle.example.com/mod/lti/token.php</code></td>
+<td>ConfigMap: <code>appointme</code></td>
+</tr>
+<tr>
+<td><code>LTI_JWKS_URI</code></td>
+<td>LTI JWKS URI</td>
+<td><code>https://moodle.example.com/mod/lti/certs.php</code></td>
+<td>ConfigMap: <code>appointme</code></td>
 </tr>
 </tbody>
 </table>
@@ -289,7 +401,7 @@ The application automatically maps LTI roles from the OIDC claims to internal ap
 <p>Most modern LMS platforms support LTI 1.3 with OIDC. When configuring AppointMe as an External Tool (LTI 1.3), use the following settings:</p>
 <p><strong>Moodle Tool Configuration:</strong></p>
 <ul>
-<li><strong>Tool URL</strong>: <code>[CLIENT_URL]</code> (e.g., <code>https://appointme.example.com</code>)</li>
+<li><strong>Tool URL</strong>: <code>[BASE_URL]</code> (e.g., <code>https://appointme.example.com</code>)</li>
 <li><strong>LTI version</strong>: LTI 1.3</li>
 <li><strong>Public key type</strong>: RSA Key
 *   <em>AppointMe uses <code>client_secret_basic</code> authentication (Client ID + Client Secret) to communicate with the LMS. It DOES NOT sign requests with a private key (which is what <code>private_key_jwt</code> uses).</em>
@@ -303,7 +415,7 @@ The application automatically maps LTI roles from the OIDC claims to internal ap
 </code></pre>
 <ul>
 <li><strong>Initiate login URL</strong>: <code>[API_URL]/api/v1/oidc/init</code> (e.g., <code>https://api.appointme.example.com/api/v1/oidc/init</code>)</li>
-<li><strong>Redirection URI(s)</strong>: <code>[CLIENT_URL]/oidc-callback</code> (e.g., <code>https://appointme.example.com/oidc-callback</code>)</li>
+<li><strong>Redirection URI(s)</strong>: <code>[BASE_URL]/oidc-callback</code> (e.g., <code>https://appointme.example.com/oidc-callback</code>)</li>
 <li><strong>Custom parameters</strong>: No custom parameters are required.
 <ul>
 <li><em>Roles are automatically mapped from <code>https://purl.imsglobal.org/spec/lti/claim/roles</code>.</em></li>
@@ -342,4 +454,4 @@ The application automatically maps LTI roles from the OIDC claims to internal ap
 <li>Client callback handler: <a href="media/OidcCallback.tsx"><code>client/src/pages/OidcCallback.tsx</code></a></li>
 </ul>
 <p>For detailed implementation, see the source code in the repository.</p>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#appointment"><span>AP<wbr/>Pointment</span></a><ul><li><a href="#deployment"><span>Deployment</span></a></li><li><ul><li><a href="#deployment-on-kubernetes"><span>Deployment on <wbr/>Kubernetes</span></a></li><li><a href="#environment-overlays-stagingproduction"><span>Environment <wbr/>Overlays (<wbr/>Staging/<wbr/>Production)</span></a></li><li><a href="#deployment-with-argocd"><span>Deployment with <wbr/>Argo<wbr/>CD</span></a></li><li><a href="#configuration"><span>Configuration</span></a></li><li><ul><li><a href="#environment-variables"><span>Environment <wbr/>Variables</span></a></li></ul></li></ul></li><li><a href="#lti-integration"><span>LTI <wbr/>Integration</span></a></li><li><ul><li><a href="#how-it-works"><span>How <wbr/>It <wbr/>Works</span></a></li><li><a href="#configuration-1"><span>Configuration</span></a></li><li><a href="#setting-up-with-keycloak"><span>Setting <wbr/>Up with <wbr/>Keycloak</span></a></li><li><a href="#setting-up-with-lms-moodlecanvas"><span>Setting <wbr/>Up with <wbr/>LMS (<wbr/>Moodle/<wbr/>Canvas)</span></a></li><li><a href="#security-features"><span>Security <wbr/>Features</span></a></li><li><a href="#api-endpoints"><span>API <wbr/>Endpoints</span></a></li><li><a href="#technical-implementation"><span>Technical <wbr/>Implementation</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">appointme</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#appointment"><span>AP<wbr/>Pointment</span></a><ul><li><a href="#deployment"><span>Deployment</span></a></li><li><ul><li><a href="#deployment-on-kubernetes"><span>Deployment on <wbr/>Kubernetes</span></a></li><li><a href="#environment-overlays-stagingproduction"><span>Environment <wbr/>Overlays (<wbr/>Staging/<wbr/>Production)</span></a></li><li><a href="#deployment-with-argocd"><span>Deployment with <wbr/>Argo<wbr/>CD</span></a></li><li><a href="#configuration"><span>Configuration</span></a></li><li><ul><li><a href="#configuration-values"><span>Configuration <wbr/>Values</span></a></li></ul></li></ul></li><li><a href="#lti-integration"><span>LTI <wbr/>Integration</span></a></li><li><ul><li><a href="#how-it-works"><span>How <wbr/>It <wbr/>Works</span></a></li><li><a href="#configuration-1"><span>Configuration</span></a></li><li><a href="#setting-up-with-keycloak"><span>Setting <wbr/>Up with <wbr/>Keycloak</span></a></li><li><a href="#setting-up-with-lms-moodlecanvas"><span>Setting <wbr/>Up with <wbr/>LMS (<wbr/>Moodle/<wbr/>Canvas)</span></a></li><li><a href="#security-features"><span>Security <wbr/>Features</span></a></li><li><a href="#api-endpoints"><span>API <wbr/>Endpoints</span></a></li><li><a href="#technical-implementation"><span>Technical <wbr/>Implementation</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">appointme</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
