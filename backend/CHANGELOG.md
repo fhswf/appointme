@@ -1,3 +1,11 @@
+# backend [1.38.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.2...backend@1.38.0-rc.3) (2026-01-20)
+
+
+### Bug Fixes
+
+* **backend:** use production env for backend ([f7d9eb4](https://github.com/fhswf/appointme/commit/f7d9eb499e0d1ebe1e5352f2201545a40b651a93))
+* visibility of restricted events ([1af3f3e](https://github.com/fhswf/appointme/commit/1af3f3e71d2445de55197f866380bda320ca5187))
+
 # backend [1.38.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.1...backend@1.38.0-rc.2) (2026-01-20)
 
 
