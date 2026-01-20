@@ -4,7 +4,7 @@
 import { Router } from "express";
 import { middleware } from "../handlers/middleware.js";
 import { userRateLimiter } from "../config/rateLimit.js";
-import { getUserByUrl, updateUser, getUser, getAppointments, getCalendars, getCalendarEvents, searchUsers } from "../controller/user_controller.js";
+import { getUserByUrl, updateUser, getUser, getTransientUser, getAppointments, getCalendars, getCalendarEvents, searchUsers } from "../controller/user_controller.js";
 
 const { requireAuth } = middleware;
 
@@ -38,6 +38,33 @@ export const userRouter = Router();
  *               $ref: '#/components/schemas/Error'
  */
 userRouter.get("/me", userRateLimiter, middleware.optionalAuth, getUser);
+
+/**
+ * @openapi
+ * /api/v1/user/transient:
+ *   get:
+ *     summary: Get transient user
+ *     description: Retrieve the currently logged in transient user's profile (LTI)
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Not authenticated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+userRouter.get("/transient", userRateLimiter, middleware.optionalAuth, getTransientUser);
 
 /**
  * @openapi

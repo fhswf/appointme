@@ -4,6 +4,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { doubleCsrf } from "csrf-csrf";
 import { dataBaseConn } from "./config/dbConn.js";
 
 //Load routes
@@ -31,6 +32,25 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
+app.use(cookieParser(process.env.CSRF_SECRET));
+
+const {
+  doubleCsrfProtection,
+  generateCsrfToken
+} = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || "default_csrf_secret",
+  cookieName: "x-csrf-token",
+  cookieOptions: {
+    sameSite: "lax",
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  },
+  size: 64,
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+  getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
+  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
+});
+
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
   ORIGINS.push("http://localhost:5173");
@@ -49,36 +69,6 @@ app.use(
   })
 );
 
-app.use(cookieParser(process.env.CSRF_SECRET));
-
-//Connecting to the database
-if (process.env.NODE_ENV !== "test") {
-  dataBaseConn();
-}
-
-//Bodyparser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-import { doubleCsrf } from "csrf-csrf";
-
-const {
-  doubleCsrfProtection,
-  generateCsrfToken
-} = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET || "Secret",
-  cookieName: "x-csrf-token",
-  cookieOptions: {
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  },
-  size: 64,
-  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-  getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
-  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
-});
-
 const csrfProtection = (req, res, next) => {
   // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
   if (req.method === 'POST') {
@@ -90,6 +80,15 @@ const csrfProtection = (req, res, next) => {
 };
 
 app.use(csrfProtection);
+
+//Connecting to the database
+if (process.env.NODE_ENV !== "test") {
+  dataBaseConn();
+}
+
+//Bodyparser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /**
  * @openapi

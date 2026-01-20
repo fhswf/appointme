@@ -11,6 +11,16 @@ export async function getUser() {
   return response;
 }
 
+export async function getTransientUser() {
+  const response = await axios.get(
+    `${CONFIG.API_URL}/user/transient`,
+    {
+      withCredentials: true,
+    }
+  );
+  return response;
+}
+
 import { getCsrfToken } from "./csrf_service";
 
 export async function updateUser(user: any) {

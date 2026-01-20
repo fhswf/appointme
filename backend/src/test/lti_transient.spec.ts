@@ -110,10 +110,10 @@ describe("LTI Transient User Support", () => {
         };
     };
 
-    describe("GET /api/v1/user/me", () => {
+    describe("GET /api/v1/user/transient", () => {
         it("should return transient user data for LTI token in cookie", async () => {
             const res = await request(app)
-                .get("/api/v1/user/me")
+                .get("/api/v1/user/transient")
                 .set("Cookie", [`lti_token=${transientToken}`]);
 
             expect(res.status).toBe(200);
@@ -128,7 +128,7 @@ describe("LTI Transient User Support", () => {
 
         it("should return 401 for invalid token", async () => {
             const res = await request(app)
-                .get("/api/v1/user/me")
+                .get("/api/v1/user/transient")
                 .set("Cookie", [`lti_token=invalid.token`]);
 
             expect(res.status).toBe(401);

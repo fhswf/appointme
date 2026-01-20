@@ -29,12 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const res = await getUser();
             console.log("AuthProvider: getUser response status=%d data=%o", res.status, res.data);
 
-            if (res.data?.success === false || res.status === 401) {
-                console.log("AuthProvider: not authenticated (logic/401)");
-                setIsAuthenticated(false);
-                setUser(null);
-                Sentry.setUser(null);
-            } else if (res.data) {
+            if (res.status === 200 && res.data && res.data.success !== false) {
                 console.log("AuthProvider: authenticated user %o", res.data);
                 setIsAuthenticated(true);
                 setUser(res.data);
@@ -44,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     username: res.data.name,
                 });
             } else {
-                console.log("AuthProvider: response 200 OK but no user data found (null/empty)");
+                console.log("AuthProvider: no user data found (status=%d)", res.status);
                 setIsAuthenticated(false);
                 setUser(null);
                 Sentry.setUser(null);
