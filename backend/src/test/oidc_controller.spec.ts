@@ -373,8 +373,16 @@ describe('OIDC Controller', () => {
                 })
             });
 
-            // findOneAndUpdate should NOT be called (or we don't care, but for this test flow it matters)
-            // But wait, the code calls findOne first. If it returns user, we skip creation.
+            // Mock findOneAndUpdate for profile update
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: 'existing_user_id',
+                    email: 'existing@example.com',
+                    name: 'Existing User',
+                    picture_url: 'http://pic.com/existing.jpg', // Updated picture
+                    roles: []
+                })
+            });
 
             (sign as any).mockReturnValue('mock_access_token');
 
@@ -775,6 +783,14 @@ describe('OIDC Controller', () => {
                 exec: vi.fn().mockResolvedValue(mockUser) // Return same user after role update
             });
 
+            // Mock findOneAndUpdate for profile update
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...mockUser,
+                    name: 'OIDC Update',
+                })
+            });
+
             (sign as any).mockReturnValue('mock_access_token');
 
             const res = await request(app)
@@ -785,16 +801,20 @@ describe('OIDC Controller', () => {
 
             expect(res.status).toBe(200);
 
-            // Check that save was called (updating name/picture)
-            expect(mockUser.save).toHaveBeenCalled();
+            expect(res.status).toBe(200);
 
-            // Check that google_tokens were NOT modified
-            expect(mockUser.google_tokens).toEqual({
-                access_token: 'preserve_me',
-                refresh_token: 'keep_me'
-            });
-            // name should be updated
-            expect(mockUser.name).toBe('OIDC Update');
+            // Check that save was NOT called
+            expect(mockUser.save).not.toHaveBeenCalled();
+
+            // Check findOneAndUpdate was called with safer update
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: 'local_user_id' },
+                { $set: expect.objectContaining({ name: 'OIDC Update' }) },
+                expect.objectContaining({ new: true })
+            );
+
+            // We rely on findOneAndUpdate to return the object with google_tokens (which we mocked above)
+
         });
 
         it('should fall back to constructed JWKS URI if valid issuer present', async () => {

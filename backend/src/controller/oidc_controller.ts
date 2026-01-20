@@ -60,7 +60,6 @@ const getConfig = async (issuer?: string): Promise<Configuration | null> => {
     if (configCache[targetIssuer]) {
         return configCache[targetIssuer];
     }
-
     logger.info("OIDC Config: Issuer=%s, ClientID=%s", targetIssuer, targetClientId);
 
     try {
@@ -158,15 +157,24 @@ export const getAuthUrl = async (req: Request, res: Response): Promise<void> => 
 
 const updateExistingUser = async (user: any, name?: string, picture?: string) => {
     // User exists - update details if needed (e.g. name, picture)
-    // We do not change _id here, even if it doesn't match `sub`.
+    // We use findOneAndUpdate to ensure we only update specific fields and do not overwrite 
+    // other fields like google_tokens if the user object instance was partial or stale.
+    const update: any = {};
+
     if (!user.use_gravatar && picture) {
-        user.picture_url = picture;
+        update.picture_url = picture;
     }
     if (name) {
-        user.name = name;
+        update.name = name;
     }
-    // Save updates
-    await user.save();
+
+    if (Object.keys(update).length > 0) {
+        return await UserModel.findOneAndUpdate(
+            { _id: user._id },
+            { $set: update },
+            { new: true, runValidators: true }
+        ).exec();
+    }
     return user;
 };
 
