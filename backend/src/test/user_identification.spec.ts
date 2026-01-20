@@ -142,6 +142,12 @@ describe("User Identification by Email", () => {
             exec: vi.fn().mockResolvedValue(existingUser)
         });
 
+        // Mock UserModel.findOneAndUpdate to return the updated user (or same user)
+        // This is needed because updateExistingUser calls findOneAndUpdate
+        (UserModel.findOneAndUpdate as any).mockReturnValue({
+            exec: vi.fn().mockResolvedValue(existingUser)
+        });
+
         // Mock request/response for OIDC login
         // Since we are using supertest for Google test, let's use it here too for consistency if possible, 
         // BUT the first test passed with direct call and mocking req/res. 
