@@ -80,7 +80,7 @@ spec:
                   key: TZ
                   name: appointme
             - name: NODE_ENV
-              value: development
+              value: production
             - name: DISABLE_GOOGLE_LOGIN
               valueFrom:
                 configMapKeyRef:
