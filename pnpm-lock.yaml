@@ -129,8 +129,8 @@ importers:
         specifier: ^2.29.1
         version: 2.30.1
       mongoose:
-        specifier: ^9.1.4
-        version: 9.1.4(socks@2.8.7)
+        specifier: ^9.1.5
+        version: 9.1.5(socks@2.8.7)
       node-ical:
         specifier: ^0.23.1
         version: 0.23.1
@@ -2104,6 +2104,9 @@ packages:
 
   '@mongodb-js/saslprep@1.4.4':
     resolution: {integrity: sha512-p7X/ytJDIdwUfFL/CLOhKgdfJe1Fa8uw9seJYvdOmnP9JBWGWHW69HkOixXS6Wy9yvGf1MbhcS6lVmrhy4jm2g==}
+
+  '@mongodb-js/saslprep@1.4.5':
+    resolution: {integrity: sha512-k64Lbyb7ycCSXHSLzxVdb2xsKGPMvYZfCICXvDsI8Z65CeWQzTEKS4YmGbnqw+U9RBvLPTsB6UCmwkgsDTGWIw==}
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
@@ -4321,8 +4324,8 @@ packages:
     resolution: {integrity: sha512-WIsKqkSC0ABoBJuT1LEX+2HEvNmNKKgnTAyd0fL8qzK4SH2i9NXg+t08YtdZp/V9IZ33cxe3iV4yM0qg8lMQng==}
     engines: {node: '>=16.20.1'}
 
-  bson@7.0.0:
-    resolution: {integrity: sha512-Kwc6Wh4lQ5OmkqqKhYGKIuELXl+EPYSCObVE6bWsp1T/cGkOCBN0I8wF/T44BiuhHyNi1mmKVPXk60d41xZ7kw==}
+  bson@7.1.1:
+    resolution: {integrity: sha512-TtJgBB+QyOlWjrbM+8bRgH84VM/xrDjyBFgSgGrfZF4xvt6gbEDtcswm27Tn9F9TWsjQybxT8b8VpCP/oJK4Dw==}
     engines: {node: '>=20.19.0'}
 
   bubble-stream-error@1.0.0:
@@ -7073,8 +7076,8 @@ packages:
       socks:
         optional: true
 
-  mongoose@9.1.4:
-    resolution: {integrity: sha512-V8JIyoWKWW+R2COlOsh6gaYw9TvczSiP/cN3Yuk1pv7ws5VNFAy5GPrK8jfz9tVYovmqdWOJRurMjL4ilYn9wA==}
+  mongoose@9.1.5:
+    resolution: {integrity: sha512-N6gypEO+wLmZp8kCYNQmrEWxVMT0KhyHvVttBZoKA/1ngY7aUsBjqHzCPtDgz+i8JAnqMOiEKmuJIDEQu1b9Dw==}
     engines: {node: '>=20.19.0'}
 
   monocart-coverage-reports@2.12.9:
@@ -11240,6 +11243,10 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
+  '@mongodb-js/saslprep@1.4.5':
+    dependencies:
+      sparse-bitfield: 3.0.3
+
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
       eslint-scope: 5.1.1
@@ -13964,7 +13971,7 @@ snapshots:
 
   bson@6.10.4: {}
 
-  bson@7.0.0: {}
+  bson@7.1.1: {}
 
   bubble-stream-error@1.0.0:
     dependencies:
@@ -17127,13 +17134,13 @@ snapshots:
 
   mongodb@7.0.0(socks@2.8.7):
     dependencies:
-      '@mongodb-js/saslprep': 1.4.4
-      bson: 7.0.0
+      '@mongodb-js/saslprep': 1.4.5
+      bson: 7.1.1
       mongodb-connection-string-url: 7.0.0
     optionalDependencies:
       socks: 2.8.7
 
-  mongoose@9.1.4(socks@2.8.7):
+  mongoose@9.1.5(socks@2.8.7):
     dependencies:
       kareem: 3.0.0
       mongodb: 7.0.0(socks@2.8.7)
