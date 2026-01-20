@@ -1,3 +1,10 @@
+# backend [1.37.0-rc.22](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.21...backend@1.37.0-rc.22) (2026-01-20)
+
+
+### Bug Fixes
+
+* improve csrf protection ([e33fb05](https://github.com/fhswf/appointme/commit/e33fb05c5dd9bae97d8953fd006bd61df1d60752))
+
 # backend [1.37.0-rc.21](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.20...backend@1.37.0-rc.21) (2026-01-19)
 
 
