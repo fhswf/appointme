@@ -1,3 +1,10 @@
+# client [1.33.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.2...client@1.33.0-rc.3) (2026-01-21)
+
+
+### Features
+
+* import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
+
 # client [1.33.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.1...client@1.33.0-rc.2) (2026-01-20)
 
 

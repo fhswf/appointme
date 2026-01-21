@@ -4,4 +4,4 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/frontend
-    newTag: 1.33.0-rc.2
+    newTag: 1.33.0-rc.3
