@@ -45,6 +45,10 @@ test.describe('Scheduling page', () => {
 
         await page.route('**/api/v1/user/christian-gawron', async route => await route.fulfill({ path: './tests/fixtures/userByURL.json' }));
         await page.route('**/event/*/*', async route => await route.fulfill({ path: './tests/fixtures/event.json' }));
+        await page.route('**/api/v1/csrf-token', async route => await route.fulfill({
+            status: 200,
+            body: JSON.stringify({ csrfToken: 'mock-csrf-token-e2e' })
+        }));
 
     });
 
