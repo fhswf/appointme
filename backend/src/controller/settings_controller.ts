@@ -25,7 +25,7 @@ export const exportSettings = async (req: Request, res: Response): Promise<void>
             updatedAt,
             __v,
             ...userSettings
-        } = user as any;
+        } = user;
 
         const events = await EventModel.find({ user: userId }).lean().exec();
 
@@ -50,6 +50,56 @@ export const exportSettings = async (req: Request, res: Response): Promise<void>
 /**
  * Import user settings and events
  */
+const importUserSettings = async (userId: string, userSettings: any) => {
+    // Prevent overwriting critical identity fields
+    delete userSettings._id;
+    delete userSettings.email;
+    delete userSettings.google_tokens;
+    delete userSettings.roles; // Security: Don't allow role escalation via import
+
+    // Sanitize userSettings to avoid injecting MongoDB operators
+    const safeUserSettings: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(userSettings)) {
+        // Skip any keys that could be interpreted as MongoDB operators
+        if (typeof key === "string" && key.startsWith("$")) {
+            continue;
+        }
+        safeUserSettings[key] = value;
+    }
+
+    await UserModel.findByIdAndUpdate(userId, { $set: safeUserSettings }, { new: true, runValidators: true }).exec();
+};
+
+const importEvents = async (userId: string, events: any[]) => {
+    for (const eventData of events) {
+        // Ensure event belongs to current user
+        eventData.user = userId;
+
+        // Copy only safe, non-operator fields from the incoming eventData
+        const safeEventData: any = {};
+        if (eventData && typeof eventData === "object") {
+            for (const key of Object.keys(eventData)) {
+                // Disallow MongoDB operator-style keys and reserved fields
+                if (key.startsWith("$") || key === "user") {
+                    continue;
+                }
+                safeEventData[key] = eventData[key];
+            }
+        }
+        safeEventData.user = userId;
+
+
+        // Use URL as unique identifier to update existing or create new
+        if (safeEventData.url && typeof safeEventData.url === 'string') {
+            await EventModel.findOneAndUpdate(
+                { user: userId, url: safeEventData.url },
+                { $set: safeEventData },
+                { upsert: true, new: true, runValidators: true }
+            ).exec();
+        }
+    }
+};
+
 export const importSettings = async (req: Request, res: Response): Promise<void> => {
     const userId = req['user_id'];
     const { user: userSettings, events } = req.body;
@@ -62,54 +112,12 @@ export const importSettings = async (req: Request, res: Response): Promise<void>
     try {
         // Update User Settings
         if (userSettings) {
-            // Prevent overwriting critical identity fields
-            delete userSettings._id;
-            delete userSettings.email;
-            delete userSettings.google_tokens;
-            delete userSettings.roles; // Security: Don't allow role escalation via import
-
-            // Sanitize userSettings to avoid injecting MongoDB operators
-            const safeUserSettings: Record<string, unknown> = {};
-            for (const [key, value] of Object.entries(userSettings)) {
-                // Skip any keys that could be interpreted as MongoDB operators
-                if (typeof key === "string" && key.startsWith("$")) {
-                    continue;
-                }
-                safeUserSettings[key] = value;
-            }
-
-            await UserModel.findByIdAndUpdate(userId, { $set: safeUserSettings }, { new: true, runValidators: true }).exec();
+            await importUserSettings(userId, userSettings);
         }
 
         // Import Events
         if (events && Array.isArray(events)) {
-            for (const eventData of events) {
-                // Ensure event belongs to current user
-                eventData.user = userId;
-
-                // Copy only safe, non-operator fields from the incoming eventData
-                const safeEventData: any = {};
-                if (eventData && typeof eventData === "object") {
-                    for (const key of Object.keys(eventData)) {
-                        // Disallow MongoDB operator-style keys and reserved fields
-                        if (key.startsWith("$") || key === "user") {
-                            continue;
-                        }
-                        safeEventData[key] = eventData[key];
-                    }
-                }
-                safeEventData.user = userId;
-
-
-                // Use URL as unique identifier to update existing or create new
-                if (safeEventData.url && typeof safeEventData.url === 'string') {
-                    await EventModel.findOneAndUpdate(
-                        { user: userId, url: safeEventData.url },
-                        { $set: safeEventData },
-                        { upsert: true, new: true, runValidators: true }
-                    ).exec();
-                }
-            }
+            await importEvents(userId, events);
         }
 
         res.status(200).json({ message: "Settings imported successfully" });
