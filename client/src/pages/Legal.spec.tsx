@@ -34,7 +34,7 @@ vi.mock('react-i18next', () => ({
 }));
 
 // Mock useLocation
-const mockLocation = { hash: '' };
+const mockLocation: { hash: string; state?: any } = { hash: '', state: undefined };
 vi.mock('react-router-dom', () => ({
     useLocation: () => mockLocation
 }));
@@ -50,6 +50,7 @@ describe('Legal Page', () => {
 
     beforeEach(() => {
         mockLocation.hash = '';
+        mockLocation.state = undefined;
     });
 
     it('should render navbar and footer', () => {
@@ -58,26 +59,33 @@ describe('Legal Page', () => {
         expect(screen.getByTestId('footer')).toBeInTheDocument();
     });
 
-    it('should default to Terms of Use tab', () => {
+    it('should default to Privacy tab', () => {
         renderWithContext();
-        // Check if terms content is shown
-        expect(screen.getByText('terms_of_use_content')).toBeInTheDocument();
+        // Check if privacy content is shown (extended because not from booking)
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
         expect(screen.getByTestId('contact-info')).toBeInTheDocument();
         // Other content should not be visible
         expect(screen.queryByText('impressum_content')).not.toBeInTheDocument();
-        expect(screen.queryByText('privacy_content_public')).not.toBeInTheDocument();
-    });
-
-    it('should switch to Privacy tab on click', () => {
-        renderWithContext();
-        fireEvent.click(screen.getByText('Datenschutzhinweise'));
-
-        expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
-        // Terms of Use content should be hidden
         expect(screen.queryByText('terms_of_use_content')).not.toBeInTheDocument();
     });
 
-    it('should show public privacy content when not logged in', () => {
+    it('should switch to Terms of Use tab on click', () => {
+        renderWithContext();
+        fireEvent.click(screen.getByText('terms_of_use_title'));
+
+        expect(screen.getByText('terms_of_use_content')).toBeInTheDocument();
+        // Privacy content should be hidden
+        expect(screen.queryByText('privacy_content')).not.toBeInTheDocument();
+    });
+
+    it('should show extended privacy content when not logged in but direct access', () => {
+        renderWithContext(null);
+        fireEvent.click(screen.getByText('Datenschutzhinweise'));
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
+    });
+
+    it('should show public privacy content when coming from booking page', () => {
+        mockLocation.state = { from: '/users/someone' };
         renderWithContext(null);
         fireEvent.click(screen.getByText('Datenschutzhinweise'));
         expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
@@ -92,7 +100,7 @@ describe('Legal Page', () => {
     it('should respect hash #privacy', () => {
         mockLocation.hash = '#privacy';
         renderWithContext();
-        expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
     });
 
     it('should respect hash #terms', () => {
@@ -110,11 +118,11 @@ describe('Legal Page', () => {
     it('should switch back to Impressum from Privacy', () => {
         renderWithContext();
         fireEvent.click(screen.getByText('Datenschutzhinweise'));
-        expect(screen.getByText('privacy_content_public')).toBeInTheDocument();
-        
+        expect(screen.getByText('privacy_content')).toBeInTheDocument();
+
         fireEvent.click(screen.getByText('Impressum'));
         expect(screen.getByText('impressum_content')).toBeInTheDocument();
-        expect(screen.queryByText('privacy_content_public')).not.toBeInTheDocument();
+        expect(screen.queryByText('privacy_content')).not.toBeInTheDocument();
         expect(screen.queryByText('terms_of_use_content')).not.toBeInTheDocument();
     });
 
