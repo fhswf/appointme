@@ -29,6 +29,11 @@ spec:
       containers:
         - image: mongo
           name: mongo-appointme
+          args:
+            - "--profile"
+            - "1"
+            - "--slowms"
+            - "100"
           resources:
             requests:
               memory: "256Mi"

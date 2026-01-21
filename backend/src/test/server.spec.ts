@@ -54,6 +54,13 @@ describe("Server routes", () => {
         findOne: vi.fn((query) => {
           console.log("UserModel: mocked findOne");
           return {
+            lean: vi.fn(() => {
+              return {
+                exec: vi.fn(() => {
+                  return Promise.resolve(USER);
+                })
+              }
+            }),
             exec: vi.fn(() => {
               return Promise.resolve(USER);
             }),
