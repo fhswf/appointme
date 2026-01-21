@@ -56,6 +56,11 @@ const csrfProtection = (req, res, next) => {
     if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
       return next();
     }
+    // Exclude public booking endpoint /api/v1/event/:id/slot
+    const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
+    if (bookingPathRegex.test(req.path)) {
+      return next();
+    }
   }
   doubleCsrfProtection(req, res, next);
 };
