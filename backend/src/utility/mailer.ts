@@ -90,3 +90,21 @@ export const sendEmail = (to: string, subject: string, html: string) => {
         });
     });
 };
+
+/**
+ * Verifies the SMTP connection
+ */
+export const verifyConnection = async () => {
+    return new Promise((resolve, reject) => {
+        transporter.verify((error, success) => {
+            if (error) {
+                logger.error("Error verifying SMTP connection: %o", error);
+                reject(error);
+            } else {
+                logger.info("SMTP connection verified");
+                resolve(success);
+            }
+        });
+    });
+};
+
