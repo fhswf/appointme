@@ -1,3 +1,37 @@
+# backend [1.38.0](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0) (2026-01-21)
+
+
+### Bug Fixes
+
+* add smtp config in k8s ([502551e](https://github.com/fhswf/appointme/commit/502551e9b01cb676230de8c201882d73497868a7))
+* authentication handling ([e25b793](https://github.com/fhswf/appointme/commit/e25b7938be4225be4bf3851de036fe3b79da8c4a))
+* authentication handling ([264b701](https://github.com/fhswf/appointme/commit/264b701d3aa38d680879ea214e77f208f05f958b))
+* avoid accidentally overwriting google tokens on oidc login ([e075f07](https://github.com/fhswf/appointme/commit/e075f07b0b5f77300a6bc405dd451018a331f682))
+* **backend:** use production env for backend ([f7d9eb4](https://github.com/fhswf/appointme/commit/f7d9eb499e0d1ebe1e5352f2201545a40b651a93))
+* check uniqueness constrains before importing settings ([852d73f](https://github.com/fhswf/appointme/commit/852d73f51d7170c54b241531d920c66e676241fe))
+* do not require csrf token on booking endpoint ([fef0331](https://github.com/fhswf/appointme/commit/fef03315c681108337993d5d76e9d6a8420cadc1))
+* improve csrf handling ([8660929](https://github.com/fhswf/appointme/commit/8660929e419d7b0f693cd9820c1247213dc54c1f))
+* narrowing csrf exclusions ([a964a46](https://github.com/fhswf/appointme/commit/a964a461dbd3bf880f501746e4303bc2a23babf4))
+* sanitize settings before importing them ([8b31f27](https://github.com/fhswf/appointme/commit/8b31f27c9d3757a0eaadbcfd67f64a92f5ffb909))
+* use mongoose schema validion for settings import ([83feac8](https://github.com/fhswf/appointme/commit/83feac89f581776f87a570e865783eb3b5f94b8d))
+* visibility of restricted events ([1af3f3e](https://github.com/fhswf/appointme/commit/1af3f3e71d2445de55197f866380bda320ca5187))
+
+
+### Features
+
+* filter transient fields in settings export ([50cde89](https://github.com/fhswf/appointme/commit/50cde897b505ac6886a6851213bd0d2c317b0c32))
+* import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
+* separate access token from "transient" lti token ([da9e2e7](https://github.com/fhswf/appointme/commit/da9e2e7a6362ab65fd2c07b6cc12c685fc349d1e))
+* separate access token from "transient" lti token ([a8d1482](https://github.com/fhswf/appointme/commit/a8d1482b1429a3b8b6a0710183d2f24f67c6798a))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.1
+
 # backend [1.38.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.5...backend@1.38.0-rc.6) (2026-01-21)
 
 
