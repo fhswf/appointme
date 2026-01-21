@@ -1,3 +1,21 @@
+# backend [1.38.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.4...backend@1.38.0-rc.5) (2026-01-21)
+
+
+### Bug Fixes
+
+* add smtp config in k8s ([502551e](https://github.com/fhswf/appointme/commit/502551e9b01cb676230de8c201882d73497868a7))
+* check uniqueness constrains before importing settings ([852d73f](https://github.com/fhswf/appointme/commit/852d73f51d7170c54b241531d920c66e676241fe))
+* do not require csrf token on booking endpoint ([fef0331](https://github.com/fhswf/appointme/commit/fef03315c681108337993d5d76e9d6a8420cadc1))
+* narrowing csrf exclusions ([a964a46](https://github.com/fhswf/appointme/commit/a964a461dbd3bf880f501746e4303bc2a23babf4))
+* sanitize settings before importing them ([8b31f27](https://github.com/fhswf/appointme/commit/8b31f27c9d3757a0eaadbcfd67f64a92f5ffb909))
+* use mongoose schema validion for settings import ([83feac8](https://github.com/fhswf/appointme/commit/83feac89f581776f87a570e865783eb3b5f94b8d))
+
+
+### Features
+
+* filter transient fields in settings export ([50cde89](https://github.com/fhswf/appointme/commit/50cde897b505ac6886a6851213bd0d2c317b0c32))
+* import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
+
 # backend [1.38.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.3...backend@1.38.0-rc.4) (2026-01-20)
 
 
