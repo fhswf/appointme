@@ -60,8 +60,9 @@ const csrfProtection = (req, res, next) => {
   doubleCsrfProtection(req, res, next);
 };
 
-app.use(csrfProtection);
 app.use(cookieParser(process.env.CSRF_SECRET));
+app.use(csrfProtection);
+
 
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
