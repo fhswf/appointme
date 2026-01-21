@@ -51,9 +51,9 @@ const {
 });
 
 const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
+  // Exclude POST /api/v1/oidc/init and /api/v1/oidc/login from CSRF protection
   if (req.method === 'POST') {
-    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+    if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
       return next();
     }
   }
@@ -144,7 +144,7 @@ const cronLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.post("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
+router.get("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
 
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")
