@@ -20,7 +20,8 @@ vi.mock('../controller/google_controller.js', () => ({
 vi.mock('../utility/mailer.js', () => ({
     transporter: {
         sendMail: vi.fn()
-    }
+    },
+    verifyConnection: vi.fn().mockResolvedValue(true)
 }));
 
 vi.mock('../logging.js', () => ({
@@ -89,7 +90,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 0,
             valid: 0,
             invalid: 0,
-            errors: 0
+            errors: 0,
+            smtp: true
         });
     });
 
@@ -116,7 +118,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 1,
             invalid: 0,
-            errors: 0
+            errors: 0,
+            smtp: true
         });
     });
 
@@ -150,7 +153,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 1,
             invalid: 0,
-            errors: 0
+            errors: 0,
+            smtp: true
         });
     });
 
@@ -185,7 +189,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 0,
             invalid: 1,
-            errors: 0
+            errors: 0,
+            smtp: true
         });
     });
 
@@ -208,7 +213,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 0,
             invalid: 1,
-            errors: 0
+            errors: 0,
+            smtp: true
         });
     });
 
@@ -235,7 +241,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 0,
             invalid: 0,
-            errors: 1
+            errors: 1,
+            smtp: true
         });
     });
 
@@ -252,7 +259,8 @@ describe('Cron Controller - validateGoogleTokens', () => {
             total: 1,
             valid: 0,
             invalid: 0,
-            errors: 1
+            errors: 1,
+            smtp: true
         });
     });
 });
