@@ -15,7 +15,11 @@ const Legal: React.FC = () => {
     const { user } = useContext(UserContext);
     const [activeTab, setActiveTab] = useState<'terms' | 'impressum' | 'privacy'>('privacy');
 
-    const showExtended = user || location.state?.from === '/' || location.state?.from === '/landing';
+    const fromPath = location.state?.from as string | undefined;
+    // Show public version only if coming from booking pages
+    const isFromBooking = fromPath && (fromPath.startsWith('/users/') || fromPath.startsWith('/booked'));
+    // Default to extended version (logged in, from landing, or direct access), unless explicitly from booking flow
+    const showExtended = user || !isFromBooking;
 
     useEffect(() => {
         if (location.hash === '#privacy') {
