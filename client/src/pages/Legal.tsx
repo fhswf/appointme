@@ -15,6 +15,8 @@ const Legal: React.FC = () => {
     const { user } = useContext(UserContext);
     const [activeTab, setActiveTab] = useState<'terms' | 'impressum' | 'privacy'>('terms');
 
+    const showExtended = user || location.state?.from === '/' || location.state?.from === '/landing';
+
     useEffect(() => {
         if (location.hash === '#privacy') {
             setActiveTab('privacy');
@@ -69,7 +71,7 @@ const Legal: React.FC = () => {
                         )}
                         {activeTab === 'privacy' && (
                             <div>
-                                <ReactMarkdown components={markdownComponents}>{user ? t("privacy_content") : t("privacy_content_public")}</ReactMarkdown>
+                                <ReactMarkdown components={markdownComponents}>{showExtended ? t("privacy_content") : t("privacy_content_public")}</ReactMarkdown>
                                 <ContactInfo />
                             </div>
                         )}
