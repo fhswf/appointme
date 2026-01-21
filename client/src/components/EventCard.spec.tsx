@@ -126,4 +126,26 @@ describe('EventCard Component', () => {
 
         expect(mockOnDelete).toHaveBeenCalledWith(mockEvent);
     });
+
+    it('should display Student Only badge for student events', () => {
+        const studentEvent = {
+            ...mockEvent,
+            allowed_roles: ['student']
+        };
+
+        render(
+            <BrowserRouter>
+                <EventCard
+                    event={studentEvent}
+                    url="test-user"
+                    hasCalendar={true}
+                    setActive={mockSetActive}
+                    onDelete={mockOnDelete}
+                />
+            </BrowserRouter>
+        );
+
+        expect(screen.getByText('Student Only')).toBeInTheDocument();
+    });
 });
+
