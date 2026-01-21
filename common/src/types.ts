@@ -143,7 +143,7 @@ export interface User {
   picture_url: string;
   google_picture_url?: string;
   use_gravatar?: boolean;
-  google_tokens: GoogleTokens;
+  google_tokens?: GoogleTokens;
   caldav_accounts?: CalDavAccount[];
   push_calendars: string[];
   pull_calendars: string[];

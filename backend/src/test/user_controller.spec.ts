@@ -118,6 +118,16 @@ describe("User Controller", () => {
                 .put("/api/v1/user/me")
                 .send({ data: { user_url: "new-unique-url" } });
 
+            expect(UserModel.findByIdAndUpdate).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.anything(),
+                expect.objectContaining({
+                    projection: expect.not.objectContaining({
+                        "google_tokens.access_token": 1
+                    })
+                })
+            );
+
             expect(res.status).toBe(200);
             expect(res.body.user_url).toBe("new-unique-url");
         });
@@ -291,6 +301,13 @@ describe("User Controller", () => {
             const res = await request(app).get("/api/v1/user/me");
             expect(res.status).toBe(200);
             expect(res.body.email).toBe(USER.email);
+
+            expect(UserModel.findOne).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.not.objectContaining({
+                    "google_tokens.access_token": 1
+                })
+            );
         });
 
         it("should return 404 if user not found", async () => {
