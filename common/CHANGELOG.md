@@ -1,3 +1,10 @@
+## common [1.15.1](https://github.com/fhswf/appointme/compare/common@1.15.0...common@1.15.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* update legal information on the landing page ([7854f2d](https://github.com/fhswf/appointme/commit/7854f2dbd2b31c6a0461a41cef5331619f967e90))
+
 ## common [1.15.1-rc.1](https://github.com/fhswf/appointme/compare/common@1.15.0...common@1.15.1-rc.1) (2026-01-21)
 
 

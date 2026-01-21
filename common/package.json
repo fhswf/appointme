@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "1.15.1-rc.1",
+  "version": "1.15.1",
   "description": "Common types for backend and frontend",
   "repository": {
     "type": "git",
