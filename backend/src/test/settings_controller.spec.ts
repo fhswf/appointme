@@ -74,7 +74,7 @@ describe("Settings Controller", () => {
             expect(UserModel.findByIdAndUpdate).toHaveBeenCalledWith(
                 "test_user_id",
                 { $set: userSettings },
-                { new: true }
+                { new: true, runValidators: true }
             );
             expect(EventModel.findOneAndUpdate).toHaveBeenCalled();
         });

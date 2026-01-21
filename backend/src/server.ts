@@ -51,6 +51,18 @@ const {
   getSessionIdentifier: (req) => req.cookies['access_token'] || "",
 });
 
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
+  if (req.method === 'POST') {
+    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+      return next();
+    }
+  }
+  doubleCsrfProtection(req, res, next);
+};
+
+app.use(csrfProtection);
+
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
   ORIGINS.push("http://localhost:5173");
@@ -69,17 +81,7 @@ app.use(
   })
 );
 
-const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
-  if (req.method === 'POST') {
-    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
-      return next();
-    }
-  }
-  doubleCsrfProtection(req, res, next);
-};
 
-app.use(csrfProtection);
 
 //Connecting to the database
 if (process.env.NODE_ENV !== "test") {

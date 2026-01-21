@@ -78,7 +78,7 @@ export const importSettings = async (req: Request, res: Response): Promise<void>
                 safeUserSettings[key] = value;
             }
 
-            await UserModel.findByIdAndUpdate(userId, { $set: safeUserSettings }, { new: true }).exec();
+            await UserModel.findByIdAndUpdate(userId, { $set: safeUserSettings }, { new: true, runValidators: true }).exec();
         }
 
         // Import Events
@@ -106,7 +106,7 @@ export const importSettings = async (req: Request, res: Response): Promise<void>
                     await EventModel.findOneAndUpdate(
                         { user: userId, url: safeEventData.url },
                         { $set: safeEventData },
-                        { upsert: true, new: true }
+                        { upsert: true, new: true, runValidators: true }
                     ).exec();
                 }
             }
