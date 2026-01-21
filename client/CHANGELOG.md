@@ -1,3 +1,10 @@
+## client [1.33.1](https://github.com/fhswf/appointme/compare/client@1.33.0...client@1.33.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* show extended legal information per default ([814bb71](https://github.com/fhswf/appointme/commit/814bb717d6fbc9df6d57393887d28cf490c50d53))
+
 ## client [1.33.1-rc.1](https://github.com/fhswf/appointme/compare/client@1.33.0...client@1.33.1-rc.1) (2026-01-21)
 
 
