@@ -4,13 +4,74 @@
 import { Router } from "express";
 import { middleware } from "../handlers/middleware.js";
 import { userRateLimiter } from "../config/rateLimit.js";
-import { getUserByUrl, updateUser, getUser, getTransientUser, getAppointments, getCalendars, getCalendarEvents, searchUsers } from "../controller/user_controller.js";
+import {
+    getUserByUrl,
+    updateUser,
+    getUser,
+    getTransientUser,
+    getAppointments,
+    getCalendars,
+    getCalendarEvents,
+    searchUsers
+} from "../controller/user_controller.js";
+import { exportSettings, importSettings } from "../controller/settings_controller.js";
 
 const { requireAuth } = middleware;
 
+
+
 export const userRouter = Router();
 
+/**
+ * @openapi
+ * /api/v1/user/settings:
+ *   get:
+ *     summary: Export user settings
+ *     description: Export user settings and events as a JSON file
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     responses:
+ *       200:
+ *         description: Settings exported successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       401:
+ *         description: Not authenticated
+ */
 
+userRouter.get("/settings", userRateLimiter, requireAuth, exportSettings);
+
+/**
+ * @openapi
+ * /api/v1/user/settings:
+ *   put:
+ *     summary: Import user settings
+ *     description: Import user settings and events from a JSON file
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *       - csrfToken: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Settings imported successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Not authenticated
+ */
+userRouter.put("/settings", userRateLimiter, requireAuth, importSettings);
 
 /**
  * @openapi

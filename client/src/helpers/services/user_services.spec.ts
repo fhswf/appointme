@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
-import { getUser, updateUser, getUserByUrl } from './user_services';
+import { getUser, updateUser, getUserByUrl, getTransientUser, exportSettings, importSettings } from './user_services';
+import * as userServices from './user_services';
 import * as csrfService from './csrf_service';
 
 // Mock axios
@@ -204,6 +205,57 @@ describe('user_services', () => {
             expect(axios.get).not.toHaveBeenCalledWith(
                 expect.any(String),
                 expect.objectContaining({ withCredentials: true })
+            );
+        });
+    });
+
+    describe('getTransientUser', () => {
+        it('should fetch transient user', async () => {
+            const mockUser = { data: { _id: 'transient', role: 'anonymous' } };
+            vi.mocked(axios.get).mockResolvedValue(mockUser);
+
+            const result = await userServices.getTransientUser();
+
+            expect(axios.get).toHaveBeenCalledWith(
+                'http://localhost:3001/user/transient',
+                { withCredentials: true }
+            );
+            expect(result).toEqual(mockUser);
+        });
+    });
+
+    describe('exportSettings', () => {
+        it('should call export endpoint', async () => {
+            const mockResponse = { data: { user: {}, events: [] } };
+            vi.mocked(axios.get).mockResolvedValue(mockResponse);
+
+            const result = await userServices.exportSettings();
+
+            expect(axios.get).toHaveBeenCalledWith(
+                'http://localhost:3001/user/settings',
+                { withCredentials: true }
+            );
+            expect(result).toEqual(mockResponse);
+        });
+    });
+
+    describe('importSettings', () => {
+        it('should call import endpoint with csrf token', async () => {
+            const mockCsrfToken = 'test-token';
+            const settingsData = { user: { theme: 'light' }, events: [] };
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue(mockCsrfToken);
+            vi.mocked(axios.put).mockResolvedValue({ data: { message: 'Success' } });
+
+            await userServices.importSettings(settingsData);
+
+            expect(csrfService.getCsrfToken).toHaveBeenCalled();
+            expect(axios.put).toHaveBeenCalledWith(
+                'http://localhost:3001/user/settings',
+                settingsData,
+                {
+                    headers: { 'x-csrf-token': mockCsrfToken },
+                    withCredentials: true
+                }
             );
         });
     });

@@ -7,7 +7,9 @@ import { toast } from 'sonner';
 // Mock dependencies
 vi.mock('../helpers/services/user_services', () => ({
     getUser: vi.fn(),
-    updateUser: vi.fn()
+    updateUser: vi.fn(),
+    exportSettings: vi.fn(),
+    importSettings: vi.fn()
 }));
 
 vi.mock('sonner', () => ({
@@ -247,5 +249,60 @@ describe('ProfileDialog', () => {
         // Trigger onChange via mock button
         const updateButton = screen.getByText('Update Availability');
         fireEvent.click(updateButton);
+    });
+
+    it('should handle data tab export', async () => {
+        const mockSettings = { data: { user: {}, events: [] } };
+        vi.mocked(userServices.exportSettings).mockResolvedValue(mockSettings as any);
+
+        // Mock URL.createObjectURL and URL.revokeObjectURL
+        const mockCreateObjectURL = vi.fn(() => 'blob:http://localhost/blob');
+        const mockRevokeObjectURL = vi.fn();
+        Object.defineProperty(window, 'URL', {
+            value: {
+                createObjectURL: mockCreateObjectURL,
+                revokeObjectURL: mockRevokeObjectURL
+            },
+            writable: true
+        });
+
+        render(<ProfileDialog open={true} onOpenChange={vi.fn()} />);
+        await waitFor(() => expect(screen.queryByText('loading')).not.toBeInTheDocument());
+
+        fireEvent.click(screen.getByText('Data'));
+        fireEvent.click(screen.getByText('Export Data'));
+
+        await waitFor(() => {
+            expect(userServices.exportSettings).toHaveBeenCalled();
+            expect(mockCreateObjectURL).toHaveBeenCalled();
+        });
+    });
+
+    it('should handle data tab import', async () => {
+        vi.mocked(userServices.importSettings).mockResolvedValue({} as any);
+        const onOpenChange = vi.fn();
+        const mockRefreshAuth = vi.fn(); // Assuming it's already mocked properly in the file scope if needed, or re-mock here via existing mocks
+
+        // Mock window.confirm
+        const mockConfirm = vi.spyOn(window, 'confirm');
+        mockConfirm.mockReturnValue(true);
+
+        render(<ProfileDialog open={true} onOpenChange={onOpenChange} />);
+        await waitFor(() => expect(screen.queryByText('loading')).not.toBeInTheDocument());
+
+        fireEvent.click(screen.getByText('Data'));
+
+        const file = new File(['{"user":{},"events":[]}'], 'settings.json', { type: 'application/json' });
+
+        // Find input directly by ID since it's hidden and might be hard to select by label text in this structure
+        const fileInput = document.getElementById('import-file') as HTMLInputElement;
+
+        Object.defineProperty(fileInput, 'files', { value: [file] });
+        fireEvent.change(fileInput);
+
+        await waitFor(() => {
+            expect(userServices.importSettings).toHaveBeenCalledWith(expect.objectContaining({ user: {}, events: [] }));
+            expect(onOpenChange).toHaveBeenCalledWith(false);
+        });
     });
 });

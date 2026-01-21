@@ -32,7 +32,6 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
-app.use(cookieParser(process.env.CSRF_SECRET));
 
 const {
   doubleCsrfProtection,
@@ -50,6 +49,25 @@ const {
   getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
   getSessionIdentifier: (req) => req.cookies['access_token'] || "",
 });
+
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/oidc/init and /api/v1/oidc/login from CSRF protection
+  if (req.method === 'POST') {
+    if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+      return next();
+    }
+    // Exclude public booking endpoint /api/v1/event/:id/slot
+    const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
+    if (bookingPathRegex.test(req.path)) {
+      return next();
+    }
+  }
+  doubleCsrfProtection(req, res, next);
+};
+
+app.use(cookieParser(process.env.CSRF_SECRET));
+app.use(csrfProtection);
+
 
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
@@ -69,17 +87,7 @@ app.use(
   })
 );
 
-const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
-  if (req.method === 'POST') {
-    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
-      return next();
-    }
-  }
-  doubleCsrfProtection(req, res, next);
-};
 
-app.use(csrfProtection);
 
 //Connecting to the database
 if (process.env.NODE_ENV !== "test") {
@@ -141,7 +149,7 @@ const cronLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.post("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
+router.get("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
 
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")

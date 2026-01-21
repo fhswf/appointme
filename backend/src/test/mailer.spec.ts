@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { sendEventInvitation, transporter } from '../utility/mailer.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { sendEventInvitation, transporter, sendEmail, verifyConnection } from '../utility/mailer.js';
 
 // Mock nodemailer
 vi.mock("nodemailer", () => {
@@ -7,6 +8,9 @@ vi.mock("nodemailer", () => {
         createTransport: vi.fn(() => ({
             sendMail: vi.fn((mailOptions, callback) => {
                 callback(null, { messageId: 'test-message-id' });
+            }),
+            verify: vi.fn((callback) => {
+                callback(null, true);
             })
         }))
     }
@@ -47,6 +51,53 @@ describe('Mailer Utility', () => {
         }) as any);
 
         await expect(sendEventInvitation('fail@test.com', 'Sub', 'Body', 'ICS')).rejects.toThrow("Send failed");
+    });
+
+    it('should send generic email', async () => {
+        const sendMailSpy = vi.spyOn(transporter, 'sendMail');
+
+        const to = 'test@example.com';
+        const subject = 'Test Subject';
+        const html = '<p>Test Body</p>';
+
+        await sendEmail(to, subject, html);
+
+        expect(sendMailSpy).toHaveBeenCalledWith(expect.objectContaining({
+            to: to,
+            subject: subject,
+            html: html
+        }), expect.any(Function));
+    });
+
+    it('should handle generic email send errors', async () => {
+        const error = new Error("Send failed");
+        vi.spyOn(transporter, 'sendMail').mockImplementation(((opts: any, cb: any) => {
+            if (typeof cb === 'function') {
+                cb(error, null);
+            }
+            return Promise.reject(error);
+        }) as any);
+
+        const result = await sendEmail('fail@test.com', 'Sub', 'Body');
+        expect(result).toBeNull();
+    });
+
+    it('should verify connection successfully', async () => {
+        vi.spyOn(transporter, 'verify').mockImplementation(((cb: any) => {
+            cb(null, true);
+        }) as any);
+
+        const result = await verifyConnection();
+        expect(result).toBe(true);
+    });
+
+    it('should handle verify connection error', async () => {
+        const error = new Error("Connection failed");
+        vi.spyOn(transporter, 'verify').mockImplementation(((cb: any) => {
+            cb(error, null);
+        }) as any);
+
+        await expect(verifyConnection()).rejects.toThrow("Connection failed");
     });
 });
 

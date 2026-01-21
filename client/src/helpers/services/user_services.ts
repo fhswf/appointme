@@ -43,3 +43,26 @@ export async function getUserByUrl(url: string) {
     `${CONFIG.API_URL}/user/${url}`
   );
 }
+
+export async function exportSettings() {
+  return axios.get(
+    `${CONFIG.API_URL}/user/settings`,
+    {
+      withCredentials: true,
+    }
+  );
+}
+
+export async function importSettings(data: any) {
+  const csrfToken = await getCsrfToken();
+  return axios.put(
+    `${CONFIG.API_URL}/user/settings`,
+    data,
+    {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
+      withCredentials: true,
+    }
+  );
+}
