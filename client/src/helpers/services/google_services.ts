@@ -45,6 +45,7 @@ export async function insertEvent(
   description
 ) {
   const start = time.valueOf();
+  const csrfToken = await getCsrfToken();
   const response = axios.post(
     `${CONFIG.API_URL}/event/${event_id}/slot`,
     {
@@ -52,6 +53,12 @@ export async function insertEvent(
       attendeeName: name,
       attendeeEmail: email,
       description,
+    },
+    {
+      headers: {
+        "x-csrf-token": csrfToken,
+      },
+      withCredentials: true
     }
   );
   return response;

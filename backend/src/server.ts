@@ -47,7 +47,7 @@ const {
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
   getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
-  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
+  getSessionIdentifier: (req) => req.cookies['access_token'] || req.cookies['lti_token'] || "",
 });
 
 const csrfProtection = (req, res, next) => {
@@ -59,10 +59,10 @@ const csrfProtection = (req, res, next) => {
       return next();
     }
     // Public booking endpoint /api/v1/event/:id/slot:
-    // - If the request is anonymous (no access_token cookie), allow it without CSRF.
-    // - If an access_token cookie is present (authenticated flow), require CSRF.
+    // - If the request is anonymous (no access_token and no lti_token), allow it without CSRF.
+    // - If an access_token or lti_token cookie is present (authenticated flow), require CSRF.
     const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
-    if (bookingPathRegex.test(req.path) && !req.cookies['access_token']) {
+    if (bookingPathRegex.test(req.path) && !req.cookies['access_token'] && !req.cookies['lti_token']) {
       return next();
     }
   }
