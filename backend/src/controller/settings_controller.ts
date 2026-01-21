@@ -23,6 +23,7 @@ export const exportSettings = async (req: Request, res: Response): Promise<void>
             google_tokens,
             createdAt,
             updatedAt,
+            __v,
             ...userSettings
         } = user as any;
 
@@ -31,7 +32,7 @@ export const exportSettings = async (req: Request, res: Response): Promise<void>
         const exportData = {
             user: userSettings,
             events: events.map((event: any) => {
-                const { _id, user, createdAt, updatedAt, ...eventData } = event;
+                const { _id, user, createdAt, updatedAt, __v, ...eventData } = event;
                 return eventData;
             })
         };
