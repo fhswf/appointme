@@ -60,7 +60,9 @@ describe("GET /api/v1/user/me Reproduction", () => {
 
         // 2. Mock User Found
         (UserModel.findOne as any).mockReturnValue({
-            exec: vi.fn().mockResolvedValue({ ...USER, _id: "user_id_123" })
+            lean: vi.fn().mockReturnValue({
+                exec: vi.fn().mockResolvedValue({ ...USER, _id: "user_id_123" })
+            })
         });
 
         // 3. Request with Cookie
@@ -76,7 +78,9 @@ describe("GET /api/v1/user/me Reproduction", () => {
         const token = jsonwebtoken.sign({ _id: "user_id_404" }, JWT_SECRET);
 
         (UserModel.findOne as any).mockReturnValue({
-            exec: vi.fn().mockResolvedValue(null)
+            lean: vi.fn().mockReturnValue({
+                exec: vi.fn().mockResolvedValue(null)
+            })
         });
 
         const res = await request(app)

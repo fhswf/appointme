@@ -88,6 +88,7 @@ export const getUser = (req: Request, res: Response): void => {
         "use_gravatar": 1,
         "defaultAvailable": 1
       })
+      .lean()
       .exec()
       .then(user => {
         if (!user) {
