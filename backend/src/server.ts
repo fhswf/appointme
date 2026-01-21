@@ -32,7 +32,6 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
-app.use(cookieParser(process.env.CSRF_SECRET));
 
 const {
   doubleCsrfProtection,
@@ -62,6 +61,7 @@ const csrfProtection = (req, res, next) => {
 };
 
 app.use(csrfProtection);
+app.use(cookieParser(process.env.CSRF_SECRET));
 
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
