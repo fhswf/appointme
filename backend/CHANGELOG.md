@@ -1,3 +1,10 @@
+## backend [1.38.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.0...backend@1.38.1-rc.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* refine csrf exemption rules ([f88e5c8](https://github.com/fhswf/appointme/commit/f88e5c80d526596a7dd673f0d46b782f600f20cd))
+
 # backend [1.38.0](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0) (2026-01-21)
 
 
