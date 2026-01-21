@@ -171,6 +171,46 @@ describe("Settings Controller", () => {
             expect(updateArg.$set.google_tokens).toBeUndefined();
             expect(updateArg.$set.roles).toBeUndefined();
         });
+
+        it("should handle unique constraint violations for user_url and picture_url", async () => {
+            const conflictingSettings = {
+                theme: "dark",
+                user_url: "taken_url",
+                picture_url: "taken_picture_url"
+            };
+
+            // Simulate collision check finding existing users
+            (UserModel as any).find = vi.fn().mockReturnValue({
+                select: vi.fn().mockReturnValue({
+                    lean: vi.fn().mockReturnValue({
+                        exec: vi.fn().mockImplementation(() => {
+                            // Return conflict for both
+                            return Promise.resolve([
+                                { _id: "other_user_1", user_url: "taken_url" },
+                                { _id: "other_user_2", picture_url: "taken_picture_url" }
+                            ]);
+                        })
+                    })
+                })
+            });
+
+            (UserModel.findByIdAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({})
+            });
+
+            const res = await request(app)
+                .put("/api/v1/user/settings")
+                .send({ user: conflictingSettings });
+
+            expect(res.status).toBe(200);
+
+            const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
+            const updateArg = updateCall[1];
+            expect(updateArg.$set.theme).toBe("dark");
+            // These should be undefined because they conflict
+            expect(updateArg.$set.user_url).toBeUndefined();
+            expect(updateArg.$set.picture_url).toBeUndefined();
+        });
     });
 
     describe("GET /api/v1/user/settings", () => {

@@ -57,6 +57,23 @@ const importUserSettings = async (userId: string, userSettings: any) => {
     delete userSettings.google_tokens;
     delete userSettings.roles; // Security: Don't allow role escalation via import
 
+    // Check for unique constraint violations (user_url, picture_url)
+    const uniqueChecks: any[] = [];
+    if (userSettings.user_url) uniqueChecks.push({ user_url: userSettings.user_url });
+    if (userSettings.picture_url) uniqueChecks.push({ picture_url: userSettings.picture_url });
+
+    if (uniqueChecks.length > 0) {
+        const conflicts = await UserModel.find({
+            _id: { $ne: userId },
+            $or: uniqueChecks
+        }).select('user_url picture_url').lean().exec();
+
+        for (const conflict of conflicts) {
+            if (conflict.user_url === userSettings.user_url) delete userSettings.user_url;
+            if (conflict.picture_url === userSettings.picture_url) delete userSettings.picture_url;
+        }
+    }
+
     // Sanitize userSettings to avoid injecting MongoDB operators
     const safeUserSettings: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(userSettings)) {
