@@ -1,3 +1,10 @@
+# client [1.34.0](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0) (2026-01-21)
+
+
+### Features
+
+* show event attributes in event card ([6a4c3d0](https://github.com/fhswf/appointme/commit/6a4c3d0df6f16a16713a9c31348800bb9dadcd1f))
+
 # client [1.34.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0-rc.1) (2026-01-21)
 
 
