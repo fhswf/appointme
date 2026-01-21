@@ -51,14 +51,18 @@ const {
 });
 
 const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/oidc/init and /api/v1/oidc/login from CSRF protection
+  // For POST requests, selectively allow certain unauthenticated endpoints
   if (req.method === 'POST') {
+    // OIDC init/login endpoints are handled via their own protocol flows and
+    // are not intended to rely on cookie-based authentication.
     if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
       return next();
     }
-    // Exclude public booking endpoint /api/v1/event/:id/slot
+    // Public booking endpoint /api/v1/event/:id/slot:
+    // - If the request is anonymous (no access_token cookie), allow it without CSRF.
+    // - If an access_token cookie is present (authenticated flow), require CSRF.
     const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
-    if (bookingPathRegex.test(req.path)) {
+    if (bookingPathRegex.test(req.path) && !req.cookies['access_token']) {
       return next();
     }
   }
