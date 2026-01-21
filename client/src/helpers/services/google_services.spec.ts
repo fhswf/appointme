@@ -123,6 +123,7 @@ describe('google_services', () => {
             const description = 'Test meeting';
 
             const mockResponse = { data: { success: true, eventId: 'created-event-id' } };
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
             vi.mocked(axios.post).mockResolvedValue(mockResponse);
 
             const result = await insertEvent(eventId, time, name, email, description);
@@ -134,6 +135,12 @@ describe('google_services', () => {
                     attendeeName: name,
                     attendeeEmail: email,
                     description
+                },
+                {
+                    headers: {
+                        'x-csrf-token': 'token'
+                    },
+                    withCredentials: true
                 }
             );
             expect(result).toEqual(mockResponse);
@@ -142,6 +149,7 @@ describe('google_services', () => {
         it('should convert time to valueOf', async () => {
             const time = new Date('2025-01-15T14:30:00Z');
             vi.mocked(axios.post).mockResolvedValue({ data: {} });
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
 
             await insertEvent('event1', time, 'Name', 'email@test.com', 'Description');
 
@@ -149,11 +157,18 @@ describe('google_services', () => {
                 expect.any(String),
                 expect.objectContaining({
                     start: time.valueOf()
+                }),
+                expect.objectContaining({
+                    headers: {
+                        'x-csrf-token': 'token'
+                    },
+                    withCredentials: true
                 })
             );
         });
 
         it('should handle errors', async () => {
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
             vi.mocked(axios.post).mockRejectedValue(new Error('Slot not available'));
 
             await expect(
@@ -162,6 +177,7 @@ describe('google_services', () => {
         });
 
         it('should handle missing description', async () => {
+            vi.mocked(csrfService.getCsrfToken).mockResolvedValue('token');
             vi.mocked(axios.post).mockResolvedValue({ data: {} });
 
             await insertEvent('event1', new Date(), 'Name', 'email@test.com', '');
@@ -170,6 +186,12 @@ describe('google_services', () => {
                 expect.any(String),
                 expect.objectContaining({
                     description: ''
+                }),
+                expect.objectContaining({
+                    headers: {
+                        'x-csrf-token': 'token'
+                    },
+                    withCredentials: true
                 })
             );
         });

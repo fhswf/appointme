@@ -99,10 +99,10 @@ describe('EventList Component', () => {
         renderEventList();
 
         await waitFor(() => {
-            expect(screen.getByTestId('event-list')).toBeInTheDocument();
+            expect(screen.getByText('Test Event 1')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('Test Event 1')).toBeInTheDocument();
+        expect(screen.getByTestId('event-list')).toBeInTheDocument();
         expect(screen.getByText('Test Event 2')).toBeInTheDocument();
     });
 

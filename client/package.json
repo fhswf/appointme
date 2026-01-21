@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.33.1",
+  "version": "1.33.2-rc.1",
   "homepage": "https://jupiter.fh-swf.de/meeting",
   "contributors": [
     {
@@ -36,8 +36,8 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@react-oauth/google": "latest",
-    "@sentry/browser": "^10.35.0",
-    "@sentry/react": "^10.35.0",
+    "@sentry/browser": "^10.36.0",
+    "@sentry/react": "^10.36.0",
     "@stepperize/react": "^5.1.9",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.9",

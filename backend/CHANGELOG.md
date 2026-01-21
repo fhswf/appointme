@@ -1,3 +1,17 @@
+## backend [1.38.1-rc.2](https://github.com/fhswf/appointme/compare/backend@1.38.1-rc.1...backend@1.38.1-rc.2) (2026-01-21)
+
+
+### Bug Fixes
+
+* add csrf tokens for the booking endpoint ([83fad2f](https://github.com/fhswf/appointme/commit/83fad2f98e5d4a421d872ebe84ecf5ce14c3d321))
+
+## backend [1.38.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.0...backend@1.38.1-rc.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* refine csrf exemption rules ([f88e5c8](https://github.com/fhswf/appointme/commit/f88e5c80d526596a7dd673f0d46b782f600f20cd))
+
 # backend [1.38.0](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0) (2026-01-21)
 
 
