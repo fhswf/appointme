@@ -13,7 +13,7 @@ const Legal: React.FC = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const { user } = useContext(UserContext);
-    const [activeTab, setActiveTab] = useState<'terms' | 'impressum' | 'privacy'>('terms');
+    const [activeTab, setActiveTab] = useState<'terms' | 'impressum' | 'privacy'>('privacy');
 
     const showExtended = user || location.state?.from === '/' || location.state?.from === '/landing';
 
@@ -35,6 +35,13 @@ const Legal: React.FC = () => {
                     <div className="flex space-x-4 border-b border-border mb-8">
                         <Button
                             variant="ghost"
+                            className={`pb-2 rounded-none px-4 ${activeTab === 'privacy' ? 'border-b-2 border-primary font-bold text-foreground' : 'text-muted-foreground'}`}
+                            onClick={() => setActiveTab('privacy')}
+                        >
+                            {t("Datenschutzhinweise")}
+                        </Button>
+                        <Button
+                            variant="ghost"
                             className={`pb-2 rounded-none px-4 ${activeTab === 'terms' ? 'border-b-2 border-primary font-bold text-foreground' : 'text-muted-foreground'}`}
                             onClick={() => setActiveTab('terms')}
                         >
@@ -47,16 +54,15 @@ const Legal: React.FC = () => {
                         >
                             {t("Impressum")}
                         </Button>
-                        <Button
-                            variant="ghost"
-                            className={`pb-2 rounded-none px-4 ${activeTab === 'privacy' ? 'border-b-2 border-primary font-bold text-foreground' : 'text-muted-foreground'}`}
-                            onClick={() => setActiveTab('privacy')}
-                        >
-                            {t("Datenschutzhinweise")}
-                        </Button>
                     </div>
 
                     <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        {activeTab === 'privacy' && (
+                            <div>
+                                <ReactMarkdown components={markdownComponents}>{showExtended ? t("privacy_content") : t("privacy_content_public")}</ReactMarkdown>
+                                <ContactInfo />
+                            </div>
+                        )}
                         {activeTab === 'terms' && (
                             <div>
                                 <ReactMarkdown components={markdownComponents}>{t("terms_of_use_content")}</ReactMarkdown>
@@ -66,12 +72,6 @@ const Legal: React.FC = () => {
                         {activeTab === 'impressum' && (
                             <div>
                                 <ReactMarkdown components={markdownComponents}>{t("impressum_content")}</ReactMarkdown>
-                                <ContactInfo />
-                            </div>
-                        )}
-                        {activeTab === 'privacy' && (
-                            <div>
-                                <ReactMarkdown components={markdownComponents}>{showExtended ? t("privacy_content") : t("privacy_content_public")}</ReactMarkdown>
                                 <ContactInfo />
                             </div>
                         )}
