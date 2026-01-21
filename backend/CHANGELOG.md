@@ -1,3 +1,11 @@
+## backend [1.38.2](https://github.com/fhswf/appointme/compare/backend@1.38.1...backend@1.38.2) (2026-01-21)
+
+
+### Bug Fixes
+
+* mongodb performance improvements ([0e6265f](https://github.com/fhswf/appointme/commit/0e6265f3fadd1836b174510d9da6c8186ad6917d))
+* mongodb performance improvements ([757fe59](https://github.com/fhswf/appointme/commit/757fe59b3122862edad62f3a25facda8e60e8c96))
+
 ## backend [1.38.2-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.1...backend@1.38.2-rc.1) (2026-01-21)
 
 
