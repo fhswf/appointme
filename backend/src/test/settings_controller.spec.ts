@@ -172,4 +172,93 @@ describe("Settings Controller", () => {
             expect(updateArg.$set.roles).toBeUndefined();
         });
     });
+
+    describe("GET /api/v1/user/settings", () => {
+        it("should export settings correctly", async () => {
+            const mockUser = {
+                _id: "test_user_id",
+                email: "test@example.com",
+                google_tokens: "secret_tokens",
+                roles: ["user"],
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                __v: 0,
+                theme: "dark",
+                language: "en"
+            };
+
+            const mockEvents = [
+                {
+                    _id: "event_id_1",
+                    user: "test_user_id",
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    __v: 0,
+                    title: "Event 1",
+                    url: "event-1"
+                }
+            ];
+
+            (UserModel.findById as any).mockReturnValue({
+                lean: vi.fn().mockReturnValue({
+                    exec: vi.fn().mockResolvedValue(mockUser)
+                })
+            });
+
+            (EventModel.find as any).mockReturnValue({
+                lean: vi.fn().mockReturnValue({
+                    exec: vi.fn().mockResolvedValue(mockEvents)
+                })
+            });
+
+            const res = await request(app).get("/api/v1/user/settings");
+
+            expect(res.status).toBe(200);
+            expect(res.headers['content-type']).toMatch(/application\/json/);
+            expect(res.headers['content-disposition']).toMatch(/attachment; filename="settings-.*\.json"/);
+
+            expect(res.body.user).toEqual({
+                theme: "dark",
+                language: "en",
+                email: "test@example.com",
+                roles: ["user"]
+            });
+            expect(res.body.user._id).toBeUndefined();
+            expect(res.body.user.google_tokens).toBeUndefined();
+
+            expect(res.body.events).toHaveLength(1);
+            expect(res.body.events[0]).toEqual({
+                title: "Event 1",
+                url: "event-1"
+            });
+            expect(res.body.events[0]._id).toBeUndefined();
+            expect(res.body.events[0].user).toBeUndefined();
+        });
+
+        it("should handle user not found", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                lean: vi.fn().mockReturnValue({
+                    exec: vi.fn().mockResolvedValue(null)
+                })
+            });
+
+            const res = await request(app).get("/api/v1/user/settings");
+
+            expect(res.status).toBe(404);
+            expect(res.body).toEqual({ error: "User not found" });
+        });
+
+        it("should handle export errors", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                lean: vi.fn().mockReturnValue({
+                    exec: vi.fn().mockRejectedValue(new Error("DB Error"))
+                })
+            });
+
+            const res = await request(app).get("/api/v1/user/settings");
+
+            expect(res.status).toBe(500);
+            expect(res.body).toEqual({ error: "Failed to export settings" });
+        });
+    });
 });
