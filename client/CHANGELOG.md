@@ -1,3 +1,19 @@
+# client [1.33.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.3...client@1.33.0-rc.4) (2026-01-21)
+
+
+### Bug Fixes
+
+* make privacy the main item on the legal page ([0713a35](https://github.com/fhswf/appointme/commit/0713a35f777f6d05696ef0aaf86e98efccefbcf5))
+* update legal information on the landing page ([7854f2d](https://github.com/fhswf/appointme/commit/7854f2dbd2b31c6a0461a41cef5331619f967e90))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.15.1-rc.1
+
 # client [1.33.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.2...client@1.33.0-rc.3) (2026-01-21)
 
 
