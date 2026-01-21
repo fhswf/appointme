@@ -45,16 +45,24 @@ const {
     secure: process.env.NODE_ENV === "production",
   },
   size: 64,
+  // Only safe, idempotent methods are ignored; all state-changing methods
+  // (e.g., POST, PUT, PATCH, DELETE) are protected by default.
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
   getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
   getSessionIdentifier: (req) => req.cookies['access_token'] || req.cookies['lti_token'] || "",
 });
 
-const csrfProtection = (req, res, next) => {
+// Helper: a request is considered "authenticated" if it carries either of the
+// cookies used for identifying a user session.
+const isAuthenticatedRequest = (req: express.Request): boolean => {
+  return !!(req.cookies['access_token'] || req.cookies['lti_token']);
+};
+
+const csrfProtection: express.RequestHandler = (req, res, next) => {
   // For POST requests, selectively allow certain unauthenticated endpoints
   if (req.method === 'POST') {
     // OIDC init/login endpoints are handled via their own protocol flows and
-    // are not intended to rely on cookie-based authentication.
+    // must not rely on cookie-based authentication.
     if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
       return next();
     }
@@ -62,11 +70,13 @@ const csrfProtection = (req, res, next) => {
     // - If the request is anonymous (no access_token and no lti_token), allow it without CSRF.
     // - If an access_token or lti_token cookie is present (authenticated flow), require CSRF.
     const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
-    if (bookingPathRegex.test(req.path) && !req.cookies['access_token'] && !req.cookies['lti_token']) {
+    if (bookingPathRegex.test(req.path) && !isAuthenticatedRequest(req)) {
       return next();
     }
   }
-  doubleCsrfProtection(req, res, next);
+  // All other requests (including all authenticated, state-changing ones)
+  // are protected by the doubleCsrf middleware.
+  return doubleCsrfProtection(req, res, next);
 };
 
 app.use(cookieParser(process.env.CSRF_SECRET));
