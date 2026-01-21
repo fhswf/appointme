@@ -7,8 +7,14 @@ import { USER } from './USER.js';
 // Mock dependencies
 vi.mock("../models/User.js", () => {
     const UserModelMock = vi.fn();
-    (UserModelMock as any).findOne = vi.fn();
-    (UserModelMock as any).findById = vi.fn();
+    (UserModelMock as any).findOne = vi.fn().mockReturnValue({
+        lean: vi.fn().mockReturnThis(),
+        exec: vi.fn()
+    });
+    (UserModelMock as any).findById = vi.fn().mockReturnValue({
+        lean: vi.fn().mockReturnThis(),
+        exec: vi.fn()
+    });
     (UserModelMock as any).findByIdAndUpdate = vi.fn();
     (UserModelMock as any).find = vi.fn();
     return { UserModel: UserModelMock };
@@ -278,6 +284,7 @@ describe("User Controller", () => {
 
         it("should return user data if found", async () => {
             (UserModel.findOne as any).mockReturnValue({
+                lean: vi.fn().mockReturnThis(),
                 exec: vi.fn().mockResolvedValue(USER)
             });
 
@@ -288,6 +295,7 @@ describe("User Controller", () => {
 
         it("should return 404 if user not found", async () => {
             (UserModel.findOne as any).mockReturnValue({
+                lean: vi.fn().mockReturnThis(),
                 exec: vi.fn().mockResolvedValue(null)
             });
 

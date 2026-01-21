@@ -124,15 +124,20 @@ export const EventCard = (props: EventCardProps) => {
           {props.event.description}
         </p>
 
-        {props.event.tags && props.event.tags.length > 0 && (
+        {(props.event.tags && props.event.tags.length > 0) || (props.event.allowed_roles && props.event.allowed_roles.includes("student")) ? (
           <div className="flex flex-wrap gap-2 mt-4">
-            {props.event.tags.map((tag) => (
+            {props.event.allowed_roles?.includes("student") && (
+              <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-md text-xs font-medium border border-amber-200 dark:border-amber-800 flex items-center gap-1">
+                {t("Student Only")}
+              </span>
+            )}
+            {props.event.tags && props.event.tags.map((tag) => (
               <span key={tag} className="bg-muted text-muted-foreground px-2 py-1 rounded-md text-xs font-medium border border-border">
                 {tag}
               </span>
             ))}
           </div>
-        )}
+        ) : null}
       </CardContent>
 
       <CardFooter className="px-5 py-4 border-t border-border bg-muted/30 justify-between">

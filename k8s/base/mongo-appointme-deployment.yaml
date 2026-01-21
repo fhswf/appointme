@@ -29,7 +29,31 @@ spec:
       containers:
         - image: mongo
           name: mongo-appointme
-          resources: {}
+          args:
+            - "--profile"
+            - "1"
+            - "--slowms"
+            - "100"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 5
+            periodSeconds: 10
           ports:
             - containerPort: 27017
           volumeMounts:
