@@ -68,7 +68,17 @@ export const importSettings = async (req: Request, res: Response): Promise<void>
             delete userSettings.google_tokens;
             delete userSettings.roles; // Security: Don't allow role escalation via import
 
-            await UserModel.findByIdAndUpdate(userId, { $set: userSettings }, { new: true }).exec();
+            // Sanitize userSettings to avoid injecting MongoDB operators
+            const safeUserSettings: Record<string, unknown> = {};
+            for (const [key, value] of Object.entries(userSettings)) {
+                // Skip any keys that could be interpreted as MongoDB operators
+                if (typeof key === "string" && key.startsWith("$")) {
+                    continue;
+                }
+                safeUserSettings[key] = value;
+            }
+
+            await UserModel.findByIdAndUpdate(userId, { $set: safeUserSettings }, { new: true }).exec();
         }
 
         // Import Events
@@ -77,11 +87,25 @@ export const importSettings = async (req: Request, res: Response): Promise<void>
                 // Ensure event belongs to current user
                 eventData.user = userId;
 
+                // Copy only safe, non-operator fields from the incoming eventData
+                const safeEventData: any = {};
+                if (eventData && typeof eventData === "object") {
+                    for (const key of Object.keys(eventData)) {
+                        // Disallow MongoDB operator-style keys and reserved fields
+                        if (key.startsWith("$") || key === "user") {
+                            continue;
+                        }
+                        safeEventData[key] = eventData[key];
+                    }
+                }
+                safeEventData.user = userId;
+
+
                 // Use URL as unique identifier to update existing or create new
-                if (eventData.url) {
+                if (safeEventData.url && typeof safeEventData.url === 'string') {
                     await EventModel.findOneAndUpdate(
-                        { user: userId, url: eventData.url },
-                        { $set: eventData },
+                        { user: userId, url: safeEventData.url },
+                        { $set: safeEventData },
                         { upsert: true, new: true }
                     ).exec();
                 }
