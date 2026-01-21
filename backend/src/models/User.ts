@@ -84,6 +84,11 @@ const userSchema = new Schema<UserDocument>(
       default: "",
       unique: true,
     },
+    welcome: {
+      type: String,
+      default: "",
+      trim: true
+    },
     picture_url: {
       type: String,
       default: "",

@@ -74,4 +74,33 @@ describe("Landing Page", () => {
         expect(buttons.length).toBeGreaterThan(0);
         expect(buttons[0].closest('a')).toHaveAttribute('href', '/login');
     });
+
+    test("renders for transient user (unauthenticated)", () => {
+        (useAuth as any).mockReturnValue({
+            isAuthenticated: false,
+            user: null
+        });
+        render(
+            <BrowserRouter>
+                <Landing />
+            </BrowserRouter>
+        );
+
+        expect(screen.getByTestId("app-navbar")).toBeInTheDocument();
+        expect(screen.getByText(/Terminverwaltung/i)).toBeInTheDocument();
+    });
+
+    test("redirects for authenticated persistent user", () => {
+        (useAuth as any).mockReturnValue({
+            isAuthenticated: true,
+            user: { isTransient: false }
+        });
+        render(
+            <BrowserRouter>
+                <Landing />
+            </BrowserRouter>
+        );
+
+        expect(screen.queryByText(/Terminverwaltung/i)).not.toBeInTheDocument();
+    });
 });

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { UserModel } from '../models/User.js';
 import { getAuth } from './google_controller.js';
 import { logger } from '../logging.js';
-import { transporter } from '../utility/mailer.js';
+import { transporter, verifyConnection } from '../utility/mailer.js';
 
 /**
  * Validates Google Calendar tokens for all users.
@@ -18,13 +18,24 @@ export const validateGoogleTokens = async (req: Request, res: Response) => {
     }
 
     logger.info('Starting daily token validation job');
+
+    // Check SMTP connection
+    let smtpStatus = false;
+    try {
+        await verifyConnection();
+        smtpStatus = true;
+    } catch (e) {
+        logger.error('SMTP connection check failed: %o', e);
+    }
+
     const users = await UserModel.find({ 'google_tokens.access_token': { $exists: true } }).exec();
 
     const stats = {
         total: users.length,
         valid: 0,
         invalid: 0,
-        errors: 0
+        errors: 0,
+        smtp: smtpStatus
     };
 
     for (const user of users) {

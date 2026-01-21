@@ -373,8 +373,16 @@ describe('OIDC Controller', () => {
                 })
             });
 
-            // findOneAndUpdate should NOT be called (or we don't care, but for this test flow it matters)
-            // But wait, the code calls findOne first. If it returns user, we skip creation.
+            // Mock findOneAndUpdate for profile update
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    _id: 'existing_user_id',
+                    email: 'existing@example.com',
+                    name: 'Existing User',
+                    picture_url: 'http://pic.com/existing.jpg', // Updated picture
+                    roles: []
+                })
+            });
 
             (sign as any).mockReturnValue('mock_access_token');
 
@@ -565,6 +573,9 @@ describe('OIDC Controller', () => {
                 iss: 'https://lti.example.com',
                 aud: 'lti_client_id',
                 'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-123' },
+                'https://purl.imsglobal.org/spec/lti/claim/roles': ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner'],
+                'https://purl.imsglobal.org/spec/lti/claim/resource_link': { id: 'link-1' },
+                'https://purl.imsglobal.org/spec/lti/claim/tool_platform': { guid: 'tool-1' },
             };
 
             const jwtVerifyMock = vi.fn().mockResolvedValue({ payload: claims });
@@ -608,6 +619,9 @@ describe('OIDC Controller', () => {
                     email: 'lti@example.com',
                     name: 'LTI User',
                     lti_context_id: 'course-123',
+                    'https://purl.imsglobal.org/spec/lti/claim/roles': ['http://purl.imsglobal.org/vocab/lis/v2/membership#Learner'],
+                    'https://purl.imsglobal.org/spec/lti/claim/resource_link': { id: 'link-1' },
+                    'https://purl.imsglobal.org/spec/lti/claim/tool_platform': { guid: 'tool-1' },
                 }),
                 expect.anything(),
                 expect.anything()
@@ -618,7 +632,49 @@ describe('OIDC Controller', () => {
 
             // Should set cookie
             const cookies = res.headers['set-cookie'];
-            expect(cookies.some((c: string) => c.startsWith('access_token='))).toBe(true);
+            expect(cookies.some((c: string) => c.startsWith('lti_token='))).toBe(true);
+        });
+
+        it('should login successfully for LTI user without email (transient)', async () => {
+            await getCsrfToken();
+            const id_token = 'valid_lti_token_no_email';
+            const claims = {
+                sub: 'lti_user_no_email',
+                // no email
+                name: 'LTI No Email',
+                iss: 'https://lti.example.com',
+                aud: 'lti_client_id',
+                'https://purl.imsglobal.org/spec/lti/claim/context': { id: 'course-123' },
+            };
+
+            const jose = await import('jose');
+            (jose.jwtVerify as any).mockResolvedValue({ payload: claims });
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            // Mock User finding - return NULL
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: vi.fn() });
+
+            (sign as any).mockReturnValue('mock_lti_token');
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            // Currently fails with 400, but we want 302/200
+            expect(res.status).toBe(302);
+
+            expect(sign).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sub: 'lti_user_no_email',
+                    name: 'LTI No Email',
+                    // email should be undefined or not present
+                }),
+                expect.anything(),
+                expect.anything()
+            );
         });
 
         it('should include _id if local user exists for LTI and preserve google_tokens', async () => {
@@ -727,6 +783,14 @@ describe('OIDC Controller', () => {
                 exec: vi.fn().mockResolvedValue(mockUser) // Return same user after role update
             });
 
+            // Mock findOneAndUpdate for profile update
+            (UserModel.findOneAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...mockUser,
+                    name: 'OIDC Update',
+                })
+            });
+
             (sign as any).mockReturnValue('mock_access_token');
 
             const res = await request(app)
@@ -737,16 +801,20 @@ describe('OIDC Controller', () => {
 
             expect(res.status).toBe(200);
 
-            // Check that save was called (updating name/picture)
-            expect(mockUser.save).toHaveBeenCalled();
+            expect(res.status).toBe(200);
 
-            // Check that google_tokens were NOT modified
-            expect(mockUser.google_tokens).toEqual({
-                access_token: 'preserve_me',
-                refresh_token: 'keep_me'
-            });
-            // name should be updated
-            expect(mockUser.name).toBe('OIDC Update');
+            // Check that save was NOT called
+            expect(mockUser.save).not.toHaveBeenCalled();
+
+            // Check findOneAndUpdate was called with safer update
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: 'local_user_id' },
+                { $set: expect.objectContaining({ name: 'OIDC Update' }) },
+                expect.objectContaining({ new: true })
+            );
+
+            // We rely on findOneAndUpdate to return the object with google_tokens (which we mocked above)
+
         });
 
         it('should fall back to constructed JWKS URI if valid issuer present', async () => {

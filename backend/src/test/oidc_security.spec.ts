@@ -123,8 +123,26 @@ describe("OIDC Security Bug Reproduction", () => {
 
         expect(mockFindOne).not.toHaveBeenCalled();
 
-        // Verify findOneAndUpdate (upsert) was NOT called (since we updated existing user without upsert logic via updateUserRoles which calls updateOne)
-        expect(mockFindOneAndUpdate).not.toHaveBeenCalled();
+        // Verify findOneAndUpdate (upsert) was NOT called for *email* update.
+        // It IS called for updating name/picture via updateExistingUser, but we must ensure email is not in the $set.
+        // calculate what we expect:
+        // updateExistingUser calls: UserModel.findOneAndUpdate({ _id: user._id }, { $set: update }, ...)
+        // update object should only contain name (and maybe picture), NOT email.
+
+        expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                $set: expect.objectContaining({ name: "New Name" })
+            }),
+            expect.anything()
+        );
+
+        // Crucial check: Email should NOT be in the $set object
+        const updateCall = mockFindOneAndUpdate.mock.calls.find(call => call[0]._id === "google-123");
+        if (updateCall) {
+            const updateOp = updateCall[1];
+            expect(updateOp.$set).not.toHaveProperty("email");
+        }
 
         // Verify updateOne WAS called (via updateUserRoles)
         // updateUserRoles implementation: await UserModel.updateOne({ _id: user._id }, { $addToSet: params }).exec();

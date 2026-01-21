@@ -80,7 +80,7 @@ spec:
                   key: TZ
                   name: appointme
             - name: NODE_ENV
-              value: development
+              value: production
             - name: DISABLE_GOOGLE_LOGIN
               valueFrom:
                 configMapKeyRef:
@@ -155,6 +155,21 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: LTI_JWKS_URI
+                  name: appointme
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: SMTP_HOST
+                  name: appointme
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: SMTP_PORT
+                  name: appointme
+            - name: SMTP_SECURE
+              valueFrom:
+                configMapKeyRef:
+                  key: SMTP_SECURE
                   name: appointme
           image: ghcr.io/fhswf/appointme/backend:latest
           name: appointme

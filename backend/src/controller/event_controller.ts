@@ -454,18 +454,34 @@ export const getEventByIdController = (req: Request, res: Response): void => {
  * @param {request} req
  * @param {response} res
  */
-export const getActiveEventsController = (req: Request, res: Response): void => {
+export const getActiveEventsController = async (req: Request, res: Response): Promise<void> => {
   const userid = req.params.userId;
+  let userRoles: string[] = [];
 
-  EventModel
-    .find({ user: userid, isActive: true })
-    .exec()
-    .then(event => {
-      res.status(200).json(event);
-    })
-    .catch(err => {
-      res.status(400).json({ error: err });
+  try {
+    if (req["user"]) {
+      userRoles = req["user"].roles || [];
+    } else if (req["user_id"]) {
+      const user = await UserModel.findById(req["user_id"]).exec();
+      if (user) {
+        userRoles = user.roles || [];
+      }
+    } else if (req['user_claims']) {
+      userRoles = req['user_claims'].roles || [];
+    }
+
+    const events = await EventModel.find({ user: userid, isActive: true }).exec();
+    const visibleEvents = events.filter(event => {
+      if (!event.allowed_roles || event.allowed_roles.length === 0) {
+        return true;
+      }
+      return event.allowed_roles.some(r => userRoles.includes(r));
     });
+
+    res.status(200).json(visibleEvents);
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
 }
 
 /**

@@ -23,7 +23,7 @@ To deploy the application on Kubernetes, you need to create the necessary Config
 1.  **Prepare Configuration:**
     Detailed configuration templates are provided in `backend/k8s/`.
     *   `backend/k8s/configmap.yaml.example`: Use this as a template. Rename it to `configmap.yaml` (or create a new one). **This is the central configuration for both backend and client.**
-        *   Updates to `API_URL` and `CLIENT_URL` here will configure the Backend.
+        *   Updates to `API_URL` and `BASE_URL` here will configure the Backend.
         *   Updates to `REACT_APP_API_URL` and `REACT_APP_URL` here will be injected into the Client.
         *   Set `MONGO_URI` and `CORS_ALLOWED_ORIGINS` as needed.
     *   `backend/k8s/secret.yaml.example`: Use this as a template. Rename it to `secret.yaml` (or create a new one) and set sensitive secrets. **Important:** Replace the placeholder values (e.g., `changeme`) with your actual secrets before applying.
@@ -75,7 +75,7 @@ You can manage multiple environments (e.g., Staging, Production) using Kustomize
       name: appointme
     data:
       API_URL: "https://staging.example.com/api/v1"
-      CLIENT_URL: "https://staging.example.com"
+      BASE_URL: "https://staging.example.com"
       REACT_APP_API_URL: "https://staging.example.com/api/v1"
       REACT_APP_URL: "https://staging.example.com"
     ```
@@ -121,23 +121,31 @@ spec:
 
 - provide details in `docker.env` and `.env`
 
-#### Environment Variables
+#### Configuration Values
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `MONGO_URI` | Connection string for MongoDB | Yes | |
-| `CLIENT_URL` | URL of the frontend application (e.g., `https://example.com`) | Yes | |
-| `API_URL` | URL of the backend API (e.g., `https://api.example.com/api/v1`) | Yes | |
-| `JWT_SECRET` | Secret key for signing JWTs | Yes | |
-| `CLIENT_ID` | Google OAuth2 Client ID | No (if Google Login disabled) | |
-| `CLIENT_SECRET` | Google OAuth2 Client Secret | No (if Google Login disabled) | |
-| `DISABLE_GOOGLE_LOGIN`| Set to `true` to disable Google Login | No | `false` |
-| `OIDC_ISSUER` | OIDC Provider URL (e.g., Keycloak Realm URL) | No (if OIDC disabled) | |
-| `OIDC_CLIENT_ID` | OIDC Client ID | No (if OIDC disabled) | |
-| `OIDC_CLIENT_SECRET` | OIDC Client Secret (for Confidential clients) | No | |
-| `EMAIL_FROM` | Email address for sending notifications | Yes | |
-| `EMAIL_PASSWORD` | Password for the email account | Yes | |
-| `ENCRYPTION_KEY` | 32-byte hex key for encrypting CalDAV passwords | Yes | |
+| Variable | Description | Required | Default | Source |
+|----------|-------------|----------|---------|--------|
+| `MONGO_URI` | Connection string for MongoDB | Yes | | ConfigMap: `appointme` |
+| `BASE_URL` | URL of the frontend application (e.g., `https://example.com`) | Yes | | ConfigMap: `appointme` |
+| `API_URL` | URL of the backend API (e.g., `https://api.example.com/api/v1`) | Yes | | ConfigMap: `appointme` |
+| `BASE_PATH` | Base path of the application | No | `/` | ConfigMap: `appointme` |
+| `DOMAIN` | Domain for cookie scoping (e.g. `example.com`) | No | | ConfigMap: `appointme` (implied) |
+| `JWT_SECRET` | Secret key for signing JWTs | Yes | | Secret: `appointme-secret` |
+| `CSRF_SECRET` | Secret key for CSRF protection | Yes | | Secret: `appointme-secret` |
+| `ADMIN_API_KEY` | API Key for admin/cron operations | Yes | | Secret: `appointme-secret` |
+| `SENTRY_DSN` | Sentry DSN for error tracking | No | | Secret: `appointme-secret` |
+| `CLIENT_ID` | Google OAuth2 Client ID | No (if Google Login disabled) | | Secret: `appointme-secret` |
+| `CLIENT_SECRET` | Google OAuth2 Client Secret | No (if Google Login disabled) | | Secret: `appointme-secret` |
+| `DISABLE_GOOGLE_LOGIN`| Set to `true` to disable Google Login | No | `false` | ConfigMap: `appointme` |
+| `OIDC_ISSUER` | OIDC Provider URL (e.g., Keycloak Realm URL) | No (if OIDC disabled) | | ConfigMap: `appointme` |
+| `OIDC_CLIENT_ID` | OIDC Client ID | No (if OIDC disabled) | | ConfigMap: `appointme` |
+| `OIDC_CLIENT_SECRET` | OIDC Client Secret (for Confidential clients) | No | | Secret: `appointme-secret` |
+| `EMAIL_FROM` | Email address for sending notifications | Yes | | Secret: `appointme-secret` |
+| `EMAIL_PASSWORD` | Password for the email account | Yes | | Secret: `appointme-secret` |
+| `ENCRYPTION_KEY` | 32-byte hex key for encrypting CalDAV passwords | Yes | | Secret: `appointme-secret` |
+| `CONTACT_INFO` | Contact information (Markdown supported) | No | | ConfigMap: `appointme` |
+| `REACT_APP_API_URL` | Public API URL for the React Client | Yes | | ConfigMap: `appointme` |
+| `REACT_APP_URL` | Public URL of the React Client | Yes | | ConfigMap: `appointme` |
 
 ## LTI Integration
 
@@ -176,13 +184,19 @@ The LTI integration is implemented using the standard OIDC authentication flow:
 
 To enable LTI/OIDC authentication, configure the following environment variables:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `OIDC_ISSUER` | OIDC Provider/LTI Platform URL | `https://keycloak.example.com/realms/myrealm` |
-| `OIDC_CLIENT_ID` | OIDC Client ID registered with the provider | `appointme` |
-| `OIDC_CLIENT_SECRET` | Client Secret (for confidential clients) | `your-secret-here` |
-| `OIDC_NAME` | Display name for the login button (optional) | `Campus-ID` |
-| `OIDC_ICON` | Icon path for the login button (optional) | `/fh-swf.svg` |
+| Variable | Description | Example | Source |
+|----------|-------------|---------|--------|
+| `OIDC_ISSUER` | OIDC Provider/LTI Platform URL | `https://keycloak.example.com/realms/myrealm` | ConfigMap: `appointme` |
+| `OIDC_CLIENT_ID` | OIDC Client ID registered with the provider | `appointme` | ConfigMap: `appointme` |
+| `OIDC_CLIENT_SECRET` | Client Secret (for confidential clients) | `your-secret-here` | Secret: `appointme-secret` |
+| `OIDC_NAME` | Display name for the login button (optional) | `Campus-ID` | ConfigMap: `appointme` |
+| `OIDC_ICON` | Icon path for the login button (optional) | `/fh-swf.svg` | ConfigMap: `appointme` |
+| `LTI_ISSUER` | LTI Issuer URL (Overrides OIDC_ISSUER for LTI) | `https://moodle.example.com` | ConfigMap: `appointme` |
+| `LTI_CLIENT_ID` | LTI Client ID (Overrides OIDC_CLIENT_ID for LTI) | `client-123` | ConfigMap: `appointme` |
+| `LTI_CLIENT_SECRET` | LTI Client Secret (Overrides OIDC_CLIENT_SECRET) | `secret-456` | Secret (Implicit?) |
+| `LTI_AUTH_ENDPOINT` | LTI Authorization Endpoint | `https://moodle.example.com/mod/lti/auth.php` | ConfigMap: `appointme` |
+| `LTI_TOKEN_ENDPOINT` | LTI Token Endpoint | `https://moodle.example.com/mod/lti/token.php` | ConfigMap: `appointme` |
+| `LTI_JWKS_URI` | LTI JWKS URI | `https://moodle.example.com/mod/lti/certs.php` | ConfigMap: `appointme` |
 
 ### Setting Up with Keycloak
 
@@ -204,7 +218,7 @@ To enable LTI/OIDC authentication, configure the following environment variables
  
  **Moodle Tool Configuration:**
  
- *   **Tool URL**: `[CLIENT_URL]` (e.g., `https://appointme.example.com`)
+ *   **Tool URL**: `[BASE_URL]` (e.g., `https://appointme.example.com`)
  *   **LTI version**: LTI 1.3
  *   **Public key type**: RSA Key
     *   *AppointMe uses `client_secret_basic` authentication (Client ID + Client Secret) to communicate with the LMS. It DOES NOT sign requests with a private key (which is what `private_key_jwt` uses).*
@@ -216,7 +230,7 @@ To enable LTI/OIDC authentication, configure the following environment variables
         ```
     *   *Paste `public.key` into Moodle. AppointMe does NOT need the private key and will NOT use this key pair. It validates the JWTs sent BY Moodle using Moodle's own public keys (fetched automatically via the Issuer URL).*
  *   **Initiate login URL**: `[API_URL]/api/v1/oidc/init` (e.g., `https://api.appointme.example.com/api/v1/oidc/init`)
- *   **Redirection URI(s)**: `[CLIENT_URL]/oidc-callback` (e.g., `https://appointme.example.com/oidc-callback`)
+ *   **Redirection URI(s)**: `[BASE_URL]/oidc-callback` (e.g., `https://appointme.example.com/oidc-callback`)
  *   **Custom parameters**: No custom parameters are required.
      *   *Roles are automatically mapped from `https://purl.imsglobal.org/spec/lti/claim/roles`.*
  

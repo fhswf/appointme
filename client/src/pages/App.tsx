@@ -30,6 +30,22 @@ const App = () => {
   const renderContent = () => {
     if (!user) return null;
 
+    if (user.isTransient) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
+          <h1 className="text-3xl font-bold">{t("Welcome, {{name}}", { name: user.name })}</h1>
+          <p className="text-muted-foreground max-w-md">
+            {t("You are logged in via your Learning Management System. Please use the specific booking links provided in your course to book appointments.")}
+          </p>
+          <Button asChild variant="outline" className="mt-4">
+            <RouterLink to="/logout">
+              {t("Logout")}
+            </RouterLink>
+          </Button>
+        </div>
+      );
+    }
+
     if (!connected) {
       return (
         <>

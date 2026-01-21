@@ -87,6 +87,7 @@ describe('Booking Page', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         (userServices.getUserByUrl as any).mockResolvedValue({ data: mockUser });
+        (userServices.getTransientUser as any).mockResolvedValue({ data: null });
         (eventServices.getEventByUrlAndUser as any).mockResolvedValue({ data: mockEvent });
         // @ts-ignore
         (eventServices.getAvailableTimes as any).mockResolvedValue(mockSlotsImpl);

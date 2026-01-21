@@ -4,6 +4,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { doubleCsrf } from "csrf-csrf";
 import { dataBaseConn } from "./config/dbConn.js";
 
 //Load routes
@@ -31,6 +32,43 @@ const app = express();
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
+
+const {
+  doubleCsrfProtection,
+  generateCsrfToken
+} = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || "default_csrf_secret",
+  cookieName: "x-csrf-token",
+  cookieOptions: {
+    sameSite: "lax",
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  },
+  size: 64,
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+  getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
+  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
+});
+
+const csrfProtection = (req, res, next) => {
+  // Exclude POST /api/v1/oidc/init and /api/v1/oidc/login from CSRF protection
+  if (req.method === 'POST') {
+    if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+      return next();
+    }
+    // Exclude public booking endpoint /api/v1/event/:id/slot
+    const bookingPathRegex = /^\/api\/v1\/event\/[^/]+\/slot$/;
+    if (bookingPathRegex.test(req.path)) {
+      return next();
+    }
+  }
+  doubleCsrfProtection(req, res, next);
+};
+
+app.use(cookieParser(process.env.CSRF_SECRET));
+app.use(csrfProtection);
+
+
 const ORIGINS = [process.env.BASE_URL, "https://appointme.gawron.cloud"];
 if (process.env.NODE_ENV === "development") {
   ORIGINS.push("http://localhost:5173");
@@ -49,7 +87,7 @@ app.use(
   })
 );
 
-app.use(cookieParser(process.env.CSRF_SECRET));
+
 
 //Connecting to the database
 if (process.env.NODE_ENV !== "test") {
@@ -59,37 +97,6 @@ if (process.env.NODE_ENV !== "test") {
 //Bodyparser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-import { doubleCsrf } from "csrf-csrf";
-
-const {
-  doubleCsrfProtection,
-  generateCsrfToken
-} = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET || "Secret",
-  cookieName: "x-csrf-token",
-  cookieOptions: {
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  },
-  size: 64,
-  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-  getCsrfTokenFromRequest: (req) => req.headers["x-csrf-token"],
-  getSessionIdentifier: (req) => req.cookies['access_token'] || "",
-});
-
-const csrfProtection = (req, res, next) => {
-  // Exclude POST /api/v1/events/:id/slot, /api/v1/cron/validate-tokens AND /api/v1/oidc/init from CSRF protection
-  if (req.method === 'POST') {
-    if (/^\/api\/v1\/event\/[^/]+\/slot$/.test(req.path) || req.path === '/api/v1/cron/validate-tokens' || req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
-      return next();
-    }
-  }
-  doubleCsrfProtection(req, res, next);
-};
-
-app.use(csrfProtection);
 
 /**
  * @openapi
@@ -142,7 +149,7 @@ const cronLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.post("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
+router.get("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
 
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")

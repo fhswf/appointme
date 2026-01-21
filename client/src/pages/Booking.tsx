@@ -61,14 +61,38 @@ const Booking = () => {
 
   // Pre-fill details from auth user (LTI or regular)
   useEffect(() => {
-    if (auth.user && !details) {
-      setDetails({
-        name: auth.user.name || "",
-        email: auth.user.email || "",
-        description: "" // User can add more info
+    if (auth.user) {
+      setDetails((prev) => {
+        if (prev) return prev;
+        return {
+          name: auth.user!.name || "",
+          email: auth.user!.email || "",
+          description: "",
+        };
+      });
+    } else {
+      // Check for transient user if not authenticated
+      import("../helpers/services/user_services").then((services) => {
+        services
+          .getTransientUser()
+          .then((res) => {
+            if (res.data) {
+              setDetails((prev) => {
+                if (prev) return prev;
+                return {
+                  name: res.data.name || "",
+                  email: res.data.email || "",
+                  description: "",
+                };
+              });
+            }
+          })
+          .catch((err) => {
+            // Ignore 401, just means no transient user
+          });
       });
     }
-  }, [auth.user, details]);
+  }, [auth.user]);
 
   const updateSlots = (startDate: Date) => {
     getAvailableTimes(

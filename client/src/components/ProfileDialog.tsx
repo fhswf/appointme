@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { getUser, updateUser } from "../helpers/services/user_services";
+import { getUser, updateUser, exportSettings, importSettings } from "../helpers/services/user_services";
 import { User } from "lucide-react";
 import { useAuth } from "../components/AuthProvider";
 import { LanguageSelector } from "./LanguageSelector";
@@ -32,7 +32,7 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
         send_invitation_email: false,
         defaultAvailable: {} as any
     });
-    const [tab, setTab] = useState<'profile' | 'availability'>('profile');
+    const [tab, setTab] = useState<'profile' | 'availability' | 'data'>('profile');
 
     useEffect(() => {
         if (open) {
@@ -82,6 +82,55 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
             });
     };
 
+    const handleExport = () => {
+        exportSettings()
+            .then((res) => {
+                const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: "application/json" });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `appointme-settings-${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                toast.success(t("Settings exported successfully"));
+            })
+            .catch(() => {
+                toast.error(t("Failed to export settings"));
+            });
+    };
+
+    const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target?.result as string);
+                if (window.confirm(t("Are you sure you want to import settings? This will overwrite your current profile and events."))) {
+                    importSettings(data)
+                        .then(() => {
+                            toast.success(t("Settings imported successfully"));
+                            refreshAuth();
+                            onOpenChange(false);
+                            // Optional: Reload page to reflect all changes
+                            window.location.reload();
+                        })
+                        .catch(() => {
+                            toast.error(t("Failed to import settings"));
+                        });
+                }
+            } catch (err) {
+                toast.error(t("Invalid file format"));
+            }
+        };
+        reader.readAsText(file);
+        // Reset input
+        e.target.value = '';
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto" data-testid="profile-dialog">
@@ -96,6 +145,7 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
                         <div className="flex space-x-2 mb-4 border-b pb-2">
                             <Button type="button" variant={tab === 'profile' ? 'default' : 'ghost'} onClick={() => setTab('profile')}>{t("Profile")}</Button>
                             <Button type="button" variant={tab === 'availability' ? 'default' : 'ghost'} onClick={() => setTab('availability')}>{t("Standard Availability")}</Button>
+                            <Button type="button" variant={tab === 'data' ? 'default' : 'ghost'} onClick={() => setTab('data')}>{t("Data")}</Button>
                         </div>
 
                         {tab === 'profile' && (
@@ -182,6 +232,43 @@ export function ProfileDialog({ open, onOpenChange }: Readonly<ProfileDialogProp
                                     available={formData.defaultAvailable}
                                     onChange={(slots) => setFormData(prev => ({ ...prev, defaultAvailable: slots }))}
                                 />
+                            </div>
+                        )}
+
+                        {tab === 'data' && (
+                            <div className="space-y-6">
+                                <div className="p-4 border rounded-md bg-gray-50">
+                                    <h3 className="font-medium text-gray-900 mb-2">{t("Export Settings")}</h3>
+                                    <p className="text-sm text-gray-500 mb-4">{t("Download your settings and events as a JSON file.")}</p>
+                                    <Button type="button" onClick={handleExport} variant="outline" className="w-full sm:w-auto">
+                                        {t("Export Data")}
+                                    </Button>
+                                </div>
+
+                                <div className="p-4 border rounded-md bg-gray-50">
+                                    <h3 className="font-medium text-gray-900 mb-2">{t("Import Settings")}</h3>
+                                    <p className="text-sm text-gray-500 mb-4">{t("Restore your settings from a JSON file. This will overwrite existing data.")}</p>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="file"
+                                            accept=".json"
+                                            id="import-file"
+                                            className="hidden"
+                                            onChange={handleImport}
+                                        />
+                                        <label htmlFor="import-file">
+                                            <Button type="button" variant="outline" className="w-full sm:w-auto pointer-events-none" onClick={(e) => {
+                                                // Trigger the file input click
+                                                // Since the label wraps the button, this might double trigger or conflict
+                                                // Better: Put onClick on the Button that triggers document.getElementById('import-file').click()
+                                                e.preventDefault();
+                                                document.getElementById('import-file')?.click();
+                                            }}>
+                                                {t("Select File")}
+                                            </Button>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </form>
