@@ -35,7 +35,7 @@
     "common": "file:../common",
     "concurrently": "^9.2.1",
     "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "csrf-csrf": "^4.0.3",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
