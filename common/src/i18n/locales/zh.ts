@@ -93,6 +93,9 @@ export const zh = {
     "Confirmation": "确认",
     "Please share anything that will help me to prepare for our meeting": "请分享任何通过帮助我准备我们的会议",
     "confirmationText": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
+    "confirmationText_male": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
+    "confirmationText_female": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
+    "confirmationText_neuter": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
     "Name": "姓名",
     "Please provide your name": "请提供您的姓名",
     "Email": "电子邮件",
@@ -161,9 +164,7 @@ export const zh = {
     "I acknowledge that my password will be stored encrypted in the database.": "我确认我的密码将加密存储在数据库中。",
     "event_copy_link": "复制链接",
     "link_copied_to_clipboard": "链接已复制到剪贴板！",
-    "link_copy_failed": "无法将链接复制到剪贴板！"
-
-    ,
+    "link_copy_failed": "无法将链接复制到剪贴板！",
 
     // Missing keys added by script
     "copy": "复制",
@@ -301,4 +302,29 @@ export const zh = {
     "monthly": "每月",
     "Series Booking Note: Students will book all occurrences at once.": "系列预订说明：学生将一次性预订所有事件。",
     "Feedback": "反馈",
+
+    "Student Only": "仅限学生",
+    "Restricted to Students": "仅限学生",
+    "Settings exported successfully": "设置导出成功",
+    "Failed to export settings": "导出设置失败",
+    "Are you sure you want to import settings? This will overwrite your current profile and events.": "您确定要导入设置吗？这将覆盖您当前的个人资料和事件。",
+    "Settings imported successfully": "设置导入成功",
+    "Failed to import settings": "导入设置失败",
+    "Invalid file format": "无效的文件格式",
+    "Data": "数据",
+    "Export Settings": "导出设置",
+    "Download your settings and events as a JSON file.": "将您的设置和事件作为 JSON 文件下载。",
+    "Export Data": "导出数据",
+    "Import Settings": "导入设置",
+    "Restore your settings from a JSON file. This will overwrite existing data.": "从 JSON 文件恢复您的设置。这将覆盖现有数据。",
+    "Select File": "选择文件",
+    "Online Meeting": "在线会议",
+    "You are logged in via your Learning Management System. Please use the specific booking links provided in your course to book appointments.": "您是通过学习管理系统登录的。请使用课程中提供的特定预订链接进行预约。",
+    "Logout": "登出",
+    "MyProvider": "我的提供商",
+    "Grammatical Gender": "语法性别",
+    "Male": "男性",
+    "Female": "女性",
+    "Neuter": "中性",
+    "gender_help_text": "用于确认消息中的正确语法。"
 };

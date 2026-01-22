@@ -93,6 +93,9 @@ export const ko = {
     "Confirmation": "확인",
     "Please share anything that will help me to prepare for our meeting": "회의 준비에 도움이 될 만한 내용을 공유해 주세요",
     "confirmationText": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
+    "confirmationText_male": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
+    "confirmationText_female": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
+    "confirmationText_neuter": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
     "Name": "이름",
     "Please provide your name": "이름을 제공해 주세요",
     "Email": "이메일",
@@ -161,9 +164,7 @@ export const ko = {
     "I acknowledge that my password will be stored encrypted in the database.": "내 비밀번호가 데이터베이스에 암호화되어 저장된다는 것을 인정합니다.",
     "event_copy_link": "링크 복사",
     "link_copied_to_clipboard": "링크가 클립보드에 복사되었습니다!",
-    "link_copy_failed": "클립보드에 링크를 복사할 수 없습니다!"
-
-    ,
+    "link_copy_failed": "클립보드에 링크를 복사할 수 없습니다!",
 
     // Missing keys added by script
     "copy": "복사",
@@ -301,4 +302,29 @@ export const ko = {
     "monthly": "매월",
     "Series Booking Note: Students will book all occurrences at once.": "연속 예약 참고: 학생들은 모든 일정을 한 번에 예약합니다.",
     "Feedback": "피드백",
+
+    "Student Only": "학생 전용",
+    "Restricted to Students": "학생으로 제한됨",
+    "Settings exported successfully": "설정이 성공적으로 내보내졌습니다",
+    "Failed to export settings": "설정 내보내기 실패",
+    "Are you sure you want to import settings? This will overwrite your current profile and events.": "설정을 가져오시겠습니까? 현재 프로필과 이벤트가 덮어쓰여집니다.",
+    "Settings imported successfully": "설정이 성공적으로 가져와졌습니다",
+    "Failed to import settings": "설정 가져오기 실패",
+    "Invalid file format": "잘못된 파일 형식",
+    "Data": "데이터",
+    "Export Settings": "설정 내보내기",
+    "Download your settings and events as a JSON file.": "설정 및 이벤트를 JSON 파일로 다운로드합니다.",
+    "Export Data": "데이터 내보내기",
+    "Import Settings": "설정 가져오기",
+    "Restore your settings from a JSON file. This will overwrite existing data.": "JSON 파일에서 설정을 복원합니다. 기존 데이터를 덮어씁니다.",
+    "Select File": "파일 선택",
+    "Online Meeting": "온라인 회의",
+    "You are logged in via your Learning Management System. Please use the specific booking links provided in your course to book appointments.": "학습 관리 시스템을 통해 로그인했습니다. 약속을 예약하려면 과정에서 제공된 특정 예약 링크를 사용하십시오.",
+    "Logout": "로그아웃",
+    "MyProvider": "내 공급자",
+    "Grammatical Gender": "문법적 성",
+    "Male": "남성",
+    "Female": "여성",
+    "Neuter": "중성",
+    "gender_help_text": "확인 메시지에서 올바른 문법을 사용하는 데 사용됩니다."
 };
