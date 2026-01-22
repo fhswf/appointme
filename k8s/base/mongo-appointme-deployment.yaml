@@ -44,16 +44,16 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 27017
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            initialDelaySeconds: 20
+            periodSeconds: 60
           readinessProbe:
             exec:
               command:
                 - mongosh
                 - --eval
                 - "db.adminCommand('ping')"
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 20
+            periodSeconds: 60
             timeoutSeconds: 5
           ports:
             - containerPort: 27017
