@@ -49,6 +49,12 @@ const eventSchema = new Schema<EventDocument>({
     default: [],
   },
 
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'neuter'],
+    required: false
+  },
+
   isActive: {
     type: Boolean,
     default: false,

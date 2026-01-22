@@ -19,7 +19,7 @@ const Finished = (props: FinishedProps) => {
         {t("Confirmation")}
       </h1>
       <p className="text-lg">
-        <Trans i18nKey="confirmationText">
+        <Trans i18nKey="confirmationText" context={event?.gender || 'neuter'}>
           You booked an {{ event: event?.name }} with {{ name: user.name }} appointment on{" "}
           {{
             date: time?.toLocaleDateString(i18n.language, {

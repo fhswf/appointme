@@ -274,6 +274,11 @@ export const en = {
     "next": "Next",
     "back": "Back",
     "n_more": "{{count}} more ...",
+    "Grammatical Gender": "Grammatical Gender",
+    "Male": "Male",
+    "Female": "Female",
+    "Neuter": "Neuter",
+    "gender_help_text": "Used for correct grammar in confirmation messages.",
 
     // Recurrence
     "Recurrence": "Recurrence",
