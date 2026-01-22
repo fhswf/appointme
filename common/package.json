@@ -30,7 +30,7 @@
     "lib/*.map"
   ],
   "devDependencies": {
-    "@types/node": "^25.0.9",
+    "@types/node": "^25.0.10",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "jshint": "^2.12.0",
