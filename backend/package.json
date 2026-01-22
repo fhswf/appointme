@@ -83,7 +83,7 @@
     "supertest": "^7.2.2",
     "ts-node": "^10.9.1",
     "tsx": "^4.21.0",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.18"
   },
   "eslintConfig": {
     "extends": [
