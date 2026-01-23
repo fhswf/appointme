@@ -92,7 +92,7 @@
   },
   "stableVersion": "1.38.0",
   "resolutions": {
-    "lodash.template": "npm:lodash@4.17.21",
+    "lodash.template": "npm:lodash@4.17.23",
     "glob": "11.1.0"
   },
   "pnpm": {
