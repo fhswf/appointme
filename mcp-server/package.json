@@ -1,6 +1,6 @@
 {
   "name": "mcp-server",
-  "version": "1.0.1",
+  "version": "1.0.2-rc.1",
   "description": "MCP server for BookMe API",
   "main": "build/index.js",
   "type": "module",
@@ -16,18 +16,18 @@
     "@modelcontextprotocol/sdk": "^1.25.3",
     "axios": "^1.13.2",
     "common": "file:../common",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "hono": "^4.11.4",
+    "hono": "^4.11.5",
     "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.0.9",
-    "@vitest/coverage-v8": "^4.0.17",
-    "vitest": "^4.0.17"
+    "@types/node": "^25.0.10",
+    "@vitest/coverage-v8": "^4.0.18",
+    "vitest": "^4.0.18"
   },
   "release": {
     "plugins": [

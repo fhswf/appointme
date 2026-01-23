@@ -196,8 +196,49 @@ export const es = {
     "GO HOME": "INICIO",
     "Impressum": "Aviso legal",
     "Datenschutzhinweise": "Política de privacidad",
-    "privacy_content": "# Política de privacidad\n\n## Almacenamiento y procesamiento de datos personales\n\nEsta aplicación almacena y procesa los siguientes datos personales, que son necesarios para el funcionamiento de la aplicación:\n\n*   **Perfil de usuario:** Nombre, dirección de correo electrónico, URL de la foto de perfil.\n*   **Datos de autenticación:** Tokens OAuth (para la integración con Google Calendar) y/o credenciales para calendarios CalDAV (nombre de usuario, contraseña).\n*   **Datos del calendario:** Configuración de los calendarios a vincular, tipos de eventos creados (nombre, descripción, ubicación) y reservas de citas.\n*   **Datos de registro:** Su dirección IP se almacena temporalmente en los archivos de registro del servidor.\n\n## Cookies y terceros\n\nLa aplicación utiliza cookies para la gestión de sesiones.\n\nAlgunas partes de la aplicación utilizan componentes alojados en redes de entrega de contenido como Cloudflare y/o servicios web de terceros como Mapbox o la API de Google Calendar. Al utilizar las aplicaciones, su navegador o el servidor accede a estos componentes y servicios, lo que transmite su dirección IP y posiblemente otros datos a los proveedores respectivos.",
-    "privacy_content_public": "# Política de privacidad\n\n## Procesamiento de datos\n\nCon el fin de reservar una cita, esta aplicación procesa los datos que usted proporciona (nombre, dirección de correo electrónico, descripción, fecha y hora de la cita). Estos datos se almacenan para gestionar la cita y pueden sincronizarse con el calendario del organizador.",
+    "privacy_content": `
+# Política de privacidad
+
+## Recopilación y uso de datos
+Esta aplicación recopila y utiliza datos personales para proporcionar servicios de programación de citas.
+
+*   **Perfil de usuario:** Almacenamos su nombre, dirección de correo electrónico y foto de perfil para identificarlo y personalizar su experiencia.
+*   **Datos de usuario de Google:** Si conecta su Google Calendar, accedemos a los datos de su calendario para:
+    *   Verificar su disponibilidad para evitar reservas dobles.
+    *   Crear nuevos eventos en su calendario cuando se reserva una cita.
+    *   **No** utilizamos sus datos de Google Calendar para ningún otro propósito, como publicidad o investigación de mercado.
+*   **Datos del calendario:** Almacenamos la configuración de sus calendarios conectados, los tipos de eventos que crea (nombre, descripción, ubicación) y las reservas de citas.
+*   **Datos de registro:** Su dirección IP se almacena temporalmente en los archivos de registro del servidor para fines de seguridad y solución de problemas.
+*   **Telemetría:** Recopilamos datos de uso anónimos e informes de errores utilizando Sentry para mejorar la estabilidad de la aplicación.
+
+## Intercambio de datos
+No compartimos sus datos personales con terceros, excepto cuando sea necesario para proporcionar el servicio o lo exija la ley.
+
+*   **Datos de usuario de Google:** Los datos obtenidos de las API de Google **no se comparten** con herramientas de terceros, modelos de IA o entidades externas, excepto cuando sea necesario para proporcionar las funciones de integración del calendario (por ejemplo, comunicarse con los servidores de Google).
+*   **Proveedores de servicios:** Utilizamos Sentry para el seguimiento de errores y la supervisión de aplicaciones para garantizar la estabilidad del servicio. Este proveedor puede procesar direcciones IP y otros datos técnicos estrictamente para la prestación del servicio.
+*   **Alojamiento:** La aplicación está alojada en nuestra propia infraestructura (clúster de Kubernetes). No utilizamos CDN de terceros ni proveedores de alojamiento que, por lo tanto, obtengan acceso a sus datos.
+
+## Almacenamiento y protección de datos
+Sus datos se almacenan de forma segura en nuestros servidores.
+*   **Cifrado:** Todos los datos transmitidos entre su navegador y nuestros servidores están cifrados mediante HTTPS. Los datos confidenciales, como los tokens de acceso, se almacenan cifrados en nuestra base de datos.
+*   **Control de acceso:** El acceso a sus datos está restringido al personal autorizado y solo se accede cuando es necesario para soporte o mantenimiento.
+
+## Retención y eliminación de datos
+*   **Retención:** Conservamos su perfil de usuario y los datos de configuración del calendario mientras su cuenta esté activa. Los datos de las citas se conservan para proporcionarle un historial de sus eventos programados.
+*   **Eliminación:** Tiene derecho a solicitar la eliminación de sus datos. Puede desconectar su Google Calendar en cualquier momento a través de la configuración de la aplicación, lo que eliminará nuestro acceso a sus datos de Google. Para solicitar la eliminación completa de la cuenta y los datos, contáctenos en gawron.christian@fh-swf.de o utilice la función de eliminación de cuenta en la configuración de su perfil.
+
+## Política de datos de usuario de los servicios de API de Google
+El uso y la transferencia por parte de AppointMe a cualquier otra aplicación de la información recibida de las API de Google cumplirán con la [Política de datos de usuario de los servicios de API de Google](https://developers.google.com/terms/api-services-user-data-policy), incluidos los requisitos de uso limitado.`,
+    "privacy_content_public": `
+# Política de privacidad
+
+## Procesamiento de datos
+
+Con el fin de reservar una cita, esta aplicación procesa los datos que usted proporciona (nombre, dirección de correo electrónico, descripción, fecha y hora de la cita). Estos datos se almacenan para gestionar la cita y pueden sincronizarse con el calendario del organizador.
+
+## Telemetría
+
+Utilizamos Sentry para recopilar datos de telemetría anónimos e informes de errores para mejorar la estabilidad de la aplicación.`,
     "impressum_content": "# Aviso legal\n\n## Descargo de responsabilidad\nEl contenido de este servidor no forma parte de la oferta en línea oficial de la Universidad de Ciencias Aplicadas de South Westphalia.",
     "CalDav Calendar": "Calendario CalDav",
     "loading": "Cargando...",

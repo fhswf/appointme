@@ -210,8 +210,49 @@ export const fr = {
     "GO HOME": "ACCUEIL",
     "Impressum": "Mentions légales",
     "Datenschutzhinweise": "Politique de confidentialité",
-    "privacy_content": "# Politique de confidentialité\n\n## Stockage et traitement des données personnelles\n\nCette application stocke et traite les données personnelles suivantes, nécessaires au fonctionnement de l'application :\n\n*   **Profil utilisateur :** Nom, adresse e-mail, URL de la photo de profil.\n*   **Données d'authentification :** Jetons OAuth (pour l'intégration de Google Agenda) et/ou identifiants pour les calendriers CalDAV (nom d'utilisateur, mot de passe).\n*   **Données du calendrier :** Configuration des calendriers à lier, types d'événements créés (nom, description, lieu) et réservations de rendez-vous.\n*   **Données de journal :** Votre adresse IP est stockée temporairement dans les fichiers journaux du serveur.\n\n## Cookies et tiers\n\nL'application utilise des cookies pour la gestion de session.\n\nCertaines parties de l'application utilisent des composants hébergés sur des réseaux de diffusion de contenu comme Cloudflare et/ou des services web tiers comme Mapbox ou l'API Google Agenda. Lors de l'utilisation des applications, votre navigateur ou le serveur accède à ces composants et services, ce qui transmet votre adresse IP et éventuellement d'autres données aux fournisseurs respectifs.",
-    "privacy_content_public": "# Politique de confidentialité\n\n## Traitement des données\n\nDans le but de réserver un rendez-vous, cette application traite les données que vous fournissez (nom, adresse e-mail, description, date et heure du rendez-vous). Ces données sont stockées pour gérer le rendez-vous et peuvent être synchronisées avec le calendrier de l'organisateur.",
+    "privacy_content": `
+# Politique de confidentialité
+
+## Collecte et utilisation des données
+Cette application collecte et utilise des données personnelles pour fournir des services de prise de rendez-vous.
+
+*   **Profil utilisateur:** Nous stockons votre nom, votre adresse e-mail et votre photo de profil pour vous identifier et personnaliser votre expérience.
+*   **Données utilisateur Google:** Si vous connectez votre Google Agenda, nous accédons aux données de votre agenda pour :
+    *   Vérifier vos disponibilités pour éviter les doubles réservations.
+    *   Créer de nouveaux événements dans votre agenda lorsqu'un rendez-vous est pris.
+    *   Nous n'utilisons **pas** vos données Google Agenda à d'autres fins, telles que la publicité ou les études de marché.
+*   **Données d'agenda:** Nous stockons les paramètres de configuration de vos agendas connectés, les types d'événements que vous créez (nom, description, lieu) et les réservations de rendez-vous.
+*   **Données de journal:** Votre adresse IP est stockée temporairement dans les fichiers journaux du serveur à des fins de sécurité et de dépannage.
+*   **Télémétrie:** Nous collectons des données d'utilisation anonymes et des rapports d'erreurs en utilisant Sentry pour améliorer la stabilité de l'application.
+
+## Partage des données
+Nous ne partageons pas vos données personnelles avec des tiers, sauf si cela est nécessaire pour fournir le service ou si la loi l'exige.
+
+*   **Données utilisateur Google:** Les données obtenues à partir des API Google ne sont **pas partagées** avec des outils tiers, des modèles d'IA ou des entités externes, sauf si cela est nécessaire pour fournir les fonctionnalités d'intégration de l'agenda (par exemple, communiquer avec les serveurs de Google).
+*   **Fournisseurs de services:** Nous utilisons Sentry pour le suivi des erreurs et la surveillance des applications afin d'assurer la stabilité du service. Ce fournisseur peut traiter les adresses IP et d'autres données techniques strictement pour la fourniture du service.
+*   **Hébergement:** L'application est hébergée sur notre propre infrastructure (cluster Kubernetes). Nous n'utilisons pas de CDN tiers ou de fournisseurs d'hébergement qui auraient ainsi accès à vos données.
+
+## Stockage et protection des données
+Vos données sont stockées en toute sécurité sur nos serveurs.
+*   **Chiffrement:** Toutes les données transmises entre votre navigateur et nos serveurs sont chiffrées via HTTPS. Les données sensibles telles que les jetons d'accès sont stockées chiffrées dans notre base de données.
+*   **Contrôle d'accès:** L'accès à vos données est restreint au personnel autorisé et n'est accessible que lorsque cela est nécessaire pour le support ou la maintenance.
+
+## Conservation et suppression des données
+*   **Conservation:** Nous conservons votre profil utilisateur et les données de configuration de votre agenda tant que votre compte est actif. Les données de rendez-vous sont conservées pour vous fournir un historique de vos événements programmés.
+*   **Suppression:** Vous avez le droit de demander la suppression de vos données. Vous pouvez déconnecter votre Google Agenda à tout moment via les paramètres de l'application, ce qui supprimera notre accès à vos données Google. Pour demander la suppression complète de votre compte et de vos données, veuillez nous contacter à gawron.christian@fh-swf.de ou utiliser la fonctionnalité de suppression de compte dans les paramètres de votre profil.
+
+## Politique relative aux données utilisateur des services API de Google
+L'utilisation et le transfert par AppointMe vers toute autre application des informations reçues des API Google respecteront la [Politique relative aux données utilisateur des services API de Google](https://developers.google.com/terms/api-services-user-data-policy), y compris les exigences d'utilisation limitée.`,
+    "privacy_content_public": `
+# Politique de confidentialité
+
+## Traitement des données
+
+Dans le but de réserver un rendez-vous, cette application traite les données que vous fournissez (nom, adresse e-mail, description, date et heure du rendez-vous). Ces données sont stockées pour gérer le rendez-vous et peuvent être synchronisées avec le calendrier de l'organisateur.
+
+## Télémétrie
+
+Nous utilisons Sentry pour collecter des données télémétriques anonymes et des rapports d'erreurs afin d'améliorer la stabilité de l'application.`,
     "impressum_content": "# Mentions légales\n\n## Avis de non-responsabilité\nLe contenu de ce serveur ne fait pas partie de l'offre en ligne officielle de l'Université des Sciences Appliquées de South Westphalia.",
     "CalDav Calendar": "Calendrier CalDav",
     "loading": "Chargement...",
