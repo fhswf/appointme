@@ -12,7 +12,7 @@ vi.mock('react-i18next', () => ({
     },
   }),
   Trans: ({ i18nKey }: any) => {
-    return <span>{i18nKey}</span>; 
+    return <span>{i18nKey}</span>;
   },
 }));
 
@@ -37,7 +37,7 @@ describe('Finished Component', () => {
   });
 
   it('redirects to home when state is missing', () => {
-     render(
+    render(
       <MemoryRouter initialEntries={['/finished']}>
         <Routes>
           <Route path="/finished" element={<Finished />} />
@@ -45,7 +45,26 @@ describe('Finished Component', () => {
         </Routes>
       </MemoryRouter>
     );
-     
+
+    expect(screen.getByText('Home Page')).toBeInTheDocument();
+  });
+
+  it('redirects to home when state is missing user property', () => {
+    const invalidState = {
+      time: new Date(),
+      event: { name: 'Test Event', gender: 'neuter' },
+      // user is missing
+    };
+
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/finished', state: invalidState }]}>
+        <Routes>
+          <Route path="/finished" element={<Finished />} />
+          <Route path="/" element={<div>Home Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
     expect(screen.getByText('Home Page')).toBeInTheDocument();
   });
 });

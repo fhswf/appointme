@@ -8,7 +8,7 @@ export type FinishedProps = {};
 const Finished = (props: FinishedProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
-  if (!location.state) {
+  if (!location.state || !location.state.user) {
     return <Navigate to="/" />;
   }
 
