@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 
 
@@ -8,6 +8,10 @@ export type FinishedProps = {};
 const Finished = (props: FinishedProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  if (!location.state) {
+    return <Navigate to="/" />;
+  }
+
   console.log("state: %o", location.state);
   const time = location.state.time as Date;
   const event = location.state.event;
