@@ -196,8 +196,49 @@ export const it = {
     "GO HOME": "VAI ALLA HOME",
     "Impressum": "Note legali",
     "Datenschutzhinweise": "Informativa sulla privacy",
-    "privacy_content": "# Informativa sulla privacy\n\n## Archiviazione e trattamento dei dati personali\n\nQuesta applicazione archivia ed elabora i seguenti dati personali, necessari per il funzionamento dell'applicazione:\n\n*   **Profilo utente:** Nome, indirizzo email, URL dell'immagine del profilo.\n*   **Dati di autenticazione:** Token OAuth (per l'integrazione di Google Calendar) e/o credenziali per calendari CalDAV (nome utente, password).\n*   **Dati del calendario:** Configurazione dei calendari da collegare, tipi di eventi creati (nome, descrizione, luogo) e prenotazioni di appuntamenti.\n*   **Dati di registro:** Il tuo indirizzo IP viene temporaneamente memorizzato nei file di registro del server.\n\n## Cookie e terze parti\n\nL'applicazione utilizza i cookie per la gestione della sessione.\n\nAlcune parti dell'applicazione utilizzano componenti ospitati su reti di distribuzione dei contenuti come Cloudflare e/o servizi web di terze parti come Mapbox o l'API di Google Calendar. Quando si utilizzano le applicazioni, il browser o il server accede a questi componenti e servizi, trasmettendo il proprio indirizzo IP ed eventualmente altri dati ai rispettivi fornitori.",
-    "privacy_content_public": "# Informativa sulla privacy\n\n## Elaborazione dei dati\n\nAl fine di prenotare un appuntamento, questa applicazione elabora i dati forniti (nome, indirizzo email, descrizione, data e ora dell'appuntamento). Questi dati vengono archiviati per gestire l'appuntamento e possono essere sincronizzati con il calendario dell'organizzatore.",
+    "privacy_content": `
+# Informativa sulla privacy
+
+## Raccolta e utilizzo dei dati
+Questa applicazione raccoglie e utilizza i dati personali per fornire servizi di pianificazione degli appuntamenti.
+
+*   **Profilo utente:** Memorizziamo il tuo nome, indirizzo email e immagine del profilo per identificarti e personalizzare la tua esperienza.
+*   **Dati utente Google:** Se connetti il tuo Google Calendar, accediamo ai dati del tuo calendario per:
+    *   Controllare la tua disponibilità per evitare doppie prenotazioni.
+    *   Creare nuovi eventi nel tuo calendario quando viene prenotato un appuntamento.
+    *   **Non** utilizziamo i dati del tuo Google Calendar per altri scopi, come pubblicità o ricerche di mercato.
+*   **Dati del calendario:** Memorizziamo le impostazioni di configurazione per i tuoi calendari connessi, i tipi di eventi che crei (nome, descrizione, luogo) e le prenotazioni degli appuntamenti.
+*   **Dati di registro:** Il tuo indirizzo IP viene temporaneamente memorizzato nei file di registro del server per scopi di sicurezza e risoluzione dei problemi.
+*   **Telemetria:** Raccogliamo dati di utilizzo anonimi e segnalazioni di errori utilizzando Sentry per migliorare la stabilità dell'applicazione.
+
+## Condivisione dei dati
+Non condividiamo i tuoi dati personali con terze parti, tranne quando necessario per fornire il servizio o come richiesto dalla legge.
+
+*   **Dati utente Google:** I dati ottenuti dalle API di Google **non vengono condivisi** con strumenti di terze parti, modelli di intelligenza artificiale o entità esterne, tranne quando necessario per fornire le funzionalità di integrazione del calendario (ad esempio, comunicando con i server di Google).
+*   **Fornitori di servizi:** Utilizziamo Sentry per il tracciamento degli errori e il monitoraggio delle applicazioni per garantire la stabilità del servizio. Questo fornitore può elaborare indirizzi IP e altri dati tecnici rigorosamente per la fornitura del servizio.
+*   **Hosting:** L'applicazione è ospitata sulla nostra infrastruttura (cluster Kubernetes). Non utilizziamo CDN di terze parti o fornitori di hosting che ottengono quindi accesso ai tuoi dati.
+
+## Archiviazione e protezione dei dati
+I tuoi dati sono archiviati in modo sicuro sui nostri server.
+*   **Crittografia:** Tutti i dati trasmessi tra il tuo browser e i nostri server sono crittografati tramite HTTPS. I dati sensibili come i token di accesso sono archiviati crittografati nel nostro database.
+*   **Controllo degli accessi:** L'accesso ai tuoi dati è limitato al personale autorizzato e vi si accede solo quando necessario per supporto o manutenzione.
+
+## Conservazione e cancellazione dei dati
+*   **Conservazione:** Conserviamo il tuo profilo utente e i dati di configurazione del calendario finché il tuo account è attivo. I dati degli appuntamenti vengono conservati per fornirti una cronologia dei tuoi eventi programmati.
+*   **Cancellazione:** Hai il diritto di richiedere la cancellazione dei tuoi dati. Puoi disconnettere il tuo Google Calendar in qualsiasi momento tramite le impostazioni dell'applicazione, il che rimuoverà il nostro accesso ai tuoi dati Google. Per richiedere la cancellazione completa dell'account e dei dati, contattaci all'indirizzo gawron.christian@fh-swf.de o utilizza la funzione di cancellazione dell'account nelle impostazioni del tuo profilo.
+
+## Norme sui dati utente dei servizi API di Google
+L'uso e il trasferimento da parte di AppointMe a qualsiasi altra app delle informazioni ricevute dalle API di Google rispetteranno le [Norme sui dati utente dei servizi API di Google](https://developers.google.com/terms/api-services-user-data-policy), compresi i requisiti di utilizzo limitato.`,
+    "privacy_content_public": `
+# Informativa sulla privacy
+
+## Elaborazione dei dati
+
+Al fine di prenotare un appuntamento, questa applicazione elabora i dati forniti (nome, indirizzo email, descrizione, data e ora dell'appuntamento). Questi dati vengono archiviati per gestire l'appuntamento e possono essere sincronizzati con il calendario dell'organizzatore.
+
+## Telemetria
+
+Utilizziamo Sentry per raccogliere dati di telemetria anonimi e segnalazioni di errori per migliorare la stabilità dell'applicazione.`,
     "impressum_content": "# Note legali\n\n## Disclaimer\nIl contenuto di questo server non fa parte dell'offerta online ufficiale dell'Università di Scienze Applicate della Vestfalia meridionale.",
     "CalDav Calendar": "Calendario CalDav",
     "loading": "Caricamento...",

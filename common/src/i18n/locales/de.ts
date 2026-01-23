@@ -190,8 +190,49 @@ Programmiert mit ❤️ an der Fachhochschule Südwestfalen`,
     "GO HOME": "ZUR STARTSEITE",
     "Impressum": "Impressum",
     "Datenschutzhinweise": "Datenschutzhinweise",
-    "privacy_content": "# Datenschutzhinweise\n\n## Speicherung und Verarbeitung personenbezogener Daten\n\nDiese Anwendung speichert und verarbeitet folgende personenbezogene Daten, die für die Funktion der Anwendung notwendig sind:\n\n*   **Benutzerprofil:** Name, E-Mail-Adresse, Profilbild-URL.\n*   **Authentifizierungsdaten:** OAuth-Token (für Google Kalender Integration) und/oder Zugangsdaten für CalDAV-Kalender (Benutzername, Passwort).\n*   **Kalenderdaten:** Konfiguration der zu verknüpfenden Kalender, erstellte Ereignistypen (Name, Beschreibung, Ort) und Terminbuchungen.\n*   **Logdaten:** In den Logdateien des Servers wird Ihre IP-Adresse vorübergehend gespeichert.\n*   **Telemetrie:** Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln und die Stabilität der Anwendung zu verbessern.\n\n## Cookies und Drittanbieter\n\nDie Anwendung verwendet Cookies zur Sitzungsverwaltung.\n\nTeilweise verwenden die Anwendungen Komponenten, die auf Content-Delivery-Networks wie Cloudflare gehostet werden, und/oder Webdienste von Drittanbietern wie Mapbox, Sentry oder Google Calendar API. Bei der Verwendung der Anwendungen greift Ihr Browser bzw. der Server auf diese Komponenten und Dienste zu, wodurch Ihre IP-Adresse und ggf. auch weitere Daten an die jeweiligen Anbieter übertragen werden.\n\n## Google API Services User Data Policy\n\nDie Nutzung der Google Calendar API und die Verwendung der erhaltenen Informationen erfolgen in Übereinstimmung mit der [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), einschließlich der Anforderungen an die eingeschränkte Nutzung.",
-    "privacy_content_public": "# Datenschutzhinweise\n\n## Datenverarbeitung\n\nZum Zwecke der Terminbuchung verarbeitet diese Anwendung die von Ihnen bereitgestellten Daten (Name, E-Mail-Adresse, Beschreibung, Datum und Uhrzeit des Termins). Diese Daten werden gespeichert, um den Termin zu verwalten, und können mit dem Kalender des Organisators synchronisiert werden.\n\n## Telemetrie\n\nWir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln und die Stabilität der Anwendung zu verbessern.",
+    "privacy_content": `
+# Datenschutzhinweise
+
+## Datenerhebung und -nutzung
+Diese Anwendung erhebt und nutzt personenbezogene Daten, um Terminbuchungsdienste bereitzustellen.
+
+*   **Benutzerprofil:** Wir speichern Ihren Namen, Ihre E-Mail-Adresse und Ihr Profilbild, um Sie zu identifizieren und Ihr Nutzererlebnis zu personalisieren.
+*   **Google-Nutzerdaten:** Wenn Sie Ihren Google Kalender verbinden, greifen wir auf Ihre Kalenderdaten zu, um:
+    *   Ihre Verfügbarkeit zu prüfen und Doppelbuchungen zu vermeiden.
+    *   Neue Termine in Ihrem Kalender zu erstellen, wenn ein Termin gebucht wird.
+    *   Wir nutzen Ihre Google Kalenderdaten **nicht** für andere Zwecke, wie z.B. Werbung oder Marktforschung.
+*   **Kalenderdaten:** Wir speichern Konfigurationseinstellungen für Ihre verbundenen Kalender, von Ihnen erstellte Terminarten (Name, Beschreibung, Ort) und Terminbuchungen.
+*   **Protokolldaten:** Ihre IP-Adresse wird vorübergehend in Server-Logdateien zu Sicherheits- und Fehlerbehebungszwecken gespeichert.
+*   **Telemetrie:** Wir erfassen anonyme Nutzungsdaten und Fehlerberichte mit Sentry, um die Stabilität der Anwendung zu verbessern.
+
+## Datenweitergabe
+Wir geben Ihre personenbezogenen Daten nicht an Dritte weiter, es sei denn, dies ist zur Bereitstellung des Dienstes erforderlich oder gesetzlich vorgeschrieben.
+
+*   **Google-Nutzerdaten:** Daten, die über Google APIs erhalten wurden, werden **nicht** an Tools von Drittanbietern, KI-Modelle oder externe Entitäten weitergegeben, außer dies ist zur Bereitstellung der Kalenderintegrationsfunktionen erforderlich (z.B. Kommunikation mit Google-Servern).
+*   **Dienstleister:** Wir nutzen Sentry für Fehlerverfolgung und Anwendungsüberwachung, um die Dienststabilität sicherzustellen. Dieser Anbieter kann IP-Adressen und andere technische Daten streng zweckgebunden zur Dienstbereitstellung verarbeiten.
+*   **Hosting:** Die Anwendung wird auf unserer eigenen Infrastruktur (Kubernetes-Cluster) gehostet. Wir nutzen keine CDNs oder Hosting-Anbieter von Drittanbietern, die dadurch Zugriff auf Ihre Daten erhalten.
+
+## Datenspeicherung und -schutz
+Ihre Daten werden sicher auf unseren Servern gespeichert.
+*   **Verschlüsselung:** Alle Daten, die zwischen Ihrem Browser und unseren Servern übertragen werden, sind mittels HTTPS verschlüsselt. Sensible Daten wie Zugriffstoken werden verschlüsselt in unserer Datenbank gespeichert.
+*   **Zugriffskontrolle:** Der Zugriff auf Ihre Daten ist auf autorisiertes Personal beschränkt und erfolgt nur, wenn dies für Support oder Wartung erforderlich ist.
+
+## Datenspeicherung und Löschung
+*   **Aufbewahrung:** Wir bewahren Ihr Benutzerprofil und Ihre Kalenderkonfigurationsdaten so lange auf, wie Ihr Konto aktiv ist. Termindaten werden aufbewahrt, um Ihnen eine Historie Ihrer geplanten Termine bereitzustellen.
+*   **Löschung:** Sie haben das Recht, die Löschung Ihrer Daten zu verlangen. Sie können Ihren Google Kalender jederzeit über die Anwendungseinstellungen trennen, wodurch unser Zugriff auf Ihre Google-Daten entfernt wird. Um die vollständige Löschung Ihres Kontos und Ihrer Daten zu beantragen, kontaktieren Sie uns bitte unter gawron.christian@fh-swf.de oder nutzen Sie die Funktion zum Löschen des Kontos in Ihren Profileinstellungen.
+
+## Google API Services User Data Policy
+Die Nutzung der Google Calendar API und die Verwendung der erhaltenen Informationen erfolgen in Übereinstimmung mit der [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), einschließlich der Anforderungen an die eingeschränkte Nutzung.`,
+    "privacy_content_public": `
+# Datenschutzhinweise
+
+## Datenverarbeitung
+
+Zum Zwecke der Terminbuchung verarbeitet diese Anwendung die von Ihnen bereitgestellten Daten (Name, E-Mail-Adresse, Beschreibung, Datum und Uhrzeit des Termins). Diese Daten werden gespeichert, um den Termin zu verwalten, und können mit dem Kalender des Organisators synchronisiert werden.
+
+## Telemetrie
+
+Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln und die Stabilität der Anwendung zu verbessern.`,
     "impressum_content": "# Impressum\n\n## Disclaimer\nDie Inhalte auf diesem Server gehören nicht zum offiziellen Onlineangebot der Fachhochschule Südwestfalen.",
     "CalDav Calendar": "CalDav Kalender",
     "loading": "Laden...",
