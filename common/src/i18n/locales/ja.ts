@@ -92,7 +92,6 @@ export const ja = {
     "Provide details": "詳細を提供",
     "Confirmation": "確認",
     "Please share anything that will help me to prepare for our meeting": "会議の準備に役立つ情報を共有してください",
-    "confirmationText": "{{date}} {{time}} に {{name}} と {{event}} の予定を予約しました。",
     "confirmationText_male": "{{date}} {{time}} に {{name}} と {{event}} の予定を予約しました。",
     "confirmationText_female": "{{date}} {{time}} に {{name}} と {{event}} の予定を予約しました。",
     "confirmationText_neuter": "{{date}} {{time}} に {{name}} と {{event}} の予定を予約しました。",

@@ -92,7 +92,6 @@ export const ko = {
     "Provide details": "세부 정보 제공",
     "Confirmation": "확인",
     "Please share anything that will help me to prepare for our meeting": "회의 준비에 도움이 될 만한 내용을 공유해 주세요",
-    "confirmationText": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
     "confirmationText_male": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
     "confirmationText_female": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",
     "confirmationText_neuter": "{{date}} {{time}}에 {{name}} 님과 {{event}} 약속을 예약했습니다.",

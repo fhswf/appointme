@@ -81,7 +81,6 @@ export const en = {
     "Provide details": "Provide details",
     "Confirmation": "Confirmation",
     "Please share anything that will help me to prepare for our meeting": "Please share anything that will help me to prepare for our meeting",
-    "confirmationText": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
     "Name": "Name",
     "Please provide your name": "Please provide your name",
     "Email": "Email",

@@ -92,7 +92,6 @@ export const zh = {
     "Provide details": "提供详细信息",
     "Confirmation": "确认",
     "Please share anything that will help me to prepare for our meeting": "请分享任何通过帮助我准备我们的会议",
-    "confirmationText": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
     "confirmationText_male": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
     "confirmationText_female": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",
     "confirmationText_neuter": "您已在 {{date}} {{time}} 与 {{name}} 预订了 {{event}} 预约。",

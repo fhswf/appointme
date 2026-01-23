@@ -105,7 +105,6 @@ export const fr = {
     "Provide details": "Fournir des détails",
     "Confirmation": "Confirmation",
     "Please share anything that will help me to prepare for our meeting": "Veuillez partager tout ce qui m'aidera à me préparer pour notre réunion",
-    "confirmationText": "Vous avez réservé un rendez-vous {{event}} avec {{name}} le {{date}} à {{time}}.",
     "confirmationText_male": "Vous avez réservé un rendez-vous {{event}} avec {{name}} le {{date}} à {{time}}.",
     "confirmationText_female": "Vous avez réservé un rendez-vous {{event}} avec {{name}} le {{date}} à {{time}}.",
     "confirmationText_neuter": "Vous avez réservé un rendez-vous {{event}} avec {{name}} le {{date}} à {{time}}.",

@@ -92,7 +92,6 @@ export const it = {
     "Provide details": "Fornisci dettagli",
     "Confirmation": "Conferma",
     "Please share anything that will help me to prepare for our meeting": "Condividi qualsiasi cosa che mi aiuterà a prepararmi per la nostra riunione",
-    "confirmationText": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
     "confirmationText_male": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
     "confirmationText_female": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
     "confirmationText_neuter": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
