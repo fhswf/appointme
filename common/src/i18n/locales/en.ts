@@ -182,8 +182,49 @@ export const en = {
     "GO HOME": "GO HOME",
     "Impressum": "Imprint",
     "Datenschutzhinweise": "Privacy Policy",
-    "privacy_content": "# Privacy Policy\n\n## Storage and processing of personal data\n\nThis application stores and processes the following personal data, which is necessary for the function of the application:\n\n*   **User profile:** Name, email address, profile picture URL.\n*   **Authentication data:** OAuth tokens (for Google Calendar integration) and/or credentials for CalDAV calendars (username, password).\n*   **Calendar data:** Configuration of the calendars to be linked, created event types (name, description, location) and appointment bookings.\n*   **Log data:** Your IP address is temporarily stored in the server log files.\n*   **Telemetry data:** Anonymous usage data and error reports are collected using Sentry.\n\n## Cookies and third-party providers\n\nThe application uses cookies for session management.\n\nSome of the applications use components hosted on content delivery networks such as Cloudflare, and/or web services from third-party providers such as Mapbox, Sentry or Google Calendar API. When using the applications, your browser or the server accesses these components and services, whereby your IP address and possibly other data are transmitted to the respective providers.\n\n## Google API Services User Data Policy\n\nAppointMe's use and transfer to any other app of information received from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.",
-    "privacy_content_public": "# Privacy Policy\n\n## Data Processing\n\nFor the purpose of booking an appointment, this application processes the data you provide (name, email address, description, date, and time of the appointment). This data is stored to manage the appointment and may be synced to the organizer's calendar.\n\n## Telemetry\n\nWe use Sentry to collect anonymous telemetry data and error reports to improve the application stability.",
+    "privacy_content": `
+# Privacy Policy
+
+## Data Collection and Usage
+This application collects and uses personal data to provide appointment scheduling services.
+
+*   **User Profile:** We store your name, email address, and profile picture to identify you and personalize your experience.
+*   **Google User Data:** If you connect your Google Calendar, we access your calendar data to:
+    *   Check your availability to prevent double bookings.
+    *   Create new events in your calendar when an appointment is booked.
+    *   We do **not** use your Google Calendar data for any other purposes, such as advertising or market research.
+*   **Calendar Data:** We store configuration settings for your connected calendars, event types you create (name, description, location), and appointment bookings.
+*   **Log Data:** Your IP address is temporarily stored in server log files for security and troubleshooting.
+*   **Telemetry:** We collect anonymous usage data and error reports using Sentry to improve application stability.
+
+## Data Sharing
+We do not share your personal data with third parties, except as necessary to provide the service or as required by law.
+
+*   **Google User Data:** Data obtained from Google APIs is **not shared** with any third-party tools, AI models, or external entities, except as necessary to provide the calendar integration features (e.g., communicating with Google's servers).
+*   **Service Providers:** We use Sentry for error tracking and application monitoring to ensure service stability. This provider may process IP addresses and other technical data strictly for service provision.
+*   **Hosting:** The application is hosted on our own infrastructure (Kubernetes cluster). We do not use third-party CDNs or hosting providers that thereby gain access to your data.
+
+## Data Storage and Protection
+Your data is stored securely on our servers.
+*   **Encryption:** All data transmitted between your browser and our servers is encrypted using HTTPS. Sensitive data such as access tokens are stored encrypted in our database.
+*   **Access Control:** Access to your data is restricted to authorized personnel and is only accessed when necessary for support or maintenance.
+
+## Data Retention and Deletion
+*   **Retention:** We retain your user profile and calendar configuration data for as long as your account is active. Appointment data is retained to provide you with a history of your scheduled events.
+*   **Deletion:** You have the right to request the deletion of your data. You can disconnect your Google Calendar at any time via the application settings, which will remove our access to your Google data. To request full account and data deletion, please contact us at gawron.christian@fh-swf.de or use the delete account feature in your profile settings.
+
+## Google API Services User Data Policy
+AppointMe's use and transfer to any other app of information received from Google APIs will adhere to [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.`,
+    "privacy_content_public": `
+# Privacy Policy
+
+## Data Processing
+
+For the purpose of booking an appointment, this application processes the data you provide (name, email address, description, date, and time of the appointment). This data is stored to manage the appointment and may be synced to the organizer's calendar.
+
+## Telemetry
+
+We use Sentry to collect anonymous telemetry data and error reports to improve the application stability.`,
     "impressum_content": "# Imprint\n\n## Disclaimer\nThe content on this server is not part of the official online offer of the South Westphalia University of Applied Sciences.",
     "CalDav Calendar": "CalDav Calendar",
     "loading": "Loading...",
