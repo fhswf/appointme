@@ -1,3 +1,10 @@
+## common [1.15.2-rc.1](https://github.com/fhswf/appointme/compare/common@1.15.1...common@1.15.2-rc.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* update privacy statement ([8f56fd8](https://github.com/fhswf/appointme/commit/8f56fd863a16fa6f577f338dda41bd6265bfbadd))
+
 ## common [1.15.1](https://github.com/fhswf/appointme/compare/common@1.15.0...common@1.15.1) (2026-01-21)
 
 
