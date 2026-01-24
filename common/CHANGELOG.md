@@ -1,3 +1,16 @@
+# common [1.16.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0-rc.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* adding missing translations ([a43e012](https://github.com/fhswf/appointme/commit/a43e012e22c2038f1688621a38d8f3f1f5fdcba2))
+* remove outdated entries ([a846c4a](https://github.com/fhswf/appointme/commit/a846c4ad30f24041cb10f5b44143161508509a26))
+
+
+### Features
+
+* add gender-aware translations ([528e4d5](https://github.com/fhswf/appointme/commit/528e4d5f66929c462cd53f63dc43410f8ce2b2de))
+
 ## common [1.15.2](https://github.com/fhswf/appointme/compare/common@1.15.1...common@1.15.2) (2026-01-23)
 
 
