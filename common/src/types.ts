@@ -51,6 +51,7 @@ export type Event = {
   url: string;
   allowed_roles?: string[];
   tags?: string[];
+  gender?: 'male' | 'female' | 'neuter';
 
   bufferafter: number;
   bufferbefore: number;

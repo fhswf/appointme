@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 
 
@@ -8,6 +8,10 @@ export type FinishedProps = {};
 const Finished = (props: FinishedProps) => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  if (!location.state || !location.state.user) {
+    return <Navigate to="/" />;
+  }
+
   console.log("state: %o", location.state);
   const time = location.state.time as Date;
   const event = location.state.event;
@@ -19,7 +23,7 @@ const Finished = (props: FinishedProps) => {
         {t("Confirmation")}
       </h1>
       <p className="text-lg">
-        <Trans i18nKey="confirmationText">
+        <Trans i18nKey="confirmationText" context={event?.gender || 'neuter'}>
           You booked an {{ event: event?.name }} with {{ name: user.name }} appointment on{" "}
           {{
             date: time?.toLocaleDateString(i18n.language, {

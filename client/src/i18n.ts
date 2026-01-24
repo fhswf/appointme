@@ -19,12 +19,6 @@ i18n
 
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
-            format: (value, format, lng) => {
-                if (value instanceof Date) {
-                    return value.toLocaleString(lng);
-                }
-                return value;
-            }
         },
 
     });

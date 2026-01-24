@@ -92,7 +92,9 @@ export const it = {
     "Provide details": "Fornisci dettagli",
     "Confirmation": "Conferma",
     "Please share anything that will help me to prepare for our meeting": "Condividi qualsiasi cosa che mi aiuterà a prepararmi per la nostra riunione",
-    "confirmationText": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
+    "confirmationText_male": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
+    "confirmationText_female": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
+    "confirmationText_neuter": "Hai prenotato un appuntamento {{event}} con {{name}} il {{date}} alle {{time}}.",
     "Name": "Nome",
     "Please provide your name": "Fornisci il tuo nome",
     "Email": "E-mail",
@@ -160,9 +162,7 @@ export const it = {
     "I acknowledge that my password will be stored encrypted in the database.": "Riconosco che la mia password verrà memorizzata crittografata nel database.",
     "event_copy_link": "Copia link",
     "link_copied_to_clipboard": "Link copiato negli appunti!",
-    "link_copy_failed": "Impossibile copiare il link negli appunti!"
-
-    ,
+    "link_copy_failed": "Impossibile copiare il link negli appunti!",
 
     // Missing keys added by script
     "edit": "Modifica",
@@ -342,4 +342,29 @@ Utilizziamo Sentry per raccogliere dati di telemetria anonimi e segnalazioni di 
     "monthly": "Mensile",
     "Series Booking Note: Students will book all occurrences at once.": "Nota prenotazione in serie: Gli studenti prenoteranno tutte le occorrenze in una volta sola.",
     "Feedback": "Feedback",
+
+    "Student Only": "Solo studenti",
+    "Restricted to Students": "Limitato agli studenti",
+    "Settings exported successfully": "Impostazioni esportate con successo",
+    "Failed to export settings": "Impossibile esportare le impostazioni",
+    "Are you sure you want to import settings? This will overwrite your current profile and events.": "Sei sicuro di voler importare le impostazioni? Questo sovrascriverà il tuo profilo attuale e gli eventi.",
+    "Settings imported successfully": "Impostazioni importate con successo",
+    "Failed to import settings": "Impossibile importare le impostazioni",
+    "Invalid file format": "Formato file non valido",
+    "Data": "Dati",
+    "Export Settings": "Esporta impostazioni",
+    "Download your settings and events as a JSON file.": "Scarica le tue impostazioni e gli eventi come file JSON.",
+    "Export Data": "Esporta dati",
+    "Import Settings": "Importa impostazioni",
+    "Restore your settings from a JSON file. This will overwrite existing data.": "Ripristina le tue impostazioni da un file JSON. Questo sovrascriverà i dati esistenti.",
+    "Select File": "Seleziona file",
+    "Online Meeting": "Riunione online",
+    "You are logged in via your Learning Management System. Please use the specific booking links provided in your course to book appointments.": "Hai effettuato l'accesso tramite il tuo Learning Management System. Utilizza i link di prenotazione specifici forniti nel tuo corso per prenotare gli appuntamenti.",
+    "Logout": "Disconnettersi",
+    "MyProvider": "Il mio provider",
+    "Grammatical Gender": "Genere grammaticale",
+    "Male": "Maschile",
+    "Female": "Femminile",
+    "Neuter": "Neutro",
+    "gender_help_text": "Utilizzato per la grammatica corretta nei messaggi di conferma."
 };
