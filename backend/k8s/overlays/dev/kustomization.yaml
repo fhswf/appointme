@@ -4,6 +4,6 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/backend
-    newTag: 1.38.3-rc.1
+    newTag: 1.39.0-rc.1
 patches:
   - path: configmap-patch.yaml
