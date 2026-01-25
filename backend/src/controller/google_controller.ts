@@ -40,8 +40,9 @@ const createOAuthClient = (userId?: string): OAuth2Client => {
   return client;
 };
 const SCOPES = [
-  "https://www.googleapis.com/auth/calendar",
+  "https://www.googleapis.com/auth/calendar.calendars.readonly",
   "https://www.googleapis.com/auth/calendar.events",
+  "https://www.googleapis.com/auth/calendar.readonly",
 ];
 
 /**
