@@ -1,3 +1,24 @@
+# client [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.34.1...client@1.35.0-rc.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* check `location.state` before accessing it ([1cea34b](https://github.com/fhswf/appointme/commit/1cea34b49da2f833e5b80c878ad17d534b19277e))
+* check for user in location.state before accessing it ([1e105d2](https://github.com/fhswf/appointme/commit/1e105d26d351cc1aaadb9c045c6e560401a711de))
+
+
+### Features
+
+* add gender-aware translations ([528e4d5](https://github.com/fhswf/appointme/commit/528e4d5f66929c462cd53f63dc43410f8ce2b2de))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.0-rc.1
+
 ## client [1.34.1](https://github.com/fhswf/appointme/compare/client@1.34.0...client@1.34.1) (2026-01-23)
 
 

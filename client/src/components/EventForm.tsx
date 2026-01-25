@@ -181,8 +181,29 @@ export const EventForm = (props: EventFormProps): JSX.Element => {
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={handleTagKeyDown}
             placeholder={t("Type a tag and press Enter")}
-            />
+          />
           <p className="text-sm text-muted-foreground">{t("Press Enter to add a tag")}</p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="gender">{t("Grammatical Gender")}</Label>
+          <Select
+            value={formData.gender || "neuter"}
+            onValueChange={(val: any) => {
+              setChanged(true);
+              setFormData({ ...formData, gender: val });
+            }}
+          >
+            <SelectTrigger id="gender">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="neuter">{t("Neuter", { name: formData.name })}</SelectItem>
+              <SelectItem value="male">{t("Male", { name: formData.name })}</SelectItem>
+              <SelectItem value="female">{t("Female", { name: formData.name })}</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-muted-foreground">{t("gender_help_text")}</p>
         </div>
 
         <div className="flex items-center space-x-2">

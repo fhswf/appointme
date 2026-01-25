@@ -446,5 +446,28 @@ describe('EventForm Component', () => {
         );
 
         expect(screen.getByTestId('event-form-title')).toHaveValue('New Prop Event');
+        expect(screen.getByTestId('event-form-title')).toHaveValue('New Prop Event');
+    });
+
+    it('should update gender field', () => {
+        render(
+            <BrowserRouter>
+                <EventForm event={mockEvent} handleOnSubmit={mockSubmit} />
+            </BrowserRouter>
+        );
+
+        const selects = screen.getAllByTestId('mock-select');
+        const genderSelect = selects.find(select => select.querySelector('option[value="male"]'));
+
+        expect(genderSelect).toBeDefined();
+        if (genderSelect) {
+            fireEvent.change(genderSelect, { target: { value: 'male' } });
+        }
+
+        const submitButton = screen.getByTestId('event-form-submit');
+        fireEvent.click(submitButton);
+        const submittedEvent = mockSubmit.mock.calls[mockSubmit.mock.calls.length - 1][0];
+
+        expect(submittedEvent.gender).toBe('male');
     });
 });

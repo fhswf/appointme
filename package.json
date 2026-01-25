@@ -1,6 +1,6 @@
 {
   "name": "appointme",
-  "version": "1.65.8",
+  "version": "1.68.2",
   "description": "This web application helps you planning your appointments.",
   "main": "README.md",
   "directories": {
@@ -92,7 +92,7 @@
   },
   "stableVersion": "1.38.0",
   "resolutions": {
-    "lodash.template": "npm:lodash@4.17.21",
+    "lodash.template": "npm:lodash@4.17.23",
     "glob": "11.1.0"
   },
   "pnpm": {

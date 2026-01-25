@@ -1,6 +1,6 @@
 {
   "name": "mcp-server",
-  "version": "1.0.2",
+  "version": "1.0.3-rc.1",
   "description": "MCP server for BookMe API",
   "main": "build/index.js",
   "type": "module",
@@ -20,7 +20,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "hono": "^4.11.5",
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
