@@ -1,3 +1,10 @@
+# backend [1.39.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.39.0-rc.1...backend@1.39.0-rc.2) (2026-01-25)
+
+
+### Bug Fixes
+
+* update list of required API scopes ([7790f6d](https://github.com/fhswf/appointme/commit/7790f6db678c18b56fc0d82f66a7a619bce0cf31))
+
 # backend [1.39.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0-rc.1) (2026-01-24)
 
 
