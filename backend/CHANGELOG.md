@@ -1,3 +1,17 @@
+# backend [1.40.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0-rc.1) (2026-01-26)
+
+
+### Bug Fixes
+
+* caldav uid handling ([c9463c6](https://github.com/fhswf/appointme/commit/c9463c6fca7d54b67883c96f8c7df8c1e14c7857))
+* handle synchronization of recurring events ([1bf4fb1](https://github.com/fhswf/appointme/commit/1bf4fb1876c63e2007cedc37ae9748eefd7d0e26))
+* race condition during synchronization of recurring events ([491784a](https://github.com/fhswf/appointme/commit/491784aecea6d15c5e3647c4dfeadfaef7ff190e))
+
+
+### Features
+
+* asynchronous calendar entries ([6b59783](https://github.com/fhswf/appointme/commit/6b59783dc4ab98edc222506c5b3d042fb48c4c7e))
+
 # backend [1.39.0](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0) (2026-01-25)
 
 
