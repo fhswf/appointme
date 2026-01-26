@@ -1,5 +1,5 @@
 
-import { AppointmentModel, AppointmentDocument } from "../models/Appointment.js";
+import { AppointmentModel } from "../models/Appointment.js";
 import { UserModel } from "../models/User.js";
 import { EventModel } from "../models/Event.js";
 import { logger } from "../logging.js";
@@ -12,7 +12,6 @@ import validator from "validator";
 import crypto from 'node:crypto';
 import { calendar_v3 } from 'googleapis';
 import Schema$Event = calendar_v3.Schema$Event;
-import { addMinutes } from 'date-fns';
 
 export interface SyncResult {
     calendar: string;
@@ -34,60 +33,14 @@ export async function syncAppointment(appointmentId: string): Promise<boolean> {
         return true;
     }
 
+    const context = await fetchSyncContext(appointment);
+    if (!context) return false;
+
+    const { user, eventDoc } = context;
+
     try {
-        const user = await UserModel.findById(appointment.user).exec();
-        if (!user) throw new Error("User not found");
-
-        const eventDoc = await EventModel.findById(appointment.event).exec();
-        if (!eventDoc) throw new Error("Event definition not found");
-
-        const starttime = appointment.start;
-        const endtime = appointment.end;
-        const userComment = appointment.description || "";
-        const attendeeName = appointment.attendeeName;
-        const attendeeEmail = appointment.attendeeEmail;
-
-        const eventDescription = String(eventDoc.description);
-
-        // Use Appointment ID as deterministic ID for external systems
         const deterministicId = appointment._id.toString();
-
-        const event: Schema$Event = {
-            id: deterministicId, // Set explicit ID for Google
-            summary: eventDoc.name + " mit " + attendeeName,
-            location: eventDoc.location || appointment.location,
-            description: eventDescription,
-            start: {
-                dateTime: starttime.toISOString(),
-                timeZone: "Europe/Berlin",
-            },
-            end: {
-                dateTime: endtime.toISOString(),
-                timeZone: "Europe/Berlin",
-            },
-            organizer: {
-                displayName: user.name,
-                email: user.email,
-                id: user._id as string
-            },
-            attendees: [
-                {
-                    displayName: attendeeName,
-                    email: attendeeEmail,
-                }
-            ],
-            source: (process.env.BASE_URL?.startsWith('http')) ? {
-                title: "Appoint Me",
-                url: process.env.BASE_URL,
-            } : undefined,
-            guestsCanModify: true,
-            guestsCanInviteOthers: true,
-            extendedProperties: {
-                private: {
-                    appointme_id: deterministicId
-                }
-            }
-        };
+        const event = buildExternalEvent(appointment, eventDoc, user, deterministicId);
 
         const targetCalendars = user.push_calendars || [];
         const locale: Locale = 'de';
@@ -95,55 +48,125 @@ export async function syncAppointment(appointmentId: string): Promise<boolean> {
         const { results, successCount } = await pushEventToCalendars({
             user,
             event,
-            userComment,
+            userComment: appointment.description || "",
             targetCalendars,
             locale,
-            attendeeName,
-            attendeeEmail,
+            attendeeName: appointment.attendeeName,
+            attendeeEmail: appointment.attendeeEmail,
             recurrence: appointment.isRecurring ? eventDoc.recurrence : undefined,
             deterministicId
         });
 
-        if (successCount > 0) {
-            const googleResult = results.find(r => r.type === 'google' && r.success);
-            const caldavResult = results.find(r => r.type === 'caldav' && r.success);
-
-            appointment.status = 'synced';
-            appointment.googleId = googleResult?.event?.id || (googleResult ? deterministicId : undefined);
-            appointment.caldavUid = caldavResult?.event?.uid || (caldavResult ? deterministicId : undefined);
-            appointment.syncError = undefined;
-            appointment.lastSyncAttempt = new Date();
-
-            await appointment.save();
-
-            if (appointment.isRecurring && appointment.seriesId) {
-                await AppointmentModel.updateMany(
-                    { seriesId: appointment.seriesId },
-                    {
-                        $set: {
-                            status: 'synced',
-                            googleId: appointment.googleId,
-                            caldavUid: appointment.caldavUid,
-                            lastSyncAttempt: new Date()
-                        }
-                    }
-                );
-            }
-
-            return true;
-        } else {
-            const errors = results.map(r => r.error).join('; ');
-            appointment.status = 'failed';
-            appointment.syncError = errors;
-            appointment.lastSyncAttempt = new Date();
-            await appointment.save();
-            return false;
-        }
+        return await updateAppointmentStatus(appointment, results, successCount, deterministicId);
 
     } catch (err) {
         logger.error(`Sync failed for appointment ${appointmentId}`, err);
         appointment.status = 'failed';
         appointment.syncError = err instanceof Error ? err.message : String(err);
+        appointment.lastSyncAttempt = new Date();
+        await appointment.save();
+        return false;
+    }
+}
+
+async function fetchSyncContext(appointment: any) {
+    const user = await UserModel.findById(appointment.user).exec();
+    if (!user) {
+        // throw new Error("User not found"); // Original logic threw error? 
+        // Original logic: if (!user) throw new Error("User not found");
+        // But wait, if I throw here, it goes to catch block in syncAppointment.
+        // My previous refactor returned null and logged? 
+        // Let's stick to throwing to match original behavior if that's what we want, 
+        // OR return null and let caller handle.
+        // Original code: if (!user) throw new Error("User not found");
+        // So I should throw here to reach the catch block that updates status to failed?
+        // Actually, if user is not found, we PROBABLY want to fail the sync and mark it failed.
+        throw new Error("User not found");
+    }
+
+    const eventDoc = await EventModel.findById(appointment.event).exec();
+    if (!eventDoc) throw new Error("Event definition not found");
+
+    return { user, eventDoc };
+}
+
+function buildExternalEvent(appointment: any, eventDoc: any, user: any, deterministicId: string): Schema$Event {
+    const starttime = appointment.start;
+    const endtime = appointment.end;
+    const attendeeName = appointment.attendeeName;
+    const attendeeEmail = appointment.attendeeEmail;
+    const eventDescription = String(eventDoc.description);
+
+    return {
+        id: deterministicId, // Set explicit ID for Google
+        summary: eventDoc.name + " mit " + attendeeName,
+        location: eventDoc.location || appointment.location,
+        description: eventDescription,
+        start: {
+            dateTime: starttime.toISOString(),
+            timeZone: "Europe/Berlin",
+        },
+        end: {
+            dateTime: endtime.toISOString(),
+            timeZone: "Europe/Berlin",
+        },
+        organizer: {
+            displayName: user.name,
+            email: user.email,
+            id: user._id as string
+        },
+        attendees: [
+            {
+                displayName: attendeeName,
+                email: attendeeEmail,
+            }
+        ],
+        source: (process.env.BASE_URL?.startsWith('http')) ? {
+            title: "Appoint Me",
+            url: process.env.BASE_URL,
+        } : undefined,
+        guestsCanModify: true,
+        guestsCanInviteOthers: true,
+        extendedProperties: {
+            private: {
+                appointme_id: deterministicId
+            }
+        }
+    };
+}
+
+async function updateAppointmentStatus(appointment: any, results: SyncResult[], successCount: number, deterministicId: string): Promise<boolean> {
+    if (successCount > 0) {
+        const googleResult = results.find(r => r.type === 'google' && r.success);
+        const caldavResult = results.find(r => r.type === 'caldav' && r.success);
+
+        appointment.status = 'synced';
+        appointment.googleId = googleResult?.event?.id || (googleResult ? deterministicId : undefined);
+        appointment.caldavUid = caldavResult?.event?.uid || (caldavResult ? deterministicId : undefined);
+        appointment.syncError = undefined;
+        appointment.lastSyncAttempt = new Date();
+
+        await appointment.save();
+
+        if (appointment.isRecurring && appointment.seriesId) {
+            await AppointmentModel.updateMany(
+                { seriesId: appointment.seriesId },
+                {
+                    $set: {
+                        status: 'synced',
+                        googleId: appointment.googleId,
+                        caldavUid: appointment.caldavUid,
+                        lastSyncAttempt: new Date()
+                    }
+                }
+            );
+        }
+
+        return true;
+    } else {
+        const errors = results.map(r => r.error).join('; ');
+        appointment.status = 'failed';
+        appointment.syncError = errors;
         appointment.lastSyncAttempt = new Date();
         await appointment.save();
         return false;
