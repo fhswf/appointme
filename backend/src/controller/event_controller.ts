@@ -6,20 +6,17 @@
 import { EventDocument, EventModel } from "../models/Event.js";
 import { AppointmentModel } from "../models/Appointment.js";
 import { Event, IntervalSet } from "common";
-import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
-import { getBusySlots, createCalDavEvent, findAccountForCalendar } from "./caldav_controller.js";
+import { freeBusy, events, checkFree } from "./google_controller.js";
+import { getBusySlots } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
-import validator from "validator";
 import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
 import { syncAppointment } from "../services/sync_service.js";
 import { Request, Response } from "express";
 
 import { logger } from "../logging.js";
-import { sendEventInvitation } from "../utility/mailer.js";
-import { getLocale, t, Locale } from "../utility/i18n.js";
+import { t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
-import { generateIcsContent } from "../utility/ical.js";
 import { convertBusyToFree } from "../utility/scheduler.js";
 import { UserModel } from "../models/User.js";
 import { calendar_v3 } from 'googleapis';
@@ -569,7 +566,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ error: context.error });
       return;
     }
-    const { eventDoc, user } = context;
+    const { eventDoc } = context;
     const userId = eventDoc.user;
 
     // Check for role restrictions

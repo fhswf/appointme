@@ -1,16 +1,28 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { validateGoogleTokens } from '../controller/cron_controller.js';
+import { validateGoogleTokens, reconcileAppointments } from '../controller/cron_controller.js';
 import { UserModel } from '../models/User.js';
+import { AppointmentModel } from '../models/Appointment.js';
 import { getAuth } from '../controller/google_controller.js';
 import { transporter } from '../utility/mailer.js';
 import { logger } from '../logging.js';
+import { syncAppointment } from '../services/sync_service.js';
 
 // Mock dependencies
 vi.mock('../models/User.js', () => ({
     UserModel: {
         find: vi.fn()
     }
+}));
+
+vi.mock('../models/Appointment.js', () => ({
+    AppointmentModel: {
+        find: vi.fn()
+    }
+}));
+
+vi.mock('../services/sync_service.js', () => ({
+    syncAppointment: vi.fn()
 }));
 
 vi.mock('../controller/google_controller.js', () => ({
@@ -261,6 +273,33 @@ describe('Cron Controller - validateGoogleTokens', () => {
             invalid: 0,
             errors: 1,
             smtp: true
+        });
+    });
+
+    describe('reconcileAppointments', () => {
+        it('should return 401 if x-api-key is missing', async () => {
+            const req = { headers: {} } as any;
+            const res = { status: vi.fn().mockReturnThis(), json: vi.fn() } as any;
+
+            await reconcileAppointments(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Unauthorized' });
+        });
+
+        it('should reconcile pending appointments', async () => {
+            process.env.ADMIN_API_KEY = 'secret';
+            const req = { headers: { 'x-api-key': 'secret' } } as any;
+            const res = { json: vi.fn() } as any;
+
+            const mockApps = [{ _id: '1', status: 'pending' }, { _id: '2', status: 'failed' }];
+            (AppointmentModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApps) });
+            (syncAppointment as any).mockResolvedValue(true);
+
+            await reconcileAppointments(req, res);
+
+            expect(syncAppointment).toHaveBeenCalledTimes(2);
+            expect(res.json).toHaveBeenCalledWith({ total: 2, success: 2, failed: 0 });
         });
     });
 });
