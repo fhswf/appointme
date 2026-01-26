@@ -495,7 +495,7 @@ describe("Event Controller", () => {
             if (res.status !== 200) {
                 console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
             }
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
         });
 
@@ -520,7 +520,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
         });
 
@@ -666,7 +666,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(sendEventInvitation).toHaveBeenCalledWith(
                 "guest@example.com",
                 expect.stringContaining("Invitation: Event <script>alert(1)</script>"),
@@ -837,7 +837,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
             expect(res.body.instancesCreated).toBe(3);
             expect(res.body.seriesId).toBeDefined();
@@ -875,7 +875,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.instancesCreated).toBe(3);
 
             // Verify AppointmentModel was initialized with correct dates
@@ -951,7 +951,7 @@ describe("Event Controller", () => {
                     attendeeEmail: "guest@example.com"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(insertGoogleEvent).toHaveBeenCalledWith(
                 expect.objectContaining({ _id: expect.any(String) }), // user object
                 expect.objectContaining({ summary: expect.stringContaining("Fallback Guest") }), // event object
