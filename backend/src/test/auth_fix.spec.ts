@@ -41,7 +41,8 @@ vi.mock("../models/Appointment.js", () => {
     const AppointmentModelMock = vi.fn().mockImplementation(function (this: any, data: any) {
         return {
             ...data,
-            save: vi.fn().mockResolvedValue(data)
+            _id: "appointment_123",
+            save: vi.fn().mockResolvedValue({ ...data, _id: "appointment_123" })
         };
     });
     return { AppointmentModel: AppointmentModelMock };
