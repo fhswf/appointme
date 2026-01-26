@@ -100,7 +100,7 @@ export async function syncAppointment(appointmentId: string): Promise<boolean> {
             locale,
             attendeeName,
             attendeeEmail,
-            recurrence: appointment.isRecurring ? { /* We might need to fetch full recurrence info if we are syncing a series vs single instance */ } : undefined,
+            recurrence: appointment.isRecurring ? eventDoc.recurrence : undefined,
             deterministicId
         });
 
