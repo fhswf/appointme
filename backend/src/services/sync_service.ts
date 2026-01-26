@@ -33,6 +33,16 @@ export async function syncAppointment(appointmentId: string): Promise<boolean> {
         return true;
     }
 
+    // Fix for race condition: 
+    // If this is a recurring appointment but not the first one (index > 0),
+    // we skip syncing it individually because the first appointment (index 0) 
+    // is responsible for syncing the entire series.
+    // We return true so that the reconcile job considers it "handled".
+    if (appointment.isRecurring && appointment.recurrenceIndex && appointment.recurrenceIndex > 0) {
+        logger.info(`Skipping sync for recurring appointment ${appointmentId} (index ${appointment.recurrenceIndex}) as it is covered by the series sync.`);
+        return true;
+    }
+
     const context = await fetchSyncContext(appointment);
     if (!context) return false;
 

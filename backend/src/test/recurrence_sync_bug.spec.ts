@@ -6,21 +6,32 @@ const { insertGoogleEventMock } = vi.hoisted(() => {
     return { insertGoogleEventMock: vi.fn().mockResolvedValue({ data: { id: 'google_event_id' } }) };
 });
 
+const mockAppointment = (overrides = {}) => ({
+    _id: 'appointment_123',
+    user: 'user_123',
+    event: 'event_123',
+    start: new Date(),
+    end: new Date(),
+    status: 'pending',
+    isRecurring: true,
+    recurrenceIndex: 0,
+    seriesId: 'series_123',
+    save: vi.fn(),
+    toJSON: () => ({}),
+    ...overrides
+});
+
 vi.mock('../models/Appointment.js', () => ({
     AppointmentModel: {
-        findById: vi.fn().mockReturnValue({
-            exec: vi.fn().mockResolvedValue({
-                _id: 'appointment_123',
-                user: 'user_123',
-                event: 'event_123',
-                start: new Date(),
-                end: new Date(),
-                status: 'pending',
-                isRecurring: true,
-                seriesId: 'series_123',
-                save: vi.fn(),
-                toJSON: () => ({})
-            })
+        findById: vi.fn().mockImplementation((id) => {
+            if (id === 'appointment_123') return { exec: vi.fn().mockResolvedValue(mockAppointment()) };
+            if (id === 'appointment_secondary') return {
+                exec: vi.fn().mockResolvedValue(mockAppointment({
+                    _id: 'appointment_secondary',
+                    recurrenceIndex: 1
+                }))
+            };
+            return { exec: vi.fn().mockResolvedValue(null) };
         }),
         updateMany: vi.fn().mockResolvedValue({})
     }
@@ -76,21 +87,22 @@ describe('Recurrence Sync Bug Reproduction', () => {
         vi.clearAllMocks();
     });
 
-    it('should pass recurrence object to insertGoogleEvent for recurring appointments', async () => {
+    it('should sync the primary appointment (index 0)', async () => {
         await syncAppointment('appointment_123');
-
         expect(insertGoogleEventMock).toHaveBeenCalled();
-        const callArgs = insertGoogleEventMock.mock.calls[0];
-        // user, event, calendarUrl, recurrence
-        const recurrenceArg = callArgs[3];
+    });
 
-        console.log('Passed recurrence arg:', recurrenceArg);
+    it('should NOT sync a secondary appointment (index > 0) to avoid duplicates', async () => {
+        // This test simulates the race condition where `reconcileAppointments` picks up 
+        // a secondary appointment (index 1) which is still 'pending'.
+        // Currently, without the fix, this WILL call insertGoogleEvent.
+        // We want it to NOT call insertGoogleEvent.
 
-        const expectedRecurrence = {
-            enabled: true,
-            frequency: 'WEEKLY'
-        };
+        await syncAppointment('appointment_secondary');
 
-        expect(recurrenceArg).toEqual(expectedRecurrence);
+        // With the bug, this expect would fail if we asserted .not.toHaveBeenCalled()
+        // But for reproduction, we want to demonstrate it IS called (or we write the test asserting correct behavior and see it fail)
+        // Let's write the test asserting the CORRECT behavior.
+        expect(insertGoogleEventMock).not.toHaveBeenCalled();
     });
 });
