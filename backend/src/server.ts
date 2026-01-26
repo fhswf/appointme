@@ -154,7 +154,7 @@ router.use("/user/", userRouter);
 router.use("/caldav/", caldavRouter);
 router.use("/oidc/", oidcRouter);
 
-import { validateGoogleTokens } from "./controller/cron_controller.js";
+import { validateGoogleTokens, reconcileAppointments } from "./controller/cron_controller.js";
 
 const cronLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -164,6 +164,7 @@ const cronLimiter = rateLimit({
 });
 
 router.get("/cron/validate-tokens", cronLimiter, validateGoogleTokens);
+router.post("/cron/reconcile", cronLimiter, reconcileAppointments);
 
 router.get("/ping", (req, res) => {
   res.status(200).send("OK")

@@ -106,3 +106,53 @@ const sendEmail = (to: string, subject: string, html: string) => {
         });
     });
 };
+
+import { AppointmentModel } from '../models/Appointment.js';
+import { syncAppointment } from '../services/sync_service.js';
+
+export const reconcileAppointments = async (req: Request, res: Response) => {
+    // Security check
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey !== process.env.ADMIN_API_KEY) {
+        logger.warn('Unauthorized attempt to access reconcile route');
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    logger.info("Starting appointment reconciliation job via cron route");
+
+    try {
+        // 1. Process pending and failed appointments
+        const pendingAppointments = await AppointmentModel.find({
+            status: { $in: ['pending', 'failed'] }
+        }).exec();
+
+        logger.info(`Found ${pendingAppointments.length} pending/failed appointments`);
+
+        const results = {
+            total: pendingAppointments.length,
+            success: 0,
+            failed: 0
+        };
+
+        for (const app of pendingAppointments) {
+            logger.info(`Syncing appointment ${app._id} (status: ${app.status})...`);
+            try {
+                const success = await syncAppointment(app._id.toString());
+                if (success) {
+                    results.success++;
+                } else {
+                    results.failed++;
+                }
+            } catch (err) {
+                logger.error(`Error processing appointment ${app._id}`, err);
+                results.failed++;
+            }
+        }
+
+        res.json(results);
+
+    } catch (err) {
+        logger.error("Reconciliation job failed", err);
+        res.status(500).json({ error: err });
+    }
+};

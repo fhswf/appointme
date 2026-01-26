@@ -3,7 +3,11 @@ import type { Document } from 'mongoose';
 const { Schema, model, models } = mongoose;
 import { Appointment } from 'common'
 
-export interface AppointmentDocument extends Omit<Appointment, '_id'>, Document { }
+export interface AppointmentDocument extends Omit<Appointment, '_id'>, Document {
+    status: 'pending' | 'synced' | 'failed';
+    syncError?: string;
+    lastSyncAttempt?: Date;
+}
 
 const appointmentSchema = new Schema<AppointmentDocument>({
     user: {
@@ -55,6 +59,17 @@ const appointmentSchema = new Schema<AppointmentDocument>({
     },
     recurrenceIndex: {
         type: Number
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'synced', 'failed'],
+        default: 'pending'
+    },
+    syncError: {
+        type: String
+    },
+    lastSyncAttempt: {
+        type: Date
     }
 }, {
     timestamps: true
