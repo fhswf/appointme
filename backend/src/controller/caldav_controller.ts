@@ -353,7 +353,7 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any): Promise<any> => {
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any, uid?: string): Promise<any> => {
     const calendarUrl = targetCalendarUrl;
     if (!calendarUrl) {
         throw new Error('Target calendar URL is required');
@@ -425,8 +425,11 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         }))
     };
 
-    const randomStr = crypto.randomBytes(8).toString('hex');
-    const uid = `${Date.now()}-${randomStr}`;
+    let eventUid = uid;
+    if (!eventUid) {
+        const randomStr = crypto.randomBytes(8).toString('hex');
+        eventUid = `${Date.now()}-${randomStr}`;
+    }
 
     // WORKAROUND: tsdav bug where fetchOptions.headers overwrites auth headers in createObject
     // We pass Auth explicitly in fetchOptions for this call only.
@@ -442,7 +445,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
     };
 
     const icsContent = generateIcsContent({
-        uid,
+        uid: eventUid,
         start: new Date(eventData.start),
         end: new Date(eventData.end),
         summary: eventData.summary,
@@ -463,7 +466,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
 
     const createdEvent = await client.createCalendarObject({
         calendar: targetCalendar,
-        filename: `${uid}.ics`,
+        filename: `${eventUid}.ics`,
         iCalString: icsContent,
         fetchOptions: creationFetchOptions
     });
@@ -499,19 +502,19 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
 
         const found = fetchedObjects.find(obj => {
             if (obj.data) {
-                return obj.data.includes(`UID:${uid}`);
+                return obj.data.includes(`UID:${eventUid}`);
             }
             return false;
         });
 
         if (found) {
-            logger.info('Successfully verified event creation on server. UID: %s', uid);
+            logger.info('Successfully verified event creation on server. UID: %s', eventUid);
         } else {
-            logger.warn('Event created but not found on server verification. UID: %s', uid);
+            logger.warn('Event created but not found on server verification. UID: %s', eventUid);
         }
     } catch (verifyError) {
         logger.error('Error verifying event creation: %o', verifyError);
     }
 
-    return { response: createdEvent, uid };
+    return { response: createdEvent, uid: eventUid };
 };

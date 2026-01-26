@@ -6,19 +6,17 @@
 import { EventDocument, EventModel } from "../models/Event.js";
 import { AppointmentModel } from "../models/Appointment.js";
 import { Event, IntervalSet } from "common";
-import { freeBusy, events, checkFree, insertGoogleEvent } from "./google_controller.js";
-import { getBusySlots, createCalDavEvent, findAccountForCalendar } from "./caldav_controller.js";
+import { freeBusy, events, checkFree } from "./google_controller.js";
+import { getBusySlots } from "./caldav_controller.js";
 import { ValidationError, validationResult } from "express-validator";
-import validator from "validator";
 import { errorHandler } from "../handlers/errorhandler.js";
 import { addMinutes, addDays, startOfHour, startOfDay } from 'date-fns';
+import { syncAppointment } from "../services/sync_service.js";
 import { Request, Response } from "express";
 
 import { logger } from "../logging.js";
-import { sendEventInvitation } from "../utility/mailer.js";
-import { getLocale, t, Locale } from "../utility/i18n.js";
+import { t } from "../utility/i18n.js";
 import crypto from 'node:crypto';
-import { generateIcsContent } from "../utility/ical.js";
 import { convertBusyToFree } from "../utility/scheduler.js";
 import { UserModel } from "../models/User.js";
 import { calendar_v3 } from 'googleapis';
@@ -568,7 +566,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ error: context.error });
       return;
     }
-    const { eventDoc, user } = context;
+    const { eventDoc } = context;
     const userId = eventDoc.user;
 
     // Check for role restrictions
@@ -613,81 +611,45 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     }
 
     const userComment = req.body.description as string;
-    const eventDescription = String(eventDoc.description);
-    const event = constructGoogleEvent(eventDoc, user, starttime, req.body);
 
-    // Determine target calendars
-    const targetCalendars = user.push_calendars || [];
-    const locale = getLocale(req.headers['accept-language']);
-    const attendeeName = validator.escape(req.body.attendeeName as string);
-    const attendeeEmail = req.body.attendeeEmail as string;
-
-    // For recurring events, pass recurrence info to calendar creation
-    const { results, successCount } = await pushEventToCalendars({
-      user,
-      event,
+    // Persist appointments locally first (Pending status)
+    const { seriesId, appointmentIds } = await persistAppointments({
+      userId,
+      eventId,
+      instances,
+      eventDoc,
+      attendeeName: req.body.attendeeName,
+      attendeeEmail: req.body.attendeeEmail,
       userComment,
-      targetCalendars,
-      locale,
-      attendeeName,
-      attendeeEmail,
-      recurrence: eventDoc.recurrence?.enabled ? eventDoc.recurrence : undefined
+      // no googleId/caldavUid initially
     });
 
-    if (successCount > 0) {
-      const googleResult = results.find(r => r.type === 'google' && r.success);
-      const caldavResult = results.find(r => r.type === 'caldav' && r.success);
+    // Trigger async sync for each appointment (or at least the first one/series master)
+    // Note: If it's a series, our simple syncService might treat each as individual if we just loop.
+    // However, constructGoogleEvent creates a single event with recurrence rule. 
+    // The current architecture creates N appointments in DB for the instances.
+    // We should probably only sync the first one if it is a recurring series?
 
-      const { seriesId } = await persistAppointments({
-        userId,
-        eventId,
-        instances,
-        eventDoc,
-        attendeeName: req.body.attendeeName,
-        attendeeEmail: req.body.attendeeEmail,
-        userComment,
-        googleId: googleResult?.event?.id,
-        caldavUid: caldavResult?.event?.uid
+    // In strict recurrence mode (google calendar recurrence), we only push the start event.
+    // persistAppointments returns appointmentIds.
+
+    if (appointmentIds.length > 0) {
+      // Only sync the first appointment (the master or the single event)
+      // If it's a recurring event, the Google/CalDAV logic uses the recurrence rule on the first event.
+      syncAppointment(appointmentIds[0]).catch(err => {
+        logger.error(`Async sync failed for appointment ${appointmentIds[0]}`, err);
       });
-
-      const firstSuccess = results.find(r => r.success);
-      res.json({
-        ...firstSuccess,
-        results,
-        instancesCreated: instances.length,
-        seriesId: seriesId
-      });
-    } else if (targetCalendars.length > 0) {
-      // All attempted failed
-      const firstError = results[0]?.error || "Failed to create event on any calendar";
-      const errorMsg = firstError instanceof Error ? firstError.message : String(firstError);
-      res.status(400).json({ error: errorMsg, results });
-    } else {
-      // No calendars configured - fallback
-      logger.info("No push calendars configured, falling back to Google Primary");
-      try {
-        const result = await processGoogleBooking(user, userComment, event, 'primary', eventDoc.recurrence);
-
-        const { seriesId } = await persistAppointments({
-          userId,
-          eventId,
-          instances,
-          eventDoc,
-          attendeeName: req.body.attendeeName,
-          attendeeEmail: req.body.attendeeEmail,
-          userComment,
-          googleId: result?.event?.id
-        });
-
-        res.json({ ...result, instancesCreated: instances.length, seriesId: seriesId });
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        logger.error("Fallback booking failed", err);
-        res.status(400).json({ error: msg, details: err });
-      }
     }
+
+    res.status(201).json({
+      success: true,
+      instancesCreated: instances.length,
+      seriesId: seriesId,
+      message: "Appointment booked successfully. Syncing to calendar in background."
+    });
+
   } catch (err) {
-    res.status(400).json({ error: err });
+    res.status(400).json({ error: err instanceof Error ? err.message : String(err) });
   }
 }
 
@@ -730,42 +692,6 @@ async function validateAvailability(eventDoc: EventDocument, userId: string, ins
   return { available: true };
 }
 
-function constructGoogleEvent(eventDoc: EventDocument, user: any, starttime: Date, body: any): Schema$Event {
-  const eventDescription = String(eventDoc.description);
-  const endtime = addMinutes(starttime, eventDoc.duration);
-
-  return {
-    summary: eventDoc.name + " mit " + (body.attendeeName),
-    location: eventDoc.location,
-    description: eventDescription,
-    start: {
-      dateTime: starttime.toISOString(),
-      timeZone: "Europe/Berlin",
-    },
-    end: {
-      dateTime: endtime.toISOString(),
-      timeZone: "Europe/Berlin",
-    },
-    organizer: {
-      displayName: user.name,
-      email: user.email,
-      id: user._id as string
-    },
-    attendees: [
-      {
-        displayName: body.attendeeName as string,
-        email: body.attendeeEmail as string,
-      }
-    ],
-    source: (process.env.BASE_URL?.startsWith('http')) ? {
-      title: "Appoint Me",
-      url: process.env.BASE_URL,
-    } : undefined,
-    guestsCanModify: true,
-    guestsCanInviteOthers: true,
-  };
-}
-
 interface PersistAppointmentsParams {
   userId: string;
   eventId: string;
@@ -792,6 +718,7 @@ async function persistAppointments(params: PersistAppointmentsParams) {
   } = params;
 
   const seriesId = instances.length > 1 ? crypto.randomUUID() : undefined;
+  const appointmentIds: string[] = [];
 
   for (let i = 0; i < instances.length; i++) {
     const instanceStart = instances[i];
@@ -810,152 +737,12 @@ async function persistAppointments(params: PersistAppointmentsParams) {
       caldavUid: i === 0 ? caldavUid : undefined,
       seriesId: seriesId,
       isRecurring: instances.length > 1,
-      recurrenceIndex: i
+      recurrenceIndex: i,
+      status: 'pending' // Default to pending
     });
-    await appointment.save();
+    const saved = await appointment.save();
+    appointmentIds.push(saved._id.toString());
   }
 
-  return { seriesId };
-}
-
-async function pushEventToCalendars(params: {
-  user: any;
-  event: Schema$Event;
-  userComment: string;
-  targetCalendars: string[];
-  locale: Locale;
-  attendeeName: string;
-  attendeeEmail: string;
-  recurrence?: any;
-}) {
-  const { user, event, userComment, targetCalendars, locale, attendeeName, attendeeEmail, recurrence } = params;
-  const results = [];
-  let successCount = 0;
-
-  for (const calendar of targetCalendars) {
-    try {
-      // Check if calendar is a CalDav URL (heuristic: starts with http/https) 
-      if (calendar.startsWith('http') || calendar.startsWith('/')) {
-        const res = await processCalDavBooking({
-          user,
-          event,
-          userComment,
-          calendarUrl: calendar,
-          locale,
-          attendeeName,
-          attendeeEmail,
-          sendInvitation: user.send_invitation_email,
-          recurrence
-        });
-        successCount++;
-        results.push({ calendar, success: true, type: 'caldav', event: res.event });
-      } else {
-        const res = await processGoogleBooking(user, userComment, event, calendar, recurrence);
-        successCount++;
-        results.push({ calendar, success: true, type: 'google', event: res.event });
-      }
-    } catch (err) {
-      logger.error(`Failed to push to calendar ${calendar}:`, err);
-      results.push({ calendar, success: false, error: err });
-    }
-  }
-  return { results, successCount };
-}
-
-async function processCalDavBooking(
-  params: {
-    user: any;
-    event: Schema$Event;
-    userComment: string;
-    calendarUrl: string;
-    locale: Locale;
-    attendeeName: string;
-    attendeeEmail: string;
-    sendInvitation: boolean;
-    recurrence?: any;
-  }
-) {
-  const { user, event, userComment, calendarUrl, locale, attendeeName, attendeeEmail, sendInvitation, recurrence } = params;
-  const calDavAccount = findAccountForCalendar(user, calendarUrl);
-  if (calDavAccount) {
-    if (validator.isEmail(calDavAccount.username)) {
-      logger.info('Using CalDAV account username as organizer email: %s', calDavAccount.username);
-      event.organizer.email = calDavAccount.username;
-    } else {
-      logger.warn('CalDAV account username is not an email, keeping default: %s', calDavAccount.username);
-    }
-  }
-
-  try {
-    // Pass userComment and calendarUrl to CalDAV interaction
-    const evt = await createCalDavEvent(user, event, userComment, calendarUrl, recurrence);
-    logger.debug('CalDav insert returned %j', evt);
-
-    const randomStr = crypto.randomBytes(8).toString('hex');
-    const uid = `${Date.now()}-${randomStr}`;
-
-    const icsContent = generateIcsContent({
-      uid,
-      start: new Date(event.start.dateTime),
-      end: new Date(event.end.dateTime),
-      summary: event.summary,
-      description: event.description,
-      location: event.location,
-      organizer: {
-        displayName: event.organizer.displayName,
-        email: event.organizer.email
-      },
-      attendees: event.attendees.map(a => ({
-        displayName: a.displayName,
-        email: a.email,
-        partstat: 'NEEDS-ACTION',
-        rsvp: true
-      }))
-    }, { comment: userComment });
-
-    const subject = t(locale, 'invitationSubject', { summary: event.summary });
-
-    // Escape description for HTML email, preserving newlines as <br>
-    const escapedDescription = validator.escape(event.description || '').replaceAll('\n', '<br>');
-    const escapedComment = validator.escape(userComment || '').replaceAll('\n', '<br>');
-
-    const timeStr = new Date(event.start.dateTime).toLocaleString(t(locale, 'dateFormat'), { timeZone: 'Europe/Berlin' });
-
-    const html = t(locale, 'invitationBody', {
-      attendeeName,
-      summary: validator.escape(event.summary),
-      description: escapedDescription + (escapedComment ? '<br><br>Kommentar:<br>' + escapedComment : ''),
-      time: timeStr
-    });
-
-    if (sendInvitation) {
-      sendEventInvitation(attendeeEmail, subject, html, icsContent, 'invite.ics')
-        .then(() => logger.info('Invitation email sent to %s', attendeeEmail))
-        .catch(err => logger.error('Failed to send invitation email', err));
-    } else {
-      logger.info('Invitation email skipped for %s (user setting)', attendeeEmail);
-    }
-
-    return { success: true, message: "Event wurde gebucht (CalDav)", event: evt };
-  } catch (error) {
-    logger.error('CalDav insert failed', error);
-    throw error;
-  }
-}
-
-async function processGoogleBooking(user: any, userComment: string, event: Schema$Event, calendarUrl: string, recurrence?: any) {
-  // Fallback to Google Calendar
-  try {
-    const googleEvent = { ...event };
-    if (userComment) {
-      googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
-    }
-
-    const evt = await insertGoogleEvent(user, googleEvent, calendarUrl, recurrence);
-    logger.debug('insert returned %j', evt)
-    return { success: true, message: "Event wurde gebucht", event: evt.data };
-  } catch (error) {
-    logger.error('Google insert failed: %o', error);
-    throw error;
-  }
+  return { seriesId, appointmentIds };
 }

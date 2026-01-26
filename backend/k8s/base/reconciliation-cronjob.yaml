@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: appointme-reconciliation
+  namespace: appointme
+spec:
+  schedule: "*/15 * * * *" # Every 15 minutes
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: curl
+            image: curlimages/curl
+            args:
+            - "-s"
+            - "-S"
+            - "-X"
+            - "POST"
+            - "http://appointme:5000/api/v1/cron/reconcile"
+            - "-H"
+            - "x-api-key: $(ADMIN_API_KEY)"
+            env:
+            - name: ADMIN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: appointme-secret
+                  key: ADMIN_API_KEY
+          restartPolicy: OnFailure
