@@ -649,7 +649,7 @@ export const insertEvent = async (req: Request, res: Response): Promise<void> =>
     });
 
   } catch (err) {
-    res.status(400).json({ error: err });
+    res.status(400).json({ error: err instanceof Error ? err.message : String(err) });
   }
 }
 

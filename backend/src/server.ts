@@ -63,7 +63,7 @@ const csrfProtection: express.RequestHandler = (req, res, next) => {
   if (req.method === 'POST') {
     // OIDC init/login endpoints are handled via their own protocol flows and
     // must not rely on cookie-based authentication.
-    if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login') {
+    if (req.path === '/api/v1/oidc/init' || req.path === '/api/v1/oidc/login' || req.path.startsWith('/api/v1/cron/')) {
       return next();
     }
     // Public booking endpoint /api/v1/event/:id/slot:

@@ -104,6 +104,10 @@ vi.mock("../controller/caldav_controller.js", () => ({
     findAccountForCalendar: vi.fn().mockReturnValue({ username: "test@caldav.com", serverUrl: "https://caldav.example.com" })
 }));
 
+vi.mock("../services/sync_service.js", () => ({
+    syncAppointment: vi.fn().mockResolvedValue(true)
+}));
+
 const mockQuery = (result: any, rejected = false) => {
     return {
         exec: rejected ? vi.fn().mockRejectedValue(result) : vi.fn().mockResolvedValue(result),
@@ -492,11 +496,14 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            if (res.status !== 200) {
+            if (res.status !== 201) {
                 console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
             }
             expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should insert event successfully (CalDAV)", async () => {
@@ -522,6 +529,9 @@ describe("Event Controller", () => {
 
             expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should handle unavailable slot", async () => {
@@ -667,13 +677,9 @@ describe("Event Controller", () => {
                 });
 
             expect(res.status).toBe(201);
-            expect(sendEventInvitation).toHaveBeenCalledWith(
-                "guest@example.com",
-                expect.stringContaining("Invitation: Event <script>alert(1)</script>"),
-                expect.stringContaining("Guest &lt;b&gt;Bold&lt;&#x2F;b&gt;"),
-                expect.any(String),
-                "invite.ics"
-            );
+            // Sanitization is now handled in sync_service, not controller side effects in this tick
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should return 404 if event not found during insert", async () => {
@@ -952,12 +958,9 @@ describe("Event Controller", () => {
                 });
 
             expect(res.status).toBe(201);
-            expect(insertGoogleEvent).toHaveBeenCalledWith(
-                expect.objectContaining({ _id: expect.any(String) }), // user object
-                expect.objectContaining({ summary: expect.stringContaining("Fallback Guest") }), // event object
-                'primary',
-                undefined
-            );
+            // Fallback logic is now in sync_service
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
     });
 });

@@ -45,6 +45,10 @@ vi.mock("../models/Appointment.js", () => {
             })
         };
     });
+    (AppointmentModelMock as any).find = vi.fn().mockReturnThis();
+    (AppointmentModelMock as any).findById = vi.fn().mockReturnThis();
+    (AppointmentModelMock as any).updateMany = vi.fn();
+    (AppointmentModelMock as any).exec = vi.fn().mockResolvedValue([]);
     return { AppointmentModel: AppointmentModelMock };
 });
 
@@ -55,11 +59,21 @@ vi.mock("../services/sync_service.js", () => ({
 
 vi.mock("../controller/google_controller.js", () => ({
     checkFree: vi.fn().mockResolvedValue(true),
+    revokeScopes: vi.fn(),
+    generateAuthUrl: vi.fn().mockReturnValue("http://auth.url"),
+    getCalendarList: vi.fn().mockResolvedValue([]),
+    googleCallback: vi.fn().mockImplementation((req, res) => res.json({})),
     // ... other mocks if needed
 }));
 
 vi.mock("../controller/caldav_controller.js", () => ({
-    // ... mocks if needed
+    createCalDavEvent: vi.fn().mockResolvedValue({ ok: true }),
+    getBusySlots: vi.fn().mockResolvedValue([]),
+    addAccount: vi.fn().mockImplementation((req, res) => res.json({})),
+    listAccounts: vi.fn().mockImplementation((req, res) => res.json([])),
+    removeAccount: vi.fn().mockImplementation((req, res) => res.json({})),
+    listCalendars: vi.fn().mockImplementation((req, res) => res.json([])),
+    findAccountForCalendar: vi.fn().mockReturnValue({ username: "test@caldav.com", serverUrl: "https://caldav.example.com" })
 }));
 
 const mockQuery = (result: any) => {
