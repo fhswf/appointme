@@ -4,7 +4,7 @@ import { validateGoogleTokens, reconcileAppointments } from '../controller/cron_
 import { UserModel } from '../models/User.js';
 import { AppointmentModel } from '../models/Appointment.js';
 import { getAuth } from '../controller/google_controller.js';
-import { transporter } from '../utility/mailer.js';
+import { transporter, verifyConnection } from '../utility/mailer.js';
 import { logger } from '../logging.js';
 import { syncAppointment } from '../services/sync_service.js';
 
@@ -276,6 +276,37 @@ describe('Cron Controller - validateGoogleTokens', () => {
         });
     });
 
+    it('should verify connection and log error on smtp failure', async () => {
+        (verifyConnection as any).mockRejectedValue(new Error('SMTP Down'));
+        (UserModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue([]) });
+
+        await validateGoogleTokens(req, res);
+
+        expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('SMTP connection check failed'), expect.anything());
+    });
+
+    it('should log error if sendEmail fails but continue', async () => {
+        const mockUser = {
+            _id: 'user_mail_fail',
+            email: 'fail@example.com',
+            auth_check_notification: true,
+            google_tokens: { access_token: 'valid' }
+        };
+        (UserModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue([mockUser]) });
+        (getAuth as any).mockResolvedValue('auth');
+        mockCalendarListList.mockResolvedValue({});
+
+        (transporter.sendMail as any).mockImplementation((opts, cb) => cb(new Error('Send failed'), null));
+
+        await validateGoogleTokens(req, res);
+
+        expect(transporter.sendMail).toHaveBeenCalled();
+        expect(logger.error).toHaveBeenCalledWith("Error sending email: %o", expect.anything());
+        // Should still count as valid even if email failed
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ valid: 1 }));
+    });
+
+
     describe('reconcileAppointments', () => {
         it('should return 401 if x-api-key is missing', async () => {
             const req = { headers: {} } as any;
@@ -300,6 +331,25 @@ describe('Cron Controller - validateGoogleTokens', () => {
 
             expect(syncAppointment).toHaveBeenCalledTimes(2);
             expect(res.json).toHaveBeenCalledWith({ total: 2, success: 2, failed: 0 });
+        });
+
+        it('should handle sync exceptions gracefully', async () => {
+            process.env.ADMIN_API_KEY = 'secret';
+            const req = { headers: { 'x-api-key': 'secret' } } as any;
+            const res = { json: vi.fn() } as any;
+
+            const mockApps = [{ _id: '1', status: 'pending' }, { _id: '2', status: 'pending' }];
+            (AppointmentModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApps) });
+
+            (syncAppointment as any)
+                .mockResolvedValueOnce(true) // 1 success
+                .mockRejectedValueOnce(new Error('Sync crash')); // 2 crash
+
+            await reconcileAppointments(req, res);
+
+            expect(syncAppointment).toHaveBeenCalledTimes(2);
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Error processing appointment'), expect.anything());
+            expect(res.json).toHaveBeenCalledWith({ total: 2, success: 1, failed: 1 });
         });
     });
 });

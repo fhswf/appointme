@@ -7,6 +7,7 @@ import { USER } from './USER.js';
 import { AppointmentModel } from "../models/Appointment.js";
 import { EventModel } from "../models/Event.js";
 import { UserModel } from "../models/User.js";
+import { middleware } from "../handlers/middleware.js";
 
 // Mock dependencies
 vi.mock("../models/Event.js", () => {
@@ -619,9 +620,59 @@ describe("Event Controller", () => {
                     attendeeName: "Guest",
                     attendeeEmail: "guest@example.com"
                 });
-
             expect(res.status).toBe(403);
             expect(res.body.error).toContain("Access denied");
+        });
+
+        it("should allow access if restricted to roles and user has role", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery({
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                allowed_roles: ['student']
+            }));
+
+            // Mock checkFree
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(true);
+
+            // Mock middleware to simulate authenticated user
+            (middleware.optionalAuth as any).mockImplementation((req: any, res: any, next: any) => {
+                req.user_id = "visitor_id";
+                req['user_id'] = "visitor_id";
+                next();
+            });
+
+            // Mock user lookup to return user WITH role
+            // Since req['user'] is undefined in test, controller will look up via req['user_id']
+            (UserModel.findById as any).mockImplementation(() => mockQuery({
+                ...USER,
+                _id: "visitor_id",
+                roles: ['student'],
+                push_calendars: []
+            }));
+
+            // We need to override the middleware mock to ensure req['user_id'] is set to our visitor?
+            // Existing middleware mock sets req['user_id'] = USER._id.
+            // But we want the REQUESTER to be the visitor.
+            // However, insertEvent uses req['user_id'] (from middleware/token).
+            // If we want to simulate a different user, we should probably update the mock or rely on USER._id being the requester.
+            // If USER._id is the requester, then we just need USER to have the role.
+            // But USER in 'USER.js' might not have roles.
+            // Let's just mock UserModel.findById to return a user with roles regardless of ID passed (or for USER._id)
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: Date.now().toString(),
+                    attendeeName: "Authorized Student",
+                    attendeeEmail: "student@example.com"
+                });
+
+            expect(res.status).toBe(201);
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should allow access if restricted to roles and user has role (needs auth middleware or mock)", async () => {

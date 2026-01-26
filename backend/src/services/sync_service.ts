@@ -232,9 +232,9 @@ async function processCalDavBooking(
     }
 
     try {
-        const evt = await createCalDavEvent(user, event, userComment, calendarUrl, recurrence);
+        const evt = await createCalDavEvent(user, event, userComment, calendarUrl, recurrence, deterministicId);
 
-        const uid = deterministicId || `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
+        const uid = deterministicId || evt.uid || `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
 
         const icsContent = generateIcsContent({
             uid,
