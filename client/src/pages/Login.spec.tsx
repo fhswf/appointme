@@ -107,22 +107,13 @@ describe('Login Page', () => {
     it('should fail Google login flow when state mismatches', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
 
-        // Override mock implementation to simulate state mismatch
-        mockGoogleLogin.mockImplementation((loginOptions: any) => {
-            // We access the captured onSuccess from the hook setup (we need to capture it if we want to change behavior per test, 
-            // but here the hook is already set up when Component renders.
-            // Easier way: The component uses the hook defined in the module mock. 
-            // The module mock uses the `options` passed to useGoogleLogin.
-            // We can't easily change `options.onSuccess` from outside after render.
-            // BUT, we can make the mock trigger onSuccess with WRONG state.
-        });
-
-        // Re-mock for this specific test case to inject wrong state in callback
-        vi.mocked(require('@react-oauth/google').useGoogleLogin).mockImplementation((options: any) => {
+        let capturedOptions: any;
+        mockGoogleLogin.mockImplementation((options: any) => {
+            capturedOptions = options;
             return (loginOptions: any) => {
                 // Trigger success but with WRONG state
-                if (options.onSuccess) {
-                    options.onSuccess({ code: 'test-code', state: 'wrong-state' });
+                if (capturedOptions && capturedOptions.onSuccess) {
+                    capturedOptions.onSuccess({ code: 'test-code', state: 'wrong-state' });
                 }
             }
         });
@@ -132,8 +123,7 @@ describe('Login Page', () => {
 
         fireEvent.click(screen.getByText('login_with google'));
 
-        // Should verify state was passed to login
-        // But postGoogleLogin should NOT be called
+        // Should verify postGoogleLogin should NOT be called
         await waitFor(() => expect(authServices.postGoogleLogin).not.toHaveBeenCalled());
     });
 
