@@ -247,7 +247,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
-export async function verifyEvent(user: UserDocument, eventId: string, calendarId: string = "primary"): Promise<boolean>;
+
 export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary', recurrence?: any) {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");

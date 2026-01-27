@@ -353,7 +353,7 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const verifyEvent = async (user: User, uid: string, calendarUrl: string, start: Date, end: Date): Promise<boolean>;
+
 export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any, uid?: string): Promise<any> => {
     const calendarUrl = targetCalendarUrl;
     if (!calendarUrl) {
