@@ -247,6 +247,7 @@ export async function checkFree(event: Event, userid: string, timeMin: Date, tim
 /**
  * Helper to insert event into Google Calendar
  */
+export async function verifyEvent(user: UserDocument, eventId: string, calendarId: string = "primary"): Promise<boolean>;
 export async function insertGoogleEvent(user: UserDocument, event: Schema$Event, calendarId: string = 'primary', recurrence?: any) {
   if (!user.google_tokens || !user.google_tokens.access_token) {
     throw new Error("No Google account connected");
@@ -412,4 +413,46 @@ function saveTokens(user: string, token) {
     .catch(err => {
       logger.error('saveTokens: %o', err)
     });
+}
+/**
+ * Verify if an event exists in Google Calendar
+ */
+export async function verifyEvent(user: UserDocument, eventId: string, calendarId: string = 'primary'): Promise<boolean> {
+  if (!user.google_tokens || !user.google_tokens.access_token) {
+    logger.warn(`verifyEvent: User ${user._id} has no Google tokens`);
+    return false;
+  }
+
+  try {
+    const oAuth2Client = createOAuthClient(user._id as unknown as string);
+    oAuth2Client.setCredentials(user.google_tokens);
+    const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+
+    await calendar.events.get({
+      calendarId,
+      eventId
+    });
+    return true;
+  } catch (err: any) {
+    if (err.code === 404 || err.code === 410) {
+      logger.info(`verifyEvent: Event ${eventId} not found (404/410)`);
+      return false;
+    }
+    // For other errors (auth, network), strictly speaking we didn't confirm it's missing,
+    // but throwing might stop the whole job. 
+    // If auth fails, it's effectively missing/broken.
+    logger.error(`verifyEvent: Error checking event ${eventId}: ${err.message}`);
+
+    // If invalid grant, it's definitely not reachable
+    if (err.message === 'invalid_grant' ||
+      err.response?.data?.error === 'invalid_grant') {
+      return false;
+    }
+
+    // For 500s or temporary issues, we might want to return true to avoid false deletion,
+    // but for reconciliation "retry" logic, returning false causes a retry.
+    // However, if we return false, it marks as failed -> tries to sync -> might fail again.
+    // Let's return false to stay on safe side of "not verified".
+    return false;
+  }
 }
