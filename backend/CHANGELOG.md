@@ -1,3 +1,11 @@
+# backend [1.40.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.3...backend@1.40.0-rc.4) (2026-01-27)
+
+
+### Bug Fixes
+
+* handle login if user slug is not available ([4cf0310](https://github.com/fhswf/appointme/commit/4cf03107af7e1b0f81d0d261aa800d03f8f5c14e))
+* handle login if user slug is not available ([19e0b78](https://github.com/fhswf/appointme/commit/19e0b78bde962fb2a275e54701cfcda32e4cb304))
+
 # backend [1.40.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.2...backend@1.40.0-rc.3) (2026-01-27)
 
 
