@@ -243,9 +243,8 @@ export async function verifyAppointment(appointmentId: string): Promise<boolean>
     const appointment = await AppointmentModel.findById(appointmentId).exec();
     if (!appointment) return false;
 
-    // We only verify "synced" appointments. 
-    // If it is in another status, standard reconciliation handles it.
-    if (appointment.status !== 'synced') return true;
+    // We allow verifying any appointment that has an ID, even if status is failed.
+    // If it is pending/failed with no ID, it will fail verification below (which is correct).
 
     // Check specific edge case: Recurring entries (index > 0) are managed by the series.
     if (appointment.isRecurring && appointment.recurrenceIndex && appointment.recurrenceIndex > 0) {

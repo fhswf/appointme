@@ -17,7 +17,8 @@ vi.mock('../models/User.js', () => ({
 
 vi.mock('../models/Appointment.js', () => ({
     AppointmentModel: {
-        find: vi.fn()
+        find: vi.fn(),
+        countDocuments: vi.fn().mockResolvedValue(0)
     }
 }));
 
@@ -322,7 +323,10 @@ describe('Cron Controller - validateGoogleTokens', () => {
         it('should reconcile pending appointments', async () => {
             process.env.ADMIN_API_KEY = 'secret';
             const req = { headers: { 'x-api-key': 'secret' }, query: {} } as any;
-            const res = { json: vi.fn() } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
 
             const mockApps = [{ _id: '1', status: 'pending' }, { _id: '2', status: 'failed' }];
             (AppointmentModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApps) });
@@ -331,13 +335,18 @@ describe('Cron Controller - validateGoogleTokens', () => {
             await reconcileAppointments(req, res);
 
             expect(syncAppointment).toHaveBeenCalledTimes(2);
-            expect(res.json).toHaveBeenCalledWith({ checked: 0, missing: 0, restored: 2, total: 2, success: 2, failed: 0 });
+            // restored should be 0 unless verifyFutureAppointments marks them synced. 
+            // In this test (process pending), restored is 0.
+            expect(res.json).toHaveBeenCalledWith({ checked: 0, missing: 0, restored: 0, total: 2, success: 2, failed: 0 });
         });
 
         it('should handle sync exceptions gracefully', async () => {
             process.env.ADMIN_API_KEY = 'secret';
             const req = { headers: { 'x-api-key': 'secret' }, query: {} } as any;
-            const res = { json: vi.fn() } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
 
             const mockApps = [{ _id: '1', status: 'pending' }, { _id: '2', status: 'pending' }];
             (AppointmentModel.find as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApps) });
@@ -350,7 +359,7 @@ describe('Cron Controller - validateGoogleTokens', () => {
 
             expect(syncAppointment).toHaveBeenCalledTimes(2);
             expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Error processing appointment'), expect.anything());
-            expect(res.json).toHaveBeenCalledWith({ checked: 0, missing: 0, restored: 1, total: 2, success: 1, failed: 1 });
+            expect(res.json).toHaveBeenCalledWith({ checked: 0, missing: 0, restored: 0, total: 2, success: 1, failed: 1 });
         });
 
         it('should verify appointments when mode is full', async () => {
@@ -359,17 +368,20 @@ describe('Cron Controller - validateGoogleTokens', () => {
                 headers: { 'x-api-key': 'secret' },
                 query: { mode: 'full' }
             } as any;
-            const res = { json: vi.fn() } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
 
             const mockSyncedApps = [{ _id: 'synced1', status: 'synced', save: vi.fn() }];
             const mockPendingApps = []; // No pending initially
 
-            // First find for synced apps
+            // First find for future apps
             (AppointmentModel.find as any).mockImplementation((query) => {
-                if (query.status === 'synced') {
+                if (query.start && query.start['$gt']) {
                     return { exec: vi.fn().mockResolvedValue(mockSyncedApps) };
                 }
-                if (query.status['$in']) {
+                if (query.status && query.status['$in']) {
                     return { exec: vi.fn().mockResolvedValue(mockPendingApps) };
                 }
                 return { exec: vi.fn().mockResolvedValue([]) };
@@ -382,7 +394,7 @@ describe('Cron Controller - validateGoogleTokens', () => {
 
             expect(verifyAppointment).toHaveBeenCalledWith('synced1');
             expect(mockSyncedApps[0].save).not.toHaveBeenCalled(); // verification passed, no save
-            expect(res.json).toHaveBeenCalledWith({ checked: 1, missing: 0, restored: 0, total: 0, success: 0, failed: 0 });
+            expect(res.json).toHaveBeenCalledWith({ checked: 1, missing: 0, restored: 0, total: 1, success: 0, failed: 0 });
         });
 
         it('should mark failed verification as failed and re-sync', async () => {
@@ -391,7 +403,10 @@ describe('Cron Controller - validateGoogleTokens', () => {
                 headers: { 'x-api-key': 'secret' },
                 query: { mode: 'full' }
             } as any;
-            const res = { json: vi.fn() } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
 
             const mockSyncedApp = {
                 _id: 'missing1',
@@ -404,8 +419,11 @@ describe('Cron Controller - validateGoogleTokens', () => {
             (syncAppointment as any).mockResolvedValue(true);
 
             (AppointmentModel.find as any)
-                .mockImplementationOnce(() => ({ exec: vi.fn().mockResolvedValue([mockSyncedApp]) })) // 1. Synced
-                .mockImplementationOnce(() => ({ exec: vi.fn().mockResolvedValue([mockSyncedApp]) })); // 2. Pending/Failed
+                .mockImplementation((query) => {
+                    if (query.start) return { exec: vi.fn().mockResolvedValue([mockSyncedApp]) }; // Future check
+                    if (query.status) return { exec: vi.fn().mockResolvedValue([mockSyncedApp]) }; // Pending check
+                    return { exec: vi.fn().mockResolvedValue([]) };
+                });
 
             await reconcileAppointments(req, res);
 
@@ -414,7 +432,105 @@ describe('Cron Controller - validateGoogleTokens', () => {
             expect(mockSyncedApp.save).toHaveBeenCalled();
             expect(syncAppointment).toHaveBeenCalledWith('missing1');
 
-            expect(res.json).toHaveBeenCalledWith({ checked: 1, missing: 1, restored: 1, total: 1, success: 1, failed: 0 });
+            // checked=1 (future), total=2 (1 checked + 1 pending/failed found in step 2)
+            expect(res.json).toHaveBeenCalledWith({ checked: 1, missing: 1, restored: 0, total: 2, success: 1, failed: 0 });
+        });
+
+        it('should skip verification for pending appointments but still sync them', async () => {
+            process.env.ADMIN_API_KEY = 'secret';
+            const req = {
+                headers: { 'x-api-key': 'secret' },
+                query: { mode: 'full' }
+            } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
+
+            const mockPendingApp = {
+                _id: 'pending1',
+                status: 'pending',
+                start: new Date(Date.now() + 10000), // Future
+                save: vi.fn()
+            };
+
+            const { verifyAppointment, syncAppointment } = await import('../services/sync_service.js');
+            (verifyAppointment as any).mockResolvedValue(true); // Should NOT be called
+            (syncAppointment as any).mockResolvedValue(true);
+
+            (AppointmentModel.find as any)
+                .mockImplementation((query) => {
+                    // Step 1: verifyFutureAppointments
+                    if (query.start && query.status && query.status['$ne'] === 'pending') {
+                        // Should NOT match mockPendingApp because it is pending
+                        return { exec: vi.fn().mockResolvedValue([]) };
+                    }
+                    if (query.start) {
+                        // If the code didn't filter pending, it would match here.
+                        // But we want to simulate the DB behavior: if query excludes pending, return empty.
+                        // If the code passes the correct query, we return empty here (correct behavior).
+                        return { exec: vi.fn().mockResolvedValue([]) };
+                    }
+
+                    // Step 2: processPendingAppointments
+                    if (query.status && query.status['$in']) {
+                        return { exec: vi.fn().mockResolvedValue([mockPendingApp]) };
+                    }
+                    return { exec: vi.fn().mockResolvedValue([]) };
+                });
+
+            await reconcileAppointments(req, res);
+
+            // verifyAppointment should NOT be called because it was excluded in step 1 lookup
+            expect(verifyAppointment).not.toHaveBeenCalled();
+
+            // syncAppointment SHOULD be called because it was found in step 2 lookup
+            expect(syncAppointment).toHaveBeenCalledWith('pending1');
+
+            expect(res.json).toHaveBeenCalledWith({ checked: 0, missing: 0, restored: 0, total: 1, success: 1, failed: 0 });
+        });
+
+        it('should verify failed appointments to see if they are actually valid (restoration)', async () => {
+            process.env.ADMIN_API_KEY = 'secret';
+            const req = {
+                headers: { 'x-api-key': 'secret' },
+                query: { mode: 'full' }
+            } as any;
+            const res = {
+                json: vi.fn(),
+                status: vi.fn().mockReturnThis()
+            } as any;
+
+            const mockFailedApp = {
+                _id: 'failed1',
+                status: 'failed',
+                start: new Date(Date.now() + 10000),
+                save: vi.fn()
+            };
+
+            const { verifyAppointment } = await import('../services/sync_service.js');
+            (verifyAppointment as any).mockResolvedValue(true); // It IS valid on calendar
+
+            (AppointmentModel.find as any)
+                .mockImplementation((query) => {
+                    // Step 1: verifyFutureAppointments
+                    if (query.start && query.status && query.status['$ne'] === 'pending') {
+                        // Should match failed app because it is NOT pending
+                        return { exec: vi.fn().mockResolvedValue([mockFailedApp]) };
+                    }
+                    return { exec: vi.fn().mockResolvedValue([]) };
+                });
+
+            await reconcileAppointments(req, res);
+
+            // verifyAppointment SHOULD be called for failed app
+            expect(verifyAppointment).toHaveBeenCalledWith('failed1');
+
+            // Should be marked synced (restored)
+            expect(mockFailedApp.status).toBe('synced');
+            expect(mockFailedApp.save).toHaveBeenCalled();
+
+            expect(res.json).toHaveBeenCalledWith({ checked: 1, missing: 0, restored: 1, total: 1, success: 0, failed: 0 });
         });
     });
 });

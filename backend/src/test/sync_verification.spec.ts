@@ -48,6 +48,7 @@ vi.mock("../models/Appointment.js", () => {
     (AppointmentModelMock as any).find = vi.fn().mockReturnThis();
     (AppointmentModelMock as any).findById = vi.fn().mockReturnThis();
     (AppointmentModelMock as any).updateMany = vi.fn();
+    (AppointmentModelMock as any).countDocuments = vi.fn().mockResolvedValue(0);
     (AppointmentModelMock as any).exec = vi.fn().mockResolvedValue([]);
     return { AppointmentModel: AppointmentModelMock };
 });

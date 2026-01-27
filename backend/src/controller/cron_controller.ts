@@ -119,29 +119,36 @@ interface ReconcileResults {
     failed: number;
 }
 
-const verifySyncedAppointments = async (results: ReconcileResults) => {
-    const syncedAppointments = await AppointmentModel.find({
-        status: 'synced',
-        start: { $gt: new Date() } // Only future appointments
+const verifyFutureAppointments = async (results: ReconcileResults) => {
+    const futureAppointments = await AppointmentModel.find({
+        start: { $gt: new Date() }, // All future appointments of any status
+        status: { $ne: 'pending' }  // Skip pending appointments (they are handled by processPendingAppointments)
     }).exec();
 
-    logger.info(`Verifying ${syncedAppointments.length} synced appointments...`);
-    results.checked = syncedAppointments.length;
+    logger.info(`Verifying ${futureAppointments.length} future appointments...`);
+    results.checked = futureAppointments.length;
+    results.total += futureAppointments.length;
 
-    for (const app of syncedAppointments) {
+    for (const app of futureAppointments) {
         try {
             const isValid = await verifyAppointment(app._id.toString());
-            if (!isValid) {
-                logger.warn(`Appointment ${app._id} verification failed. Marking as failed for re-sync.`);
-                app.status = 'failed';
-                await app.save();
+            if (isValid) {
+                if (app.status !== 'synced') {
+                    logger.info(`Appointment ${app._id} verified as valid. Marking as synced.`);
+                    app.status = 'synced';
+                    await app.save();
+                    results.restored++;
+                }
+            } else {
+                if (app.status !== 'failed') {
+                    logger.warn(`Appointment ${app._id} verification failed. Marking as failed for re-sync.`);
+                    app.status = 'failed';
+                    await app.save();
+                }
                 results.missing++;
             }
         } catch (err) {
             logger.error(`Error verifying appointment ${app._id}`, err);
-            // Standard error handling: do nothing? or count as missing?
-            // To be safe, if we can't verify, we probably shouldn't assume it's missing unless we are sure.
-            // But verifyAppointment handles internal errors by returning false only on definitive failure or config mismatch.
         }
     }
 };
@@ -152,7 +159,7 @@ const processPendingAppointments = async (results: ReconcileResults) => {
     }).exec();
 
     logger.info(`Found ${pendingAppointments.length} pending/failed appointments (reconcile)`);
-    results.total = pendingAppointments.length;
+    results.total += pendingAppointments.length;
 
     for (const app of pendingAppointments) {
         logger.info(`Syncing appointment ${app._id} (status: ${app.status})...`);
@@ -187,6 +194,7 @@ export const reconcileAppointments = async (req: Request, res: Response) => {
 
     const { mode } = req.query;
     logger.info(`Starting appointment reconciliation job (mode: ${mode || 'standard'})`);
+    logger.info(`Server time: ${new Date().toISOString()}`);
 
     try {
         const results: ReconcileResults = {
@@ -198,25 +206,19 @@ export const reconcileAppointments = async (req: Request, res: Response) => {
             failed: 0
         };
 
+        // Debug: Check how many future appointments exist in total
+        const totalFuture = await AppointmentModel.countDocuments({ start: { $gt: new Date() } });
+        logger.info(`Total future appointments in DB (any status): ${totalFuture}`);
+
         // 0. If mode is full, verify existing appointments first
         if (mode === 'full') {
-            await verifySyncedAppointments(results);
+            await verifyFutureAppointments(results);
         }
 
         // 1. Process pending and failed appointments (including those just marked as failed)
         await processPendingAppointments(results);
 
-        // Approximation for restored: 
-        // If we ran in full mode, 'restored' could be the subset of 'success' that were previously 'synced'.
-        // But we already saved them as 'failed'.
-        // Let's just leave 'restored' as 0 or count successes. 
-        // The user asked for "number of missing calendar entries" (missing) and "restored" (optional/implied re-sync).
-        // Let's set restored = success, but clarify in documentation if needed. 
-        // Actually, let's refine:
-        // `missing` = found missing in verification.
-        // `success` = total successfully synced in this run.
-        // `restored` isn't strictly tracked separately but `success` covers it if pending list only had the missing ones.
-        results.restored = results.success;
+        // removed heuristic for restored since we now track it properly in verifyFutureAppointments
 
         res.json(results);
 
