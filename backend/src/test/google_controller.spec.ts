@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { googleCallback, generateAuthUrl, revokeScopes, getCalendarList, events, freeBusy, checkFree, insertGoogleEvent } from '../controller/google_controller';
+import { googleCallback, generateAuthUrl, revokeScopes, getCalendarList, events, freeBusy, checkFree, insertGoogleEvent, verifyEvent } from '../controller/google_controller';
 import { Event } from 'common';
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
@@ -617,6 +617,76 @@ describe('google_controller', () => {
                 calendarId: 'primary',
                 requestBody: { summary: 'test' }
             }));
+        });
+    });
+
+    describe('verifyEvent', () => {
+        it('should return false if no google tokens', async () => {
+            const user = { _id: 'user', google_tokens: {} } as any;
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(false);
+        });
+
+        it('should return true if event found', async () => {
+            const user = { _id: 'user', google_tokens: { access_token: 'tok' } } as any;
+            const getMock = vi.fn().mockResolvedValue({ data: {} });
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: { get: getMock }
+            });
+
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(true);
+            expect(getMock).toHaveBeenCalledWith(expect.objectContaining({ eventId: 'evt_id' }));
+        });
+
+        it('should return false if event not found (404)', async () => {
+            const user = { _id: 'user', google_tokens: { access_token: 'tok' } } as any;
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: { get: vi.fn().mockRejectedValue({ code: 404 }) }
+            });
+
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(false);
+        });
+
+        it('should return false if event gone (410)', async () => {
+            const user = { _id: 'user', google_tokens: { access_token: 'tok' } } as any;
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: { get: vi.fn().mockRejectedValue({ code: 410 }) }
+            });
+
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(false);
+        });
+
+        it('should return false if invalid_grant', async () => {
+            const user = { _id: 'user', google_tokens: { access_token: 'tok' } } as any;
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: { get: vi.fn().mockRejectedValue({ message: 'invalid_grant' }) }
+            });
+
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(false);
+        });
+
+        it('should return false for other errors (assumed safe default)', async () => {
+            const user = { _id: 'user', google_tokens: { access_token: 'tok' } } as any;
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                events: { get: vi.fn().mockRejectedValue(new Error('Random API error')) }
+            });
+
+            const result = await verifyEvent(user, 'evt_id');
+            expect(result).toBe(false);
         });
     });
 
