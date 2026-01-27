@@ -1,3 +1,10 @@
+# backend [1.40.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.2...backend@1.40.0-rc.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* full reconciliation should check all future appointments ([54f5851](https://github.com/fhswf/appointme/commit/54f585139af12671c5c4a1baef0baf1abe23a8c9))
+
 # backend [1.40.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.1...backend@1.40.0-rc.2) (2026-01-27)
 
 
