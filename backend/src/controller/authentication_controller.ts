@@ -3,6 +3,7 @@
 /**
  * @module authentication_controller
  */
+import { UserModel } from "../models/User.js";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 import pkg from 'jsonwebtoken';
@@ -47,11 +48,34 @@ export const googleLoginController = (req: Request, res: Response): void => {
       logger.debug('picture: %s', picture);
       if (email_verified) {
         try {
-          // Use shared service to create/update user with unique URL handling
-          const user = await createUserWithUniqueUrl(sub, email, name, picture);
+          // Check if user exists to avoid overwriting roles/preferences with default values
+          let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
+
+          if (user) {
+            // Existing user: only update name, email, and picture_url (if not using gravatar)
+            // We do NOT update roles here as Google OAuth doesn't provide them, and we shouldn't overwrite existing ones.
+            const updateData: any = {
+              name,
+              email,
+              google_picture_url: picture
+            };
+
+            if (!user.use_gravatar) {
+              updateData.picture_url = picture;
+            }
+
+            user = await UserModel.findOneAndUpdate(
+              { _id: user._id },
+              { $set: updateData },
+              { new: true }
+            ).exec();
+          } else {
+            // New user: use shared service to create with unique URL handling
+            user = await createUserWithUniqueUrl(sub, email, name, picture);
+          }
 
           if (!user) {
-            throw new Error("User creation failed");
+            throw new Error("User creation/update failed");
           }
 
           const { _id } = user;
