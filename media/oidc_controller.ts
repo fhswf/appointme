@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import { UserModel } from '../models/User.js';
 import pkg from 'jsonwebtoken';
 import { logger } from '../logging.js';
-import { validateUrl } from './authentication_controller.js';
+import { createUserWithUniqueUrl } from '../services/user_service.js';
 
 const { sign } = pkg;
 
@@ -194,37 +194,6 @@ const mapRoles = (claims: any): string[] => {
     return roles;
 };
 
-const createNewUser = async (sub: string, email: string, name?: string, picture?: string, roles: string[] = []) => {
-    let user_url = validateUrl(email);
-    const picture_url = picture || "";
-    const userName = name || email.split('@')[0];
-    let user;
-
-    let retry = 0;
-    const maxRetries = 5;
-
-    while (retry < maxRetries) {
-        try {
-            user = await UserModel.findOneAndUpdate(
-                { _id: sub },
-                { name: userName, email, picture_url, user_url, roles },
-                { upsert: true, new: true, runValidators: true }
-            ).exec();
-            break;
-        } catch (err: any) {
-            if (err.code === 11000 && err.keyPattern?.user_url) {
-                user_url = `${validateUrl(email)}-${Math.floor(Math.random() * 10000)}`;
-                retry++;
-                continue;
-            }
-            throw err;
-        }
-    }
-
-    if (!user) throw new Error("User creation failed after retries");
-    return user;
-};
-
 const updateUserRoles = async (user: any, roles: string[]) => {
     if (roles.length > 0) {
         const params: any = { roles: { $each: roles } };
@@ -248,7 +217,7 @@ const findOrCreateUser = async (sub: string, email: string, name?: string, pictu
         return await updateExistingUser(user, name, picture);
     }
 
-    return await createNewUser(sub, email, name, picture, roles);
+    return await createUserWithUniqueUrl(sub, email, name, picture, roles);
 };
 
 const setAuthCookie = (res: Response, user: any, redirectUrl?: string, req?: Request) => {
