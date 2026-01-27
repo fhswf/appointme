@@ -14,9 +14,10 @@ vi.mock('react-router-dom', () => ({
 // Mock @react-oauth/google
 vi.mock('@react-oauth/google', () => ({
     useGoogleLogin: (options: any) => {
-        return () => {
+        return (loginParams: any) => {
             // Simulate success immediately when the login function is called
-            options.onSuccess({ code: 'mock-google-token' });
+            // Pass back the state that was sent in loginParams
+            options.onSuccess({ code: 'mock-google-token', state: loginParams?.state });
         };
     },
 }));
@@ -44,6 +45,14 @@ describe('Login Component', () => {
         (authServices.getAuthConfig as any).mockResolvedValue({
             oidcEnabled: false,
             googleEnabled: true
+        });
+
+        // Mock crypto.randomUUID
+        Object.defineProperty(global, 'crypto', {
+            value: {
+                randomUUID: () => 'mock-uuid-state'
+            },
+            writable: true
         });
     });
 
