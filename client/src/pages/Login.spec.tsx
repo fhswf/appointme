@@ -219,4 +219,59 @@ describe('Login Page', () => {
 
         await waitFor(() => expect(screen.getByText('or')).toBeInTheDocument());
     });
+
+    it('should prevent race condition on double click', async () => {
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
+
+        // Setup unique UUIDs
+        const mockRandomUUID = vi.fn()
+            .mockReturnValueOnce('uuid-1')
+            .mockReturnValueOnce('uuid-2');
+
+        Object.defineProperty(global, 'crypto', {
+            value: {
+                randomUUID: mockRandomUUID
+            },
+            writable: true
+        });
+
+        let triggerLogin: any;
+        let hookOptions: any;
+        const loginMockFn = vi.fn((loginOptions: any) => {
+            triggerLogin = loginOptions;
+        });
+
+        vi.mocked(useGoogleLogin).mockImplementation((options: any) => {
+            hookOptions = options;
+            return loginMockFn;
+        });
+
+        render(<Login />);
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
+
+        // First click
+        fireEvent.click(screen.getByText('login_with google'));
+        expect(loginMockFn).toHaveBeenCalledTimes(1);
+        const state1 = triggerLogin?.state;
+        expect(state1).toBe('uuid-1');
+
+        // Second click (should be ignored due to loading state)
+        fireEvent.click(screen.getByText('login_with google'));
+
+        // Assertions for fix
+        expect(loginMockFn).toHaveBeenCalledTimes(1); // Should still be 1
+        expect(mockRandomUUID).toHaveBeenCalledTimes(1); // Should still be 1 (uuid-2 not generated)
+
+        // Complete the flow
+        hookOptions.onSuccess({ code: 'test-code', state: state1 });
+
+        // Should NOT log error
+        expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('State mismatch'), expect.anything(), expect.anything());
+        // Should navigate
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/'));
+
+        consoleSpy.mockRestore();
+    });
 });
+

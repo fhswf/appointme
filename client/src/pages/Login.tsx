@@ -13,11 +13,13 @@ const Login = () => {
   const { t } = useTranslation();
   const { refreshAuth } = useAuth();
   const [config, setConfig] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const stateRef = useRef<string | null>(null);
 
   const loginWithGoogle = useGoogleLogin({
     onSuccess: (codeResponse) => {
+      setIsLoading(false);
       if (codeResponse.state !== stateRef.current) {
         console.error("State mismatch: expected %s, got %s", stateRef.current, codeResponse.state);
         toast.error(t("login_failed"));
@@ -25,7 +27,10 @@ const Login = () => {
       }
       sendGoogleToken(codeResponse.code)
     },
-    onError: (error) => console.log('Login Failed:', error),
+    onError: (error) => {
+      setIsLoading(false);
+      console.log('Login Failed:', error)
+    },
     flow: 'auth-code',
   });
 
@@ -56,6 +61,8 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
+    if (isLoading) return;
+    setIsLoading(true);
     const state = crypto.randomUUID();
     stateRef.current = state;
     loginWithGoogle({ state });
@@ -116,7 +123,7 @@ const Login = () => {
             )}
 
             {config.googleEnabled && (
-              <button onClick={() => handleGoogleLogin()} data-testid="login-google" className="group w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-campus dark:hover:border-campus hover:border dark:hover:border transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-campus focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer">
+              <button disabled={isLoading} onClick={() => handleGoogleLogin()} data-testid="login-google" className="group w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-campus dark:hover:border-campus hover:border dark:hover:border transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-campus focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
