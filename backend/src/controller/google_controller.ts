@@ -418,7 +418,7 @@ function saveTokens(user: string, token) {
  * Verify if an event exists in Google Calendar
  */
 export async function verifyEvent(user: UserDocument, eventId: string, calendarId: string = 'primary'): Promise<boolean> {
-  if (!user.google_tokens || !user.google_tokens.access_token) {
+  if (!user.google_tokens?.access_token) {
     logger.warn(`verifyEvent: User ${user._id} has no Google tokens`);
     return false;
   }

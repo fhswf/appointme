@@ -263,22 +263,19 @@ export async function verifyAppointment(appointmentId: string): Promise<boolean>
     for (const calendar of targetCalendars) {
         if (calendar.startsWith('http') || calendar.startsWith('/')) {
             // CalDAV
-            if (!appointment.caldavUid) {
-                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing CalDAV UID for calendar ${calendar}`);
-                allVerified = false;
-            } else {
+            if (appointment.caldavUid) {
                 const exists = await verifyCalDavEvent(user, appointment.caldavUid, calendar, appointment.start, appointment.end);
                 if (!exists) {
                     logger.info(`verifyAppointment: Appointment ${appointmentId} validation failed on CalDAV ${calendar}`);
                     allVerified = false;
                 }
+            } else {
+                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing CalDAV UID for calendar ${calendar}`);
+                allVerified = false;
             }
         } else {
             // Google
-            if (!appointment.googleId) {
-                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing Google ID for calendar ${calendar}`);
-                allVerified = false;
-            } else {
+            if (appointment.googleId) {
                 // For Google, if we have multiple calendars, we'd need to check which one it was pushed to.
                 // But typically we push to one Google calendar or primary.
                 // The current data model stores a single googleId.
@@ -297,6 +294,9 @@ export async function verifyAppointment(appointmentId: string): Promise<boolean>
                     logger.info(`verifyAppointment: Appointment ${appointmentId} validation failed on Google ${calendar}`);
                     allVerified = false;
                 }
+            } else {
+                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing Google ID for calendar ${calendar}`);
+                allVerified = false;
             }
         }
     }

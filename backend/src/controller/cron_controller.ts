@@ -110,6 +110,73 @@ const sendEmail = (to: string, subject: string, html: string) => {
 import { AppointmentModel } from '../models/Appointment.js';
 import { syncAppointment, verifyAppointment } from '../services/sync_service.js';
 
+interface ReconcileResults {
+    checked: number;
+    missing: number;
+    restored: number;
+    total: number;
+    success: number;
+    failed: number;
+}
+
+const verifySyncedAppointments = async (results: ReconcileResults) => {
+    const syncedAppointments = await AppointmentModel.find({
+        status: 'synced',
+        start: { $gt: new Date() } // Only future appointments
+    }).exec();
+
+    logger.info(`Verifying ${syncedAppointments.length} synced appointments...`);
+    results.checked = syncedAppointments.length;
+
+    for (const app of syncedAppointments) {
+        try {
+            const isValid = await verifyAppointment(app._id.toString());
+            if (!isValid) {
+                logger.warn(`Appointment ${app._id} verification failed. Marking as failed for re-sync.`);
+                app.status = 'failed';
+                await app.save();
+                results.missing++;
+            }
+        } catch (err) {
+            logger.error(`Error verifying appointment ${app._id}`, err);
+            // Standard error handling: do nothing? or count as missing?
+            // To be safe, if we can't verify, we probably shouldn't assume it's missing unless we are sure.
+            // But verifyAppointment handles internal errors by returning false only on definitive failure or config mismatch.
+        }
+    }
+};
+
+const processPendingAppointments = async (results: ReconcileResults) => {
+    const pendingAppointments = await AppointmentModel.find({
+        status: { $in: ['pending', 'failed'] }
+    }).exec();
+
+    logger.info(`Found ${pendingAppointments.length} pending/failed appointments (reconcile)`);
+    results.total = pendingAppointments.length;
+
+    for (const app of pendingAppointments) {
+        logger.info(`Syncing appointment ${app._id} (status: ${app.status})...`);
+        try {
+            const success = await syncAppointment(app._id.toString());
+            if (success) {
+                results.success++;
+                // If this was one of the missing ones we just found, count it as restored
+                // Implementation note: we don't track exactly which ID was a "missing" one easily here 
+                // without a Set, but simplistically, if we had missing > 0, we can assume some successes are restorations.
+                // But to be precise, we'd need to know if `app` was one of the ones we just invalidated.
+                // Let's rely on the fact that standard reconcile just reports successes. 
+                // The 'restored' count is a bit overlapping with 'success'. 
+                // Let's just return what we have.
+            } else {
+                results.failed++;
+            }
+        } catch (err) {
+            logger.error(`Error processing appointment ${app._id}`, err);
+            results.failed++;
+        }
+    }
+};
+
 export const reconcileAppointments = async (req: Request, res: Response) => {
     // Security check
     const apiKey = req.headers['x-api-key'];
@@ -122,7 +189,7 @@ export const reconcileAppointments = async (req: Request, res: Response) => {
     logger.info(`Starting appointment reconciliation job (mode: ${mode || 'standard'})`);
 
     try {
-        const results = {
+        const results: ReconcileResults = {
             checked: 0,
             missing: 0,
             restored: 0,
@@ -133,61 +200,11 @@ export const reconcileAppointments = async (req: Request, res: Response) => {
 
         // 0. If mode is full, verify existing appointments first
         if (mode === 'full') {
-            const syncedAppointments = await AppointmentModel.find({
-                status: 'synced',
-                start: { $gt: new Date() } // Only future appointments
-            }).exec();
-
-            logger.info(`Verifying ${syncedAppointments.length} synced appointments...`);
-            results.checked = syncedAppointments.length;
-
-            for (const app of syncedAppointments) {
-                try {
-                    const isValid = await verifyAppointment(app._id.toString());
-                    if (!isValid) {
-                        logger.warn(`Appointment ${app._id} verification failed. Marking as failed for re-sync.`);
-                        app.status = 'failed';
-                        await app.save();
-                        results.missing++;
-                    }
-                } catch (err) {
-                    logger.error(`Error verifying appointment ${app._id}`, err);
-                    // Standard error handling: do nothing? or count as missing?
-                    // To be safe, if we can't verify, we probably shouldn't assume it's missing unless we are sure.
-                    // But verifyAppointment handles internal errors by returning false only on definitive failure or config mismatch.
-                }
-            }
+            await verifySyncedAppointments(results);
         }
 
         // 1. Process pending and failed appointments (including those just marked as failed)
-        const pendingAppointments = await AppointmentModel.find({
-            status: { $in: ['pending', 'failed'] }
-        }).exec();
-
-        logger.info(`Found ${pendingAppointments.length} pending/failed appointments (reconcile)`);
-        results.total = pendingAppointments.length;
-
-        for (const app of pendingAppointments) {
-            logger.info(`Syncing appointment ${app._id} (status: ${app.status})...`);
-            try {
-                const success = await syncAppointment(app._id.toString());
-                if (success) {
-                    results.success++;
-                    // If this was one of the missing ones we just found, count it as restored
-                    // Implementation note: we don't track exactly which ID was a "missing" one easily here 
-                    // without a Set, but simplistically, if we had missing > 0, we can assume some successes are restorations.
-                    // But to be precise, we'd need to know if `app` was one of the ones we just invalidated.
-                    // Let's rely on the fact that standard reconcile just reports successes. 
-                    // The 'restored' count is a bit overlapping with 'success'. 
-                    // Let's just return what we have.
-                } else {
-                    results.failed++;
-                }
-            } catch (err) {
-                logger.error(`Error processing appointment ${app._id}`, err);
-                results.failed++;
-            }
-        }
+        await processPendingAppointments(results);
 
         // Approximation for restored: 
         // If we ran in full mode, 'restored' could be the subset of 'success' that were previously 'synced'.
