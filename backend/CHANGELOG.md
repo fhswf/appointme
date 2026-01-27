@@ -1,3 +1,11 @@
+# backend [1.40.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.1...backend@1.40.0-rc.2) (2026-01-27)
+
+
+### Features
+
+* provide extended reconciliation ([707aaad](https://github.com/fhswf/appointme/commit/707aaad49c818673852dc86e72277d45b535f0ca))
+* provide extended reconciliation ([14211c7](https://github.com/fhswf/appointme/commit/14211c7ab8653ff4cb47a1d726875f41f5f31900))
+
 # backend [1.40.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0-rc.1) (2026-01-26)
 
 
