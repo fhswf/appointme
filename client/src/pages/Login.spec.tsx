@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from './Login';
 import * as authServices from '../helpers/services/auth_services';
+import { useGoogleLogin } from '@react-oauth/google';
 
 // Mock dependencies
 const mockNavigate = vi.fn();
@@ -10,17 +11,10 @@ vi.mock('react-router-dom', () => ({
     useLocation: () => ({ search: '' })
 }));
 
-const mockGoogleLogin = vi.fn();
+// Mock @react-oauth/google
 vi.mock('@react-oauth/google', () => ({
-    useGoogleLogin: (options: any) => {
-        mockGoogleLogin.mockImplementation((loginOptions: any) => {
-            if (options.onSuccess) {
-                // Simulate success callback with the state passed in loginOptions
-                options.onSuccess({ code: 'test-code', state: loginOptions?.state });
-            }
-        });
-        return mockGoogleLogin;
-    }
+    useGoogleLogin: vi.fn(),
+    GoogleOAuthProvider: ({ children }: any) => <>{children}</>
 }));
 
 vi.mock('../components/ui/button', () => ({
@@ -52,6 +46,7 @@ vi.mock('sonner', () => ({
 
 describe('Login Page', () => {
     const mockRandomUUID = vi.fn(() => 'mock-uuid-state');
+    const mockGoogleLoginFn = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -59,6 +54,7 @@ describe('Login Page', () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({});
         vi.spyOn(authServices, 'postGoogleLogin').mockResolvedValue({ success: true });
         vi.spyOn(authServices, 'getOidcAuthUrl').mockResolvedValue({ url: 'http://oidc-url.com' });
+
         // Mock global location
         Object.defineProperty(window, 'location', {
             configurable: true,
@@ -69,7 +65,19 @@ describe('Login Page', () => {
         Object.defineProperty(global, 'crypto', {
             value: {
                 randomUUID: mockRandomUUID
-            }
+            },
+            writable: true
+        });
+
+        // Setup default useGoogleLogin behavior
+        vi.mocked(useGoogleLogin).mockImplementation((options: any) => {
+            mockGoogleLoginFn.mockImplementation((loginOptions: any) => {
+                if (options.onSuccess) {
+                    // Default behavior: echo state back
+                    options.onSuccess({ code: 'test-code', state: loginOptions?.state });
+                }
+            });
+            return mockGoogleLoginFn;
         });
     });
 
@@ -98,7 +106,7 @@ describe('Login Page', () => {
 
         fireEvent.click(screen.getByText('login_with google'));
 
-        await waitFor(() => expect(mockGoogleLogin).toHaveBeenCalledWith({ state: 'mock-uuid-state' }));
+        await waitFor(() => expect(mockGoogleLoginFn).toHaveBeenCalledWith({ state: 'mock-uuid-state' }));
         await waitFor(() => expect(authServices.postGoogleLogin).toHaveBeenCalledWith('test-code'));
         await waitFor(() => expect(mockRefreshAuth).toHaveBeenCalled());
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/'));
@@ -107,13 +115,12 @@ describe('Login Page', () => {
     it('should fail Google login flow when state mismatches', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
 
-        let capturedOptions: any;
-        mockGoogleLogin.mockImplementation((options: any) => {
-            capturedOptions = options;
+        // Override the hook implementation for this specific test
+        vi.mocked(useGoogleLogin).mockImplementation((options: any) => {
             return (loginOptions: any) => {
-                // Trigger success but with WRONG state
-                if (capturedOptions && capturedOptions.onSuccess) {
-                    capturedOptions.onSuccess({ code: 'test-code', state: 'wrong-state' });
+                // Trigger success with mismatching state
+                if (options.onSuccess) {
+                    options.onSuccess({ code: 'test-code', state: 'wrong-state' });
                 }
             }
         });
@@ -123,7 +130,7 @@ describe('Login Page', () => {
 
         fireEvent.click(screen.getByText('login_with google'));
 
-        // Should verify postGoogleLogin should NOT be called
+        // postGoogleLogin should NOT be called because of state mismatch
         await waitFor(() => expect(authServices.postGoogleLogin).not.toHaveBeenCalled());
     });
 
@@ -160,5 +167,56 @@ describe('Login Page', () => {
 
         await waitFor(() => expect(authServices.getOidcAuthUrl).toHaveBeenCalled());
         await waitFor(() => expect(screen.getByText('login_with SSO')).toBeInTheDocument());
+    });
+    it('should handle config fetch error', async () => {
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+        vi.spyOn(authServices, 'getAuthConfig').mockRejectedValue(new Error('Config Error'));
+        render(<Login />);
+        await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith(expect.any(Error)));
+        await waitFor(() => expect(screen.queryByText('login_with')).not.toBeInTheDocument());
+        consoleSpy.mockRestore();
+    });
+
+    it('should log google login errors', async () => {
+        const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
+
+        // Override hook to trigger onError
+        vi.mocked(useGoogleLogin).mockImplementation((options: any) => {
+            return () => {
+                if (options.onError) {
+                    options.onError('Google Error');
+                }
+            }
+        });
+
+        render(<Login />);
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
+        fireEvent.click(screen.getByText('login_with google'));
+
+        await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith('Login Failed:', 'Google Error'));
+        consoleSpy.mockRestore();
+    });
+
+    it('should render specific OIDC icon when provided', async () => {
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({
+            oidcEnabled: true,
+            oidcName: 'MySSO',
+            oidcIcon: 'http://icon.url/icon.png'
+        });
+        render(<Login />);
+
+        await waitFor(() => expect(screen.getByAltText('sso_icon_alt')).toBeInTheDocument());
+        expect(screen.getByAltText('sso_icon_alt')).toHaveAttribute('src', 'http://icon.url/icon.png');
+    });
+
+    it('should render divider when both methods are enabled', async () => {
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({
+            oidcEnabled: true,
+            googleEnabled: true
+        });
+        render(<Login />);
+
+        await waitFor(() => expect(screen.getByText('or')).toBeInTheDocument());
     });
 });
