@@ -1020,4 +1020,76 @@ END:VCALENDAR` }
             expect(busySlots[0].start.toISOString()).toBe("2024-01-01T10:00:00.000Z");
         });
     });
+
+    describe("verifyEvent", () => {
+        it("should return false if account not found", async () => {
+            const user = { caldav_accounts: [] };
+            // @ts-ignore
+            const result = await caldavController.verifyEvent(user, "uid", "http://cal", new Date(), new Date());
+            expect(result).toBe(false);
+        });
+
+        it("should return true if event found in calendar", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "http://cal", displayName: "Cal" }
+                    ]),
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([
+                        { data: "BEGIN:VCALENDAR\nUID:found_uid\nEND:VCALENDAR" }
+                    ])
+                });
+            });
+
+            const user = {
+                caldav_accounts: [{ serverUrl: "http://cal", username: "u", password: "p" }]
+            };
+            // @ts-ignore
+            const result = await caldavController.verifyEvent(user, "found_uid", "http://cal", new Date(), new Date());
+            expect(result).toBe(true);
+        });
+
+        it("should return false if event not found", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockResolvedValue(true),
+                    fetchCalendars: vi.fn().mockResolvedValue([
+                        { url: "http://cal", displayName: "Cal" }
+                    ]),
+                    fetchCalendarObjects: vi.fn().mockResolvedValue([
+                        { data: "BEGIN:VCALENDAR\nUID:other_uid\nEND:VCALENDAR" }
+                    ])
+                });
+            });
+
+            const user = {
+                caldav_accounts: [{ serverUrl: "http://cal", username: "u", password: "p" }]
+            };
+            // @ts-ignore
+            const result = await caldavController.verifyEvent(user, "missing_uid", "http://cal", new Date(), new Date());
+            expect(result).toBe(false);
+        });
+
+        it("should handle error during verification gracefully", async () => {
+            const { DAVClient } = await import('tsdav');
+            // @ts-ignore
+            DAVClient.mockImplementation(function () {
+                return ({
+                    login: vi.fn().mockRejectedValue(new Error("Network Error"))
+                });
+            });
+
+            const user = {
+                caldav_accounts: [{ serverUrl: "http://cal", username: "u", password: "p" }]
+            };
+            // @ts-ignore
+            const result = await caldavController.verifyEvent(user, "uid", "http://cal", new Date(), new Date());
+            expect(result).toBe(false);
+        });
+    });
 });

@@ -1,6 +1,6 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi, beforeEach } from 'vitest';
-import { syncAppointment, pushEventToCalendars } from '../services/sync_service.js';
+import { syncAppointment, pushEventToCalendars, verifyAppointment } from '../services/sync_service.js';
 import { AppointmentModel } from '../models/Appointment.js';
 import { UserModel } from '../models/User.js';
 import { EventModel } from '../models/Event.js';
@@ -32,11 +32,13 @@ vi.mock('../logging.js', () => ({
     }
 }));
 vi.mock('../controller/google_controller.js', () => ({
-    insertGoogleEvent: vi.fn()
+    insertGoogleEvent: vi.fn(),
+    verifyEvent: vi.fn()
 }));
 vi.mock('../controller/caldav_controller.js', () => ({
     createCalDavEvent: vi.fn(),
-    findAccountForCalendar: vi.fn()
+    findAccountForCalendar: vi.fn(),
+    verifyEvent: vi.fn()
 }));
 vi.mock('../utility/mailer.js', () => ({
     sendEventInvitation: vi.fn().mockResolvedValue(true)
@@ -277,4 +279,94 @@ describe('Sync Service', () => {
         expect(insertGoogleEvent).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), 'primary', undefined);
     });
 
+    describe('verifyAppointment', () => {
+        it('should return false if appointment not found', async () => {
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            const result = await verifyAppointment('missing');
+            expect(result).toBe(false);
+        });
+
+        it('should return true if appointment not synced', async () => {
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ status: 'pending' }) });
+            const result = await verifyAppointment('pending_app');
+            expect(result).toBe(true);
+        });
+
+        it('should verify google appointment successfully', async () => {
+            const mockApp = {
+                _id: 'app_g',
+                status: 'synced',
+                user: 'user_1',
+                googleId: 'g_id'
+            };
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApp) });
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...USER, push_calendars: ['primary'] }) });
+
+            const { verifyEvent } = await import('../controller/google_controller.js');
+            (verifyEvent as any).mockResolvedValue(true);
+
+            const result = await verifyAppointment('app_g');
+            expect(result).toBe(true);
+            expect(verifyEvent).toHaveBeenCalledWith(expect.any(Object), 'g_id', 'primary');
+        });
+
+        it('should fail if google ID missing but google calendar configured', async () => {
+            const mockApp = {
+                _id: 'app_g_missing',
+                status: 'synced',
+                user: 'user_1',
+                googleId: undefined // MISSING
+            };
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApp) });
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...USER, push_calendars: ['primary'] }) });
+
+            const result = await verifyAppointment('app_g_missing');
+            expect(result).toBe(false);
+        });
+
+        it('should verify caldav appointment successfully', async () => {
+            const mockApp = {
+                _id: 'app_c',
+                status: 'synced',
+                user: 'user_1',
+                caldavUid: 'c_uid',
+                start: new Date(),
+                end: new Date()
+            };
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApp) });
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...USER, push_calendars: ['http://cal.example.com'] }) });
+
+            const { verifyEvent } = await import('../controller/caldav_controller.js');
+            (verifyEvent as any).mockResolvedValue(true);
+
+            const result = await verifyAppointment('app_c');
+            expect(result).toBe(true);
+            expect(verifyEvent).toHaveBeenCalledWith(expect.any(Object), 'c_uid', 'http://cal.example.com', expect.any(Date), expect.any(Date));
+        });
+
+        it('should fail if caldav UID missing but caldav calendar configured', async () => {
+            const mockApp = {
+                _id: 'app_c_missing',
+                status: 'synced',
+                user: 'user_1',
+                caldavUid: undefined // MISSING
+            };
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApp) });
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...USER, push_calendars: ['http://cal.example.com'] }) });
+
+            const result = await verifyAppointment('app_c_missing');
+            expect(result).toBe(false);
+        });
+
+        it('should return true if no push calendars', async () => {
+            const mockApp = { status: 'synced', user: 'user_1' };
+            (AppointmentModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockApp) });
+            (UserModel.findById as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...USER, push_calendars: [] }) });
+
+            const result = await verifyAppointment('app_no_push');
+            expect(result).toBe(true);
+        });
+    });
 });
+
+

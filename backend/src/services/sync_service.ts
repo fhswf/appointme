@@ -3,8 +3,8 @@ import { AppointmentModel } from "../models/Appointment.js";
 import { UserModel } from "../models/User.js";
 import { EventModel } from "../models/Event.js";
 import { logger } from "../logging.js";
-import { insertGoogleEvent } from "../controller/google_controller.js";
-import { createCalDavEvent, findAccountForCalendar } from "../controller/caldav_controller.js";
+import { insertGoogleEvent, verifyEvent as verifyGoogleEvent } from "../controller/google_controller.js";
+import { createCalDavEvent, findAccountForCalendar, verifyEvent as verifyCalDavEvent } from "../controller/caldav_controller.js";
 import { generateIcsContent } from "../utility/ical.js";
 import { sendEventInvitation } from "../utility/mailer.js";
 import { t, Locale } from "../utility/i18n.js";
@@ -237,6 +237,71 @@ export async function pushEventToCalendars(params: {
         }
     }
     return { results, successCount };
+}
+
+export async function verifyAppointment(appointmentId: string): Promise<boolean> {
+    const appointment = await AppointmentModel.findById(appointmentId).exec();
+    if (!appointment) return false;
+
+    // We only verify "synced" appointments. 
+    // If it is in another status, standard reconciliation handles it.
+    if (appointment.status !== 'synced') return true;
+
+    // Check specific edge case: Recurring entries (index > 0) are managed by the series.
+    if (appointment.isRecurring && appointment.recurrenceIndex && appointment.recurrenceIndex > 0) {
+        return true;
+    }
+
+    const user = await UserModel.findById(appointment.user).exec();
+    if (!user) return false;
+
+    const targetCalendars = user.push_calendars || [];
+    if (targetCalendars.length === 0) return true; // No target calendars, so it's "fine"
+
+    let allVerified = true;
+
+    for (const calendar of targetCalendars) {
+        if (calendar.startsWith('http') || calendar.startsWith('/')) {
+            // CalDAV
+            if (appointment.caldavUid) {
+                const exists = await verifyCalDavEvent(user, appointment.caldavUid, calendar, appointment.start, appointment.end);
+                if (!exists) {
+                    logger.info(`verifyAppointment: Appointment ${appointmentId} validation failed on CalDAV ${calendar}`);
+                    allVerified = false;
+                }
+            } else {
+                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing CalDAV UID for calendar ${calendar}`);
+                allVerified = false;
+            }
+        } else {
+            // Google
+            if (appointment.googleId) {
+                // For Google, if we have multiple calendars, we'd need to check which one it was pushed to.
+                // But typically we push to one Google calendar or primary.
+                // The current data model stores a single googleId.
+                // If the user has multiple google calendars in push_calendars, existing logic 
+                // pushes to ALL of them but we only store ONE ID? 
+                // Looking at pushEventToCalendars:
+                // It pushes to all.
+                // updateAppointmentStatus stores `googleResult?.event?.id`.
+                // It finds the FIRST success result.
+                // So we only technically track one. 
+                // We will verify against the configured calendar.
+                // If config changed, this might fail. We assume config stable.
+
+                const exists = await verifyGoogleEvent(user, appointment.googleId, calendar);
+                if (!exists) {
+                    logger.info(`verifyAppointment: Appointment ${appointmentId} validation failed on Google ${calendar}`);
+                    allVerified = false;
+                }
+            } else {
+                logger.warn(`verifyAppointment: Appointment ${appointmentId} missing Google ID for calendar ${calendar}`);
+                allVerified = false;
+            }
+        }
+    }
+
+    return allVerified;
 }
 
 async function processCalDavBooking(
