@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from '@react-oauth/google';
 import { toast } from "sonner";
 import { postGoogleLogin, getAuthConfig, getOidcAuthUrl } from "../helpers/services/auth_services";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../components/AuthProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -14,8 +14,17 @@ const Login = () => {
   const { refreshAuth } = useAuth();
   const [config, setConfig] = useState<any>({});
 
+  const stateRef = useRef<string | null>(null);
+
   const loginWithGoogle = useGoogleLogin({
-    onSuccess: (codeResponse) => { sendGoogleToken(codeResponse.code) },
+    onSuccess: (codeResponse) => {
+      if (codeResponse.state !== stateRef.current) {
+        console.error("State mismatch: expected %s, got %s", stateRef.current, codeResponse.state);
+        toast.error(t("login_failed"));
+        return;
+      }
+      sendGoogleToken(codeResponse.code)
+    },
     onError: (error) => console.log('Login Failed:', error),
     flow: 'auth-code',
   });
@@ -44,6 +53,12 @@ const Login = () => {
       console.log("GOOGLE SIGNIN ERROR", error.response);
       toast.error(t("google_login_failed") + ": " + (error.response?.data?.message || error.message));
     }
+  };
+
+  const handleGoogleLogin = () => {
+    const state = crypto.randomUUID();
+    stateRef.current = state;
+    loginWithGoogle({ state });
   };
 
   const handleOidcLogin = () => {
@@ -101,7 +116,7 @@ const Login = () => {
             )}
 
             {config.googleEnabled && (
-              <button onClick={() => loginWithGoogle()} data-testid="login-google" className="group w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-campus dark:hover:border-campus hover:border dark:hover:border transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-campus focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer">
+              <button onClick={() => handleGoogleLogin()} data-testid="login-google" className="group w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-campus dark:hover:border-campus hover:border dark:hover:border transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-campus focus:ring-offset-2 dark:focus:ring-offset-gray-900 cursor-pointer">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>

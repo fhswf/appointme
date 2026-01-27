@@ -13,9 +13,10 @@ vi.mock('react-router-dom', () => ({
 const mockGoogleLogin = vi.fn();
 vi.mock('@react-oauth/google', () => ({
     useGoogleLogin: (options: any) => {
-        mockGoogleLogin.mockImplementation(() => {
+        mockGoogleLogin.mockImplementation((loginOptions: any) => {
             if (options.onSuccess) {
-                options.onSuccess({ code: 'test-code' });
+                // Simulate success callback with the state passed in loginOptions
+                options.onSuccess({ code: 'test-code', state: loginOptions?.state });
             }
         });
         return mockGoogleLogin;
@@ -50,6 +51,8 @@ vi.mock('sonner', () => ({
 }));
 
 describe('Login Page', () => {
+    const mockRandomUUID = vi.fn(() => 'mock-uuid-state');
+
     beforeEach(() => {
         vi.clearAllMocks();
         // Default mocks
@@ -60,6 +63,13 @@ describe('Login Page', () => {
         Object.defineProperty(window, 'location', {
             configurable: true,
             value: { href: '' },
+        });
+
+        // Mock crypto.randomUUID
+        Object.defineProperty(global, 'crypto', {
+            value: {
+                randomUUID: mockRandomUUID
+            }
         });
     });
 
@@ -81,20 +91,53 @@ describe('Login Page', () => {
         await waitFor(() => expect(screen.getByText('login_with MySSO')).toBeInTheDocument());
     });
 
-    it('should handle Google login flow success', async () => {
+    it('should handle Google login flow success with valid state', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
         render(<Login />);
         await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
 
         fireEvent.click(screen.getByText('login_with google'));
 
-        await waitFor(() => expect(mockGoogleLogin).toHaveBeenCalled());
+        await waitFor(() => expect(mockGoogleLogin).toHaveBeenCalledWith({ state: 'mock-uuid-state' }));
         await waitFor(() => expect(authServices.postGoogleLogin).toHaveBeenCalledWith('test-code'));
         await waitFor(() => expect(mockRefreshAuth).toHaveBeenCalled());
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/'));
     });
 
-    it('should handle Google login flow failure', async () => {
+    it('should fail Google login flow when state mismatches', async () => {
+        vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
+
+        // Override mock implementation to simulate state mismatch
+        mockGoogleLogin.mockImplementation((loginOptions: any) => {
+            // We access the captured onSuccess from the hook setup (we need to capture it if we want to change behavior per test, 
+            // but here the hook is already set up when Component renders.
+            // Easier way: The component uses the hook defined in the module mock. 
+            // The module mock uses the `options` passed to useGoogleLogin.
+            // We can't easily change `options.onSuccess` from outside after render.
+            // BUT, we can make the mock trigger onSuccess with WRONG state.
+        });
+
+        // Re-mock for this specific test case to inject wrong state in callback
+        vi.mocked(require('@react-oauth/google').useGoogleLogin).mockImplementation((options: any) => {
+            return (loginOptions: any) => {
+                // Trigger success but with WRONG state
+                if (options.onSuccess) {
+                    options.onSuccess({ code: 'test-code', state: 'wrong-state' });
+                }
+            }
+        });
+
+        render(<Login />);
+        await waitFor(() => expect(screen.getByText('login_with google')).toBeInTheDocument());
+
+        fireEvent.click(screen.getByText('login_with google'));
+
+        // Should verify state was passed to login
+        // But postGoogleLogin should NOT be called
+        await waitFor(() => expect(authServices.postGoogleLogin).not.toHaveBeenCalled());
+    });
+
+    it('should handle Google login flow failure from API', async () => {
         vi.spyOn(authServices, 'getAuthConfig').mockResolvedValue({ googleEnabled: true });
         vi.spyOn(authServices, 'postGoogleLogin').mockRejectedValue({ response: { data: { message: 'Invalid code' } } });
         render(<Login />);
@@ -103,8 +146,6 @@ describe('Login Page', () => {
         fireEvent.click(screen.getByText('login_with google'));
 
         await waitFor(() => expect(authServices.postGoogleLogin).toHaveBeenCalled());
-        // Should show error toast? (Not checking implementation details of toast here, but could spy on it)
-        // Check valid error handling flow - e.g. NOT navigating
         await waitFor(() => expect(mockNavigate).not.toHaveBeenCalled());
     });
 
@@ -128,7 +169,6 @@ describe('Login Page', () => {
         fireEvent.click(screen.getByText('login_with SSO'));
 
         await waitFor(() => expect(authServices.getOidcAuthUrl).toHaveBeenCalled());
-        await waitFor(() => expect(screen.getByText('login_with SSO')).toBeInTheDocument()); // Verify no nav/still on page
-        // Could assert toast error if mocked properly, but basic flow is covered
+        await waitFor(() => expect(screen.getByText('login_with SSO')).toBeInTheDocument());
     });
 });
