@@ -84,3 +84,40 @@ export const createUserWithUniqueUrl = async (
 
     throw new Error(`Failed to create user after ${maxRetries} retries due to slug collision.`);
 };
+
+/**
+ * Finds an existing user by email or sub, or creates a new one.
+ * If finding an existing user, updates their profile picture (if permitted).
+ * 
+ * @param sub 
+ * @param email 
+ * @param name 
+ * @param picture 
+ * @returns 
+ */
+export const findOrUpdateGoogleUser = async (sub: string, email: string, name: string, picture: string): Promise<UserDocument | null> => {
+    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
+
+    if (user) {
+        // Existing user: only update name, email, and picture_url (if not using gravatar)
+        const updateData: any = {
+            name,
+            email,
+            google_picture_url: picture
+        };
+
+        if (!user.use_gravatar) {
+            updateData.picture_url = picture;
+        }
+
+        user = await UserModel.findOneAndUpdate(
+            { _id: user._id },
+            { $set: updateData },
+            { new: true }
+        ).exec();
+    } else {
+        // New user: use shared service to create with unique URL handling
+        user = await createUserWithUniqueUrl(sub, email, name, picture);
+    }
+    return user;
+};

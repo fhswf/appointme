@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from 'vitest';
-import { createUserWithUniqueUrl, validateUrl } from '../services/user_service.js';
+import { createUserWithUniqueUrl, validateUrl, findOrUpdateGoogleUser } from '../services/user_service.js';
 import { UserModel } from '../models/User.js';
 
 // Mock UserModel
@@ -7,6 +7,7 @@ vi.mock("../models/User.js", () => {
     return {
         UserModel: {
             findOneAndUpdate: vi.fn(),
+            findOne: vi.fn(),
         }
     }
 });
@@ -89,6 +90,63 @@ describe('User Service', () => {
             // inside catch: retry++.
             // So it runs 10 times.
             expect(UserModel.findOneAndUpdate).toHaveBeenCalledTimes(10);
+        });
+    });
+
+    describe('findOrUpdateGoogleUser', () => {
+        it('should update existing user profile', async () => {
+            const mockUser = {
+                _id: 'user123',
+                use_gravatar: false,
+                email: 'test@example.com',
+                save: vi.fn()
+            };
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockUser) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ ...mockUser, name: 'New Name' }) });
+
+            await findOrUpdateGoogleUser('user123', 'test@example.com', 'New Name', 'pic.jpg');
+
+            expect(UserModel.findOne).toHaveBeenCalledWith({ $or: [{ email: 'test@example.com' }, { _id: 'user123' }] });
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: 'user123' },
+                { $set: { name: 'New Name', email: 'test@example.com', google_picture_url: 'pic.jpg', picture_url: 'pic.jpg' } },
+                { new: true }
+            );
+        });
+
+        it('should NOT update picture_url if use_gravatar is true', async () => {
+            const mockUser = {
+                _id: 'user123',
+                use_gravatar: true,
+                email: 'test@example.com'
+            };
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockUser) });
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(mockUser) });
+
+            await findOrUpdateGoogleUser('user123', 'test@example.com', 'New Name', 'pic.jpg');
+
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                expect.anything(),
+                { $set: { name: 'New Name', email: 'test@example.com', google_picture_url: 'pic.jpg' } },
+                expect.anything()
+            );
+        });
+
+        it('should create new user if not found', async () => {
+            (UserModel.findOne as any).mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
+            // Mock findOneAndUpdate for the createUserWithUniqueUrl call that happens inside
+            (UserModel.findOneAndUpdate as any).mockReturnValue({ exec: vi.fn().mockResolvedValue({ _id: 'newuser' }) });
+
+            await findOrUpdateGoogleUser('new_sub', 'new@example.com', 'New User', 'pic.jpg');
+
+            // Verify findOne called
+            expect(UserModel.findOne).toHaveBeenCalled();
+            // Verify findOneAndUpdate called for creation (upsert: true)
+            expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
+                { _id: 'new_sub' },
+                expect.objectContaining({ $setOnInsert: expect.any(Object) }),
+                expect.objectContaining({ upsert: true, new: true, runValidators: true })
+            );
         });
     });
 });

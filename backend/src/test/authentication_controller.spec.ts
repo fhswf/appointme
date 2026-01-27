@@ -68,9 +68,10 @@ vi.mock("../models/User.js", () => {
 vi.mock("../services/user_service.js", () => ({
     createUserWithUniqueUrl: vi.fn(),
     validateUrl: vi.fn(),
+    findOrUpdateGoogleUser: vi.fn(),
 }));
 
-import { createUserWithUniqueUrl } from "../services/user_service.js";
+import { createUserWithUniqueUrl, findOrUpdateGoogleUser } from "../services/user_service.js";
 
 describe("Authentication Controller", () => {
     let app: any;
@@ -103,51 +104,14 @@ describe("Authentication Controller", () => {
     };
 
     describe("POST /api/v1/auth/google_oauth2_code", () => {
-        it("should login existing user successfully (update picture)", async () => {
+        it("should login successfully when service returns user", async () => {
             await getCsrfToken();
-
-            // Mock finding existing user
-            (UserModel.findOne as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue(USER)
-            });
-
-            // Mock updating existing user
-            (UserModel.findOneAndUpdate as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue({
-                    ...USER,
-                    picture_url: "http://example.com/pic.jpg"
-                })
-            });
-
-            const res = await request(app)
-                .post("/api/v1/auth/google_oauth2_code")
-                .set("x-csrf-token", csrfToken)
-                .set("Cookie", csrfCookie)
-                .send({
-                    code: "google_auth_code"
-                });
-
-            expect(res.status).toEqual(200);
-            expect(res.body.user).toBeDefined();
-            // Verify findOne was called
-            expect(UserModel.findOne).toHaveBeenCalled();
-            // Verify findOneAndUpdate was called (existing user path)
-            expect(UserModel.findOneAndUpdate).toHaveBeenCalled();
-            // Verify createUserWithUniqueUrl was NOT called
-            expect(createUserWithUniqueUrl).not.toHaveBeenCalled();
-        });
-
-        it("should create new user successfully using service", async () => {
-            await getCsrfToken();
-            vi.clearAllMocks();
-
-            // Mock NOT finding existing user
-            (UserModel.findOne as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue(null)
-            });
 
             // Mock service response
-            (createUserWithUniqueUrl as any).mockResolvedValue(USER);
+            (findOrUpdateGoogleUser as any).mockResolvedValue({
+                ...USER,
+                picture_url: "http://example.com/pic.jpg"
+            });
 
             const res = await request(app)
                 .post("/api/v1/auth/google_oauth2_code")
@@ -160,10 +124,8 @@ describe("Authentication Controller", () => {
             expect(res.status).toEqual(200);
             expect(res.body.user).toBeDefined();
 
-            // Verify findOne was called
-            expect(UserModel.findOne).toHaveBeenCalled();
             // Verify service was called
-            expect(createUserWithUniqueUrl).toHaveBeenCalledWith(
+            expect(findOrUpdateGoogleUser).toHaveBeenCalledWith(
                 "google_id_123",
                 "google@example.com",
                 "Google User",
@@ -171,16 +133,30 @@ describe("Authentication Controller", () => {
             );
         });
 
-        it("should handle user creation/update failure", async () => {
+        it("should handle service returning null (failure)", async () => {
             await getCsrfToken();
 
-            // Mock NOT finding existing user
-            (UserModel.findOne as any).mockReturnValue({
-                exec: vi.fn().mockResolvedValue(null)
-            });
-
             // Mock service failure (return null)
-            (createUserWithUniqueUrl as any).mockResolvedValue(null);
+            (findOrUpdateGoogleUser as any).mockResolvedValue(null);
+
+            const res = await request(app)
+                .post("/api/v1/auth/google_oauth2_code")
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({
+                    code: "google_auth_code"
+                });
+
+            expect(res.status).toEqual(400);
+            expect(res.body.message).toContain("User signup failed with google");
+            expect(res.body.error).toContain("User creation/update failed");
+        });
+
+        it("should handle service throwing error", async () => {
+            await getCsrfToken();
+
+            // Mock service throwing error
+            (findOrUpdateGoogleUser as any).mockRejectedValue(new Error("Service Error"));
 
             const res = await request(app)
                 .post("/api/v1/auth/google_oauth2_code")
@@ -192,6 +168,7 @@ describe("Authentication Controller", () => {
 
             expect(res.status).toEqual(400);
             expect(res.body.message).toContain("User signup failed");
+            expect(res.body.error).toContain("Service Error");
         });
     });
 

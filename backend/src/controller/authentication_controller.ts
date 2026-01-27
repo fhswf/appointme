@@ -3,12 +3,12 @@
 /**
  * @module authentication_controller
  */
-import { UserModel } from "../models/User.js";
 import { OAuth2Client } from 'google-auth-library';
 import { Request, Response } from "express";
 import pkg from 'jsonwebtoken';
 import { logger } from "../logging.js";
-import { createUserWithUniqueUrl } from "../services/user_service.js";
+import { findOrUpdateGoogleUser } from "../services/user_service.js";
+import { UserDocument } from "../models/User.js";
 
 
 const { sign, verify } = pkg;
@@ -48,65 +48,13 @@ export const googleLoginController = (req: Request, res: Response): void => {
       logger.debug('picture: %s', picture);
       if (email_verified) {
         try {
-          // Check if user exists to avoid overwriting roles/preferences with default values
-          let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
-
-          if (user) {
-            // Existing user: only update name, email, and picture_url (if not using gravatar)
-            // We do NOT update roles here as Google OAuth doesn't provide them, and we shouldn't overwrite existing ones.
-            const updateData: any = {
-              name,
-              email,
-              google_picture_url: picture
-            };
-
-            if (!user.use_gravatar) {
-              updateData.picture_url = picture;
-            }
-
-            user = await UserModel.findOneAndUpdate(
-              { _id: user._id },
-              { $set: updateData },
-              { new: true }
-            ).exec();
-          } else {
-            // New user: use shared service to create with unique URL handling
-            user = await createUserWithUniqueUrl(sub, email, name, picture);
-          }
+          const user = await findOrUpdateGoogleUser(sub, email, name, picture);
 
           if (!user) {
             throw new Error("User creation/update failed");
           }
 
-          const { _id } = user;
-          const access_token = sign(
-            { _id, name: user.name, email: user.email },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "1d",
-            }
-          );
-
-          const isDev = process.env.NODE_ENV === 'development';
-          const domain = process.env.DOMAIN;
-          const sameSite = isDev ? 'lax' : 'strict';
-
-          const cookieOptions: any = {
-            maxAge: 60 * 60 * 24 * 1000,
-            httpOnly: true,
-            secure: true,
-            sameSite
-          };
-          if (domain) {
-            cookieOptions.domain = domain;
-          }
-
-          res
-            .cookie('access_token', access_token, cookieOptions)
-            .status(200)
-            .json({
-              user: { _id, email: user.email, name: user.name, picture_url: user.picture_url },
-            });
+          setGoogleAuthCookie(res, user);
 
         } catch (error) {
           logger.error('Error saving user: %o', error);
@@ -123,6 +71,36 @@ export const googleLoginController = (req: Request, res: Response): void => {
       res.status(400).json({
         errors: "Google login failed. Try again",
       });
+    });
+};
+
+const setGoogleAuthCookie = (res: Response, user: UserDocument) => {
+  const { _id } = user;
+  const access_token = sign(
+    { _id, name: user.name, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  const isDev = process.env.NODE_ENV === 'development';
+  const domain = process.env.DOMAIN;
+  const sameSite = isDev ? 'lax' : 'strict';
+
+  const cookieOptions: any = {
+    maxAge: 60 * 60 * 24 * 1000,
+    httpOnly: true,
+    secure: true,
+    sameSite
+  };
+  if (domain) {
+    cookieOptions.domain = domain;
+  }
+
+  res
+    .cookie('access_token', access_token, cookieOptions)
+    .status(200)
+    .json({
+      user: { _id, email: user.email, name: user.name, picture_url: user.picture_url },
     });
 };
 
