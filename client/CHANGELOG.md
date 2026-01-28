@@ -1,3 +1,15 @@
+# client [1.36.0](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0) (2026-01-28)
+
+
+### Bug Fixes
+
+* prevent double rendering of main page ([bdfc5c6](https://github.com/fhswf/appointme/commit/bdfc5c6e6cbd3be75e18567570385dd91ce87f99))
+
+
+### Features
+
+* tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
+
 # client [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0-rc.1) (2026-01-28)
 
 
