@@ -484,7 +484,7 @@ export const CalendarSettings = () => {
     const [url, setUrl] = useState("");
     const [calendarList, setCalendarList] = useState<any>(null);
     const { t } = useTranslation();
-    const { user, refreshAuth } = useAuth();
+    const { user, refreshAuth, setUser } = useAuth();
 
     const revokeScopes = async (event: any) => {
         event.preventDefault();
@@ -524,6 +524,7 @@ export const CalendarSettings = () => {
                     updateUser(user)
                         .then((user) => {
                             console.log("updated user: %o", user);
+                            setUser(user.data);
                         })
                         .catch((err) => {
                             console.error("user update failed: %o", err);
