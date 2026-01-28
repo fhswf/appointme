@@ -485,6 +485,12 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.25.3
         version: 1.25.3(hono@4.11.4)(zod@4.3.6)
+      '@sentry/node':
+        specifier: 10.36.0
+        version: 10.36.0
+      '@sentry/profiling-node':
+        specifier: 10.36.0
+        version: 10.36.0
       axios:
         specifier: ^1.13.3
         version: 1.13.3
