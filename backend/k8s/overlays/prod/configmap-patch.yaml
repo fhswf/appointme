@@ -10,3 +10,8 @@ data:
   SMTP_HOST: "smtp.fh-swf.de"
   SMTP_PORT: "465"
   SMTP_SECURE: "true"
+  LTI_CLIENT_ID: "VFMfh1vsZFepO5J"
+  LTI_ISSUER: "https://elearning.fh-swf.de"
+  LTI_AUTH_ENDPOINT: "https://elearning.fh-swf.de/mod/lti/auth.php"
+  LTI_TOKEN_ENDPOINT: "https://elearning.fh-swf.de/mod/lti/token.php"
+  LTI_JWKS_URI: "https://elearning.fh-swf.de/mod/lti/certs.php"
