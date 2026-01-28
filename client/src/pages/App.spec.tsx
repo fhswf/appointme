@@ -9,8 +9,12 @@ vi.mock('../components/AppNavbar', () => ({
     default: () => <div data-testid="app-navbar">AppNavbar</div>
 }));
 
+const eventListRenderCount = vi.fn();
 vi.mock('../components/EventList', () => ({
-    default: ({ url }: any) => <div data-testid="event-list">EventList for {url}</div>
+    default: ({ url }: any) => {
+        eventListRenderCount();
+        return <div data-testid="event-list">EventList for {url}</div>;
+    }
 }));
 
 vi.mock('react-i18next', () => ({
@@ -39,6 +43,22 @@ describe('App Page', () => {
         expect(screen.getByText('Dr. Test')).toBeInTheDocument();
         expect(screen.getByText('@testuser')).toBeInTheDocument();
         expect(screen.getByTestId('event-list')).toHaveTextContent('EventList for testuser');
+    });
+
+    it('should render EventList only once', () => {
+        const user = { name: 'Dr. Test', user_url: 'testuser' };
+        eventListRenderCount.mockClear();
+        renderWithContext(user);
+
+        // Due to StrictMode in tests/development, components might render twice initially.
+        // However, if we see MORE than expected for StrictMode (e.g. 4 times), or if we are not in StrictMode in this test env.
+        // Vitest/RTL usually puts us in a "normal" environment unless strict mode is explicitly used in the render.
+        // But App.tsx doesn't use StrictMode? index.tsx does.
+        // In the test `renderWithContext` we wrap App in UserContext.Provider, no StrictMode.
+        // So we expect exactly 1 render if everything is optimal.
+        // If the bug exists (state update causing remount), we might see 2.
+
+        expect(eventListRenderCount).toHaveBeenCalledTimes(1);
     });
 
     it('should render Add Event button when connected', () => {

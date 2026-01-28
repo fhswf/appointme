@@ -30,6 +30,7 @@ import * as Sentry from "@sentry/react";
 if (CONFIG.SENTRY_DSN) {
   Sentry.init({
     release: "appointme-client@" + CONFIG.VERSION,
+    environment: CONFIG.ENVIRONMENT,
     dsn: CONFIG.SENTRY_DSN,
     integrations: [
       Sentry.browserTracingIntegration(),
