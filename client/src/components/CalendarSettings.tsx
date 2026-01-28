@@ -129,7 +129,7 @@ export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: 
     const handleClose = () => setOpen(false);
     const handleShow = () => setOpen(true);
 
-    const { refreshAuth } = useAuth();
+    const { refreshAuth, setUser } = useAuth();
     const save = () => {
         const newSelection = [];
         for (const item of Object.keys(selected)) {
@@ -141,9 +141,9 @@ export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: 
         const updatedUser = { ...user, push_calendars: newSelection };
 
         updateUser(updatedUser)
-            .then(() => {
+            .then((res) => {
                 toast.success(t("Calendar settings saved"));
-                refreshAuth();
+                setUser(res.data);
             })
             .catch((err) => {
                 console.error("user update failed: %o", err);
@@ -231,7 +231,7 @@ export const PullCalendars = ({ user, calendarList }: { user: any, calendarList:
 
     const handleClose = () => setOpen(false);
     const handleShow = () => setOpen(true);
-    const { refreshAuth } = useAuth();
+    const { refreshAuth, setUser } = useAuth();
     const save = () => {
 
         const updatedUser = { ...user, pull_calendars: [] };
@@ -241,9 +241,9 @@ export const PullCalendars = ({ user, calendarList }: { user: any, calendarList:
             }
         }
         updateUser(updatedUser)
-            .then((user) => {
+            .then((res) => {
                 toast.success(t("Calendar settings saved"));
-                refreshAuth();
+                setUser(res.data);
             })
             .catch((err) => {
                 console.error("user update failed: %o", err);
@@ -484,7 +484,7 @@ export const CalendarSettings = () => {
     const [url, setUrl] = useState("");
     const [calendarList, setCalendarList] = useState<any>(null);
     const { t } = useTranslation();
-    const { user, refreshAuth } = useAuth();
+    const { user, refreshAuth, setUser } = useAuth();
 
     const revokeScopes = async (event: any) => {
         event.preventDefault();
@@ -524,6 +524,7 @@ export const CalendarSettings = () => {
                     updateUser(user)
                         .then((user) => {
                             console.log("updated user: %o", user);
+                            setUser(user.data);
                         })
                         .catch((err) => {
                             console.error("user update failed: %o", err);
@@ -533,18 +534,17 @@ export const CalendarSettings = () => {
             .catch((err) => {
                 if (err.response?.status === 401) {
                     setConnected(false);
+                    getAuthUrl()
+                        .then((res) => {
+                            setUrl(res.data.url as string);
+                        })
+                        .catch((err) => {
+                            console.error("Failed to get Google auth URL:", err);
+                        });
                 } else {
                     console.error("Unexpected error loading Google calendars:", err);
                     setConnected(false);
                 }
-            });
-
-        getAuthUrl()
-            .then((res) => {
-                setUrl(res.data.url as string);
-            })
-            .catch((err) => {
-                console.error("Failed to get Google auth URL:", err);
             });
     }, [user]);
 

@@ -87,7 +87,8 @@ describe('CalendarIntegration Page', () => {
         const currentMockUser = { ...mockUser, pull_calendars: [], push_calendars: [] };
         (useAuth as any).mockImplementation(() => ({
             user: currentMockUser,
-            refreshAuth: vi.fn()
+            refreshAuth: vi.fn(),
+            setUser: vi.fn()
         }));
     });
 
