@@ -31,5 +31,6 @@ export const CONFIG = {
     API_URL: "/api/v1",
     APP_URL: getConfig("REACT_APP_URL"),
     SENTRY_DSN: getConfig("REACT_APP_SENTRY_DSN"),
+    ENVIRONMENT: import.meta.env.MODE,
     VERSION: packageJson.version,
 };
