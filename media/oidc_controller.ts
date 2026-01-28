@@ -295,15 +295,23 @@ const verifyLtiToken = async (id_token: string): Promise<any> => {
         throw new Error("Cannot verify LTI token: Missing LTI_JWKS_URI configuration");
     }
 
-    const JWKS = createRemoteJWKSet(new URL(jwksUri));
+    const JWKS = createRemoteJWKSet(new URL(jwksUri), { timeoutDuration: 10000 });
 
-    const { payload } = await jwtVerify(id_token, JWKS, {
-        issuer: process.env.LTI_ISSUER, // Strict issuer check
-        audience: process.env.LTI_CLIENT_ID, // Strict audience check
-    });
+    logger.info("Verifying LTI token with JWKS URI: %s", jwksUri);
+    try {
+        const { payload } = await jwtVerify(id_token, JWKS, {
+            issuer: process.env.LTI_ISSUER, // Strict issuer check
+            audience: process.env.LTI_CLIENT_ID, // Strict audience check
+        });
 
-    logger.debug("LTI Token Verified. Claims: %o", payload);
-    return payload;
+        logger.debug("LTI Token Verified. Claims: %o", payload);
+        return payload;
+    } catch (err: any) {
+        if (err?.code === 'ERR_JWKS_TIMEOUT' || err?.name === 'JWKSTimeout') {
+            throw new Error(`JWKS connection to ${jwksUri} timed out`);
+        }
+        throw err;
+    }
 };
 
 const exchangeCodeForToken = async (code: string, oidcConfig: Configuration): Promise<any> => {
@@ -433,13 +441,6 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         return;
     }
 
-    const oidcConfig = await getConfig(); // Uses default for now if no arg
-
-    if (!oidcConfig) {
-        res.status(503).json({ error: "OIDC not configured" });
-        return;
-    }
-
     try {
         let claims: any;
         const isLti = !!id_token;
@@ -447,6 +448,13 @@ export const oidcLoginController = async (req: Request, res: Response): Promise<
         if (isLti) {
             claims = await verifyLtiToken(id_token as string);
         } else {
+            const oidcConfig = await getConfig(); // Uses default for now if no arg
+
+            if (!oidcConfig) {
+                res.status(503).json({ error: "OIDC not configured" });
+                return;
+            }
+
             claims = await exchangeCodeForToken(code as string, oidcConfig);
         }
 
