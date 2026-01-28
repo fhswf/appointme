@@ -17,14 +17,3 @@ spec:
     namespace: appointme-prod
   syncPolicy:
     automated: {}
-  ignoreDifferences:
-  - group: ""
-    kind: Secret
-    name: argocd-secret
-    jsonPointers:
-    - /data
-  orphanedResources:
-    warn: true
-    ignore:
-      - kind: Secret
-        name: "argocd-secret"
