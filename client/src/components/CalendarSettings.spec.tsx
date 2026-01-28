@@ -80,11 +80,12 @@ describe('CalendarSettings Component', () => {
         (googleServices.getCalendarList as any).mockResolvedValue(mockCalendarList);
         (googleServices.getAuthUrl as any).mockResolvedValue({ data: { success: true, url: 'http://auth' } });
         (caldavServices.listAccounts as any).mockResolvedValue({ data: [] });
-        (userServices.updateUser as any).mockResolvedValue({});
+        (userServices.updateUser as any).mockResolvedValue({ data: mockUser });
         const currentMockUser = { ...mockUser, pull_calendars: [], push_calendars: [] };
         (useAuth as any).mockImplementation(() => ({
             user: currentMockUser,
-            refreshAuth: vi.fn()
+            refreshAuth: vi.fn(),
+            setUser: vi.fn()
         }));
     });
 
@@ -99,6 +100,7 @@ describe('CalendarSettings Component', () => {
 
         await waitFor(() => {
             expect(googleServices.getCalendarList).toHaveBeenCalled();
+            expect(googleServices.getAuthUrl).not.toHaveBeenCalled();
         });
 
         // AppNavbar is not in CalendarSettings, so we verify specific content
@@ -256,6 +258,22 @@ describe('CalendarSettings Component', () => {
         await waitFor(() => {
             expect(screen.getByText('Broken Account')).toBeInTheDocument();
             expect(screen.getByText(/Failed to load calendars for/)).toBeInTheDocument();
+        });
+    });
+
+    it('should fetch auth url if calendar list fails with 401', async () => {
+        (googleServices.getCalendarList as any).mockRejectedValue({ response: { status: 401 } });
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(googleServices.getAuthUrl).toHaveBeenCalled();
         });
     });
 
