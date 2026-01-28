@@ -32,13 +32,6 @@ data:
   OIDC_NAME: "Campus-ID"
   OIDC_ICON: "/fh-swf.svg"
 
-  # LTI Configuration
-  LTI_CLIENT_ID: "atQuQeUj6ZSOTB1"
-  LTI_ISSUER: "https://moodle.fh-swf.cloud"
-  LTI_AUTH_ENDPOINT: "https://moodle.fh-swf.cloud/mod/lti/auth.php"
-  LTI_TOKEN_ENDPOINT: "https://moodle.fh-swf.cloud/mod/lti/token.php"
-  LTI_JWKS_URI: "https://moodle.fh-swf.cloud/mod/lti/certs.php"
-
   # Client Configuration (Build-time variables for the frontend)
   REACT_APP_API_URL: "https://appointme.example.com/api/v1"
   REACT_APP_URL: "https://appointme.example.com"

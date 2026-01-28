@@ -10,3 +10,10 @@ data:
   SMTP_HOST: "smtp.fh-swf.de"
   SMTP_PORT: "465"
   SMTP_SECURE: "true"
+
+  # LTI Configuration
+  LTI_CLIENT_ID: "atQuQeUj6ZSOTB1"
+  LTI_ISSUER: "https://moodle.fh-swf.cloud"
+  LTI_AUTH_ENDPOINT: "https://moodle.fh-swf.cloud/mod/lti/auth.php"
+  LTI_TOKEN_ENDPOINT: "https://moodle.fh-swf.cloud/mod/lti/token.php"
+  LTI_JWKS_URI: "https://moodle.fh-swf.cloud/mod/lti/certs.php"
