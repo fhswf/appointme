@@ -1,3 +1,11 @@
+## backend [1.41.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.41.0...backend@1.41.1-rc.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* debug lti timeout ([3e5b284](https://github.com/fhswf/appointme/commit/3e5b284abee1ded058e532b4e532d8c36aee450a))
+* debug lti timeout ([eae286b](https://github.com/fhswf/appointme/commit/eae286b8a3ec6f6003c49efcb785b620465086e0))
+
 # backend [1.41.0](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0) (2026-01-28)
 
 
