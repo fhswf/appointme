@@ -304,15 +304,14 @@ const verifyLtiToken = async (id_token: string): Promise<any> => {
             audience: process.env.LTI_CLIENT_ID, // Strict audience check
         });
 
+        logger.debug("LTI Token Verified. Claims: %o", payload);
+        return payload;
     } catch (err: any) {
         if (err?.code === 'ERR_JWKS_TIMEOUT' || err?.name === 'JWKSTimeout') {
             throw new Error(`JWKS connection to ${jwksUri} timed out`);
         }
         throw err;
     }
-
-    logger.debug("LTI Token Verified. Claims: %o", payload);
-    return payload;
 };
 
 const exchangeCodeForToken = async (code: string, oidcConfig: Configuration): Promise<any> => {
