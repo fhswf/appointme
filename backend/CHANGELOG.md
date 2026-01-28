@@ -1,3 +1,10 @@
+# backend [1.41.0](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0) (2026-01-28)
+
+
+### Features
+
+* tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
+
 # backend [1.41.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0-rc.1) (2026-01-28)
 
 
