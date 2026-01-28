@@ -605,7 +605,7 @@ describe('OIDC Controller', () => {
             expect(res.status).toBe(302);
             expect(res.header.location).toBeDefined(); // Redirects
 
-            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/jwks'));
+            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/jwks'), { timeoutDuration: 10000 });
             expect(jose.jwtVerify).toHaveBeenCalledWith(id_token, expect.anything(), {
                 issuer: 'https://lti.example.com',
                 audience: 'lti_client_id'
@@ -635,6 +635,28 @@ describe('OIDC Controller', () => {
             // Should set cookie
             const cookies = res.headers['set-cookie'];
             expect(cookies.some((c: string) => c.startsWith('lti_token='))).toBe(true);
+        });
+
+        it('should return descriptive error when JWKS times out', async () => {
+            await getCsrfToken();
+            const id_token = 'timeout_token';
+
+            const jose = await import('jose');
+            const timeoutError: any = new Error("request timed out");
+            timeoutError.code = 'ERR_JWKS_TIMEOUT';
+            timeoutError.name = 'JWKSTimeout';
+
+            (jose.jwtVerify as any).mockRejectedValue(timeoutError);
+            (jose.createRemoteJWKSet as any).mockReturnValue({});
+
+            const res = await request(app)
+                .post('/api/v1/oidc/login')
+                .set("x-csrf-token", csrfToken)
+                .set("Cookie", csrfCookie)
+                .send({ id_token });
+
+            expect(res.status).toBe(401);
+            expect(res.body.details).toContain('JWKS connection to https://lti.example.com/jwks timed out');
         });
 
         it('should login successfully for LTI user without email (transient)', async () => {
@@ -845,7 +867,7 @@ describe('OIDC Controller', () => {
                 .send({ id_token });
 
             expect(res.status).toBe(302);
-            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/certs'));
+            expect(jose.createRemoteJWKSet).toHaveBeenCalledWith(new URL('https://lti.example.com/certs'), { timeoutDuration: 10000 });
         });
 
         it('should fail if JWKS URI cannot be determined', async () => {
