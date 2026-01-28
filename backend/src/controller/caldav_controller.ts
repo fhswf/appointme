@@ -353,7 +353,8 @@ export const findAccountForCalendar = (user: User, calendarUrl: string): CalDavA
     });
 };
 
-export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any): Promise<any> => {
+
+export const createCalDavEvent = async (user: User, eventDetails: any, userComment?: string, targetCalendarUrl?: string, recurrence?: any, uid?: string): Promise<any> => {
     const calendarUrl = targetCalendarUrl;
     if (!calendarUrl) {
         throw new Error('Target calendar URL is required');
@@ -425,8 +426,11 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
         }))
     };
 
-    const randomStr = crypto.randomBytes(8).toString('hex');
-    const uid = `${Date.now()}-${randomStr}`;
+    let eventUid = uid;
+    if (!eventUid) {
+        const randomStr = crypto.randomBytes(8).toString('hex');
+        eventUid = `${Date.now()}-${randomStr}`;
+    }
 
     // WORKAROUND: tsdav bug where fetchOptions.headers overwrites auth headers in createObject
     // We pass Auth explicitly in fetchOptions for this call only.
@@ -442,7 +446,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
     };
 
     const icsContent = generateIcsContent({
-        uid,
+        uid: eventUid,
         start: new Date(eventData.start),
         end: new Date(eventData.end),
         summary: eventData.summary,
@@ -463,7 +467,7 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
 
     const createdEvent = await client.createCalendarObject({
         calendar: targetCalendar,
-        filename: `${uid}.ics`,
+        filename: `${eventUid}.ics`,
         iCalString: icsContent,
         fetchOptions: creationFetchOptions
     });
@@ -499,19 +503,89 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
 
         const found = fetchedObjects.find(obj => {
             if (obj.data) {
-                return obj.data.includes(`UID:${uid}`);
+                return obj.data.includes(`UID:${eventUid}`);
             }
             return false;
         });
 
         if (found) {
-            logger.info('Successfully verified event creation on server. UID: %s', uid);
+            logger.info('Successfully verified event creation on server. UID: %s', eventUid);
         } else {
-            logger.warn('Event created but not found on server verification. UID: %s', uid);
+            logger.warn('Event created but not found on server verification. UID: %s', eventUid);
         }
     } catch (verifyError) {
         logger.error('Error verifying event creation: %o', verifyError);
     }
 
-    return { response: createdEvent, uid };
+    return { response: createdEvent, uid: eventUid };
+};
+export const verifyEvent = async (user: User, uid: string, calendarUrl: string, start: Date, end: Date): Promise<boolean> => {
+    // Find the account that owns the calendar URL
+    const account = findAccountForCalendar(user, calendarUrl);
+    if (!account) {
+        logger.warn('verifyEvent: CalDav account not found for calendar: %s', calendarUrl);
+        return false;
+    }
+
+    try {
+        const client = createConfiguredDAVClient({
+            serverUrl: account.serverUrl,
+            credentials: {
+                username: account.username,
+                password: decrypt(account.password),
+            },
+            authMethod: 'Basic',
+            defaultAccountType: 'caldav',
+            fetchOptions: {
+                headers: {}
+            }
+        });
+
+        await client.login();
+
+        const calendars = await client.fetchCalendars();
+        let targetCalendar = calendars.find(c => c.url === calendarUrl);
+
+        if (!targetCalendar) {
+            // Fallback: Check if this is a direct calendar URL
+            const normalizedServerUrl = account.serverUrl.replace(/\/$/, '');
+            const normalizedCalendarId = calendarUrl.replace(/\/$/, '');
+
+            if (normalizedCalendarId === normalizedServerUrl) {
+                targetCalendar = {
+                    url: account.serverUrl,
+                    displayName: account.name || 'Direct Calendar',
+                    resourcetype: 'calendar',
+                    currentUserPrivilegeSet: [] // Dummy
+                } as any;
+            } else {
+                return false;
+            }
+        }
+
+        // We expand the search window slightly to be safe
+        const searchStart = new Date(start.getTime() - 24 * 60 * 60 * 1000);
+        const searchEnd = new Date(end.getTime() + 24 * 60 * 60 * 1000);
+
+        const fetchedObjects = await client.fetchCalendarObjects({
+            calendar: targetCalendar,
+            timeRange: {
+                start: searchStart.toISOString(),
+                end: searchEnd.toISOString()
+            }
+        });
+
+        const found = fetchedObjects.find(obj => {
+            if (obj.data) {
+                return obj.data.includes(`UID:${uid}`);
+            }
+            return false;
+        });
+
+        return !!found;
+
+    } catch (e) {
+        logger.error('verifyEvent: CalDAV error', e);
+        return false;
+    }
 };

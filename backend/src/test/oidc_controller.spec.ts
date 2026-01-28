@@ -277,7 +277,9 @@ describe('OIDC Controller', () => {
             expect(UserModel.findOneAndUpdate).toHaveBeenCalledWith(
                 expect.anything(),
                 expect.objectContaining({
-                    roles: ['student']
+                    $set: expect.objectContaining({
+                        roles: ['student']
+                    })
                 }),
                 expect.anything()
             );

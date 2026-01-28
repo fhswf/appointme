@@ -5,3 +5,4 @@ resources:
   - configmap.yaml
   - service.yaml
   - cronjob.yaml
+  - reconciliation-cronjob.yaml

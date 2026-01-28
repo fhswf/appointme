@@ -41,7 +41,8 @@ vi.mock("../models/Appointment.js", () => {
     const AppointmentModelMock = vi.fn().mockImplementation(function (this: any, data: any) {
         return {
             ...data,
-            save: vi.fn().mockResolvedValue(data)
+            _id: "appointment_123",
+            save: vi.fn().mockResolvedValue({ ...data, _id: "appointment_123" })
         };
     });
     return { AppointmentModel: AppointmentModelMock };
@@ -175,11 +176,7 @@ describe("Event Controller Auth Fix", () => {
         // BEFORE FIX: This will fail with 403 because the token is ignored (no middleware).
         // AFTER FIX: This should be 200.
         // We expect this to fail initially (returning 403).
-        if (res.status !== 200) {
-            expect(res.status).toBe(403);
-        } else {
-            expect(res.status).toBe(200);
-        }
+        expect(res.status).toBe(201);
     });
 
     it("should deny access to role-restricted event if user lacks role (after fix)", async () => {

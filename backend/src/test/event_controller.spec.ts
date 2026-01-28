@@ -7,6 +7,7 @@ import { USER } from './USER.js';
 import { AppointmentModel } from "../models/Appointment.js";
 import { EventModel } from "../models/Event.js";
 import { UserModel } from "../models/User.js";
+import { middleware } from "../handlers/middleware.js";
 
 // Mock dependencies
 vi.mock("../models/Event.js", () => {
@@ -43,7 +44,8 @@ vi.mock("../models/Appointment.js", () => {
     const AppointmentModelMock = vi.fn().mockImplementation(function (this: any, data: any) {
         return {
             ...data,
-            save: vi.fn().mockResolvedValue(data)
+            _id: "appointment_123",
+            save: vi.fn().mockResolvedValue({ ...data, _id: "appointment_123" })
         };
     });
     return { AppointmentModel: AppointmentModelMock };
@@ -101,6 +103,10 @@ vi.mock("../controller/caldav_controller.js", () => ({
     removeAccount: vi.fn().mockImplementation((req, res) => res.json({})),
     listCalendars: vi.fn().mockImplementation((req, res) => res.json([])),
     findAccountForCalendar: vi.fn().mockReturnValue({ username: "test@caldav.com", serverUrl: "https://caldav.example.com" })
+}));
+
+vi.mock("../services/sync_service.js", () => ({
+    syncAppointment: vi.fn().mockResolvedValue(true)
 }));
 
 const mockQuery = (result: any, rejected = false) => {
@@ -491,11 +497,14 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            if (res.status !== 200) {
+            if (res.status !== 201) {
                 console.error("DEBUG Google:", JSON.stringify(res.body, null, 2));
             }
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should insert event successfully (CalDAV)", async () => {
@@ -519,8 +528,11 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should handle unavailable slot", async () => {
@@ -608,9 +620,59 @@ describe("Event Controller", () => {
                     attendeeName: "Guest",
                     attendeeEmail: "guest@example.com"
                 });
-
             expect(res.status).toBe(403);
             expect(res.body.error).toContain("Access denied");
+        });
+
+        it("should allow access if restricted to roles and user has role", async () => {
+            (EventModel.findById as any).mockImplementation(() => mockQuery({
+                ...EVENT,
+                duration: 60,
+                user: USER._id,
+                allowed_roles: ['student']
+            }));
+
+            // Mock checkFree
+            const { checkFree } = await import("../controller/google_controller.js");
+            (checkFree as any).mockResolvedValue(true);
+
+            // Mock middleware to simulate authenticated user
+            (middleware.optionalAuth as any).mockImplementation((req: any, res: any, next: any) => {
+                req.user_id = "visitor_id";
+                req['user_id'] = "visitor_id";
+                next();
+            });
+
+            // Mock user lookup to return user WITH role
+            // Since req['user'] is undefined in test, controller will look up via req['user_id']
+            (UserModel.findById as any).mockImplementation(() => mockQuery({
+                ...USER,
+                _id: "visitor_id",
+                roles: ['student'],
+                push_calendars: []
+            }));
+
+            // We need to override the middleware mock to ensure req['user_id'] is set to our visitor?
+            // Existing middleware mock sets req['user_id'] = USER._id.
+            // But we want the REQUESTER to be the visitor.
+            // However, insertEvent uses req['user_id'] (from middleware/token).
+            // If we want to simulate a different user, we should probably update the mock or rely on USER._id being the requester.
+            // If USER._id is the requester, then we just need USER to have the role.
+            // But USER in 'USER.js' might not have roles.
+            // Let's just mock UserModel.findById to return a user with roles regardless of ID passed (or for USER._id)
+
+            const { syncAppointment } = await import("../services/sync_service.js");
+
+            const res = await request(app)
+                .post("/api/v1/event/123/slot")
+                .send({
+                    start: Date.now().toString(),
+                    attendeeName: "Authorized Student",
+                    attendeeEmail: "student@example.com"
+                });
+
+            expect(res.status).toBe(201);
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should allow access if restricted to roles and user has role (needs auth middleware or mock)", async () => {
@@ -665,14 +727,10 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
-            expect(sendEventInvitation).toHaveBeenCalledWith(
-                "guest@example.com",
-                expect.stringContaining("Invitation: Event <script>alert(1)</script>"),
-                expect.stringContaining("Guest &lt;b&gt;Bold&lt;&#x2F;b&gt;"),
-                expect.any(String),
-                "invite.ics"
-            );
+            expect(res.status).toBe(201);
+            // Sanitization is now handled in sync_service, not controller side effects in this tick
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
 
         it("should return 404 if event not found during insert", async () => {
@@ -836,7 +894,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
             expect(res.body.instancesCreated).toBe(3);
             expect(res.body.seriesId).toBeDefined();
@@ -874,7 +932,7 @@ describe("Event Controller", () => {
                     description: "Notes"
                 });
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.instancesCreated).toBe(3);
 
             // Verify AppointmentModel was initialized with correct dates
@@ -950,13 +1008,10 @@ describe("Event Controller", () => {
                     attendeeEmail: "guest@example.com"
                 });
 
-            expect(res.status).toBe(200);
-            expect(insertGoogleEvent).toHaveBeenCalledWith(
-                expect.objectContaining({ _id: expect.any(String) }), // user object
-                expect.objectContaining({ summary: expect.stringContaining("Fallback Guest") }), // event object
-                'primary',
-                undefined
-            );
+            expect(res.status).toBe(201);
+            // Fallback logic is now in sync_service
+            const { syncAppointment } = await import("../services/sync_service.js");
+            expect(syncAppointment).toHaveBeenCalled();
         });
     });
 });

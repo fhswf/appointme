@@ -32,10 +32,9 @@ vi.mock("../models/Event.js", () => {
 // Mock AppointmentModel
 vi.mock("../models/Appointment.js", () => {
     const AppointmentModelMock = vi.fn().mockImplementation(function (data) {
-        return {
-            ...data,
-            save: vi.fn().mockResolvedValue(data)
-        };
+        const doc = { ...data, _id: "mock_appointment_id" };
+        doc.save = vi.fn().mockResolvedValue(doc);
+        return doc;
     });
     return { AppointmentModel: AppointmentModelMock };
 });
@@ -181,7 +180,7 @@ describe("LTI Transient User Support", () => {
 
 
 
-            expect(res.status).toBe(200);
+            expect(res.status).toBe(201);
             expect(res.body.success).toBe(true);
         });
 
