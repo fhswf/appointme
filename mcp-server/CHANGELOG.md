@@ -1,3 +1,10 @@
+## mcp-server [1.1.1-rc.1](https://github.com/fhswf/appointme/compare/mcp-server@1.1.0...mcp-server@1.1.1-rc.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* sentry import ([ee9b545](https://github.com/fhswf/appointme/commit/ee9b545ef9ebd751e6395fb981b78f5563eeca76))
+
 # mcp-server [1.1.0](https://github.com/fhswf/appointme/compare/mcp-server@1.0.3...mcp-server@1.1.0) (2026-01-28)
 
 
