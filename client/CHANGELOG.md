@@ -1,3 +1,15 @@
+# client [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0-rc.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* call setUser() after user update ([ba71672](https://github.com/fhswf/appointme/commit/ba716724a1880e4a13bfbab561311a6a2e012c6e))
+
+
+### Features
+
+* remove redundant backend calls in `CalendarSettings` ([527f178](https://github.com/fhswf/appointme/commit/527f17802434261b9f3cd18ebfe0530b54e159fa))
+
 # client [1.36.0](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0) (2026-01-28)
 
 
