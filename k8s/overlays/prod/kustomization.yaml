@@ -5,6 +5,7 @@ resources:
   - ../../../backend/k8s/overlays/prod
   - ../../../client/k8s/overlays/prod
   - ../../../mcp-server/k8s/overlays/prod
+  - argocd.yaml
 namespace: appointme-prod
 patches:
   - path: ingress-patch.yaml
