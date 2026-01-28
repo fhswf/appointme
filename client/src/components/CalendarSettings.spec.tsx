@@ -351,4 +351,116 @@ describe('CalendarSettings Component', () => {
         // OR if the component has it? No, CalendarSettings doesn't have a close button.
         // It's in CalendarInt.tsx
     });
+    it('should disconnect Google Calendar', async () => {
+        (googleServices.deleteAccess as any).mockResolvedValue({});
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        // Wait for connect button to show "Disconnect" (after calendar fetch success)
+        await waitFor(() => {
+            expect(screen.getByTestId('disconnect-google-button')).toBeInTheDocument();
+        });
+
+        const disconnectBtn = screen.getByTestId('disconnect-google-button');
+        fireEvent.click(disconnectBtn);
+
+        await waitFor(() => {
+            expect(googleServices.deleteAccess).toHaveBeenCalled();
+            // Should revert to connect button
+            expect(screen.getByTestId('connect-google-button')).toBeInTheDocument();
+        });
+    });
+
+    it('should auto-initialize push/pull calendars if empty', async () => {
+        const userWithoutCals = { ...mockUser, pull_calendars: [], push_calendars: [] };
+        const primaryCal = { id: 'primary', summary: 'Primary', primary: true };
+        const calendarListWithPrimary = {
+            data: {
+                data: {
+                    items: [primaryCal]
+                }
+            }
+        };
+        (googleServices.getCalendarList as any).mockResolvedValue(calendarListWithPrimary);
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: userWithoutCals } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
+                pull_calendars: ['primary'],
+                push_calendars: ['primary']
+            }));
+        });
+    });
+
+    it('should handle save error in PushCalendar', async () => {
+        (userServices.updateUser as any).mockRejectedValue(new Error('Update failed'));
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-push-calendar')).toBeInTheDocument();
+        });
+
+        const editBtn = screen.getByTestId('edit-push-calendar');
+        await userEvent.click(editBtn);
+
+        const saveBtn = screen.getByTestId('button-save');
+        await userEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+            expect(consoleSpy).toHaveBeenCalledWith("user update failed: %o", expect.any(Error));
+        });
+        consoleSpy.mockRestore();
+    });
+
+    it('should handle save error in PullCalendars', async () => {
+        (userServices.updateUser as any).mockRejectedValue(new Error('Update failed'));
+        const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('edit-pull-calendar')).toBeInTheDocument();
+        });
+
+        const editBtn = screen.getByTestId('edit-pull-calendar');
+        fireEvent.click(editBtn);
+
+        const saveBtn = screen.getByText('factual_nimble_snail_clap');
+        fireEvent.click(saveBtn);
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalled();
+            expect(consoleSpy).toHaveBeenCalledWith("user update failed: %o", expect.any(Error));
+        });
+        consoleSpy.mockRestore();
+    });
 });
+
