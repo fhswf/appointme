@@ -15,15 +15,19 @@ import { useLocation } from "react-router-dom";
 
 const App = () => {
   const user = useContext(UserContext).user;
-  const [connected, setConnected] = useState(false);
+  /*
+   * The "connected" state was previously used to show a "loading" or "onboarding" view 
+   * (integration link) briefly before checking if the user was connected.
+   * However, since `user` is guaranteed to be non-null here (checked at line 31) and we 
+   * aren't checking for specific connection status (like calendars existing) other than `!!user`,
+   * this state caused a double render and double fetch of events.
+   * 
+   * If we need to show an onboarding view for users with no calendars, we should check:
+   * if (!user.calendars || user.calendars.length === 0) { ... }
+   * 
+   * For now, we render the main event list immediately.
+   */
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setConnected(!!user);
-  }, [user]);
-
-
-
   const location = useLocation();
   const isAppointments = location.pathname === "/appointments";
 
@@ -43,31 +47,6 @@ const App = () => {
             </RouterLink>
           </Button>
         </div>
-      );
-    }
-
-    if (!connected) {
-      return (
-        <>
-          <div className="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between border-b border-border pb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 tracking-tight">
-                {t("low_clean_haddock_bubble")}
-              </h1>
-              <div className="text-muted-foreground mt-2">
-                <p>{t("deft_suave_bear_pause")}</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 mb-8">
-            <Button asChild variant="link" className="p-0 h-auto text-sm">
-              <RouterLink to="/integration">
-                {t("pink_trite_ocelot_enrich")}
-              </RouterLink>
-            </Button>
-          </div>
-          <EventList url={user.user_url} user={user} />
-        </>
       );
     }
 
@@ -122,7 +101,7 @@ const App = () => {
         </div>
       </main>
 
-      {connected && (
+      {!!user && (
         <div className="md:hidden fixed bottom-6 left-0 right-0 flex justify-center z-40 px-6 pointer-events-none">
           <Button
             asChild
