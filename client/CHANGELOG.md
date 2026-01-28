@@ -1,3 +1,11 @@
+## client [1.35.1](https://github.com/fhswf/appointme/compare/client@1.35.0...client@1.35.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* disable login button while waiting for response ([26514c9](https://github.com/fhswf/appointme/commit/26514c9c27391ea2a7ef050214b352e36eaf9640))
+* use state parameter for google login ([7c7d42c](https://github.com/fhswf/appointme/commit/7c7d42c3312dd0cda0b9a05a4f29811901c52d56))
+
 ## client [1.35.1-rc.1](https://github.com/fhswf/appointme/compare/client@1.35.0...client@1.35.1-rc.1) (2026-01-27)
 
 
