@@ -1,3 +1,10 @@
+# mcp-server [1.1.0](https://github.com/fhswf/appointme/compare/mcp-server@1.0.3...mcp-server@1.1.0) (2026-01-28)
+
+
+### Features
+
+* tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
+
 # mcp-server [1.1.0-rc.1](https://github.com/fhswf/appointme/compare/mcp-server@1.0.3...mcp-server@1.1.0-rc.1) (2026-01-28)
 
 
