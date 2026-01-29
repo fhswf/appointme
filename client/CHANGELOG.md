@@ -1,3 +1,13 @@
+## client [1.37.2-rc.1](https://github.com/fhswf/appointme/compare/client@1.37.1...client@1.37.2-rc.1) (2026-01-29)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.1-rc.1
+
 ## client [1.37.1](https://github.com/fhswf/appointme/compare/client@1.37.0...client@1.37.1) (2026-01-29)
 
 

@@ -1,3 +1,10 @@
+## common [1.16.1-rc.1](https://github.com/fhswf/appointme/compare/common@1.16.0...common@1.16.1-rc.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* use linear time algorithm for merging of interval sets ([db84c87](https://github.com/fhswf/appointme/commit/db84c870eb154fd26c7c9314ed518b5c1b1d10c4))
+
 # common [1.16.0](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0) (2026-01-25)
 
 
