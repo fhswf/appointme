@@ -76,7 +76,7 @@ spec:
             httpGet:
               path: /healthz
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
       dnsPolicy: ClusterFirst
       restartPolicy: Always
