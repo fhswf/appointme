@@ -178,19 +178,19 @@ spec:
           resources:
             limits:
               memory: 2Gi
-              cpu: 500m
+              cpu: 1000m
           livenessProbe:
             httpGet:
               path: /healthz
               port: 5000
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 20
           readinessProbe:
             httpGet:
               path: /healthz
               port: 5000
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 20
       restartPolicy: Always
       automountServiceAccountToken: false
 status: {}
