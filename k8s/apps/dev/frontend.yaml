@@ -1,18 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appointme-dev
+  name: appointme-frontend-dev
   namespace: argocd
+  labels:
+    component: frontend
+    app.kubernetes.io/part-of: appointme
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.github: ""
+    link.argocd.argoproj.io/external-link: "https://appointme.gawron.cloud/"
 spec:
   project: default
   source:
     repoURL: 'https://github.com/fhswf/appointme'
     targetRevision: HEAD
-    path: k8s/apps/dev
+    path: client/k8s/overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: appointme-dev
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

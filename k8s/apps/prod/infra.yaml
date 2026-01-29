@@ -1,18 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appointme-dev
+  name: appointme-infra-prod
   namespace: argocd
-  annotations:
-    notifications.argoproj.io/subscribe.on-deployed.github: ""
+  labels:
+    component: infra
+    app.kubernetes.io/part-of: appointme
 spec:
   project: default
   source:
     repoURL: 'https://github.com/fhswf/appointme'
     targetRevision: HEAD
-    path: k8s/apps/dev
+    path: k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
-    namespace: appointme-dev
+    namespace: appointme-prod
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
