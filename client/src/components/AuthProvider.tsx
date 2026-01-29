@@ -7,6 +7,7 @@ interface AuthContextType {
     isAuthenticated: boolean | undefined;
     refreshAuth: () => Promise<void>;
     logout: () => Promise<void>;
+    setUser: (user: UserDocument | null) => void;
 }
 
 export const AuthContext = React.createContext<AuthContextType>({
@@ -14,6 +15,7 @@ export const AuthContext = React.createContext<AuthContextType>({
     isAuthenticated: undefined,
     refreshAuth: async () => { },
     logout: async () => { },
+    setUser: () => { },
 });
 
 import { signout } from "../helpers/helpers";
@@ -68,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         Sentry.setUser(null);
     }, []);
 
-    const value = React.useMemo(() => ({ user, isAuthenticated, refreshAuth, logout }), [user, isAuthenticated, refreshAuth, logout]);
+    const value = React.useMemo(() => ({ user, isAuthenticated, refreshAuth, logout, setUser }), [user, isAuthenticated, refreshAuth, logout]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

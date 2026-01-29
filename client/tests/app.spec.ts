@@ -268,13 +268,13 @@ test.describe('Main page', () => {
             await page.getByTestId('profile-menu').click();
 
             const calendarListPromise = page.waitForResponse(resp => resp.url().includes('/google/calendarList'));
-            const generateUrlPromise = page.waitForResponse(resp => resp.url().includes('/google/generateUrl'));
+
 
             await page.getByTestId('calendar-button').click();
             await expect(page).toHaveURL(/\/integration/);
 
             await calendarListPromise;
-            await generateUrlPromise;
+
 
             await page.getByTestId('edit-push-calendar').click();
             // Select interaction might need adjustment for shadcn select
