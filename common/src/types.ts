@@ -319,19 +319,56 @@ export class IntervalSet extends Array<TimeRange> {
     }
   }
 
-  /**
-   * Calculate the union with another `IntervalSet`.
-   * @param other `IntervalSet` to add.
-   * @returns Union as `Intervalset`
-   * @todo Replace with linear time algorithm.
-   */
   add(other: IntervalSet) {
+    let i = 0;
+    let j = 0;
+    const merged: TimeRange[] = [];
 
-    other.forEach((interval) => {
-      this.addRange(interval);
-    })
+    // Merge two sorted lists
+    while (i < this.length && j < other.length) {
+      if (this[i].start.getTime() <= other[j].start.getTime()) {
+        merged.push(this[i++]);
+      } else {
+        // Create a copy of the range from 'other' to avoid side effects
+        const o = other[j++];
+        merged.push({ start: o.start, end: o.end });
+      }
+    }
 
-    return this
+    // Append remaining elements
+    while (i < this.length) {
+      merged.push(this[i++]);
+    }
+    while (j < other.length) {
+      const o = other[j++];
+      merged.push({ start: o.start, end: o.end });
+    }
+
+    // Merge overlapping intervals in the sorted list
+    if (merged.length > 0) {
+      const result: TimeRange[] = [];
+      let current = merged[0];
+
+      for (let k = 1; k < merged.length; k++) {
+        const next = merged[k];
+        if (current.end >= next.start) {
+          // Intervals overlap, merge them
+          if (next.end > current.end) {
+            current.end = next.end;
+          }
+        } else {
+          // No overlap, push current and move to next
+          result.push(current);
+          current = next;
+        }
+      }
+      result.push(current);
+
+      // Update this IntervalSet with the new list of disjoint intervals
+      this.splice(0, this.length, ...result);
+    }
+
+    return this;
   }
 
   /**
