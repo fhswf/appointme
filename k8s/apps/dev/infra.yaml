@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   labels:
     component: infra
+    app.kubernetes.io/part-of: appointme
 spec:
   project: default
   source:

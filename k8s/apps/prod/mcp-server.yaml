@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   labels:
     component: mcp-server
+    app.kubernetes.io/part-of: appointme
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.github: ""
     link.argocd.argoproj.io/external-link: "https://appointme.fh-swf.cloud/mcp"
