@@ -1,3 +1,13 @@
+## backend [1.41.3](https://github.com/fhswf/appointme/compare/backend@1.41.2...backend@1.41.3) (2026-01-29)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.1
+
 ## backend [1.41.3-rc.1](https://github.com/fhswf/appointme/compare/backend@1.41.2...backend@1.41.3-rc.1) (2026-01-29)
 
 
