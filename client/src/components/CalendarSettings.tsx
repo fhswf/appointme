@@ -129,7 +129,7 @@ export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: 
     const handleClose = () => setOpen(false);
     const handleShow = () => setOpen(true);
 
-    const { refreshAuth, setUser } = useAuth();
+    const { setUser } = useAuth();
     const save = () => {
         const newSelection = [];
         for (const item of Object.keys(selected)) {
@@ -231,7 +231,7 @@ export const PullCalendars = ({ user, calendarList }: { user: any, calendarList:
 
     const handleClose = () => setOpen(false);
     const handleShow = () => setOpen(true);
-    const { refreshAuth, setUser } = useAuth();
+    const { setUser } = useAuth();
     const save = () => {
 
         const updatedUser = { ...user, pull_calendars: [] };
