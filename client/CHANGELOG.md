@@ -1,3 +1,10 @@
+## client [1.37.1](https://github.com/fhswf/appointme/compare/client@1.37.0...client@1.37.1) (2026-01-29)
+
+
+### Bug Fixes
+
+* **client:** Increase initialDelaySeconds for readiness probe ([9b8b49a](https://github.com/fhswf/appointme/commit/9b8b49ad6fcf778edd5b9e461c5337f87f3d2e38))
+
 # client [1.37.0](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0) (2026-01-29)
 
 
