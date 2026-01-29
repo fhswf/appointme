@@ -37,7 +37,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@react-oauth/google": "latest",
     "@sentry/browser": "^10.36.0",
-    "@sentry/react": "^10.36.0",
+    "@sentry/react": "^10.38.0",
     "@stepperize/react": "^5.1.9",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.9",
