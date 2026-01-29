@@ -1,3 +1,10 @@
+## mcp-server [1.1.2](https://github.com/fhswf/appointme/compare/mcp-server@1.1.1...mcp-server@1.1.2) (2026-01-29)
+
+
+### Bug Fixes
+
+* **mcp-server:** Update readiness probe timing in deployment.yaml ([c2b9f10](https://github.com/fhswf/appointme/commit/c2b9f10ec89eba54a9f66798de268ce755541b3e))
+
 ## mcp-server [1.1.1](https://github.com/fhswf/appointme/compare/mcp-server@1.1.0...mcp-server@1.1.1) (2026-01-28)
 
 
