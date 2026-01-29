@@ -1,3 +1,10 @@
+## backend [1.41.2](https://github.com/fhswf/appointme/compare/backend@1.41.1...backend@1.41.2) (2026-01-29)
+
+
+### Bug Fixes
+
+* **backend:** Increase CPU limit and probe period for deployment ([4e6299f](https://github.com/fhswf/appointme/commit/4e6299fa01b00cb62f711fab764760fa9db65bdd))
+
 ## backend [1.41.1](https://github.com/fhswf/appointme/compare/backend@1.41.0...backend@1.41.1) (2026-01-28)
 
 
