@@ -1,3 +1,10 @@
+# backend [1.42.0](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0) (2026-01-29)
+
+
+### Features
+
+* argocd refactoring ([409fe96](https://github.com/fhswf/appointme/commit/409fe96b9fa7e1af98cd792f17024c313bc7382f))
+
 # backend [1.42.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0-rc.1) (2026-01-29)
 
 
