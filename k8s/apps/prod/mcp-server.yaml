@@ -1,18 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appointme-dev
+  name: appointme-mcp-server-prod
   namespace: argocd
+  labels:
+    component: mcp-server
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.github: ""
+    link.argocd.argoproj.io/external-link: "https://appointme.fh-swf.cloud/mcp"
 spec:
   project: default
   source:
     repoURL: 'https://github.com/fhswf/appointme'
     targetRevision: HEAD
-    path: k8s/apps/dev
+    path: mcp-server/k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
-    namespace: appointme-dev
+    namespace: appointme-prod
   syncPolicy:
-    automated: {}
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

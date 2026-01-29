@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: 'https://github.com/fhswf/appointme'
     targetRevision: HEAD
-    path: k8s/overlays/prod
+    path: k8s/apps/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: appointme-prod
