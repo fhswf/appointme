@@ -822,3 +822,49 @@ describe('google_controller', () => {
         });
     });
 });
+
+describe('Edge Cases', () => {
+    it('insertGoogleEvent should throw error if no access token', async () => {
+        const userNoToken = { ...USER, google_tokens: null };
+        await expect(insertGoogleEvent(userNoToken as any, {} as any)).rejects.toThrow("No Google account connected");
+    });
+
+    it('checkFree should handle users without default availability', async () => {
+        // Mock user returning null for defaultAvailable
+        const userMock = { ...USER, defaultAvailable: null };
+        // Use mocked findOne/findById as established in other tests or override here
+        // Using cast to any to key into module mocks if possible, OR rely on global mock behavior if defined
+        // In this file, UserModel queries are mocked via:
+        // (UserModel.findOne as any).mockImplementation(...)
+
+        (UserModel.findOne as any).mockImplementation(() => mockQuery(userMock));
+        (UserModel.findById as any).mockImplementation(() => mockQuery(userMock));
+
+        const event = { ...EVENT, availabilityMode: 'default' };
+
+        // Time range
+        const t1 = new Date("2026-02-20T10:00:00Z");
+        const t2 = new Date("2026-02-20T11:00:00Z");
+
+        const res = await checkFree(event as any, "user_id", t1, t2);
+        expect(res).toBe(false);
+    });
+
+    it('verifyEvent should return false if 404', async () => {
+        const user = { ...USER };
+        const getMock = vi.fn().mockRejectedValue({ code: 404 });
+        vi.mocked(google.calendar).mockReturnValue({
+            events: { get: getMock }
+        } as any);
+
+        const res = await verifyEvent(user as any, "eventId");
+        expect(res).toBe(false);
+    });
+
+    it('verifyEvent should return false if no tokens', async () => {
+        const user = { ...USER, google_tokens: null };
+        const res = await verifyEvent(user as any, "eventId");
+        expect(res).toBe(false);
+    });
+});
+});

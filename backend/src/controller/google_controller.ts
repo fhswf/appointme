@@ -317,7 +317,7 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
     .exec()
     .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
-      if (!google_tokens || !google_tokens.access_token) {
+      if (!google_tokens?.access_token) {
         throw new Error("No Google tokens found for user");
       }
       const oAuth2Client = createOAuthClient(user_id);
