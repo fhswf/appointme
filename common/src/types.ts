@@ -214,6 +214,8 @@ export class IntervalSet extends Array<TimeRange> {
     while (t < timeMax) {
       // We need the day of week in the target timezone
       let zonedT = toZonedTime(t, timeZone);
+      // toZonedTime returns a Date shifted so that UTC getters return the local time components.
+      // Therefore, we use getUTCDay() to get the day in the target timezone.
       let day = zonedT.getUTCDay();
 
       let s: Slot[] = slots[day];
