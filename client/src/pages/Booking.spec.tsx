@@ -79,7 +79,7 @@ describe('Booking Page', () => {
     const mockSlotsImpl = {
         overlapping: () => ['something'],
         intersect: () => [
-            { start: new Date('2025-12-08T10:00:00'), end: new Date('2025-12-08T11:00:00') }
+            { start: new Date('2025-12-08T09:00:00'), end: new Date('2025-12-08T10:00:00') }
         ]
     };
 
@@ -218,7 +218,7 @@ describe('Booking Page', () => {
         expect(toast.error).not.toHaveBeenCalled();
         expect(eventServices.getAvailableTimes).toHaveBeenCalled();
 
-        const slotRegex = /10:00/; // The format is HH:mm
+        const slotRegex = /09:00/; // The format is HH:mm
         const slotBtns = await screen.findAllByText(slotRegex);
         expect(slotBtns.length).toBeGreaterThan(0);
         const slotBtn = slotBtns[0];
@@ -245,7 +245,7 @@ describe('Booking Page', () => {
         await waitFor(() => {
             expect(insertEvent).toHaveBeenCalledWith(
                 'event1',
-                expect.any(Date), // 10:00 date object
+                expect.any(Date), // 09:00 date object
                 'John Doe',
                 'john@example.com',
                 'My meeting notes'
@@ -280,7 +280,7 @@ describe('Booking Page', () => {
         await userEvent.click(screen.getByTestId('select-date-btn'));
 
         // 2. Select Time
-        const slotBtns = await screen.findAllByText(/10:00/);
+        const slotBtns = await screen.findAllByText(/09:00/);
         const slotBtn = slotBtns[0];
         await userEvent.click(slotBtn);
 
