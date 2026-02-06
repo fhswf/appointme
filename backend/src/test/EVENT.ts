@@ -1,4 +1,5 @@
 export const EVENT = {
+    "timeZone": "Europe/Berlin",
     "available": {
         "0": [],
         "1": [

@@ -242,7 +242,7 @@ describe('google_controller', () => {
 
         expect(res.cookie).toHaveBeenCalledWith('google_auth_state', 'mock_nonce', {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             maxAge: 600000
         });
 

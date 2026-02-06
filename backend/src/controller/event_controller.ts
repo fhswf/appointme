@@ -314,6 +314,9 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
         return fits;
       }));
       logger.debug('Slots after duration filter: %d (filtered out: %d)', freeSlots.length, beforeDurationFilter - freeSlots.length);
+      for (const s of freeSlots) {
+        logger.debug('Valid slot after duration: start=%s end=%s', s.start.toISOString(), s.end.toISOString());
+      }
 
       // Handle recurrence validation
       if (event.recurrence?.enabled && recurrenceCount > 1 && recurrenceIntervalMs > 0) {
@@ -342,6 +345,9 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
           const end = new Date(slot.end);
           // Check if at least one duration fits
           while (s.getTime() + event.duration * 60000 <= end.getTime()) {
+            // Ensure we don't include slots completely outside requested range? 
+            // intersect(viewRange) handled strict clipping. 
+            // But if viewRange clipped the end of a slot, we might still start at a valid time.
             slots.push(s.toISOString());
             s = addMinutes(s, event.duration);
           }

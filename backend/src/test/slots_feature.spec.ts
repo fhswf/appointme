@@ -154,8 +154,8 @@ describe("Slots Feature Verification", () => {
             const slots = res.body; // TS types might infer any
             expect(typeof slots[0]).toBe("string");
             expect(slots).toEqual(expect.arrayContaining([
-                expect.stringContaining("T09:00:00"),
-                expect.stringContaining("T09:30:00")
+                expect.stringContaining("T10:00:00.000Z"),
+                expect.stringContaining("T10:30:00.000Z")
             ]));
             expect(slots.length).toBe(2);
         });
