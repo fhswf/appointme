@@ -175,7 +175,8 @@ describe("Recurrence Availability", () => {
             console.log("Recurrence test failed, body:", JSON.stringify(res.body));
         }
         expect(res.body).toHaveLength(1); // One slot on Monday
-        expect(res.body[0].start).toContain("2025-12-01T09:00:00.000Z");
+        const firstSlot = res.body[0];
+        expect(firstSlot.start).toContain("2025-12-01T09:00:00.000Z");
     });
 
     it("should filter out slots if a future instance is blocked (Weekly)", async () => {
