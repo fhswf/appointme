@@ -15,7 +15,7 @@ import { syncAppointment } from "../services/sync_service.js";
 import { Request, Response } from "express";
 
 import { logger } from "../logging.js";
-import { t } from "../utility/i18n.js";
+
 import crypto from 'node:crypto';
 import { convertBusyToFree } from "../utility/scheduler.js";
 import { UserModel } from "../models/User.js";
@@ -125,7 +125,10 @@ async function validateAllSlotsAvailable(
 
 export function calculateBlocked(events, event, timeMin, timeMax) {
   const eventsPerDay = {};
-  const blocked = new IntervalSet([{ start: new Date(timeMin), end: new Date(timeMin) }, { start: new Date(timeMax), end: new Date(timeMax) }]);
+  const blocked = new IntervalSet([
+    { start: new Date(timeMin.getTime() - 1), end: new Date(timeMin) },
+    { start: new Date(timeMax), end: new Date(timeMax.getTime() + 1) }
+  ]);
   events.forEach(evt => {
     logger.debug('event: %o', evt);
     if (!evt.start.dateTime) {
@@ -154,6 +157,7 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
       freeSlots = new IntervalSet(timeMin, timeMax, user.defaultAvailable, "Europe/Berlin");
     }
   }
+
 
   freeSlots = freeSlots.intersect(blocked.inverse());
 
@@ -277,24 +281,39 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
           logger.error('CalDAV getBusySlots failed', err);
           return [];
         })
-      ]).then(([freeBusyResponse, calDavSlots]) => ({
-        freeBusyResponse,
-        calDavSlots,
-        event,
-        blocked,
-        user,
-        timeMin,
-        timeMax,
-        checkMax,
-        recurrenceCount,
-        recurrenceIntervalMs
-      }));
+      ]).then(([freeBusyResponse, calDavSlots]) => {
+        logger.debug('Google FreeBusy response: %j', freeBusyResponse);
+        logger.debug('CalDAV Busy Slots: %j', calDavSlots);
+        return {
+          freeBusyResponse,
+          calDavSlots,
+          event,
+          blocked,
+          user,
+          timeMin,
+          timeMax,
+          checkMax,
+          recurrenceCount,
+          recurrenceIntervalMs
+        };
+      });
     })
     .then(({ freeBusyResponse, calDavSlots, event, blocked, user, timeMin, timeMax, checkMax, recurrenceCount, recurrenceIntervalMs }) => {
       let freeSlots = calculateFreeSlots(freeBusyResponse, calDavSlots, event, timeMin, checkMax, blocked, user);
+      logger.debug('Initial freeSlots count: %d', freeSlots.length);
+      logger.debug('Initial freeSlots: %j', freeSlots);
 
       // Filter slots by duration first
-      freeSlots = new IntervalSet(freeSlots.filter(slot => (slot.end.getTime() - slot.start.getTime()) >= event.duration * 60 * 1000));
+      const beforeDurationFilter = freeSlots.length;
+      freeSlots = new IntervalSet(freeSlots.filter(slot => {
+        const duration = slot.end.getTime() - slot.start.getTime();
+        const fits = duration >= event.duration * 60 * 1000;
+        if (!fits) {
+          logger.debug('Filtered out slot due to duration: %j (duration: %d, needed: %d)', slot, duration, event.duration * 60 * 1000);
+        }
+        return fits;
+      }));
+      logger.debug('Slots after duration filter: %d (filtered out: %d)', freeSlots.length, beforeDurationFilter - freeSlots.length);
 
       // Handle recurrence validation
       if (event.recurrence?.enabled && recurrenceCount > 1 && recurrenceIntervalMs > 0) {
@@ -307,6 +326,8 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
           // We intersect the current candidates with the available slots of the i-th instance (shifted back to base time)
           validatedSlots = validatedSlots.intersect(shifted);
         }
+        const removedByRecurrence = freeSlots.length - validatedSlots.length;
+        logger.debug('Slots removed by recurrence validation: %d', removedByRecurrence);
         freeSlots = validatedSlots;
       }
 
@@ -325,13 +346,19 @@ export const getAvailableTimes = (req: Request, res: Response): void => {
             s = addMinutes(s, event.duration);
           }
         }
+        logger.debug('Final slot list to return: %j', slots);
         res.status(200).json(slots);
         return;
       }
 
+
       logger.debug('freeSlots after filtering and recurrence check: %j', freeSlots);
 
-      res.status(200).json(freeSlots);
+      if (freeSlots.length === 0) {
+        res.status(200).json({ slots: [], message: "No slots available for the selected period." });
+      } else {
+        res.status(200).json(freeSlots);
+      }
     })
     .catch((err: unknown) => {
       logger.error('getAvailableTime: event not found or freeBusy failed: %j', err);

@@ -1,4 +1,4 @@
-import { fromZonedTime } from "date-fns-tz"
+import { fromZonedTime, toZonedTime, formatInTimeZone } from "date-fns-tz"
 
 /** Enum type representing a day of week.
  *  The ordering is compatible with the native `Date.prototype.getDay()`, which uses 0 for Sunday.
@@ -165,8 +165,8 @@ export class TimeRange {
   constructor(start: any, end: any) {
     if (typeof start == 'string') start = new Date(start);
     if (typeof end == 'string') end = new Date(end);
-    if (start > end) {
-      throw new RangeError('Illegal time interval, start > end');
+    if (start >= end) {
+      throw new RangeError('Illegal time interval, start >= end');
     }
     this.start = start;
     this.end = end;
@@ -212,7 +212,9 @@ export class IntervalSet extends Array<TimeRange> {
   private initializeWithSlots(timeMin: Date, timeMax: Date, slots: Slots, timeZone: string = 'Europe/Berlin') {
     let t = timeMin;
     while (t < timeMax) {
-      let day = t.getDay();
+      // We need the day of week in the target timezone
+      let zonedT = toZonedTime(t, timeZone);
+      let day = zonedT.getUTCDay();
 
       let s: Slot[] = slots[day];
       if (s) {
@@ -227,17 +229,16 @@ export class IntervalSet extends Array<TimeRange> {
   }
 
   private createDateFromSlot(baseDate: Date, time: string, timeZone: string): Date {
-    const [hours, minutes] = time.split(':').map(Number);
-    let date = new Date(baseDate);
-    date.setHours(hours, minutes, 0, 0);
-    return fromZonedTime(date, timeZone);
+    const dateStr = formatInTimeZone(baseDate, timeZone, 'yyyy-MM-dd');
+    const dateTimeStr = `${dateStr}T${time}:00`;
+    return fromZonedTime(dateTimeStr, timeZone);
   }
 
   private initializeWithDates(start: any, end: any) {
     start = this.convertToDate(start);
     end = this.convertToDate(end);
-    if (start > end) {
-      throw new RangeError('Illegal time interval, start > end');
+    if (start >= end) {
+      throw new RangeError('Illegal time interval, start >= end');
     }
     if (start < end) {
       this.push({ start, end });

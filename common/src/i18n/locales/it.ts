@@ -1,6 +1,8 @@
 import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const it = {
+    "Notice": "Notice",
+    "No slots available for the selected period.": "Nessuno slot disponibile per il periodo selezionato.",
     "welcome_back": "Bentornato",
     "login_subtitle": "Per favore accedi per continuare.",
     "login_tos_prefix": "Effettuando l'accesso accetti i nostri",

@@ -65,7 +65,7 @@ export const generateAuthUrl = (req: Request, res: Response): Response => {
 
   res.cookie('google_auth_state', nonce, {
     httpOnly: true,
-    secure: true, // check if this needs to be conditionally false for local dev? assuming yes for now based on other settings
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 10 // 10 minutes
   });
 
@@ -317,6 +317,9 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
     .exec()
     .then((user: UserDocument) => {
       const google_tokens = user.google_tokens;
+      if (!google_tokens || !google_tokens.access_token) {
+        throw new Error("No Google tokens found for user");
+      }
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
       return oAuth2Client;
@@ -338,8 +341,18 @@ export function getCalendarList(req: Request, res: Response): void {
           res.json(list);
         })
         .catch(error => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          res.status(400).json({ error });
+          logger.error("getCalendarList failed: %o", error);
+          const isAuthError =
+            error.code === 401 ||
+            error.code === 403 ||
+            error.message === 'invalid_grant' ||
+            error.response?.data?.error === 'invalid_grant';
+
+          if (isAuthError) {
+            res.status(401).json({ error: "Google authentication required", message: "Please connect your Google Calendar" });
+          } else {
+            res.status(500).json({ error });
+          }
         })
     })
     .catch(error => {
