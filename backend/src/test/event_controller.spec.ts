@@ -411,8 +411,8 @@ describe("Event Controller", () => {
 
             expect(res.status).toBe(200);
             expect(res.body).toHaveLength(1);
-            expect(new Date(res.body[0].start).toISOString()).toContain("T10:00:00");
-            expect(new Date(res.body[0].end).toISOString()).toContain("T10:30:00");
+            expect(new Date(res.body[0].start).toISOString()).toContain("T09:00:00");
+            expect(new Date(res.body[0].end).toISOString()).toContain("T09:30:00");
         });
 
         it("should return 400 if event not found", async () => {

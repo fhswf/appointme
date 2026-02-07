@@ -155,8 +155,8 @@ describe("Slots Feature Verification", () => {
             expect(typeof slots[0]).toBe("string");
             expect(res.body).toEqual(
                 expect.arrayContaining([
-                    expect.stringContaining("2025-12-01T10:00:00.000Z"),
-                    expect.stringContaining("2025-12-01T10:30:00.000Z")
+                    expect.stringContaining("2025-12-01T09:00:00.000Z"),
+                    expect.stringContaining("2025-12-01T09:30:00.000Z")
                 ])
             );
             expect(slots.length).toBe(2);

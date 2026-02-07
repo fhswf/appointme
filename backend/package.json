@@ -9,8 +9,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "vitest run src/**/*.spec.ts --coverage --reporter=verbose",
-    "ci": "pnpm run build && vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
+    "test": "TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage --reporter=verbose",
+    "ci": "pnpm run build && TZ=Europe/Berlin vitest run src/**/*.spec.ts --coverage; node ../utility/patch-junit-xml.js TEST-backend.xml; pnpm dlx junit-to-ctrf -o ../ctrf/backend-ctrf.json TEST-backend.xml; node ../utility/patch-ctrf.js ../ctrf/backend-ctrf.json",
     "migrate": "node --import tsx src/scripts/run-migrations.ts",
     "migrate:prod": "node build/scripts/run-migrations.js",
     "start": "node --import ./build/config/instrument.js build/server.js",
