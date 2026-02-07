@@ -1,3 +1,18 @@
+## client [1.38.1-rc.1](https://github.com/fhswf/appointme/compare/client@1.38.0...client@1.38.1-rc.1) (2026-02-07)
+
+
+### Bug Fixes
+
+* calculation of free slots in edge cases ([4c36f6f](https://github.com/fhswf/appointme/commit/4c36f6fa577ca7b306efc54d29e388f4a7362c74))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.2-rc.1
+
 # client [1.38.0](https://github.com/fhswf/appointme/compare/client@1.37.2...client@1.38.0) (2026-01-29)
 
 
