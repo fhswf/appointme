@@ -200,6 +200,7 @@ describe('Booking Page Reproduction', () => {
 
             // However, ensuring the CLASS is present is a good start.
             expect(btn).toHaveClass('aria-disabled:font-normal');
+            expect(btn).toHaveClass('disabled:font-normal');
             // And we can also add 'disabled:font-normal' to the expectations if we add it to code.
         }
     });
