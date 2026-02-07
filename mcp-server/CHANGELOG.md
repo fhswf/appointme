@@ -1,3 +1,13 @@
+## mcp-server [1.2.1-rc.1](https://github.com/fhswf/appointme/compare/mcp-server@1.2.0...mcp-server@1.2.1-rc.1) (2026-02-07)
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.2-rc.1
+
 # mcp-server [1.2.0](https://github.com/fhswf/appointme/compare/mcp-server@1.1.3...mcp-server@1.2.0) (2026-01-29)
 
 
