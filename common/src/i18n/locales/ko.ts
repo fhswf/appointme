@@ -1,6 +1,8 @@
 import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const ko = {
+    "Notice": "Notice",
+    "No slots available for the selected period.": "No slots available for the selected period.",
     "welcome_back": "다시 오신 것을 환영합니다",
     "login_subtitle": "계속하려면 로그인하십시오.",
     "login_tos_prefix": "로그인하면 다음 사항에 동의하게 됩니다",

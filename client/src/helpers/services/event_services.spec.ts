@@ -149,7 +149,7 @@ describe('Event Services', () => {
                     params: { timeMin, timeMax },
                 }
             );
-            expect(result).toBeInstanceOf(IntervalSet);
+            expect(result.slots).toBeInstanceOf(IntervalSet);
         });
     });
 

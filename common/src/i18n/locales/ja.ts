@@ -1,6 +1,8 @@
 import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const ja = {
+    "Notice": "Notice",
+    "No slots available for the selected period.": "No slots available for the selected period.",
     "welcome_back": "お帰りなさい",
     "login_subtitle": "続行するにはサインインしてください。",
     "login_tos_prefix": "ログインすることで、あなたは当社の",

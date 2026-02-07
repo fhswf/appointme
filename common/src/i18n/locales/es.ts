@@ -1,6 +1,8 @@
 import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const es = {
+    "Notice": "Notice",
+    "No slots available for the selected period.": "No slots available for the selected period.",
     "welcome_back": "Bienvenido de nuevo",
     "login_subtitle": "Por favor inicie sesión para continuar.",
     "login_tos_prefix": "Al iniciar sesión acepta nuestros",
