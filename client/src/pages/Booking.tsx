@@ -113,7 +113,7 @@ const Booking = () => {
 
           // Simple loop to find first day with availability
           while (iterator < end) {
-            if (hasAvailableSlots(iterator, slots)) {
+            if (hasAvailableSlots(iterator, res.slots)) {
               const newDate = new Date(iterator);
               setSelectedDate(newDate);
               setCurrentMonth(newDate);
@@ -425,6 +425,10 @@ const Booking = () => {
                       month={currentMonth}
                       onMonthChange={setCurrentMonth}
                       disabled={(date) => !checkDay(date)}
+                      classNames={{
+                        day: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50",
+                        day_button: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50",
+                      }}
                       className="rounded-md border"
                     />
                   </div>
