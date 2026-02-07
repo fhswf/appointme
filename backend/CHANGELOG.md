@@ -1,3 +1,23 @@
+# backend [1.43.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0-rc.1) (2026-02-07)
+
+
+### Bug Fixes
+
+* calculation of free slots in edge cases ([4c36f6f](https://github.com/fhswf/appointme/commit/4c36f6fa577ca7b306efc54d29e388f4a7362c74))
+
+
+### Features
+
+* mount secrets as file ([5e32c4f](https://github.com/fhswf/appointme/commit/5e32c4fd6002520c9bfbc58f5a9f2b130eedd4dc))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.2-rc.1
+
 # backend [1.42.0](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0) (2026-01-29)
 
 
