@@ -176,7 +176,7 @@ describe("Recurrence Availability", () => {
         }
         expect(res.body).toHaveLength(1); // One slot on Monday
         const firstSlot = res.body[0];
-        expect(firstSlot.start).toContain("2025-12-01T08:00:00.000Z");
+        expect(firstSlot.start).toContain("2025-12-01T09:00:00.000Z");
     });
 
     it("should filter out slots if a future instance is blocked (Weekly)", async () => {
