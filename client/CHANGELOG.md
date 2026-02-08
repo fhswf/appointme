@@ -1,3 +1,11 @@
+## client [1.38.1-rc.3](https://github.com/fhswf/appointme/compare/client@1.38.1-rc.2...client@1.38.1-rc.3) (2026-02-08)
+
+
+### Bug Fixes
+
+* improve highlighting of free slots ([a668551](https://github.com/fhswf/appointme/commit/a668551ee22e5a0e5ba36715183e2555153f0fbd))
+* improve highlighting of free slots ([1517144](https://github.com/fhswf/appointme/commit/1517144190c396e8bdc010ea8a8d4007bc3e5f6a))
+
 ## client [1.38.1-rc.2](https://github.com/fhswf/appointme/compare/client@1.38.1-rc.1...client@1.38.1-rc.2) (2026-02-07)
 
 
