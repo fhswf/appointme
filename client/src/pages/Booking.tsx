@@ -426,8 +426,8 @@ const Booking = () => {
                       onMonthChange={setCurrentMonth}
                       disabled={(date) => !checkDay(date)}
                       classNames={{
-                        day: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50",
-                        day_button: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50",
+                        day: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50 disabled:font-normal",
+                        day_button: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50 disabled:font-normal",
                       }}
                       className="rounded-md border"
                     />
