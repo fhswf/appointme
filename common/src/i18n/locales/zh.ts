@@ -1,6 +1,8 @@
 import { COPYRIGHT_ENGLISH } from "../constants.js";
 
 export const zh = {
+    "Notice": "Notice",
+    "No slots available for the selected period.": "No slots available for the selected period.",
     "welcome_back": "欢迎回来",
     "login_subtitle": "请登录以继续。",
     "login_tos_prefix": "登录即表示您同意我们的",

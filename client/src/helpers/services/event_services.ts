@@ -85,7 +85,15 @@ export function getAvailableTimes(timeMin: Date, timeMax: Date, eventId: string)
       },
     }
   )
-    .then((response) => new IntervalSet(response.data))
+    .then((response) => {
+      if (Array.isArray(response.data)) {
+        return { slots: new IntervalSet(response.data) };
+      }
+      return {
+        slots: new IntervalSet(response.data.slots || []),
+        message: response.data.message as string
+      };
+    })
 }
 
 export async function getUsersEvents() {

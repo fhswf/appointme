@@ -5,4 +5,4 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/mcp-server
-    newTag: 1.2.0-rc.1
+    newTag: 1.2.1-rc.1

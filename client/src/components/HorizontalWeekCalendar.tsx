@@ -92,10 +92,10 @@ const HorizontalWeekCalendar: React.FC<HorizontalWeekCalendarProps> = ({
                             disabled={isDisabled}
                             className={cn(
                                 "flex flex-col items-center justify-center h-[72px] rounded-xl transition-all border w-full",
-                                isSelected
-                                    ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 transform scale-105 border-primary z-10"
-                                    : "bg-card text-card-foreground border-border hover:border-primary",
-                                isDisabled && "opacity-50 cursor-not-allowed border-transparent bg-transparent"
+                                isSelected && "bg-primary text-primary-foreground shadow-lg shadow-primary/30 transform scale-105 border-primary z-10",
+                                !isSelected && isAvailable && "bg-accent/10 border-accent/20 font-semibold",
+                                !isSelected && !isAvailable && "bg-card text-card-foreground border-border hover:border-primary",
+                                isDisabled && "opacity-50 cursor-not-allowed border-transparent bg-transparent font-normal"
                             )}
                         >
                             <span className={cn(

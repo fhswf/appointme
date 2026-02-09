@@ -39,138 +39,18 @@ spec:
                   name: appointme
       containers:
         - env:
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: JWT_SECRET
-                  name: appointme-secret
-            - name: CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  key: CLIENT_ID
-                  name: appointme-secret                 
-            - name: CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: CLIENT_SECRET
-                  name: appointme-secret
-            - name: API_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: API_URL
-                  name: appointme
-            - name: BASE_PATH
-              valueFrom:
-                configMapKeyRef:
-                  key: BASE_PATH
-                  name: appointme
-            - name: BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: BASE_URL
-                  name: appointme
-            - name: MONGO_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: MONGO_URI
-                  name: appointme
-            - name: TZ
-              valueFrom:
-                configMapKeyRef:
-                  key: TZ
-                  name: appointme
+
+
             - name: NODE_ENV
               value: production
-            - name: DISABLE_GOOGLE_LOGIN
-              valueFrom:
-                configMapKeyRef:
-                  key: DISABLE_GOOGLE_LOGIN
-                  name: appointme
-            - name: OIDC_ISSUER
-              valueFrom:
-                configMapKeyRef:
-                  key: OIDC_ISSUER
-                  name: appointme
-            - name: OIDC_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  key: OIDC_CLIENT_ID
-                  name: appointme
-            - name: OIDC_ICON
-              valueFrom:
-                configMapKeyRef:
-                  key: OIDC_ICON
-                  name: appointme
-            - name: OIDC_NAME
-              valueFrom:
-                configMapKeyRef:
-                  key: OIDC_NAME
-                  name: appointme                  
-            - name: OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: OIDC_CLIENT_SECRET
-                  name: appointme-secret
-            - name: ENCRYPTION_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: ENCRYPTION_KEY
-                  name: appointme-secret
-            - name: CONTACT_INFO
-              valueFrom:
-                configMapKeyRef:
-                  key: CONTACT_INFO
-                  name: appointme
-            - name: ADMIN_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: ADMIN_API_KEY
-                  name: appointme-secret
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  key: SENTRY_DSN
-                  name: appointme-secret
-            - name: LTI_CLIENT_ID
-              valueFrom:
-                configMapKeyRef:
-                  key: LTI_CLIENT_ID
-                  name: appointme
-            - name: LTI_ISSUER
-              valueFrom:
-                configMapKeyRef:
-                  key: LTI_ISSUER
-                  name: appointme
-            - name: LTI_AUTH_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  key: LTI_AUTH_ENDPOINT
-                  name: appointme
-            - name: LTI_TOKEN_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  key: LTI_TOKEN_ENDPOINT
-                  name: appointme
-            - name: LTI_JWKS_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: LTI_JWKS_URI
-                  name: appointme
-            - name: SMTP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_HOST
-                  name: appointme
-            - name: SMTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_PORT
-                  name: appointme
-            - name: SMTP_SECURE
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_SECURE
-                  name: appointme
+
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/config"
+              readOnly: true
+            - name: secrets
+              mountPath: "/etc/secrets"
+              readOnly: true
           image: ghcr.io/fhswf/appointme/backend:latest
           name: appointme
           ports:
@@ -193,4 +73,12 @@ spec:
             periodSeconds: 20
       restartPolicy: Always
       automountServiceAccountToken: false
+      volumes:
+        - name: config
+          configMap:
+            name: appointme
+        - name: secrets
+          secret:
+            secretName: appointme-secret
+            defaultMode: 0400
 status: {}

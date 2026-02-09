@@ -1,6 +1,6 @@
 {
   "name": "common",
-  "version": "1.16.1",
+  "version": "1.16.2-rc.1",
   "description": "Common types for backend and frontend",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "lib/*.map"
   ],
   "devDependencies": {
-    "@types/node": "^25.0.10",
+    "@types/node": "^25.2.0",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "jshint": "^2.12.0",

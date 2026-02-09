@@ -47,8 +47,9 @@ describe('IntervalsSets', () => {
         expect(result[0].end).toEqual(new Date("2020-10-30"));
     });
     test('constructor should create slots with length 0', () => {
-        let result = new IntervalSet(new Date("2020-10-21"), new Date("2020-10-21"));
-        expect(result.length).toEqual(0);
+        expect(() => {
+            new IntervalSet(new Date("2020-10-21"), new Date("2020-10-21"));
+        }).toThrow(RangeError);
     });
     test('constructor should create slots with length 2', () => {
         let result = new IntervalSet([{ start: date1, end: date2 }, { start: date5, end: date6 }]);

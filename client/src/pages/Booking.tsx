@@ -55,6 +55,7 @@ const Booking = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [beginDate] = useState<Date>(new Date());
   const [slots, setSlots] = useState<IntervalSet>();
+  const [slotMessage, setSlotMessage] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<Date>();
   const [details, setDetails] = useState<Details>();
   const [, startTransition] = useTransition();
@@ -100,8 +101,9 @@ const Booking = () => {
       addDays(addMonths(startDate, 6), 1),
       (event as any)._id
     )
-      .then((slots) => {
-        setSlots(slots);
+      .then((res) => {
+        setSlots(res.slots);
+        setSlotMessage(res.message);
 
         // Auto-select first available date
         if (event.available && !selectedDate) {
@@ -111,7 +113,7 @@ const Booking = () => {
 
           // Simple loop to find first day with availability
           while (iterator < end) {
-            if (hasAvailableSlots(iterator, slots)) {
+            if (hasAvailableSlots(iterator, res.slots)) {
               const newDate = new Date(iterator);
               setSelectedDate(newDate);
               setCurrentMonth(newDate);
@@ -408,6 +410,12 @@ const Booking = () => {
             {stepper.switch({
               schedule: () => (
                 <div className="flex flex-col md:grid md:grid-cols-2 gap-8">
+                  {slotMessage && (
+                    <div className="md:col-span-2 bg-yellow-100 border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                      <strong className="font-bold">{t("Notice")}: </strong>
+                      <span className="block sm:inline">{t(slotMessage)}</span>
+                    </div>
+                  )}
                   {/* Desktop Calendar */}
                   <div className="hidden md:block">
                     <Calendar
@@ -417,6 +425,10 @@ const Booking = () => {
                       month={currentMonth}
                       onMonthChange={setCurrentMonth}
                       disabled={(date) => !checkDay(date)}
+                      classNames={{
+                        day: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50 disabled:font-normal",
+                        day_button: "h-9 w-9 p-0 font-bold aria-selected:opacity-100 aria-disabled:font-normal aria-disabled:opacity-50 disabled:font-normal",
+                      }}
                       className="rounded-md border"
                     />
                   </div>
