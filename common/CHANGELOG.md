@@ -1,3 +1,10 @@
+## common [1.16.2](https://github.com/fhswf/appointme/compare/common@1.16.1...common@1.16.2) (2026-02-09)
+
+
+### Bug Fixes
+
+* calculation of free slots in edge cases ([4c36f6f](https://github.com/fhswf/appointme/commit/4c36f6fa577ca7b306efc54d29e388f4a7362c74))
+
 ## common [1.16.2-rc.1](https://github.com/fhswf/appointme/compare/common@1.16.1...common@1.16.2-rc.1) (2026-02-07)
 
 
