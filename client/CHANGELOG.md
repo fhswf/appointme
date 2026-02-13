@@ -1,3 +1,18 @@
+## client [1.38.2-rc.1](https://github.com/fhswf/appointme/compare/client@1.38.1...client@1.38.2-rc.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* improve icon rendering ([1d247ff](https://github.com/fhswf/appointme/commit/1d247ffe6f9dfc9756e5a15220609c8dd168c8ff))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.1
+
 ## client [1.38.1](https://github.com/fhswf/appointme/compare/client@1.38.0...client@1.38.1) (2026-02-09)
 
 
