@@ -1,3 +1,10 @@
+## common [1.16.3-rc.1](https://github.com/fhswf/appointme/compare/common@1.16.2...common@1.16.3-rc.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* availibilty calculation ([42d80d4](https://github.com/fhswf/appointme/commit/42d80d4c76dad6d9cfcd99005c3ac109323da767))
+
 ## common [1.16.2](https://github.com/fhswf/appointme/compare/common@1.16.1...common@1.16.2) (2026-02-09)
 
 
