@@ -407,13 +407,39 @@ export class IntervalSet extends Array<TimeRange> {
 
   /**
    * Calculate the inverse of an `IntervalSet`
+   * @param start Optional start of the interval to inverse
+   * @param end Optional end of the interval to inverse
    * @returns `IntervalSet`
    */
-  inverse(): IntervalSet {
+  inverse(start?: Date | string, end?: Date | string): IntervalSet {
     let result = new IntervalSet()
+
+    // Normalize start/end to Date objects if provided
+    const startDate = start ? (typeof start === 'string' ? new Date(start) : start) : undefined;
+    const endDate = end ? (typeof end === 'string' ? new Date(end) : end) : undefined;
+
+    // Handle initial gap if start bound is provided
+    if (startDate) {
+      if (this.length > 0) {
+        if (startDate < this[0].start) {
+          result.push({ start: startDate, end: this[0].start });
+        }
+      } else if (endDate) {
+        // If set is empty and we have both bounds, the whole range is free
+        result.push({ start: startDate, end: endDate });
+        return result;
+      }
+    }
 
     for (let i = 1; i < this.length; i++) {
       result.push({ start: this[i - 1].end, end: this[i].start })
+    }
+
+    // Handle final gap if end bound is provided
+    if (endDate && this.length > 0) {
+      if (this[this.length - 1].end < endDate) {
+        result.push({ start: this[this.length - 1].end, end: endDate });
+      }
     }
 
     return result;

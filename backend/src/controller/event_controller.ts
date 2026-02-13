@@ -159,7 +159,8 @@ export function calculateFreeSlots(response, calDavSlots, event, timeMin, timeMa
   }
 
 
-  freeSlots = freeSlots.intersect(blocked.inverse());
+
+  freeSlots = freeSlots.intersect(blocked.inverse(timeMin, timeMax));
 
   for (const key in response.data.calendars) {
     const busy = response.data.calendars[key].busy;
