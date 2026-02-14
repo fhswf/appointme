@@ -1,3 +1,18 @@
+## backend [1.43.1-rc.3](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.2...backend@1.43.1-rc.3) (2026-02-14)
+
+
+### Bug Fixes
+
+* Introduce tests for phantom availability reproduction and regression, and update scheduler tests and common types. ([9be177b](https://github.com/fhswf/appointme/commit/9be177bf6a073667fd1193759fa58a0dd55dd519))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.2
+
 ## backend [1.43.1-rc.2](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.1...backend@1.43.1-rc.2) (2026-02-14)
 
 
