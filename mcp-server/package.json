@@ -16,7 +16,7 @@
     "@modelcontextprotocol/sdk": "^1.25.3",
     "@sentry/node": "10.36.0",
     "@sentry/profiling-node": "10.36.0",
-    "axios": "^1.13.3",
+    "axios": "^1.13.5",
     "common": "file:../common",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
