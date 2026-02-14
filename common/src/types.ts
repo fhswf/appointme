@@ -231,9 +231,17 @@ export class IntervalSet extends Array<TimeRange> {
   }
 
   private createDateFromSlot(baseDate: Date, time: string, timeZone: string): Date {
+    const parts = time.split(':');
+    const hour = parts[0].padStart(2, '0');
+    const minute = parts[1] ? parts[1].padStart(2, '0') : '00';
     const dateStr = formatInTimeZone(baseDate, timeZone, 'yyyy-MM-dd');
-    const dateTimeStr = `${dateStr}T${time}:00`;
-    return fromZonedTime(dateTimeStr, timeZone);
+    const dateTimeStr = `${dateStr}T${hour}:${minute}:00`;
+    // console.log(`createDateFromSlot: time=${time} -> dateTimeStr=${dateTimeStr}`);
+    const d = fromZonedTime(dateTimeStr, timeZone);
+    if (isNaN(d.getTime())) {
+      throw new Error(`Invalid Date generated from time='${time}', dateTimeStr='${dateTimeStr}', timeZone='${timeZone}'`);
+    }
+    return d;
   }
 
   private initializeWithDates(start: any, end: any) {
