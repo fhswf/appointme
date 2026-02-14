@@ -117,7 +117,7 @@ describe('Full Persistence Reproduction', () => {
 
         const timeZone = "Europe/Berlin";
         const timeMin = new Date("2026-02-18T12:00:00Z");
-        const timeMax = new Date("2026-02-19T12:00:00Z");
+        const timeMax = new Date("2026-02-19T23:00:00Z");
 
         // Simulate Default Availability: All Day (00:00 - 24:00) for Wed and Thu.
         const defaultSlots = {
@@ -148,10 +148,15 @@ describe('Full Persistence Reproduction', () => {
         // Busy 2 starts 07:00 UTC. BufferBefore 5 -> Free ends 06:55.
         // Since Availability covers this whole night, the gap 20:05 - 06:55 remains.
 
-        const phantom = finalSlots.find(s => s.start.toISOString() === "2026-02-18T20:05:00.000Z");
+        const phantomPart1 = finalSlots.find(s => s.start.toISOString() === "2026-02-18T20:05:00.000Z");
+        expect(phantomPart1).toBeDefined();
+        // It ends at midnight because IntervalSet intervals were generated per day
+        expect(phantomPart1?.end.toISOString()).toBe("2026-02-18T23:00:00.000Z");
 
-        expect(phantom).toBeDefined();
-        expect(phantom?.end.toISOString()).toBe("2026-02-19T06:55:00.000Z");
+        // The second part continues immediately
+        const phantomPart2 = finalSlots.find(s => s.start.toISOString() === "2026-02-18T23:00:00.000Z");
+        expect(phantomPart2).toBeDefined();
+        expect(phantomPart2?.end.toISOString()).toBe("2026-02-19T06:55:00.000Z");
 
         // If Default Mode is the cause, this assertion should PASS (phantom is defined).
         // If it fails, then Default Mode logic in my test is wrong or Default Mode doesn't cause it.
