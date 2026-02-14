@@ -292,5 +292,93 @@ describe('scheduler utility', () => {
             expect(result[0].start).toEqual(timeMin);
             expect(result[0].end).toEqual(timeMax);
         });
+
+        it('REGRESSION: should correctly handle asymmetric buffers (night gap scenario)', () => {
+            // Scenario: Evening appointment ends at 20:00. Morning appointment starts at 08:00.
+            // Config: bufferBefore = 30m (need prep for morning), bufferAfter = 0m (no cleanup for evening).
+            const timeMin = new Date('2026-02-18T18:00:00Z');
+            const timeMax = new Date('2026-02-19T10:00:00Z');
+
+            const busySlots = [
+                { start: new Date('2026-02-18T19:00:00Z'), end: new Date('2026-02-18T20:00:00Z') }, // Evening event
+                { start: new Date('2026-02-19T08:00:00Z'), end: new Date('2026-02-19T09:00:00Z') }  // Morning event
+            ];
+
+            const bufferBefore = 30;
+            const bufferAfter = 0;
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter);
+
+            // Expectation with CORRECT logic:
+            // 1. Free Interval after Evening Event:
+            //    Starts at Evening End + bufferAfter (20:00 + 0) = 20:00.
+            //    Ends at Morning Start - bufferBefore (08:00 - 30) = 07:30.
+            //
+            // (If buggy, it would have started at 20:30 and ended at 08:00)
+
+            expect(result.length).toBe(3);
+            // 1. Start -> Evening Start (18:00 -> 18:30 due to bufferBefore of Evening Event? No, bufferBefore of Evening applied to start)
+            // Wait, logic:
+            // First loop (Evening):
+            // _start = BusyStart (19:00) - bufferBefore (30) = 18:30.
+            // Free 1: timeMin (18:00) -> 18:30.
+
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2026-02-18T18:30:00Z'));
+
+            // NextAvailable = BusyEnd (20:00) + bufferAfter (0) = 20:00.
+            // Current = 20:00.
+
+            // Second loop (Morning):
+            // _start = BusyStart (08:00) - bufferBefore (30) = 07:30.
+            // Free 2: 20:00 -> 07:30.
+
+            expect(result[1].start).toEqual(new Date('2026-02-18T20:00:00Z'));
+            expect(result[1].end).toEqual(new Date('2026-02-19T07:30:00Z'));
+
+            // NextAvailable = BusyEnd (09:00) + bufferAfter (0) = 09:00.
+            // Current = 09:00.
+            // Free 3: 09:00 -> timeMax (10:00).
+
+            expect(result[2].start).toEqual(new Date('2026-02-19T09:00:00Z'));
+            expect(result[2].end).toEqual(timeMax);
+        });
+
+        it('should handle symmetric 5m buffers (User Scenario)', () => {
+            // Scenario: Evening appointment ends at 20:00. Morning appointment starts at 08:00.
+            // Config: bufferBefore = 5m, bufferAfter = 5m.
+            const timeMin = new Date('2026-02-18T18:00:00Z');
+            const timeMax = new Date('2026-02-19T10:00:00Z');
+
+            const busySlots = [
+                { start: new Date('2026-02-18T19:00:00Z'), end: new Date('2026-02-18T20:00:00Z') }, // Evening event
+                { start: new Date('2026-02-19T08:00:00Z'), end: new Date('2026-02-19T09:00:00Z') }  // Morning event
+            ];
+
+            const bufferBefore = 5;
+            const bufferAfter = 5;
+
+            const result = convertBusyToFree(busySlots, timeMin, timeMax, bufferBefore, bufferAfter);
+
+            // Expectation:
+            // Evening End (20:00) + bufferAfter (5) = 20:05.
+            // Morning Start (08:00) - bufferBefore (5) = 07:55.
+
+            // Note: Since bufferBefore == bufferAfter, the swap bug would have produced the SAME result here.
+
+            expect(result.length).toBe(3);
+
+            // 1. Start -> Evening Start - bufferBefore (5) = 18:55
+            expect(result[0].start).toEqual(timeMin);
+            expect(result[0].end).toEqual(new Date('2026-02-18T18:55:00Z'));
+
+            // 2. Evening End + bufferAfter (5) -> Morning Start - bufferBefore (5)
+            expect(result[1].start).toEqual(new Date('2026-02-18T20:05:00Z'));
+            expect(result[1].end).toEqual(new Date('2026-02-19T07:55:00Z'));
+
+            // 3. Morning End + bufferAfter (5) -> End
+            expect(result[2].start).toEqual(new Date('2026-02-19T09:05:00Z'));
+            expect(result[2].end).toEqual(timeMax);
+        });
     });
 });
