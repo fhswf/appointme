@@ -150,6 +150,9 @@ describe('Full Persistence Reproduction', () => {
 
         const phantom = finalSlots.find(s => s.start.toISOString() === "2026-02-18T20:05:00.000Z");
 
+        expect(phantom).toBeDefined();
+        expect(phantom?.end.toISOString()).toBe("2026-02-19T06:55:00.000Z");
+
         // If Default Mode is the cause, this assertion should PASS (phantom is defined).
         // If it fails, then Default Mode logic in my test is wrong or Default Mode doesn't cause it.
         // But logic says it should.

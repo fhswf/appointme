@@ -79,39 +79,67 @@ describe("IntervalSet Validation", () => {
             const lateStart = new Date('2024-01-01T13:00:00Z');
             const lateEnd = new Date('2024-01-01T14:00:00Z');
 
-            // This behavior depends on implementation interpretation. 
-            // Current impl: 
-            // 1. Checks strict start < first.start (midStart). 13:00 < 10:30 is FALSE. No head.
-            // 2. Loop for internal gaps. None.
-            // 3. Checks last.end (midEnd) < strict end (lateEnd). 11:30 < 14:00 is TRUE. Tail gap: 11:30 - 14:00.
-
-            // Wait, if I ask for inverse in [13:00, 14:00] but set has [10:30, 11:30].
-            // The set is "busy" at 10:30-11:30.
-            // "Free" in 13:00-14:00 should be the whole 13:00-14:00.
-            // But current logic might return [11:30, 14:00].
-
-            // The logic is:
-            // if (startDate) if (startDate < this[0].start) push(startDate, this[0].start)
-            // ... internal gaps ...
-            // if (endDate) if (this[last].end < endDate) push(this[last].end, endDate)
-
-            // So for [10:30, 11:30] and bounds [13:00, 14:00]:
-            // 1. 13:00 < 10:30 -> False.
-            // 2. No internal.
-            // 3. 11:30 < 14:00 -> True. Push [11:30, 14:00].
-
-            // This result [11:30, 14:00] covers the requested [13:00, 14:00] but includes extra time.
-            // This is technically "correct" in that [11:30, 14:00] IS free.
-            // But usually one expects the result to be clipped to the requested bounds?
-            // The method doc says "Calculate the inverse". It doesn't explicitly say "Intersected with bounds".
-            // However, usually inverse(bounds) implies "Complement relative to bounds".
-
-            // Given the usage in event_controller: freeSlots.intersect(blocked.inverse(timeMin, timeMax))
-            // intersection will clip it anyway. So this permissive behavior is fine and maybe even desired (less clipping ops).
-
             const inverted = set.inverse(lateStart, lateEnd);
             expect(inverted.length).toBeGreaterThan(0);
             expect(inverted[inverted.length - 1].end).toEqual(lateEnd);
+        });
+    });
+
+    describe("initializeWithSlots (via constructor)", () => {
+        const timeZone = "Europe/Berlin";
+        const timeMin = new Date("2026-02-18T12:00:00Z"); // Wed
+        const timeMax = new Date("2026-02-19T23:00:00Z"); // Thu 23:00 UTC (Next Day)
+
+        it("should handle single digit hours (e.g. '8:00')", () => {
+            const slots = {
+                [4]: [{ start: "8:00", end: "09:00" }] // Thu
+            };
+            // initializeWithSlots logic: loop days.
+            // Wed (3) -> No slots.
+            // Thu (4) -> Slots.
+            const set = new IntervalSet(timeMin, timeMax, slots as any, timeZone);
+            expect(set.length).toBe(1);
+            // 8:00 Berlin -> 07:00 UTC
+            expect(set[0].start.toISOString()).toBe("2026-02-19T07:00:00.000Z");
+        });
+
+        it("should handle time without minutes (e.g. '8')", () => {
+            const slots = {
+                [4]: [{ start: "8", end: "9" }]
+            };
+            const set = new IntervalSet(timeMin, timeMax, slots as any, timeZone);
+            expect(set.length).toBe(1);
+            expect(set[0].start.toISOString()).toBe("2026-02-19T07:00:00.000Z");
+        });
+
+        it("should handle '24:00' as next day 00:00", () => {
+            const slots = {
+                [3]: [{ start: "23:00", end: "24:00" }] // Wed
+            };
+            const set = new IntervalSet(timeMin, timeMax, slots as any, timeZone);
+            expect(set.length).toBe(1);
+            // 23:00 Berlin -> 22:00 UTC
+            expect(set[0].start.toISOString()).toBe("2026-02-18T22:00:00.000Z");
+            // 24:00 Berlin -> 00:00 Thu Berlin -> 23:00 Wed UTC
+            expect(set[0].end.toISOString()).toBe("2026-02-18T23:00:00.000Z");
+        });
+
+        it("should throw error for invalid time strings", () => {
+            const slots = {
+                [4]: [{ start: "invalid", end: "10:00" }]
+            };
+            expect(() => {
+                new IntervalSet(timeMin, timeMax, slots as any, timeZone);
+            }).toThrow(/Invalid Date generated/);
+        });
+
+        it("should throw error for impossible times (e.g. '99:99')", () => {
+            const slots = {
+                [4]: [{ start: "99:99", end: "10:00" }]
+            };
+            expect(() => {
+                new IntervalSet(timeMin, timeMax, slots as any, timeZone);
+            }).toThrow(/Invalid Date generated/);
         });
     });
 });

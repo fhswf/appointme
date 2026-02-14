@@ -248,8 +248,8 @@ export class IntervalSet extends Array<TimeRange> {
     const dateTimeStr = `${dateStr}T${hourStr}:${minuteStr}:00`;
 
     const d = fromZonedTime(dateTimeStr, timeZone);
-    if (isNaN(d.getTime())) {
-      throw new Error(`Invalid Date generated from time='${time}', dateTimeStr='${dateTimeStr}', timeZone='${timeZone}'`);
+    if (Number.isNaN(d.getTime())) {
+      throw new TypeError(`Invalid Date generated from time='${time}', dateTimeStr='${dateTimeStr}', timeZone='${timeZone}'`);
     }
     return d;
   }
