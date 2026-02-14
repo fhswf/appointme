@@ -1,3 +1,10 @@
+## backend [1.43.1-rc.2](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.1...backend@1.43.1-rc.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* availibilty calculation ([be34bf4](https://github.com/fhswf/appointme/commit/be34bf4bbab4657ec26fa86077efed84cc49bc79))
+
 ## backend [1.43.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.43.0...backend@1.43.1-rc.1) (2026-02-13)
 
 
