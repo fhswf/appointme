@@ -44,14 +44,9 @@ describe('MCP Server Tools', () => {
         serverTransport = new MockTransport();
         clientTransport.connect(serverTransport);
 
-        // Reset server state if needed (though Server class usually allows reconnects or we might need a fresh instance if supported)
-        // For now, we assume global 'server' instance can be re-connected.
-        // Actually, the server in index.ts is a singleton. We should check if we can re-connect.
-        // If server.connect throws on second call, we might have issues.
-        // But let's try.
-
-        // We need to ignore the promise of server.connect as it might await close
-        server.connect(serverTransport).catch(console.error);
+        // SDK 1.26.0 enforces that connect() cannot be called on an already-connected server.
+        // We must await the connection so errors surface properly.
+        await server.connect(serverTransport);
 
         client = new Client({ name: "test-client", version: "1.0.0" }, { capabilities: {} });
         await client.connect(clientTransport);
@@ -59,7 +54,9 @@ describe('MCP Server Tools', () => {
 
     afterEach(async () => {
         await client.close();
-        // Server close not easily accessible but usually fine in tests
+        // Close the server transport so the next test can reconnect.
+        // SDK 1.26.0+ requires calling close() before connecting a new transport.
+        await server.close();
     });
 
     it('should list event types', async () => {
