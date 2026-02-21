@@ -30,7 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "@sentry/node": "10.36.0",
-    "@sentry/profiling-node": "10.36.0",
+    "@sentry/profiling-node": "10.39.0",
     "body-parser": "^2.2.2",
     "common": "file:../common",
     "concurrently": "^9.2.1",
