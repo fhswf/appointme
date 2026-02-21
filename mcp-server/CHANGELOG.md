@@ -1,3 +1,10 @@
+## mcp-server [1.2.2-rc.3](https://github.com/fhswf/appointme/compare/mcp-server@1.2.2-rc.2...mcp-server@1.2.2-rc.3) (2026-02-21)
+
+
+### Bug Fixes
+
+* Await server connection and add server disconnection in tests to comply with SDK 1.26.0 requirements. ([2d35376](https://github.com/fhswf/appointme/commit/2d35376bc9149b404e4d0d9acd54472ec44f9cf7))
+
 ## mcp-server [1.2.2-rc.2](https://github.com/fhswf/appointme/compare/mcp-server@1.2.2-rc.1...mcp-server@1.2.2-rc.2) (2026-02-14)
 
 
