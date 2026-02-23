@@ -313,8 +313,8 @@ importers:
         specifier: ^25.8.0
         version: 25.8.0(typescript@5.9.3)
       i18next-browser-languagedetector:
-        specifier: ^8.0.0
-        version: 8.2.0
+        specifier: ^8.2.1
+        version: 8.2.1
       i18next-http-backend:
         specifier: ^3.0.2
         version: 3.0.2
@@ -5952,8 +5952,8 @@ packages:
     resolution: {integrity: sha512-Ty8UblRWFEcfSuIaajM34LdPXIhbs1ajEX/BBPv24J+enSVaEVY63xQ6lTO9VRYS5LAoghIG0IDJ+p+IPzKUQQ==}
     engines: {node: '>=4'}
 
-  i18next-browser-languagedetector@8.2.0:
-    resolution: {integrity: sha512-P+3zEKLnOF0qmiesW383vsLdtQVyKtCNA9cjSoKCppTKPQVfKd2W8hbVo5ZhNJKDqeM7BOcvNoKJOjpHh4Js9g==}
+  i18next-browser-languagedetector@8.2.1:
+    resolution: {integrity: sha512-bZg8+4bdmaOiApD7N7BPT9W8MLZG+nPTOFlLiJiT8uzKXFjhxw4v2ierCXOwB5sFDMtuA5G4kgYZ0AznZxQ/cw==}
 
   i18next-http-backend@3.0.2:
     resolution: {integrity: sha512-PdlvPnvIp4E1sYi46Ik4tBYh/v/NbYfFFgTjkwFl0is8A18s7/bx9aXqsrOax9WUbeNS6mD2oix7Z0yGGf6m5g==}
@@ -5961,6 +5961,7 @@ packages:
   i18next-parser@9.3.0:
     resolution: {integrity: sha512-VaQqk/6nLzTFx1MDiCZFtzZXKKyBV6Dv0cJMFM/hOt4/BWHWRgYafzYfVQRUzotwUwjqeNCprWnutzD/YAGczg==}
     engines: {node: ^18.0.0 || ^20.0.0 || ^22.0.0, npm: '>=6', yarn: '>=1'}
+    deprecated: Project is deprecated, use i18next-cli instead
     hasBin: true
 
   i18next-scanner@4.6.0:
@@ -14654,7 +14655,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       csstype: 3.2.3
 
   dom-serializer@0.2.2:
@@ -16004,9 +16005,9 @@ snapshots:
 
   hyperlinker@1.0.0: {}
 
-  i18next-browser-languagedetector@8.2.0:
+  i18next-browser-languagedetector@8.2.1:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
 
   i18next-http-backend@3.0.2:
     dependencies:
@@ -17872,7 +17873,7 @@ snapshots:
 
   react-overlays@5.2.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       '@popperjs/core': 2.11.8
       '@restart/hooks': 0.4.16(react@19.2.4)
       '@types/warning': 3.0.3
@@ -19110,7 +19111,7 @@ snapshots:
 
   uncontrollable@7.2.1(react@19.2.4):
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       '@types/react': 19.2.14
       invariant: 2.2.4
       react: 19.2.4
