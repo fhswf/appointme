@@ -54,7 +54,7 @@
     "fast-xml-parser": "^5.3.6",
     "jest-ctrf-json-reporter": "^0.0.10",
     "semantic-release": "^25.0.2",
-    "typedoc": "^0.28.16",
+    "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
   "release": {
