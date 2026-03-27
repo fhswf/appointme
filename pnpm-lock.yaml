@@ -135,8 +135,8 @@ importers:
         specifier: ^0.24.0
         version: 0.24.0
       nodemailer:
-        specifier: ^7.0.11
-        version: 7.0.12
+        specifier: ^8.0.4
+        version: 8.0.4
       openid-client:
         specifier: ^6
         version: 6.8.1
@@ -5961,6 +5961,7 @@ packages:
   i18next-parser@9.3.0:
     resolution: {integrity: sha512-VaQqk/6nLzTFx1MDiCZFtzZXKKyBV6Dv0cJMFM/hOt4/BWHWRgYafzYfVQRUzotwUwjqeNCprWnutzD/YAGczg==}
     engines: {node: ^18.0.0 || ^20.0.0 || ^22.0.0, npm: '>=6', yarn: '>=1'}
+    deprecated: Project is deprecated, use i18next-cli instead
     hasBin: true
 
   i18next-scanner@4.6.0:
@@ -7205,8 +7206,8 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
-  nodemailer@7.0.12:
-    resolution: {integrity: sha512-H+rnK5bX2Pi/6ms3sN4/jRQvYSMltV6vqup/0SFOrxYYY/qoNvhXPlYq3e+Pm9RFJRwrMGbMIwi81M4dxpomhA==}
+  nodemailer@8.0.4:
+    resolution: {integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==}
     engines: {node: '>=6.0.0'}
 
   nodemon@3.1.11:
@@ -17324,7 +17325,7 @@ snapshots:
 
   node-releases@2.0.27: {}
 
-  nodemailer@7.0.12: {}
+  nodemailer@8.0.4: {}
 
   nodemon@3.1.11:
     dependencies:
