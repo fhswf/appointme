@@ -1,61 +1,87 @@
 name: release
 
-# Run the workflow when a Pull Request is opened or when changes are pushed to master
 on:
-  pull_request:
   push:
     branches:
-      - main
       - prod
-    #paths:
-    #  - "common/**"
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
 
 jobs:
-
-  release:
-    # Only release on push to master
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/prod')
+  release-please:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-      issues: write
-      pull-requests: write
-    #needs: [test]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
         with:
-          version: 10
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
 
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm --filter common build
-
-      - name: Generate Documentation
-        run: pnpm doc
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-
-      - name: Release
+      - uses: google-github-actions/release-please-action@v4
         id: release
-        run: pnpm exec multi-semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY_USER: ${{ github.actor }}
-          DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          target-branch: prod
+
+      # ========== BACKEND PIPELINE ==========
+      - name: Docker Login
+        if: ${{ steps.release.outputs.backend--release_created || steps.release.outputs.client--release_created || steps.release.outputs.mcp-server--release_created }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Backend Docker Image
+        if: ${{ steps.release.outputs.backend--release_created }}
+        run: |
+          docker build -t ghcr.io/fhswf/appointme/backend:${{ steps.release.outputs.backend--version }} -f backend/Dockerfile .
+          docker push ghcr.io/fhswf/appointme/backend:${{ steps.release.outputs.backend--version }}
+
+      - name: Update Backend Kustomize
+        if: ${{ steps.release.outputs.backend--release_created }}
+        run: |
+          node utility/update-kustomize.js backend backend ${{ steps.release.outputs.backend--version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(deploy): update backend kustomize to version ${{ steps.release.outputs.backend--version }} [skip ci]" || echo "No changes to commit"
+
+      # ========== CLIENT PIPELINE ==========
+      - name: Build & Push Client Docker Image
+        if: ${{ steps.release.outputs.client--release_created }}
+        run: |
+          docker build -t ghcr.io/fhswf/appointme/frontend:${{ steps.release.outputs.client--version }} -f client/Dockerfile .
+          docker push ghcr.io/fhswf/appointme/frontend:${{ steps.release.outputs.client--version }}
+
+      - name: Update Client Kustomize
+        if: ${{ steps.release.outputs.client--release_created }}
+        run: |
+          node utility/update-kustomize.js client frontend ${{ steps.release.outputs.client--version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(deploy): update client kustomize to version ${{ steps.release.outputs.client--version }} [skip ci]" || echo "No changes to commit"
+
+      # ========== MCP-SERVER PIPELINE ==========
+      - name: Build & Push MCP Docker Image
+        if: ${{ steps.release.outputs.mcp-server--release_created }}
+        run: |
+          docker build -t ghcr.io/fhswf/appointme/mcp-server:${{ steps.release.outputs.mcp-server--version }} -f mcp-server/Dockerfile .
+          docker push ghcr.io/fhswf/appointme/mcp-server:${{ steps.release.outputs.mcp-server--version }}
+
+      - name: Update MCP Kustomize
+        if: ${{ steps.release.outputs.mcp-server--release_created }}
+        run: |
+          node utility/update-kustomize.js mcp-server mcp-server ${{ steps.release.outputs.mcp-server--version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(deploy): update mcp-server kustomize to version ${{ steps.release.outputs.mcp-server--version }} [skip ci]" || echo "No changes to commit"
+
+      # ========== FINALIZE PIPELINE ==========
+      - name: Push Kustomize Updates
+        if: ${{ steps.release.outputs.backend--release_created || steps.release.outputs.client--release_created || steps.release.outputs.mcp-server--release_created }}
+        run: git push origin prod

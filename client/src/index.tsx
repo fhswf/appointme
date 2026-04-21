@@ -16,6 +16,7 @@ import OidcCallback from "./pages/OidcCallback";
 import Legal from "./pages/Legal";
 import About from "./pages/About";
 import Appointments from "./pages/Appointments";
+import Changelog from "./pages/Changelog";
 import { AuthProvider } from "./components/AuthProvider";
 
 import "./i18n";
@@ -73,6 +74,7 @@ const Main = () => {
               <Route path="/booked" element={<Finished />} />
               <Route path="/legal" element={<Legal />} />
               <Route path="/about" element={<About />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/notfound" element={<NotFound />} />
 
               {/* Protected Routes */}
