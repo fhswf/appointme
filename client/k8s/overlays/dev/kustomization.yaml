@@ -5,4 +5,4 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/frontend
-    newTag: sha-33494968
+    newTag: sha-8db4baaf
