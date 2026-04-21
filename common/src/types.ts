@@ -332,9 +332,10 @@ export class IntervalSet extends Array<TimeRange> {
         }
       })
 
-      // filter out empty segments
+      // filter out empty segments and re-sort to maintain the sorted invariant
       // console.log('addRange: before filter: %o', this)
       let filtered = this.filter(x => x.start < x.end)
+      filtered.sort((r1, r2) => r1.start.getTime() - r2.start.getTime())
       // console.log('addRange: after filter: %o', filtered)
       this.splice(0, this.length, ...filtered);
     }
