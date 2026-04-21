@@ -1,0 +1,99 @@
+name: staging
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Compute a short SHA tag once and expose it for all subsequent steps
+      - name: Compute image tag
+        id: tag
+        run: echo "sha=sha-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Backend ─────────────────────────────────────────────────────────────
+      - name: Build & Push Backend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/fhswf/appointme/backend:${{ steps.tag.outputs.sha }}
+            ghcr.io/fhswf/appointme/backend:main
+
+      - name: Update Backend dev overlay
+        run: |
+          node utility/update-kustomize.js backend backend ${{ steps.tag.outputs.sha }}
+        env:
+          GITHUB_REF_NAME: main
+
+      # ── Client ──────────────────────────────────────────────────────────────
+      - name: Build & Push Client Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: client/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/fhswf/appointme/frontend:${{ steps.tag.outputs.sha }}
+            ghcr.io/fhswf/appointme/frontend:main
+
+      - name: Update Client dev overlay
+        run: |
+          node utility/update-kustomize.js client frontend ${{ steps.tag.outputs.sha }}
+        env:
+          GITHUB_REF_NAME: main
+
+      # ── MCP Server ──────────────────────────────────────────────────────────
+      - name: Build & Push MCP Server Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: mcp-server/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/fhswf/appointme/mcp-server:${{ steps.tag.outputs.sha }}
+            ghcr.io/fhswf/appointme/mcp-server:main
+
+      - name: Update MCP Server dev overlay
+        run: |
+          node utility/update-kustomize.js mcp-server mcp-server ${{ steps.tag.outputs.sha }}
+        env:
+          GITHUB_REF_NAME: main
+
+      # ── Commit & push all overlay changes ───────────────────────────────────
+      - name: Commit kustomize updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add \
+            backend/k8s/overlays/dev/kustomization.yaml \
+            client/k8s/overlays/dev/kustomization.yaml \
+            mcp-server/k8s/overlays/dev/kustomization.yaml
+          git diff --cached --quiet || \
+            git commit -m "chore(deploy): update dev overlays to ${{ steps.tag.outputs.sha }} [skip ci]"
+          git push origin main
