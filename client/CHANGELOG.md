@@ -1,3 +1,126 @@
+# Changelog
+
+## [1.91.0](https://github.com/fhswf/appointme/compare/client-v1.90.12...client-v1.91.0) (2026-04-21)
+
+
+### Improvements
+
+* add gender-aware translations ([528e4d5](https://github.com/fhswf/appointme/commit/528e4d5f66929c462cd53f63dc43410f8ce2b2de))
+* argocd refactoring ([409fe96](https://github.com/fhswf/appointme/commit/409fe96b9fa7e1af98cd792f17024c313bc7382f))
+* implement Sentry Axios interceptors for automated HTTP request tracing ([fd39d6a](https://github.com/fhswf/appointme/commit/fd39d6a0089769a90321a8d9b39d4d79f3ad032f))
+* import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
+* remove redundant backend calls in `CalendarSettings` ([527f178](https://github.com/fhswf/appointme/commit/527f17802434261b9f3cd18ebfe0530b54e159fa))
+* separate access token from "transient" lti token ([da9e2e7](https://github.com/fhswf/appointme/commit/da9e2e7a6362ab65fd2c07b6cc12c685fc349d1e))
+* show event attributes in event card ([6a4c3d0](https://github.com/fhswf/appointme/commit/6a4c3d0df6f16a16713a9c31348800bb9dadcd1f))
+* tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
+
+
+### Fixes
+
+* add csrf tokens for the booking endpoint ([83fad2f](https://github.com/fhswf/appointme/commit/83fad2f98e5d4a421d872ebe84ecf5ce14c3d321))
+* authentication handling ([e25b793](https://github.com/fhswf/appointme/commit/e25b7938be4225be4bf3851de036fe3b79da8c4a))
+* authentication handling ([264b701](https://github.com/fhswf/appointme/commit/264b701d3aa38d680879ea214e77f208f05f958b))
+* calculation of free slots in edge cases ([4c36f6f](https://github.com/fhswf/appointme/commit/4c36f6fa577ca7b306efc54d29e388f4a7362c74))
+* call setUser() after user update ([ba71672](https://github.com/fhswf/appointme/commit/ba716724a1880e4a13bfbab561311a6a2e012c6e))
+* check `location.state` before accessing it ([1cea34b](https://github.com/fhswf/appointme/commit/1cea34b49da2f833e5b80c878ad17d534b19277e))
+* check for user in location.state before accessing it ([1e105d2](https://github.com/fhswf/appointme/commit/1e105d26d351cc1aaadb9c045c6e560401a711de))
+* **client:** Increase initialDelaySeconds for readiness probe ([9b8b49a](https://github.com/fhswf/appointme/commit/9b8b49ad6fcf778edd5b9e461c5337f87f3d2e38))
+* disable login button while waiting for response ([26514c9](https://github.com/fhswf/appointme/commit/26514c9c27391ea2a7ef050214b352e36eaf9640))
+* improve highlighting of free slots ([a668551](https://github.com/fhswf/appointme/commit/a668551ee22e5a0e5ba36715183e2555153f0fbd))
+* improve highlighting of free slots ([1517144](https://github.com/fhswf/appointme/commit/1517144190c396e8bdc010ea8a8d4007bc3e5f6a))
+* improve highlighting of free slots ([c50e664](https://github.com/fhswf/appointme/commit/c50e66487da760d8e1b2b3f37cbdb18bfbea32cb))
+* improve icon rendering ([1d247ff](https://github.com/fhswf/appointme/commit/1d247ffe6f9dfc9756e5a15220609c8dd168c8ff))
+* make privacy the main item on the legal page ([0713a35](https://github.com/fhswf/appointme/commit/0713a35f777f6d05696ef0aaf86e98efccefbcf5))
+* prevent double rendering of main page ([bdfc5c6](https://github.com/fhswf/appointme/commit/bdfc5c6e6cbd3be75e18567570385dd91ce87f99))
+* show extended legal information per default ([814bb71](https://github.com/fhswf/appointme/commit/814bb717d6fbc9df6d57393887d28cf490c50d53))
+* update legal information on the landing page ([7854f2d](https://github.com/fhswf/appointme/commit/7854f2dbd2b31c6a0461a41cef5331619f967e90))
+* use state parameter for google login ([7c7d42c](https://github.com/fhswf/appointme/commit/7c7d42c3312dd0cda0b9a05a4f29811901c52d56))
+
+
+### Patches
+
+* add sentry metrics ([e1619a6](https://github.com/fhswf/appointme/commit/e1619a60437442bcbf85e1647e710e234a579513))
+* **deploy:** update dev overlays to sha-33494968 [skip ci] ([9409178](https://github.com/fhswf/appointme/commit/94091788770e4f6424226de65d1ab8d0422216cb))
+* **deploy:** update dev overlays to sha-400cd368 [skip ci] ([4dc9f98](https://github.com/fhswf/appointme/commit/4dc9f981fa9855183264ae1da0d5fae4765561d2))
+* **deploy:** update dev overlays to sha-50a47b1c [skip ci] ([5856937](https://github.com/fhswf/appointme/commit/585693715a23a56d6459685799c97e0f7cc08c1c))
+* **deploy:** update dev overlays to sha-5ec653f3 [skip ci] ([b3e359b](https://github.com/fhswf/appointme/commit/b3e359b9b4219b2cde29fdd33542c5c82473c698))
+* **deploy:** update dev overlays to sha-81a5823b [skip ci] ([f9b19f1](https://github.com/fhswf/appointme/commit/f9b19f1e0aa1dbe7cad2a208baeca757ba0609d3))
+* **deploy:** update dev overlays to sha-8db4baaf [skip ci] ([080ec13](https://github.com/fhswf/appointme/commit/080ec13f375e605b5a9cac1698a17061c2cdd7e6))
+* **deploy:** update dev overlays to sha-90f406a6 [skip ci] ([3dacbb8](https://github.com/fhswf/appointme/commit/3dacbb831cc0f0d8fd045b95879c1e6ff90cb508))
+* **deps-dev:** bump @vitest/coverage-istanbul from 4.0.17 to 4.0.18 ([1ac764f](https://github.com/fhswf/appointme/commit/1ac764f37a4d2575940b096bc409a8ad9409e9ff))
+* **deps-dev:** bump eslint-plugin-react-refresh from 0.4.26 to 0.5.0 ([2478aa2](https://github.com/fhswf/appointme/commit/2478aa2a5eaf4ec37c559578294ecda47fa8efea))
+* **deps-dev:** bump globals from 17.0.0 to 17.1.0 ([385bc1e](https://github.com/fhswf/appointme/commit/385bc1e32be5b0d279b16c73e4c9276a3669c7ba))
+* **deps-dev:** bump globals from 17.1.0 to 17.2.0 ([9db34bc](https://github.com/fhswf/appointme/commit/9db34bcd7504125cebf3e088f0cb65a971355f25))
+* **deps-dev:** bump typescript-eslint from 8.53.1 to 8.54.0 ([6c06ba1](https://github.com/fhswf/appointme/commit/6c06ba17577958893ee2c2568e3564d20bdd96e2))
+* **deps-dev:** bump vite from 7.3.1 to 7.3.2 ([1b25a47](https://github.com/fhswf/appointme/commit/1b25a47039077e1470e20192f81896919704e5d2))
+* **deps-dev:** bump vitest from 4.0.17 to 4.0.18 ([9c9ccb2](https://github.com/fhswf/appointme/commit/9c9ccb27c1feac8fb673b1bef60cdce059ca03a1))
+* **deps:** bump @playwright/test from 1.57.0 to 1.58.0 ([768d326](https://github.com/fhswf/appointme/commit/768d326b143208a6a6506873cbf4982422014b7b))
+* **deps:** bump @playwright/test from 1.58.0 to 1.58.1 ([247abec](https://github.com/fhswf/appointme/commit/247abec73bfd89faa2b411d8fdce76f3399cfc94))
+* **deps:** bump @sentry/browser from 10.35.0 to 10.36.0 ([513ec0a](https://github.com/fhswf/appointme/commit/513ec0ace7eecf71568b33f72fc767ff316e2505))
+* **deps:** bump @sentry/react from 10.35.0 to 10.36.0 ([02570e3](https://github.com/fhswf/appointme/commit/02570e370cff72e36ba7097f56fb9f3ed167f1af))
+* **deps:** bump @sentry/react from 10.36.0 to 10.38.0 ([de42a3d](https://github.com/fhswf/appointme/commit/de42a3d21b204c9ab99136df85bbe8c21520a46b))
+* **deps:** bump axios from 1.13.2 to 1.13.3 ([53bfb7c](https://github.com/fhswf/appointme/commit/53bfb7ca3c55d52ce0de03d8dbde7b8a201eec1e))
+* **deps:** bump axios from 1.13.3 to 1.13.5 ([be174b3](https://github.com/fhswf/appointme/commit/be174b36624ebea6efd150fc9c18d24320b8d1a4))
+* **deps:** bump axios from 1.13.5 to 1.15.0 ([84279d3](https://github.com/fhswf/appointme/commit/84279d3563fa920045014ed8f34e05ac5eafb14e))
+* **deps:** bump i18next-browser-languagedetector from 8.2.0 to 8.2.1 ([93936a8](https://github.com/fhswf/appointme/commit/93936a866291a0bef82eb5c840503b7a774e9922))
+* **deps:** bump lucide-react from 0.562.0 to 0.563.0 ([feb88f5](https://github.com/fhswf/appointme/commit/feb88f5b1a45744f638c55e38dd053200788dc91))
+* **deps:** bump react and @types/react ([4bd7fc6](https://github.com/fhswf/appointme/commit/4bd7fc67d0b494e2414ada4a01c91f600ef2b767))
+* **deps:** bump react-dom from 19.2.3 to 19.2.4 ([175dcca](https://github.com/fhswf/appointme/commit/175dccaa9370daa576be90328594108ce0e788bf))
+* **deps:** bump react-i18next from 16.5.3 to 16.5.4 ([adcd290](https://github.com/fhswf/appointme/commit/adcd290a68a2a399b27187669a22c8593ce0d8df))
+* **deps:** bump react-router-dom from 7.12.0 to 7.13.0 ([8c61d22](https://github.com/fhswf/appointme/commit/8c61d229cc54f846a0617ba754da52a58866fa33))
+* fix test case ([b5a26a1](https://github.com/fhswf/appointme/commit/b5a26a1bbe78dea6c29fd923792f9e77ef0158fc))
+* fix test case ([e93d134](https://github.com/fhswf/appointme/commit/e93d1342ab1c51684c781a0823aa0b496fd6764b))
+* fix test case ([48decbe](https://github.com/fhswf/appointme/commit/48decbe4173aa03f1c77393d2d417d26713f89e6))
+* fix test case ([d2af1a0](https://github.com/fhswf/appointme/commit/d2af1a02d1beb6542c262aac5aa66950813abbc2))
+* fix test case ([7c64bdf](https://github.com/fhswf/appointme/commit/7c64bdfc1e69626b6fe2b1145b9ccecbaa11a157))
+* fix test cases ([c4e73bd](https://github.com/fhswf/appointme/commit/c4e73bd9a2950292fded5ef1a53b748feef82773))
+* fix test cases ([b2ad01a](https://github.com/fhswf/appointme/commit/b2ad01abb4bf84cb6c4d23fb82f5173fee165e88))
+* fix test cases ([2101323](https://github.com/fhswf/appointme/commit/21013232ae341a95ba7c754d87ee618d707cd4a1))
+* fix test cases ([a05baa4](https://github.com/fhswf/appointme/commit/a05baa445653cdbbff7636337f3b2e255c668664))
+* fix test cases ([5e81b48](https://github.com/fhswf/appointme/commit/5e81b4876cd6c2dfc7968183ca0769e095de8a9f))
+* fixing linting issues ([52a7aa5](https://github.com/fhswf/appointme/commit/52a7aa51835c3669c8e6f7b0f88d8005a4f1a3f4))
+* fixing test cases ([147fcc4](https://github.com/fhswf/appointme/commit/147fcc4b870f34d5db295554df909885d36ab680))
+* fixing test cases ([20212ca](https://github.com/fhswf/appointme/commit/20212caaad5170f8e653c4a35328224d34aeebf6))
+* fixing test cases ([19de745](https://github.com/fhswf/appointme/commit/19de745bc8d288c631730b16216e2b4e0403f20c))
+* increase coverage ([6ab8c48](https://github.com/fhswf/appointme/commit/6ab8c48e12e8b3d5a8c5ac3079e1efed5cf16273))
+* increase test coverage ([113db4b](https://github.com/fhswf/appointme/commit/113db4b7daabc0020710ee04238d66774acc5094))
+* **release:** 1.33.0 [skip ci] ([6f330e9](https://github.com/fhswf/appointme/commit/6f330e92afe7fb495fca5c59430a30b4193b9982))
+* **release:** 1.33.0-rc.2 [skip ci] ([54cae89](https://github.com/fhswf/appointme/commit/54cae89796a5e15f2a88323e0b3858a196a6cd38))
+* **release:** 1.33.0-rc.3 [skip ci] ([fc58da8](https://github.com/fhswf/appointme/commit/fc58da8ecc0a94ea375f9186b4817e3ed32d1a16))
+* **release:** 1.33.0-rc.4 [skip ci] ([1fffd73](https://github.com/fhswf/appointme/commit/1fffd73f274124a044b6b1182e7a85354047c800))
+* **release:** 1.33.1 [skip ci] ([694b951](https://github.com/fhswf/appointme/commit/694b95134ccf87c6052ca71223df84ab823b00df))
+* **release:** 1.33.1-rc.1 [skip ci] ([6df5615](https://github.com/fhswf/appointme/commit/6df5615d9311bb2a15b08e2f3b7c768e4b2d4951))
+* **release:** 1.33.2 [skip ci] ([b4e7e6e](https://github.com/fhswf/appointme/commit/b4e7e6e696e78651c7a7d5ef745acf60253fad94))
+* **release:** 1.33.2-rc.1 [skip ci] ([77bc919](https://github.com/fhswf/appointme/commit/77bc919b3152eb3f6ba500c1a4f51ab62fc928bd))
+* **release:** 1.34.0 [skip ci] ([726be9d](https://github.com/fhswf/appointme/commit/726be9dca6aba6a583446c4fb3f354ffce036eef))
+* **release:** 1.34.0-rc.1 [skip ci] ([340b10b](https://github.com/fhswf/appointme/commit/340b10be2b5a94d5228098a573fa01a1cd3e2a4f))
+* **release:** 1.34.1 [skip ci] ([afc0e96](https://github.com/fhswf/appointme/commit/afc0e96fd6cd1d072f3c3533e57b412beafdbc70))
+* **release:** 1.34.1-rc.1 [skip ci] ([34de1c2](https://github.com/fhswf/appointme/commit/34de1c27c78a1e8e64450e1eba3d517c031e3942))
+* **release:** 1.35.0 [skip ci] ([f6dd543](https://github.com/fhswf/appointme/commit/f6dd54304c983cd8a2d9a8af01a61160de2dd7ef))
+* **release:** 1.35.0-rc.1 [skip ci] ([6d30171](https://github.com/fhswf/appointme/commit/6d30171216d9f174287b0f11a1fa519a1b6169a1))
+* **release:** 1.35.1 [skip ci] ([462c4bd](https://github.com/fhswf/appointme/commit/462c4bd25a6e3e39f271bde739061b37ea2a2266))
+* **release:** 1.35.1-rc.1 [skip ci] ([375bf9b](https://github.com/fhswf/appointme/commit/375bf9b0425485598938718c2d6d1e69d4fe00bd))
+* **release:** 1.36.0 [skip ci] ([47ffaf3](https://github.com/fhswf/appointme/commit/47ffaf3af8fb7ad3aa062b2896adcce50ba2095d))
+* **release:** 1.36.0-rc.1 [skip ci] ([644dee8](https://github.com/fhswf/appointme/commit/644dee843f9aa3af01bae577611ce43059362999))
+* **release:** 1.37.0 [skip ci] ([5a280d2](https://github.com/fhswf/appointme/commit/5a280d2fe5fb50f47354d42c619b672a0b68ffdb))
+* **release:** 1.37.0-rc.1 [skip ci] ([a68bfcc](https://github.com/fhswf/appointme/commit/a68bfcc62c5fcc13cbaa468600798137a266affc))
+* **release:** 1.37.1 [skip ci] ([977f8fe](https://github.com/fhswf/appointme/commit/977f8fe5c99aa5fac905ba28260ff437017cb470))
+* **release:** 1.37.2 [skip ci] ([917ca5b](https://github.com/fhswf/appointme/commit/917ca5b97ab0794f6d20911d2f30a69537ec7e44))
+* **release:** 1.37.2-rc.1 [skip ci] ([ac4e7e1](https://github.com/fhswf/appointme/commit/ac4e7e14d7faf4ee814a57e3d85d2b83522bcd34))
+* **release:** 1.38.0 [skip ci] ([0293dd7](https://github.com/fhswf/appointme/commit/0293dd721294a706bede8da83ea05ed9a8839140))
+* **release:** 1.38.0-rc.1 [skip ci] ([ce3efc4](https://github.com/fhswf/appointme/commit/ce3efc427185b2a509542b628c1db1e3eebcdc65))
+* **release:** 1.38.1 [skip ci] ([7d71606](https://github.com/fhswf/appointme/commit/7d71606704fdda08273fcdacf0ef1afcdba321ce))
+* **release:** 1.38.1-rc.1 [skip ci] ([f77f5cd](https://github.com/fhswf/appointme/commit/f77f5cd5477cadff5878a607ce2bb461f961b218))
+* **release:** 1.38.1-rc.2 [skip ci] ([2f26d55](https://github.com/fhswf/appointme/commit/2f26d5580ede6159d005f6d95591bdd5e584040f))
+* **release:** 1.38.1-rc.3 [skip ci] ([7753646](https://github.com/fhswf/appointme/commit/775364630e5ae7c9982802f94efcfbed124f16b3))
+* **release:** 1.38.2 [skip ci] ([f01a018](https://github.com/fhswf/appointme/commit/f01a018c5755de7e06a14b53cae768957f219688))
+* **release:** 1.38.2-rc.1 [skip ci] ([6b623f2](https://github.com/fhswf/appointme/commit/6b623f2aad171ff1d125c2ea923eb62bafc55ada))
+* **release:** 1.38.2-rc.2 [skip ci] ([c264d1c](https://github.com/fhswf/appointme/commit/c264d1c3253b34b613d44ef5769cd31d7613deca))
+* **release:** 1.38.2-rc.3 [skip ci] ([7488e8c](https://github.com/fhswf/appointme/commit/7488e8c4eff80a660732875f1dc7ff95164114fb))
+* Remove unused useState and useEffect imports ([926a7a9](https://github.com/fhswf/appointme/commit/926a7a92d714597028b35a2b41a8964480d27c4d))
+* use `release-please` for release management ([7c01559](https://github.com/fhswf/appointme/commit/7c0155912b7e04954c483fc526e80b68be262d35))
+* use release-please and improve changelog display in client ([85cc2ab](https://github.com/fhswf/appointme/commit/85cc2ab4da5252d95259992bdcdf1796865d37d0))
+
 ## client [1.38.2](https://github.com/fhswf/appointme/compare/client@1.38.1...client@1.38.2) (2026-04-21)
 
 
@@ -96,14 +219,14 @@
 
 * **common:** upgraded to 1.16.2-rc.1
 
-# client [1.38.0](https://github.com/fhswf/appointme/compare/client@1.37.2...client@1.38.0) (2026-01-29)
+## client [1.38.0](https://github.com/fhswf/appointme/compare/client@1.37.2...client@1.38.0) (2026-01-29)
 
 
 ### Features
 
 * argocd refactoring ([409fe96](https://github.com/fhswf/appointme/commit/409fe96b9fa7e1af98cd792f17024c313bc7382f))
 
-# client [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.37.2...client@1.38.0-rc.1) (2026-01-29)
+## client [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.37.2...client@1.38.0-rc.1) (2026-01-29)
 
 
 ### Features
@@ -137,7 +260,7 @@
 
 * **client:** Increase initialDelaySeconds for readiness probe ([9b8b49a](https://github.com/fhswf/appointme/commit/9b8b49ad6fcf778edd5b9e461c5337f87f3d2e38))
 
-# client [1.37.0](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0) (2026-01-29)
+## client [1.37.0](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0) (2026-01-29)
 
 
 ### Bug Fixes
@@ -149,7 +272,7 @@
 
 * remove redundant backend calls in `CalendarSettings` ([527f178](https://github.com/fhswf/appointme/commit/527f17802434261b9f3cd18ebfe0530b54e159fa))
 
-# client [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0-rc.1) (2026-01-28)
+## client [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.36.0...client@1.37.0-rc.1) (2026-01-28)
 
 
 ### Bug Fixes
@@ -161,7 +284,7 @@
 
 * remove redundant backend calls in `CalendarSettings` ([527f178](https://github.com/fhswf/appointme/commit/527f17802434261b9f3cd18ebfe0530b54e159fa))
 
-# client [1.36.0](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0) (2026-01-28)
+## client [1.36.0](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0) (2026-01-28)
 
 
 ### Bug Fixes
@@ -173,7 +296,7 @@
 
 * tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
 
-# client [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0-rc.1) (2026-01-28)
+## client [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.35.1...client@1.36.0-rc.1) (2026-01-28)
 
 
 ### Bug Fixes
@@ -201,7 +324,7 @@
 * disable login button while waiting for response ([26514c9](https://github.com/fhswf/appointme/commit/26514c9c27391ea2a7ef050214b352e36eaf9640))
 * use state parameter for google login ([7c7d42c](https://github.com/fhswf/appointme/commit/7c7d42c3312dd0cda0b9a05a4f29811901c52d56))
 
-# client [1.35.0](https://github.com/fhswf/appointme/compare/client@1.34.1...client@1.35.0) (2026-01-25)
+## client [1.35.0](https://github.com/fhswf/appointme/compare/client@1.34.1...client@1.35.0) (2026-01-25)
 
 
 ### Bug Fixes
@@ -222,7 +345,7 @@
 
 * **common:** upgraded to 1.16.0
 
-# client [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.34.1...client@1.35.0-rc.1) (2026-01-24)
+## client [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.34.1...client@1.35.0-rc.1) (2026-01-24)
 
 
 ### Bug Fixes
@@ -263,14 +386,14 @@
 
 * **common:** upgraded to 1.15.2-rc.1
 
-# client [1.34.0](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0) (2026-01-21)
+## client [1.34.0](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0) (2026-01-21)
 
 
 ### Features
 
 * show event attributes in event card ([6a4c3d0](https://github.com/fhswf/appointme/commit/6a4c3d0df6f16a16713a9c31348800bb9dadcd1f))
 
-# client [1.34.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0-rc.1) (2026-01-21)
+## client [1.34.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.33.2...client@1.34.0-rc.1) (2026-01-21)
 
 
 ### Features
@@ -305,7 +428,7 @@
 
 * show extended legal information per default ([814bb71](https://github.com/fhswf/appointme/commit/814bb717d6fbc9df6d57393887d28cf490c50d53))
 
-# client [1.33.0](https://github.com/fhswf/appointme/compare/client@1.32.0...client@1.33.0) (2026-01-21)
+## client [1.33.0](https://github.com/fhswf/appointme/compare/client@1.32.0...client@1.33.0) (2026-01-21)
 
 
 ### Bug Fixes
@@ -330,7 +453,7 @@
 
 * **common:** upgraded to 1.15.1
 
-# client [1.33.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.3...client@1.33.0-rc.4) (2026-01-21)
+## client [1.33.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.3...client@1.33.0-rc.4) (2026-01-21)
 
 
 ### Bug Fixes
@@ -346,14 +469,14 @@
 
 * **common:** upgraded to 1.15.1-rc.1
 
-# client [1.33.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.2...client@1.33.0-rc.3) (2026-01-21)
+## client [1.33.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.2...client@1.33.0-rc.3) (2026-01-21)
 
 
 ### Features
 
 * import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
 
-# client [1.33.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.1...client@1.33.0-rc.2) (2026-01-20)
+## client [1.33.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.33.0-rc.1...client@1.33.0-rc.2) (2026-01-20)
 
 
 ### Bug Fixes
@@ -366,14 +489,14 @@
 
 * separate access token from "transient" lti token ([da9e2e7](https://github.com/fhswf/appointme/commit/da9e2e7a6362ab65fd2c07b6cc12c685fc349d1e))
 
-# client [1.33.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.32.0...client@1.33.0-rc.1) (2026-01-20)
+## client [1.33.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.32.0...client@1.33.0-rc.1) (2026-01-20)
 
 
 ### Features
 
 * separate access token from "transient" lti token ([a8d1482](https://github.com/fhswf/appointme/commit/a8d1482b1429a3b8b6a0710183d2f24f67c6798a))
 
-# client [1.32.0](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0) (2026-01-20)
+## client [1.32.0](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0) (2026-01-20)
 
 
 ### Bug Fixes
@@ -654,14 +777,14 @@
 
 * **common:** upgraded to 1.15.0
 
-# client [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.11...client@1.32.0-rc.12) (2026-01-19)
+## client [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.11...client@1.32.0-rc.12) (2026-01-19)
 
 
 ### Features
 
 * LTI integration ([194bedc](https://github.com/fhswf/appointme/commit/194bedc13a1bf0dbe267a2c9f46ecf6b1e55b45a))
 
-# client [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.10...client@1.32.0-rc.11) (2026-01-16)
+## client [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.10...client@1.32.0-rc.11) (2026-01-16)
 
 
 ### Features
@@ -678,28 +801,28 @@
 
 * **common:** upgraded to 1.15.0-rc.4
 
-# client [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.9...client@1.32.0-rc.10) (2026-01-11)
+## client [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.9...client@1.32.0-rc.10) (2026-01-11)
 
 
 ### Bug Fixes
 
 * **client:** i18n issue ([73a9a4d](https://github.com/fhswf/appointme/commit/73a9a4d4e343288a82cb7d8a4afe1665be8bd0cd))
 
-# client [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.8...client@1.32.0-rc.9) (2026-01-10)
+## client [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.8...client@1.32.0-rc.9) (2026-01-10)
 
 
 ### Bug Fixes
 
 * improve sentry instrumentation ([2166525](https://github.com/fhswf/appointme/commit/2166525393c6e066ce2e9f9a9f44e153689c8e61))
 
-# client [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.7...client@1.32.0-rc.8) (2026-01-09)
+## client [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.7...client@1.32.0-rc.8) (2026-01-09)
 
 
 ### Bug Fixes
 
 * **client:** sentry config ([47718b2](https://github.com/fhswf/appointme/commit/47718b254e580e538bed042e0bb5d446dabbb518))
 
-# client [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.6...client@1.32.0-rc.7) (2026-01-09)
+## client [1.32.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.6...client@1.32.0-rc.7) (2026-01-09)
 
 
 ### Bug Fixes
@@ -711,14 +834,14 @@
 
 * **client:** sentry integration ([f9f99c7](https://github.com/fhswf/appointme/commit/f9f99c7d8d8a21c2265624cd00af7c3913b6e3a4))
 
-# client [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.5...client@1.32.0-rc.6) (2026-01-08)
+## client [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.5...client@1.32.0-rc.6) (2026-01-08)
 
 
 ### Bug Fixes
 
 * **client:** use absolute path for favicon ([25174d7](https://github.com/fhswf/appointme/commit/25174d74639784b176dca3133f5f5d0335e5d37e))
 
-# client [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.4...client@1.32.0-rc.5) (2026-01-07)
+## client [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.4...client@1.32.0-rc.5) (2026-01-07)
 
 
 ### Bug Fixes
@@ -974,14 +1097,14 @@
 * update Tailwind CSS configuration with calendar component styling. ([de93632](https://github.com/fhswf/appointme/commit/de936320b083bebfd4a5d5fe941d2f4f0a34f164))
 * use kustomization for separate stagin/prod environments ([a491378](https://github.com/fhswf/appointme/commit/a49137885ea29cd6df022771aa1cafb0fa941173))
 
-# client [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.3...client@1.32.0-rc.4) (2026-01-04)
+## client [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.3...client@1.32.0-rc.4) (2026-01-04)
 
 
 ### Bug Fixes
 
 * upgrade react-dom to match react version ([aefb3bc](https://github.com/fhswf/appointme/commit/aefb3bc95fbd2b793c286e793085d62d1836cfbd))
 
-# client [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.2...client@1.32.0-rc.3) (2025-12-31)
+## client [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.2...client@1.32.0-rc.3) (2025-12-31)
 
 
 ### Bug Fixes
@@ -1002,7 +1125,7 @@
 
 * **common:** upgraded to 1.15.0-rc.1
 
-# client [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.1...client@1.32.0-rc.2) (2025-12-31)
+## client [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.32.0-rc.1...client@1.32.0-rc.2) (2025-12-31)
 
 
 ### Features
@@ -1010,14 +1133,14 @@
 * improved booking ([b6e841c](https://github.com/fhswf/appointme/commit/b6e841c19ad723131fc2bb4e2f2f911f905447be))
 * Initialize booking calendar view to the month of the first available slot and add a corresponding test. ([80b1abf](https://github.com/fhswf/appointme/commit/80b1abf01c1916c8c8c7338a281ee7298b464596))
 
-# client [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0-rc.1) (2025-12-31)
+## client [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.31.0...client@1.32.0-rc.1) (2025-12-31)
 
 
 ### Features
 
 * enhance locale handling ([ea390db](https://github.com/fhswf/appointme/commit/ea390dbbe98c8e5697037965a80fc1dd846f2941))
 
-# client [1.31.0](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0) (2025-12-29)
+## client [1.31.0](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0) (2025-12-29)
 
 
 ### Bug Fixes
@@ -1050,7 +1173,7 @@
 
 * **common:** upgraded to 1.14.0
 
-# client [1.31.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.31.0-rc.1...client@1.31.0-rc.2) (2025-12-27)
+## client [1.31.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.31.0-rc.1...client@1.31.0-rc.2) (2025-12-27)
 
 
 ### Bug Fixes
@@ -1067,7 +1190,7 @@
 
 * refactor calendar endpoint to use VEVENT data for CalDAV calendars ([b26fdec](https://github.com/fhswf/appointme/commit/b26fdec9ff6c4b42c7e88564bc7218a63b28f542))
 
-# client [1.31.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0-rc.1) (2025-12-23)
+## client [1.31.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.30.0...client@1.31.0-rc.1) (2025-12-23)
 
 
 ### Bug Fixes
@@ -1093,14 +1216,14 @@
 
 * **common:** upgraded to 1.14.0-rc.1
 
-# client [1.30.0](https://github.com/fhswf/appointme/compare/client@1.29.1...client@1.30.0) (2025-12-19)
+## client [1.30.0](https://github.com/fhswf/appointme/compare/client@1.29.1...client@1.30.0) (2025-12-19)
 
 
 ### Features
 
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
 
-# client [1.30.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.29.1-rc.2...client@1.30.0-rc.1) (2025-12-19)
+## client [1.30.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.29.1-rc.2...client@1.30.0-rc.1) (2025-12-19)
 
 
 ### Features
@@ -1128,14 +1251,14 @@
 
 * event form ([87ddd69](https://github.com/fhswf/appointme/commit/87ddd697faadde140261a98314d34c7c8b4a6946))
 
-# client [1.29.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.29.0-rc.1...client@1.29.0-rc.2) (2025-12-18)
+## client [1.29.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.29.0-rc.1...client@1.29.0-rc.2) (2025-12-18)
 
 
 ### Bug Fixes
 
 * event form ([87ddd69](https://github.com/fhswf/appointme/commit/87ddd697faadde140261a98314d34c7c8b4a6946))
 
-# client [1.29.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0-rc.1) (2025-12-18)
+## client [1.29.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.28.0...client@1.29.0-rc.1) (2025-12-18)
 
 
 ### Bug Fixes
@@ -1162,7 +1285,7 @@
 
 * **common:** upgraded to 1.13.0
 
-# client [1.28.0](https://github.com/fhswf/appointme/compare/client@1.27.0...client@1.28.0) (2025-12-18)
+## client [1.28.0](https://github.com/fhswf/appointme/compare/client@1.27.0...client@1.28.0) (2025-12-18)
 
 
 ### Bug Fixes
@@ -1199,14 +1322,14 @@
 
 * **common:** upgraded to 1.13.0-rc.1
 
-# client [1.27.0-rc.14](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.13...client@1.27.0-rc.14) (2025-12-18)
+## client [1.27.0-rc.14](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.13...client@1.27.0-rc.14) (2025-12-18)
 
 
 ### Features
 
 * information update ([a40b227](https://github.com/fhswf/appointme/commit/a40b227249cd3432586b4a3e7d2ea242ad0eaa27))
 
-# client [1.27.0-rc.13](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.12...client@1.27.0-rc.13) (2025-12-18)
+## client [1.27.0-rc.13](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.12...client@1.27.0-rc.13) (2025-12-18)
 
 
 ### Features
@@ -1214,7 +1337,7 @@
 * add footer credits text ([bdbe88b](https://github.com/fhswf/appointme/commit/bdbe88be204850a8419c686a59507da2257c2f97))
 * Standardize primary color to campus blue and adjust foreground for both light and dark themes. ([5d6d16b](https://github.com/fhswf/appointme/commit/5d6d16bfc68ded638a60c392a5741319563e1b3e))
 
-# client [1.27.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.11...client@1.27.0-rc.12) (2025-12-18)
+## client [1.27.0-rc.12](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.11...client@1.27.0-rc.12) (2025-12-18)
 
 
 ### Features
@@ -1222,14 +1345,14 @@
 * improve landing page ([f485524](https://github.com/fhswf/appointme/commit/f4855243a732ddf0a953e5966635e77ad3b4f271))
 * improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
 
-# client [1.27.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.10...client@1.27.0-rc.11) (2025-12-17)
+## client [1.27.0-rc.11](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.10...client@1.27.0-rc.11) (2025-12-17)
 
 
 ### Bug Fixes
 
 * use cryptographic secure random numbers ([26de930](https://github.com/fhswf/appointme/commit/26de930a3e7b9899b62bb47690bb70a1b102dd7e))
 
-# client [1.27.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.9...client@1.27.0-rc.10) (2025-12-17)
+## client [1.27.0-rc.10](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.9...client@1.27.0-rc.10) (2025-12-17)
 
 
 ### Features
@@ -1253,7 +1376,7 @@
 * ui improvements ([f7e88df](https://github.com/fhswf/appointme/commit/f7e88dfeb8b7341723a0e7718b89d094c847c015))
 * ui improvements ([1e4f048](https://github.com/fhswf/appointme/commit/1e4f0484eeca7c5865af9bc45b941f611bf9bc7a))
 
-# client [1.27.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.8...client@1.27.0-rc.9) (2025-12-17)
+## client [1.27.0-rc.9](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.8...client@1.27.0-rc.9) (2025-12-17)
 
 
 ### Features
@@ -1272,7 +1395,7 @@
 
 * **common:** upgraded to 1.12.0-rc.2
 
-# client [1.27.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.7...client@1.27.0-rc.8) (2025-12-15)
+## client [1.27.0-rc.8](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.7...client@1.27.0-rc.8) (2025-12-15)
 
 
 ### Features
@@ -1287,8 +1410,8 @@
 
 * **common:** upgraded to 1.12.0-rc.1
 
-# client [1.27.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.6...client@1.27.0-rc.7) (2025-12-14)
-# client [1.27.0](https://github.com/fhswf/appointme/compare/client@1.26.1...client@1.27.0) (2025-12-13)
+## client [1.27.0-rc.7](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.6...client@1.27.0-rc.7) (2025-12-14)
+## client [1.27.0](https://github.com/fhswf/appointme/compare/client@1.26.1...client@1.27.0) (2025-12-13)
 
 
 ### Bug Fixes
@@ -1305,7 +1428,7 @@
 
 * localization of date picker ([b575f45](https://github.com/fhswf/appointme/commit/b575f45019fc025642e2d86bd6c5a713f1dad355))
 
-# client [1.27.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.5...client@1.27.0-rc.6) (2025-12-13)
+## client [1.27.0-rc.6](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.5...client@1.27.0-rc.6) (2025-12-13)
 
 
 ### Bug Fixes
@@ -1313,35 +1436,35 @@
 * use apsoluter path for runtime configuration ([9563fe7](https://github.com/fhswf/appointme/commit/9563fe70b6c16829eccd22e42edd5e8c2f08e289))
 * add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
 
-# client [1.27.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.4...client@1.27.0-rc.5) (2025-12-12)
+## client [1.27.0-rc.5](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.4...client@1.27.0-rc.5) (2025-12-12)
 
 
 ### Bug Fixes
 
 * state management in UI ([63809d7](https://github.com/fhswf/appointme/commit/63809d78f93787d0bb75b83814f0cdaaf2fb7e7a))
 
-# client [1.27.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.3...client@1.27.0-rc.4) (2025-12-12)
+## client [1.27.0-rc.4](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.3...client@1.27.0-rc.4) (2025-12-12)
 
 
 ### Bug Fixes
 
 * environment variables ([a16167e](https://github.com/fhswf/appointme/commit/a16167eef811c480a31e48438048a8eddf713060))
 
-# client [1.27.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.2...client@1.27.0-rc.3) (2025-12-12)
+## client [1.27.0-rc.3](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.2...client@1.27.0-rc.3) (2025-12-12)
 
 
 ### Bug Fixes
 
 * config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
 
-# client [1.27.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.1...client@1.27.0-rc.2) (2025-12-12)
+## client [1.27.0-rc.2](https://github.com/fhswf/appointme/compare/client@1.27.0-rc.1...client@1.27.0-rc.2) (2025-12-12)
 
 
 ### Bug Fixes
 
 * runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
 
-# client [1.27.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.26.0...client@1.27.0-rc.1) (2025-12-12)
+## client [1.27.0-rc.1](https://github.com/fhswf/appointme/compare/client@1.26.0...client@1.27.0-rc.1) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1374,7 +1497,7 @@
 * release strategy ([7cdd49c](https://github.com/fhswf/appointme/commit/7cdd49cf701624c985b7a89c4895b9fe36ead7e6))
 * release strategy ([a9f9a81](https://github.com/fhswf/appointme/commit/a9f9a81769726c054e4e8c8bce322a6cc7fcdb75))
 
-# client [1.26.0](https://github.com/fhswf/appointme/compare/client@1.25.0...client@1.26.0) (2025-12-12)
+## client [1.26.0](https://github.com/fhswf/appointme/compare/client@1.25.0...client@1.26.0) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1394,7 +1517,7 @@
 
 * **common:** upgraded to 1.11.0
 
-# client [1.25.0](https://github.com/fhswf/appointme/compare/client@1.24.0...client@1.25.0) (2025-12-12)
+## client [1.25.0](https://github.com/fhswf/appointme/compare/client@1.24.0...client@1.25.0) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1406,7 +1529,7 @@
 
 * use kustomization for separate stagin/prod environments ([baa6227](https://github.com/fhswf/appointme/commit/baa6227f1dd1d595cc7db6873be55cace3d22c42))
 
-# client [1.24.0](https://github.com/fhswf/appointme/compare/client@1.23.0...client@1.24.0) (2025-12-11)
+## client [1.24.0](https://github.com/fhswf/appointme/compare/client@1.23.0...client@1.24.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1418,7 +1541,7 @@
 
 * refactor api & swagger docs ([01efa3e](https://github.com/fhswf/appointme/commit/01efa3eef808b40f6d649122990bf55f1c68f441))
 
-# client [1.23.0](https://github.com/fhswf/appointme/compare/client@1.22.0...client@1.23.0) (2025-12-11)
+## client [1.23.0](https://github.com/fhswf/appointme/compare/client@1.22.0...client@1.23.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1430,7 +1553,7 @@
 
 * Refactor event booking logic into modular functions and introduce client-side configuration for environment variables. ([75c3380](https://github.com/fhswf/appointme/commit/75c33807d401dc6537cf0cde5cd1df4c0c7aadc0))
 
-# client [1.22.0](https://github.com/fhswf/appointme/compare/client@1.21.0...client@1.22.0) (2025-12-11)
+## client [1.22.0](https://github.com/fhswf/appointme/compare/client@1.21.0...client@1.22.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1442,7 +1565,7 @@
 
 * improve Google Calendar integration ([bbb5031](https://github.com/fhswf/appointme/commit/bbb5031acc50d41e2aa7a3fe1549d1a8db269cb6))
 
-# client [1.21.0](https://github.com/fhswf/appointme/compare/client@1.20.0...client@1.21.0) (2025-12-10)
+## client [1.21.0](https://github.com/fhswf/appointme/compare/client@1.20.0...client@1.21.0) (2025-12-10)
 
 
 ### Features
@@ -1457,7 +1580,7 @@
 
 * **common:** upgraded to 1.10.0
 
-# client [1.20.0](https://github.com/fhswf/appointme/compare/client@1.19.0...client@1.20.0) (2025-12-10)
+## client [1.20.0](https://github.com/fhswf/appointme/compare/client@1.19.0...client@1.20.0) (2025-12-10)
 
 
 ### Features
@@ -1479,7 +1602,7 @@
 
 * **common:** upgraded to 1.9.0
 
-# client [1.19.0](https://github.com/fhswf/appointme/compare/client@1.18.0...client@1.19.0) (2025-12-10)
+## client [1.19.0](https://github.com/fhswf/appointme/compare/client@1.18.0...client@1.19.0) (2025-12-10)
 
 
 ### Features
@@ -1499,14 +1622,14 @@
 
 * **common:** upgraded to 1.8.0
 
-# client [1.18.0](https://github.com/fhswf/appointme/compare/client@1.17.0...client@1.18.0) (2025-12-10)
+## client [1.18.0](https://github.com/fhswf/appointme/compare/client@1.17.0...client@1.18.0) (2025-12-10)
 
 
 ### Features
 
 * implement language selection and localized date/time display across the application ([b97609d](https://github.com/fhswf/appointme/commit/b97609d6c6c45da33a4d60d9191c947d00e78fd4))
 
-# client [1.17.0](https://github.com/fhswf/appointme/compare/client@1.16.1...client@1.17.0) (2025-12-10)
+## client [1.17.0](https://github.com/fhswf/appointme/compare/client@1.16.1...client@1.17.0) (2025-12-10)
 
 
 ### Features
@@ -1535,7 +1658,7 @@
 
 * **common:** upgraded to 1.6.0
 
-# client [1.16.0](https://github.com/fhswf/appointme/compare/client@1.15.0...client@1.16.0) (2025-12-09)
+## client [1.16.0](https://github.com/fhswf/appointme/compare/client@1.15.0...client@1.16.0) (2025-12-09)
 
 
 ### Features
@@ -1550,7 +1673,7 @@
 
 * **common:** upgraded to 1.5.0
 
-# client [1.15.0](https://github.com/fhswf/appointme/compare/client@1.14.0...client@1.15.0) (2025-12-09)
+## client [1.15.0](https://github.com/fhswf/appointme/compare/client@1.14.0...client@1.15.0) (2025-12-09)
 
 
 ### Bug Fixes
@@ -1565,7 +1688,7 @@
 * i18n restructured ([2d25c89](https://github.com/fhswf/appointme/commit/2d25c895228f4c4ad17e4237ba5c45f229527fa9))
 * Implement OIDC authentication flow ([d8e4cdd](https://github.com/fhswf/appointme/commit/d8e4cdd073a99338257b2ee90721bd91afa0b633))
 
-# client [1.14.0](https://github.com/fhswf/appointme/compare/client@1.13.0...client@1.14.0) (2025-12-08)
+## client [1.14.0](https://github.com/fhswf/appointme/compare/client@1.13.0...client@1.14.0) (2025-12-08)
 
 
 ### Bug Fixes
@@ -1748,7 +1871,7 @@
 
 * Revert "fix(client): deployment configuration" ([1e12996](https://github.com/fhswf/appointme/commit/1e12996c887783ea10ad69584fe35f45456d0b56))
 
-# client [1.13.0](https://github.com/fhswf/appointme/compare/client@1.12.0...client@1.13.0) (2025-12-04)
+## client [1.13.0](https://github.com/fhswf/appointme/compare/client@1.12.0...client@1.13.0) (2025-12-04)
 
 
 ### Features
@@ -1756,7 +1879,7 @@
 * Add client-side unit tests with Vitest and integrate them into the CI workflow. ([65e9286](https://github.com/fhswf/appointme/commit/65e92860732bd0c747ad2397d541c3dd28c0b7f4))
 * Generate JUnit reports from Vitest unit tests and convert them to CTRF for GitHub Actions PR comments. ([afe31bb](https://github.com/fhswf/appointme/commit/afe31bb9a10b5f6462cec0bcd78a057688fe7bcc))
 
-# client [1.12.0](https://github.com/fhswf/appointme/compare/client@1.11.0...client@1.12.0) (2025-12-03)
+## client [1.12.0](https://github.com/fhswf/appointme/compare/client@1.11.0...client@1.12.0) (2025-12-03)
 
 
 ### Features
@@ -1771,7 +1894,7 @@
 
 * **common:** upgraded to 1.2.0
 
-# client [1.11.0](https://github.com/fhswf/appointme/compare/client@1.10.0...client@1.11.0) (2025-12-03)
+## client [1.11.0](https://github.com/fhswf/appointme/compare/client@1.10.0...client@1.11.0) (2025-12-03)
 
 
 ### Bug Fixes
@@ -1789,7 +1912,7 @@
 * Migrate to new ESLint configuration, implement Playwright test coverage, and add new booking flow translations. ([f637abc](https://github.com/fhswf/appointme/commit/f637abc3d956f5516030e3c5209c0111f9fe0d9c))
 * update Tailwind CSS configuration with calendar component styling. ([bdc9f4b](https://github.com/fhswf/appointme/commit/bdc9f4b7fa2d5f2cb441910cdf8b1a28abbcb45d))
 
-# client [1.10.0](https://github.com/fhswf/appointme/compare/client@1.9.1...client@1.10.0) (2024-11-27)
+## client [1.10.0](https://github.com/fhswf/appointme/compare/client@1.9.1...client@1.10.0) (2024-11-27)
 
 
 ### Features
@@ -1804,7 +1927,7 @@
 * product name ([b22fce6](https://github.com/fhswf/appointme/commit/b22fce6478fff88a9af28bb9ae064a216a413325))
 * **test:** fix ci tests ([a3a4dca](https://github.com/fhswf/appointme/commit/a3a4dcaaf888f1e704f05f9340664ed48a79b658))
 
-# client [1.9.0](https://github.com/fhswf/appointme/compare/client@1.8.0...client@1.9.0) (2024-10-17)
+## client [1.9.0](https://github.com/fhswf/appointme/compare/client@1.8.0...client@1.9.0) (2024-10-17)
 
 
 ### Features
@@ -1812,7 +1935,7 @@
 * new rest api ([540c15b](https://github.com/fhswf/appointme/commit/540c15b32d752331aa6a47b76298e2e869efe81b))
 * new rest api ([93ec39b](https://github.com/fhswf/appointme/commit/93ec39bedfe704cf6c26ba72078b108c7498248a))
 
-# client [1.8.0](https://github.com/fhswf/appointme/compare/client@1.7.7...client@1.8.0) (2024-10-16)
+## client [1.8.0](https://github.com/fhswf/appointme/compare/client@1.7.7...client@1.8.0) (2024-10-16)
 
 
 ### Features
@@ -1873,7 +1996,7 @@
 
 * do not send token as bearer token ([b671e3e](https://github.com/fhswf/appointme/commit/b671e3efaa21e64a1426d4138c5bbaa2f522b7f9))
 
-# client [1.7.0](https://github.com/fhswf/appointme/compare/client@1.6.9...client@1.7.0) (2024-10-10)
+## client [1.7.0](https://github.com/fhswf/appointme/compare/client@1.6.9...client@1.7.0) (2024-10-10)
 
 
 ### Features
@@ -1975,7 +2098,7 @@
 
 * ui glitches ([281c2a4](https://github.com/fhswf/appointme/commit/281c2a4ad068bcd8a6108d490ccb6dfe4c90ae26))
 
-# client [1.6.0](https://github.com/fhswf/appointme/compare/client@1.5.4...client@1.6.0) (2024-09-27)
+## client [1.6.0](https://github.com/fhswf/appointme/compare/client@1.5.4...client@1.6.0) (2024-09-27)
 
 
 ### Features
@@ -2010,7 +2133,7 @@
 
 * **i18n:** translations added ([d146bd0](https://github.com/fhswf/appointme/commit/d146bd0f9d606eec2012975101d2ebf26cc2d533))
 
-# client [1.5.0](https://github.com/fhswf/appointme/compare/client@1.4.2...client@1.5.0) (2024-09-25)
+## client [1.5.0](https://github.com/fhswf/appointme/compare/client@1.4.2...client@1.5.0) (2024-09-25)
 
 
 ### Features
@@ -2032,7 +2155,7 @@
 * **i18n:** localization path ([c47a2b2](https://github.com/fhswf/appointme/commit/c47a2b295d565bf6ca41fc03a75c0ecc71a17179))
 * **ui:** Booking page ([2c50749](https://github.com/fhswf/appointme/commit/2c5074918d04491f4f208b3c259212452ea1a9da))
 
-# client [1.4.0](https://github.com/fhswf/appointme/compare/client@1.3.12...client@1.4.0) (2024-09-24)
+## client [1.4.0](https://github.com/fhswf/appointme/compare/client@1.3.12...client@1.4.0) (2024-09-24)
 
 
 ### Bug Fixes
@@ -2152,7 +2275,7 @@
 
 * **deployment:** update via semantic release ([52619ba](https://github.com/fhswf/appointme/commit/52619bad54f3eb702164d2909f01c52b1c7e7425))
 
-# client [1.3.0](https://github.com/fhswf/appointme/compare/client@1.2.16...client@1.3.0) (2024-09-23)
+## client [1.3.0](https://github.com/fhswf/appointme/compare/client@1.2.16...client@1.3.0) (2024-09-23)
 
 
 ### Features
@@ -2376,7 +2499,7 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 
 * **client:** deployment configuration ([710b9dc](https://github.com/fhswf/appointme/commit/710b9dc77386aeb02bd1130696bafe7b0bbb385e))
 
-# client [1.2.0](https://github.com/fhswf/appointme/compare/client@1.1.12...client@1.2.0) (2023-10-09)
+## client [1.2.0](https://github.com/fhswf/appointme/compare/client@1.1.12...client@1.2.0) (2023-10-09)
 
 
 ### Bug Fixes
@@ -2491,14 +2614,14 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 * automated docker build ([ef0f3d0](https://github.com/fhswf/appointme/commit/ef0f3d0c6f85fd934dd607e446d68599ba0fd2f3))
 * automated docker build ([3647c57](https://github.com/fhswf/appointme/commit/3647c579e5e261f60d503f3989a591043d8288a6))
 
-# client [1.1.0](https://github.com/fhswf/appointme/compare/client@1.0.0...client@1.1.0) (2023-09-11)
+## client [1.1.0](https://github.com/fhswf/appointme/compare/client@1.0.0...client@1.1.0) (2023-09-11)
 
 
 ### Features
 
 * docker build in release ([4f05ee3](https://github.com/fhswf/appointme/commit/4f05ee3f72cc8ab6482a22498bb2069b1b1a03c4))
 
-# client 1.0.0 (2023-09-10)
+## client 1.0.0 (2023-09-10)
 
 
 ### Bug Fixes
@@ -2556,21 +2679,21 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 
 * **common:** upgraded to 1.0.0
 
-# [@fhswf/appointme-client-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.7...@fhswf/appointme-client-v1.1.0) (2021-06-07)
+## [@fhswf/appointme-client-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.7...@fhswf/appointme-client-v1.1.0) (2021-06-07)
 
 
 ### Features
 
 * **markdown:** handle event type description as markdown. ([4bedade](https://github.com/fhswf/appointme/commit/4bedade846876fe6eedb5b0f4d986a33c8d283b2))
 
-# [@fhswf/appointme-client-v1.0.7](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.6...@fhswf/appointme-client-v1.0.7) (2021-06-05)
+## [@fhswf/appointme-client-v1.0.7](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.6...@fhswf/appointme-client-v1.0.7) (2021-06-05)
 
 
 ### Bug Fixes
 
 * **i18n:** add missing translation ([ad9e70f](https://github.com/fhswf/appointme/commit/ad9e70f891d3d0b4e99e95501c14b4b04e65e41b))
 
-# [@fhswf/appointme-client-v1.0.6](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.5...@fhswf/appointme-client-v1.0.6) (2021-06-05)
+## [@fhswf/appointme-client-v1.0.6](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.5...@fhswf/appointme-client-v1.0.6) (2021-06-05)
 
 
 ### Bug Fixes
@@ -2583,7 +2706,7 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 * **ui:** fix error handling ([53a0a3d](https://github.com/fhswf/appointme/commit/53a0a3d1ab0c53e5720a97b2baf3a182d17048e2))
 * **UI:** handle errors from backend ([9ecc7b3](https://github.com/fhswf/appointme/commit/9ecc7b3f310112cd4635fd02dd65514274ff55cd))
 
-# [@fhswf/appointme-client-v1.0.5](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.4...@fhswf/appointme-client-v1.0.5) (2021-06-02)
+## [@fhswf/appointme-client-v1.0.5](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.4...@fhswf/appointme-client-v1.0.5) (2021-06-02)
 
 
 ### Bug Fixes
@@ -2599,28 +2722,28 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 * **UI:** fix editing of event types ([a80b3c5](https://github.com/fhswf/appointme/commit/a80b3c50263e08c58e97051840a4016b971c3585))
 * **UI:** fix unused import in BookDetails ([404dfaa](https://github.com/fhswf/appointme/commit/404dfaab0b85faeef206a0dd61cee980e4b4ae52))
 
-# [@fhswf/appointme-client-v1.0.4](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.3...@fhswf/appointme-client-v1.0.4) (2021-05-29)
+## [@fhswf/appointme-client-v1.0.4](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.3...@fhswf/appointme-client-v1.0.4) (2021-05-29)
 
 
 ### Bug Fixes
 
 * **error handling:** catch backend errors when querying available slots ([bc07116](https://github.com/fhswf/appointme/commit/bc07116a28326450179796b6a9f119160b0c2c96))
 
-# [@fhswf/appointme-client-v1.0.3](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.2...@fhswf/appointme-client-v1.0.3) (2021-05-28)
+## [@fhswf/appointme-client-v1.0.3](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.2...@fhswf/appointme-client-v1.0.3) (2021-05-28)
 
 
 ### Bug Fixes
 
 * **build:** fix build of appointme-common ([01f4a8e](https://github.com/fhswf/appointme/commit/01f4a8e5475c8f425a0857b571b4735b1ddeb8b5))
 
-# [@fhswf/appointme-client-v1.0.2](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.1...@fhswf/appointme-client-v1.0.2) (2021-05-28)
+## [@fhswf/appointme-client-v1.0.2](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.1...@fhswf/appointme-client-v1.0.2) (2021-05-28)
 
 
 ### Bug Fixes
 
 * do not overwrite calendar settings upon login ([8923777](https://github.com/fhswf/appointme/commit/892377784cc94f2243c193f0763c82e7e58e7c16))
 
-# [@fhswf/appointme-client-v1.0.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.0...@fhswf/appointme-client-v1.0.1) (2021-05-24)
+## [@fhswf/appointme-client-v1.0.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-client-v1.0.0...@fhswf/appointme-client-v1.0.1) (2021-05-24)
 
 
 ### Bug Fixes
@@ -2631,7 +2754,7 @@ ghcr.io/fhswf/appointme/frontend:c812030a6a8fc3ed3106c0d23ae0132e3ee8219f
 * typescript issues ([46e85ca](https://github.com/fhswf/appointme/commit/46e85cab96b0180b999151d8909b5afaaf69a2fd))
 * UI glitches fixed ([2720b9d](https://github.com/fhswf/appointme/commit/2720b9d26ee4779988d71275e1d7ff4e3cc94bb1))
 
-# @fhswf/appointme-client-v1.0.0 (2021-05-15)
+## @fhswf/appointme-client-v1.0.0 (2021-05-15)
 
 
 ### Bug Fixes
