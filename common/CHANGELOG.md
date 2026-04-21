@@ -1,3 +1,10 @@
+## common [1.16.3-rc.3](https://github.com/fhswf/appointme/compare/common@1.16.3-rc.2...common@1.16.3-rc.3) (2026-04-21)
+
+
+### Bug Fixes
+
+* **scheduler:** ensure IntervalSet remains sorted after addRange overlaps ([57bd8b6](https://github.com/fhswf/appointme/commit/57bd8b69197ea56c06399d02fb3d1bec316ac61d))
+
 ## common [1.16.3-rc.2](https://github.com/fhswf/appointme/compare/common@1.16.3-rc.1...common@1.16.3-rc.2) (2026-02-14)
 
 
