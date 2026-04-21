@@ -231,9 +231,27 @@ export class IntervalSet extends Array<TimeRange> {
   }
 
   private createDateFromSlot(baseDate: Date, time: string, timeZone: string): Date {
-    const dateStr = formatInTimeZone(baseDate, timeZone, 'yyyy-MM-dd');
-    const dateTimeStr = `${dateStr}T${time}:00`;
-    return fromZonedTime(dateTimeStr, timeZone);
+    const parts = time.split(':');
+    let hour = parseInt(parts[0], 10);
+    const minute = parts[1] ? parseInt(parts[1], 10) : 0;
+
+    let targetDate = baseDate;
+    if (hour === 24 && minute === 0) {
+      hour = 0;
+      targetDate = new Date(baseDate.getTime() + 1000 * 60 * 60 * 24);
+    }
+
+    const hourStr = hour.toString().padStart(2, '0');
+    const minuteStr = minute.toString().padStart(2, '0');
+
+    const dateStr = formatInTimeZone(targetDate, timeZone, 'yyyy-MM-dd');
+    const dateTimeStr = `${dateStr}T${hourStr}:${minuteStr}:00`;
+
+    const d = fromZonedTime(dateTimeStr, timeZone);
+    if (Number.isNaN(d.getTime())) {
+      throw new TypeError(`Invalid Date generated from time='${time}', dateTimeStr='${dateTimeStr}', timeZone='${timeZone}'`);
+    }
+    return d;
   }
 
   private initializeWithDates(start: any, end: any) {
@@ -314,9 +332,10 @@ export class IntervalSet extends Array<TimeRange> {
         }
       })
 
-      // filter out empty segments
+      // filter out empty segments and re-sort to maintain the sorted invariant
       // console.log('addRange: before filter: %o', this)
       let filtered = this.filter(x => x.start < x.end)
+      filtered.sort((r1, r2) => r1.start.getTime() - r2.start.getTime())
       // console.log('addRange: after filter: %o', filtered)
       this.splice(0, this.length, ...filtered);
     }
@@ -407,13 +426,39 @@ export class IntervalSet extends Array<TimeRange> {
 
   /**
    * Calculate the inverse of an `IntervalSet`
+   * @param start Optional start of the interval to inverse
+   * @param end Optional end of the interval to inverse
    * @returns `IntervalSet`
    */
-  inverse(): IntervalSet {
+  inverse(start?: Date | string, end?: Date | string): IntervalSet {
     let result = new IntervalSet()
+
+    // Normalize start/end to Date objects if provided
+    const startDate = start ? (typeof start === 'string' ? new Date(start) : start) : undefined;
+    const endDate = end ? (typeof end === 'string' ? new Date(end) : end) : undefined;
+
+    // Handle initial gap if start bound is provided
+    if (startDate) {
+      if (this.length > 0) {
+        if (startDate < this[0].start) {
+          result.push({ start: startDate, end: this[0].start });
+        }
+      } else if (endDate) {
+        // If set is empty and we have both bounds, the whole range is free
+        result.push({ start: startDate, end: endDate });
+        return result;
+      }
+    }
 
     for (let i = 1; i < this.length; i++) {
       result.push({ start: this[i - 1].end, end: this[i].start })
+    }
+
+    // Handle final gap if end bound is provided
+    if (endDate && this.length > 0) {
+      if (this[this.length - 1].end < endDate) {
+        result.push({ start: this[this.length - 1].end, end: endDate });
+      }
     }
 
     return result;

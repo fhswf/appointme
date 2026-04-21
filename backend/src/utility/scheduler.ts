@@ -23,13 +23,13 @@ export function convertBusyToFree(busySlots: TimeSlot[], timeMin: Date, timeMax:
     let current = new Date(timeMin);
 
     for (const busy of busySlots) {
-        const _start = addMinutes(new Date(busy.start), -bufferAfter); // Free interval limit (Event End <= Busy Start - BufferAfter)
+        const _start = addMinutes(new Date(busy.start), -bufferBefore); // Free interval limit (Event End <= Busy Start - BufferBefore)
 
         if (current < _start) {
             freeIntervals.push({ start: new Date(current), end: _start });
         }
 
-        const nextAvailable = addMinutes(new Date(busy.end), bufferBefore); // Next Event Start >= Busy End + BufferBefore
+        const nextAvailable = addMinutes(new Date(busy.end), bufferAfter); // Next Event Start >= Busy End + BufferAfter
         if (nextAvailable > current) {
             current = nextAvailable;
         }

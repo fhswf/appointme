@@ -40,20 +40,17 @@ async function processSvg(inputPath, outputPath, isNoText = false) {
     }
 
     if (!isNoText) {
-        // Embed GillSans font as path
-        const fontPath = path.join(projectRoot, 'public', 'GillSans.ttf');
+        // Embed GillSans Bold font as path
+        const fontPath = path.join(projectRoot, 'public', 'GILB____.TTF');
         if (fs.existsSync(fontPath)) {
             try {
                 const font = await opentype.load(fontPath);
 
                 // Text config
-                const fontSize = 80;
-                // Rough estimation of baseline from "middle" at 320. 
-                // Middle implies bounding box center. 
-                // Assuming cap height determines visual center for this all-caps-like logo "AppointMe" (mostly).
-                // But let's try to match existing logic.
+                const fontSize = 70;
+                // Match SVG y=380 and font-size=70
                 const x = 256;
-                const y = 320;
+                const y = 380;
 
                 // We need to calculate paths for "App", "oint", "Me"
                 // And center them.
@@ -67,14 +64,7 @@ async function processSvg(inputPath, outputPath, isNoText = false) {
                 const totalWidth = w1 + w2 + w3;
 
                 const startX = x - (totalWidth / 2);
-                // Baseline adjustment. Visual middle of 320.
-                // Cap height is usually available in font.tables.os2.sCapHeight or similar.
-                // font.tables.os2.sCapHeight is in font units.
-                // scale = fontSize / font.unitsPerEm.
-                // baseline = y + (capHeight * scale) / 2? No, y is middle.
-                // baseline = y + (capHeight * scale) / 2 is wrong direction.
-                // If text sits on baseline, its middle is at baseline - capHeight/2.
-                // So if we want middle at y, then baseline = y + capHeight/2 * scale.
+
                 const scale = fontSize / font.unitsPerEm;
                 const capHeight = (font.tables.os2 && font.tables.os2.sCapHeight) || (font.ascender * 0.7); // fallback
                 const baseline = y + (capHeight * scale) / 2;

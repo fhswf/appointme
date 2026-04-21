@@ -1,6 +1,5 @@
 
 import { calculateBlocked } from "../controller/event_controller.js";
-import { IntervalSet } from "common";
 import { describe, it, expect } from "vitest";
 
 describe("calculateBlocked Regression Test", () => {
@@ -62,5 +61,64 @@ describe("calculateBlocked Regression Test", () => {
         const feb14 = free.find(s => Math.abs(s.start.getTime() - new Date("2026-02-13T23:00:00.000Z").getTime()) < 1000); // 00:00 Berlin Feb 14
         expect(feb14).toBeDefined();
         expect(feb14?.end.getTime()).toBe(timeMax.getTime());
+    });
+
+    it("should keep IntervalSet sorted when addRange overlaps the right-hand sentinel (maxPerDay + end-of-range)", () => {
+        /**
+         * Regression for: overnight mega-slots appearing in production.
+         *
+         * Steps to reproduce:
+         * 1. timeMax = start of Day D+1 (e.g. 2026-04-24T00:00:00Z).
+         * 2. Right-hand sentinel = [timeMax, timeMax+1ms].
+         * 3. calculateBlocked adds a full-day block for Day D = [Apr 23 00:00Z, Apr 24 00:00Z].
+         * 4. The Day D block's end (Apr 24 00:00Z) == sentinel start → addRange takes the
+         *    OVERLAPPING path and extends the sentinel, but previously did NOT re-sort.
+         * 5. blocked was left with sentinel BEFORE the day block in the array → inverse()
+         *    produced a backwards interval (end < start), poisoning the entire intersect.
+         */
+        const timeMin = new Date("2026-04-21T08:13:23.631Z");
+        const timeMax = new Date("2026-04-24T00:00:00.000Z"); // exactly midnight = start of Apr 24
+
+        // 3 appointments on Thursday Apr 23 → maxPerDay=3 → full day is blocked
+        const events = [
+            { start: { dateTime: "2026-04-23T06:00:00Z" } },
+            { start: { dateTime: "2026-04-23T07:00:00Z" } },
+            { start: { dateTime: "2026-04-23T08:00:00Z" } },
+        ];
+        const eventConfig = { maxPerDay: 3 };
+
+        const blocked = calculateBlocked(events, eventConfig, timeMin, timeMax);
+
+        // blocked must be sorted: every entry must start after the previous one ends
+        for (let i = 1; i < blocked.length; i++) {
+            expect(blocked[i].start.getTime()).toBeGreaterThanOrEqual(blocked[i - 1].end.getTime());
+        }
+
+        const inv = blocked.inverse(timeMin, timeMax);
+
+        // Every inverse interval must be forward (start < end) — the key property
+        // that was broken by the missing sort: backwards intervals caused the
+        // intersect to pass the whole availability window through unfiltered,
+        // producing overnight mega-slots like 21:00→08:25 next day.
+        for (const interval of inv) {
+            expect(interval.start.getTime()).toBeLessThan(
+                interval.end.getTime(),
+                `Expected start < end but got ${interval.start.toISOString()} >= ${interval.end.toISOString()}`
+            );
+        }
+
+        // The Thursday evening availability window (20:00–21:05 Berlin = 18:00–19:05 UTC)
+        // must NOT appear in the free intervals — the whole day was blocked due to maxPerDay.
+        // calculateBlocked uses local-system-time startOfDay, so in Europe/Berlin (CEST=UTC+2)
+        // "Thursday Apr 23" is blocked as [22:00 Wed UTC → 22:00 Thu UTC].
+        const thuEveningStart = new Date("2026-04-23T18:00:00Z").getTime(); // 20:00 Berlin
+        const thuEveningEnd   = new Date("2026-04-23T19:05:00Z").getTime(); // 21:05 Berlin
+        const eveningInFree = inv.some(
+            s => s.start.getTime() < thuEveningEnd && s.end.getTime() > thuEveningStart
+        );
+        expect(
+            eveningInFree,
+            "Thu evening slot 18:00–19:05 UTC should be blocked (maxPerDay reached)"
+        ).toBe(false);
     });
 });

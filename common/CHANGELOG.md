@@ -1,3 +1,25 @@
+## common [1.16.3-rc.3](https://github.com/fhswf/appointme/compare/common@1.16.3-rc.2...common@1.16.3-rc.3) (2026-04-21)
+
+
+### Bug Fixes
+
+* **scheduler:** ensure IntervalSet remains sorted after addRange overlaps ([57bd8b6](https://github.com/fhswf/appointme/commit/57bd8b69197ea56c06399d02fb3d1bec316ac61d))
+
+## common [1.16.3-rc.2](https://github.com/fhswf/appointme/compare/common@1.16.3-rc.1...common@1.16.3-rc.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* correctly interpret "24:00" time slots as midnight of the next day ([1f8de54](https://github.com/fhswf/appointme/commit/1f8de547a7a10b9701405c227fd43f487d3b564d))
+* Introduce tests for phantom availability reproduction and regression, and update scheduler tests and common types. ([9be177b](https://github.com/fhswf/appointme/commit/9be177bf6a073667fd1193759fa58a0dd55dd519))
+
+## common [1.16.3-rc.1](https://github.com/fhswf/appointme/compare/common@1.16.2...common@1.16.3-rc.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* availibilty calculation ([42d80d4](https://github.com/fhswf/appointme/commit/42d80d4c76dad6d9cfcd99005c3ac109323da767))
+
 ## common [1.16.2](https://github.com/fhswf/appointme/compare/common@1.16.1...common@1.16.2) (2026-02-09)
 
 

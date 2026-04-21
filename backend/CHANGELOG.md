@@ -1,3 +1,55 @@
+## backend [1.43.1-rc.4](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.3...backend@1.43.1-rc.4) (2026-04-21)
+
+
+### Bug Fixes
+
+* **scheduler:** ensure IntervalSet remains sorted after addRange overlaps ([57bd8b6](https://github.com/fhswf/appointme/commit/57bd8b69197ea56c06399d02fb3d1bec316ac61d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.3
+
+## backend [1.43.1-rc.3](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.2...backend@1.43.1-rc.3) (2026-02-14)
+
+
+### Bug Fixes
+
+* Introduce tests for phantom availability reproduction and regression, and update scheduler tests and common types. ([9be177b](https://github.com/fhswf/appointme/commit/9be177bf6a073667fd1193759fa58a0dd55dd519))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.2
+
+## backend [1.43.1-rc.2](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.1...backend@1.43.1-rc.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* availibilty calculation ([be34bf4](https://github.com/fhswf/appointme/commit/be34bf4bbab4657ec26fa86077efed84cc49bc79))
+
+## backend [1.43.1-rc.1](https://github.com/fhswf/appointme/compare/backend@1.43.0...backend@1.43.1-rc.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* availibilty calculation ([42d80d4](https://github.com/fhswf/appointme/commit/42d80d4c76dad6d9cfcd99005c3ac109323da767))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.1
+
 # backend [1.43.0](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0) (2026-02-09)
 
 
