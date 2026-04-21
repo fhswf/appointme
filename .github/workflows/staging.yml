@@ -89,5 +89,5 @@ jobs:
             client/k8s/overlays/dev/kustomization.yaml \
             mcp-server/k8s/overlays/dev/kustomization.yaml
           git diff --cached --quiet || \
-            git commit -m "chore(deploy): update dev overlays to ${{ steps.tag.outputs.sha }} [skip ci]"
+            git commit -m "deploy: update dev overlays to ${{ steps.tag.outputs.sha }} [skip ci]"
           git push origin main

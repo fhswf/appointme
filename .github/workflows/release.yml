@@ -49,7 +49,7 @@ jobs:
           node utility/update-kustomize.js backend backend ${{ steps.release.outputs.backend--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore(deploy): update backend kustomize to version ${{ steps.release.outputs.backend--version }} [skip ci]" || echo "No changes to commit"
+          git commit -am "deploy: update backend kustomize to version ${{ steps.release.outputs.backend--version }} [skip ci]" || echo "No changes to commit"
 
       # ========== CLIENT PIPELINE ==========
       - name: Build & Push Client Docker Image
@@ -64,7 +64,7 @@ jobs:
           node utility/update-kustomize.js client frontend ${{ steps.release.outputs.client--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore(deploy): update client kustomize to version ${{ steps.release.outputs.client--version }} [skip ci]" || echo "No changes to commit"
+          git commit -am "deploy: update client kustomize to version ${{ steps.release.outputs.client--version }} [skip ci]" || echo "No changes to commit"
 
       # ========== MCP-SERVER PIPELINE ==========
       - name: Build & Push MCP Docker Image
@@ -79,7 +79,7 @@ jobs:
           node utility/update-kustomize.js mcp-server mcp-server ${{ steps.release.outputs.mcp-server--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore(deploy): update mcp-server kustomize to version ${{ steps.release.outputs.mcp-server--version }} [skip ci]" || echo "No changes to commit"
+          git commit -am "deploy: update mcp-server kustomize to version ${{ steps.release.outputs.mcp-server--version }} [skip ci]" || echo "No changes to commit"
 
       # ========== FINALIZE PIPELINE ==========
       - name: Push Kustomize Updates and Fast-Forward Prod
