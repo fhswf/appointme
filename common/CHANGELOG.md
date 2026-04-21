@@ -1,3 +1,12 @@
+# Changelog
+
+## [1.16.4](https://github.com/fhswf/appointme/compare/common@1.16.3...common-v1.16.4) (2026-04-21)
+
+
+### Fixes
+
+* add translation for changelog description across all supported locales ([80d6e11](https://github.com/fhswf/appointme/commit/80d6e1108982170a86af3e1c30bbccea9de1ced6))
+
 ## common [1.16.3](https://github.com/fhswf/appointme/compare/common@1.16.2...common@1.16.3) (2026-04-21)
 
 
@@ -58,7 +67,7 @@
 
 * use linear time algorithm for merging of interval sets ([db84c87](https://github.com/fhswf/appointme/commit/db84c870eb154fd26c7c9314ed518b5c1b1d10c4))
 
-# common [1.16.0](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0) (2026-01-25)
+## common [1.16.0](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0) (2026-01-25)
 
 
 ### Bug Fixes
@@ -71,7 +80,7 @@
 
 * add gender-aware translations ([528e4d5](https://github.com/fhswf/appointme/commit/528e4d5f66929c462cd53f63dc43410f8ce2b2de))
 
-# common [1.16.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0-rc.1) (2026-01-24)
+## common [1.16.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.15.2...common@1.16.0-rc.1) (2026-01-24)
 
 
 ### Bug Fixes
@@ -112,7 +121,7 @@
 
 * update legal information on the landing page ([7854f2d](https://github.com/fhswf/appointme/commit/7854f2dbd2b31c6a0461a41cef5331619f967e90))
 
-# common [1.15.0](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0) (2026-01-20)
+## common [1.15.0](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0) (2026-01-20)
 
 
 ### Bug Fixes
@@ -182,14 +191,14 @@
 * ui improvements ([d67d978](https://github.com/fhswf/appointme/commit/d67d97844fc0afca2641aac16d809900f8dece85))
 * ui improvements ([8a9bf18](https://github.com/fhswf/appointme/commit/8a9bf183fec5d58eff336bb7a593fa586a78c16e))
 
-# common [1.15.0-rc.4](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.3...common@1.15.0-rc.4) (2026-01-16)
+## common [1.15.0-rc.4](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.3...common@1.15.0-rc.4) (2026-01-16)
 
 
 ### Features
 
 * introduce role-based access control for events and OIDC user role integration ([afac97c](https://github.com/fhswf/appointme/commit/afac97cc6960c8f0c64409b3d2910777d3810bf8))
 
-# common [1.15.0-rc.3](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.2...common@1.15.0-rc.3) (2026-01-07)
+## common [1.15.0-rc.3](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.2...common@1.15.0-rc.3) (2026-01-07)
 
 
 ### Bug Fixes
@@ -258,7 +267,7 @@
 * ui improvements ([d67d978](https://github.com/fhswf/appointme/commit/d67d97844fc0afca2641aac16d809900f8dece85))
 * ui improvements ([8a9bf18](https://github.com/fhswf/appointme/commit/8a9bf183fec5d58eff336bb7a593fa586a78c16e))
 
-# common [1.15.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.1...common@1.15.0-rc.2) (2026-01-04)
+## common [1.15.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.15.0-rc.1...common@1.15.0-rc.2) (2026-01-04)
 
 
 ### Bug Fixes
@@ -270,14 +279,14 @@
 
 * centralize documentation generation ([976ac6d](https://github.com/fhswf/appointme/commit/976ac6db6123dbd19d1c31ab46737154b4f7b51a))
 
-# common [1.15.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0-rc.1) (2025-12-31)
+## common [1.15.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.14.0...common@1.15.0-rc.1) (2025-12-31)
 
 
 ### Features
 
 * recurring events ([e9a1f9f](https://github.com/fhswf/appointme/commit/e9a1f9f89b04a2df72fca75db44f443568260c55))
 
-# common [1.14.0](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0) (2025-12-29)
+## common [1.14.0](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0) (2025-12-29)
 
 
 ### Features
@@ -285,7 +294,7 @@
 * add agenda view with all appointments ([adfa0ce](https://github.com/fhswf/appointme/commit/adfa0ce8b4992093d749d6538dddb3698c2c7ab8))
 * Add persistent agenda visible calendars to user profiles and integrate them into the appointments page. ([b826bd1](https://github.com/fhswf/appointme/commit/b826bd1f60d43a28e9fb97642220d4bb02c05241))
 
-# common [1.14.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0-rc.1) (2025-12-23)
+## common [1.14.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.13.0...common@1.14.0-rc.1) (2025-12-23)
 
 
 ### Features
@@ -293,7 +302,7 @@
 * add agenda view with all appointments ([adfa0ce](https://github.com/fhswf/appointme/commit/adfa0ce8b4992093d749d6538dddb3698c2c7ab8))
 * Add persistent agenda visible calendars to user profiles and integrate them into the appointments page. ([b826bd1](https://github.com/fhswf/appointme/commit/b826bd1f60d43a28e9fb97642220d4bb02c05241))
 
-# common [1.13.0](https://github.com/fhswf/appointme/compare/common@1.12.0...common@1.13.0) (2025-12-18)
+## common [1.13.0](https://github.com/fhswf/appointme/compare/common@1.12.0...common@1.13.0) (2025-12-18)
 
 
 ### Features
@@ -302,7 +311,7 @@
 * Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
 * simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
 
-# common [1.13.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.12.0...common@1.13.0-rc.1) (2025-12-18)
+## common [1.13.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.12.0...common@1.13.0-rc.1) (2025-12-18)
 
 
 ### Features
@@ -311,7 +320,7 @@
 * Implement event tagging and refactor the public planning page with dark mode support. ([e6646b0](https://github.com/fhswf/appointme/commit/e6646b092ee18393c2a52cd417348cd5b65488a4))
 * simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
 
-# common [1.12.0](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0) (2025-12-17)
+## common [1.12.0](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0) (2025-12-17)
 
 
 ### Features
@@ -325,7 +334,7 @@
 * ui improvements ([f7e88df](https://github.com/fhswf/appointme/commit/f7e88dfeb8b7341723a0e7718b89d094c847c015))
 * ui improvements ([1e4f048](https://github.com/fhswf/appointme/commit/1e4f0484eeca7c5865af9bc45b941f611bf9bc7a))
 
-# common [1.12.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.12.0-rc.1...common@1.12.0-rc.2) (2025-12-17)
+## common [1.12.0-rc.2](https://github.com/fhswf/appointme/compare/common@1.12.0-rc.1...common@1.12.0-rc.2) (2025-12-17)
 
 
 ### Features
@@ -335,14 +344,14 @@
 * ui improvements ([f7e88df](https://github.com/fhswf/appointme/commit/f7e88dfeb8b7341723a0e7718b89d094c847c015))
 * ui improvements ([1e4f048](https://github.com/fhswf/appointme/commit/1e4f0484eeca7c5865af9bc45b941f611bf9bc7a))
 
-# common [1.12.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0-rc.1) (2025-12-15)
+## common [1.12.0-rc.1](https://github.com/fhswf/appointme/compare/common@1.11.0...common@1.12.0-rc.1) (2025-12-15)
 
 
 ### Features
 
 * enhance login experience ([9d86c9c](https://github.com/fhswf/appointme/commit/9d86c9cab79ef2379e10e3ceb472bcbc79792f20))
 
-# common [1.11.0](https://github.com/fhswf/appointme/compare/common@1.10.0...common@1.11.0) (2025-12-12)
+## common [1.11.0](https://github.com/fhswf/appointme/compare/common@1.10.0...common@1.11.0) (2025-12-12)
 
 
 ### Bug Fixes
@@ -354,21 +363,21 @@
 
 * rebranding to "appointme" ([d73ce59](https://github.com/fhswf/appointme/commit/d73ce597bc90a896a6787ce8cb5f2415594063c5))
 
-# common [1.10.0](https://github.com/fhswf/appointme/compare/common@1.9.0...common@1.10.0) (2025-12-10)
+## common [1.10.0](https://github.com/fhswf/appointme/compare/common@1.9.0...common@1.10.0) (2025-12-10)
 
 
 ### Features
 
 * database migration ([c326a4c](https://github.com/fhswf/appointme/commit/c326a4c456a369bd45fe25f6c8f933b5c817dfd5))
 
-# common [1.9.0](https://github.com/fhswf/appointme/compare/common@1.8.0...common@1.9.0) (2025-12-10)
+## common [1.9.0](https://github.com/fhswf/appointme/compare/common@1.8.0...common@1.9.0) (2025-12-10)
 
 
 ### Features
 
 * externalize contact information to environment variables and a new component, updating legal pages and i18n. ([5e9aa07](https://github.com/fhswf/appointme/commit/5e9aa0732d026874d77d1f58107ffddeb4befae1))
 
-# common [1.8.0](https://github.com/fhswf/appointme/compare/common@1.7.0...common@1.8.0) (2025-12-10)
+## common [1.8.0](https://github.com/fhswf/appointme/compare/common@1.7.0...common@1.8.0) (2025-12-10)
 
 
 ### Features
@@ -379,7 +388,7 @@
 * introduce AuthProvider for centralized authentication and streamline root routing to use `/` instead of `/app`. ([679d71b](https://github.com/fhswf/appointme/commit/679d71b34dd2f26cb9df58c7408e8e47cbc20f7b))
 * ui improvements ([bd566a4](https://github.com/fhswf/appointme/commit/bd566a4def557b95e47a5dc65ba369131af7b613))
 
-# common [1.7.0](https://github.com/fhswf/appointme/compare/common@1.6.0...common@1.7.0) (2025-12-10)
+## common [1.7.0](https://github.com/fhswf/appointme/compare/common@1.6.0...common@1.7.0) (2025-12-10)
 
 
 ### Features
@@ -388,14 +397,14 @@
 * Add user welcome field, update i18n password key, enhance user update security, and integrate new client icons. ([ac5aac0](https://github.com/fhswf/appointme/commit/ac5aac038d07ad84f167c787c47d062c47ddc7e8))
 * Implement user profile page with Gravatar support, user URL updates, and i18n for navigation. ([1bfa2d6](https://github.com/fhswf/appointme/commit/1bfa2d64c04897dba6a99e6391cec0a5a51270d2))
 
-# common [1.6.0](https://github.com/fhswf/appointme/compare/common@1.5.0...common@1.6.0) (2025-12-09)
+## common [1.6.0](https://github.com/fhswf/appointme/compare/common@1.5.0...common@1.6.0) (2025-12-09)
 
 
 ### Features
 
 * Add French, Italian, Japanese, Korean, Chinese, and Spanish locales and update i18n integration. ([ba21d93](https://github.com/fhswf/appointme/commit/ba21d93db3826e3ea2944da115e6ae64ad6abeae))
 
-# common [1.5.0](https://github.com/fhswf/appointme/compare/common@1.4.0...common@1.5.0) (2025-12-09)
+## common [1.5.0](https://github.com/fhswf/appointme/compare/common@1.4.0...common@1.5.0) (2025-12-09)
 
 
 ### Bug Fixes
@@ -407,7 +416,7 @@
 
 * Add optional email field to CalDAV accounts and use it for event organizers when creating events. ([6283fdc](https://github.com/fhswf/appointme/commit/6283fdc9f3c682e52cee82a4f859d90032928300))
 
-# common [1.4.0](https://github.com/fhswf/appointme/compare/common@1.3.0...common@1.4.0) (2025-12-09)
+## common [1.4.0](https://github.com/fhswf/appointme/compare/common@1.3.0...common@1.4.0) (2025-12-09)
 
 
 ### Features
@@ -416,7 +425,7 @@
 * add OIDC controller tests and update Vitest dependencies. ([8d80865](https://github.com/fhswf/appointme/commit/8d8086527915a67e4868b62cf944a55a10794c32))
 * i18n restructured ([2d25c89](https://github.com/fhswf/appointme/commit/2d25c895228f4c4ad17e4237ba5c45f229527fa9))
 
-# common [1.3.0](https://github.com/fhswf/appointme/compare/common@1.2.0...common@1.3.0) (2025-12-08)
+## common [1.3.0](https://github.com/fhswf/appointme/compare/common@1.2.0...common@1.3.0) (2025-12-08)
 
 
 ### Bug Fixes
@@ -461,7 +470,7 @@
 * Implement Google Calendar event insertion, improve free/busy time calculation, and add token revocation. ([c2e86b3](https://github.com/fhswf/appointme/commit/c2e86b34ae2923a598daa9e513c94a63926b4ccf))
 * quality assurance ([#124](https://github.com/fhswf/appointme/issues/124)) ([87bf9a7](https://github.com/fhswf/appointme/commit/87bf9a7881825d21cf492ae37bb9359aa96d4d87))
 
-# common [1.2.0](https://github.com/fhswf/appointme/compare/common@1.1.11...common@1.2.0) (2025-12-03)
+## common [1.2.0](https://github.com/fhswf/appointme/compare/common@1.1.11...common@1.2.0) (2025-12-03)
 
 
 ### Features
@@ -551,14 +560,14 @@
 
 * **common:** fix IntervalSet constructor ([bd113bb](https://github.com/fhswf/appointme/commit/bd113bbc1e0ef5fd4b613de53a16f4dae74ee98f))
 
-# common [1.1.0](https://github.com/fhswf/appointme/compare/common@1.0.0...common@1.1.0) (2023-10-09)
+## common [1.1.0](https://github.com/fhswf/appointme/compare/common@1.0.0...common@1.1.0) (2023-10-09)
 
 
 ### Features
 
 * quality assurance ([#124](https://github.com/fhswf/appointme/issues/124)) ([2f457e5](https://github.com/fhswf/appointme/commit/2f457e52251110d6f6eb695e2467e41d2bfe9b73))
 
-# common 1.0.0 (2023-09-10)
+## common 1.0.0 (2023-09-10)
 
 
 ### Bug Fixes
@@ -583,7 +592,7 @@
 * **event type:** add min/max timespan for events, add maximum number of events per day ([59454e7](https://github.com/fhswf/appointme/commit/59454e7169da395f2bd071e77fb74f0eadf6557f))
 * **event type:** remove deprecated fields ([4f85047](https://github.com/fhswf/appointme/commit/4f85047cf3f0520873785011b8071308218c7880))
 
-# [@fhswf/appointme-common-v1.3.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.3.0...@fhswf/appointme-common-v1.3.1) (2021-05-28)
+## [@fhswf/appointme-common-v1.3.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.3.0...@fhswf/appointme-common-v1.3.1) (2021-05-28)
 
 
 ### Bug Fixes
@@ -591,28 +600,28 @@
 * **build:** fix CI build ([b420d77](https://github.com/fhswf/appointme/commit/b420d7751eb1a4eb33b4ad4a3462ec52d0449b2c))
 * **build:** fix CI build on GitHub ([f866ccd](https://github.com/fhswf/appointme/commit/f866ccdcf2cbbf455253491da7b0e699a8a5c2b2))
 
-# [@fhswf/appointme-common-v1.3.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.2.1...@fhswf/appointme-common-v1.3.0) (2021-05-28)
+## [@fhswf/appointme-common-v1.3.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.2.1...@fhswf/appointme-common-v1.3.0) (2021-05-28)
 
 
 ### Features
 
 * **event type:** remove deprecated fields ([4f85047](https://github.com/fhswf/appointme/commit/4f85047cf3f0520873785011b8071308218c7880))
 
-# [@fhswf/appointme-common-v1.2.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.2.0...@fhswf/appointme-common-v1.2.1) (2021-05-28)
+## [@fhswf/appointme-common-v1.2.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.2.0...@fhswf/appointme-common-v1.2.1) (2021-05-28)
 
 
 ### Bug Fixes
 
 * **build:** fix build of appointme-common ([01f4a8e](https://github.com/fhswf/appointme/commit/01f4a8e5475c8f425a0857b571b4735b1ddeb8b5))
 
-# [@fhswf/appointme-common-v1.2.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.1.0...@fhswf/appointme-common-v1.2.0) (2021-05-28)
+## [@fhswf/appointme-common-v1.2.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.1.0...@fhswf/appointme-common-v1.2.0) (2021-05-28)
 
 
 ### Features
 
 * **event type:** add min/max timespan for events, add maximum number of events per day ([59454e7](https://github.com/fhswf/appointme/commit/59454e7169da395f2bd071e77fb74f0eadf6557f))
 
-# [@fhswf/appointme-common-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.0.0...@fhswf/appointme-common-v1.1.0) (2021-05-24)
+## [@fhswf/appointme-common-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-common-v1.0.0...@fhswf/appointme-common-v1.1.0) (2021-05-24)
 
 
 ### Bug Fixes
@@ -627,7 +636,7 @@
 
 * common classes for handling free/busy intervals ([3a461f4](https://github.com/fhswf/appointme/commit/3a461f461b04f1a7bec12ee551ef6849cfb2afaf))
 
-# @fhswf/appointme-common-v1.0.0 (2021-05-17)
+## @fhswf/appointme-common-v1.0.0 (2021-05-17)
 
 
 ### Bug Fixes

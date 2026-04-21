@@ -1,3 +1,27 @@
+# Changelog
+
+## [1.43.2](https://github.com/fhswf/appointme/compare/backend@1.43.1...backend-v1.43.2) (2026-04-21)
+
+
+### Fixes
+
+* propagate runtime environment variables in Dockerfile and update staging workflow configuration ([50a47b1](https://github.com/fhswf/appointme/commit/50a47b1c1981621d9d6419accb7d2e0e5402a9be))
+
+
+### Patches
+
+* **deploy:** update dev overlays to sha-0c266c14 [skip ci] ([28a7334](https://github.com/fhswf/appointme/commit/28a7334904b14245c5523250c6573c545d11c07f))
+* **deploy:** update dev overlays to sha-33494968 [skip ci] ([9409178](https://github.com/fhswf/appointme/commit/94091788770e4f6424226de65d1ab8d0422216cb))
+* **deploy:** update dev overlays to sha-400cd368 [skip ci] ([4dc9f98](https://github.com/fhswf/appointme/commit/4dc9f981fa9855183264ae1da0d5fae4765561d2))
+* **deploy:** update dev overlays to sha-4c8235a0 [skip ci] ([8a142bf](https://github.com/fhswf/appointme/commit/8a142bf0fcdde94b97dee9120ac2bd7604b92acb))
+* **deploy:** update dev overlays to sha-50a47b1c [skip ci] ([5856937](https://github.com/fhswf/appointme/commit/585693715a23a56d6459685799c97e0f7cc08c1c))
+* **deploy:** update dev overlays to sha-5ec653f3 [skip ci] ([b3e359b](https://github.com/fhswf/appointme/commit/b3e359b9b4219b2cde29fdd33542c5c82473c698))
+* **deploy:** update dev overlays to sha-81a5823b [skip ci] ([f9b19f1](https://github.com/fhswf/appointme/commit/f9b19f1e0aa1dbe7cad2a208baeca757ba0609d3))
+* **deploy:** update dev overlays to sha-8db4baaf [skip ci] ([080ec13](https://github.com/fhswf/appointme/commit/080ec13f375e605b5a9cac1698a17061c2cdd7e6))
+* **deploy:** update dev overlays to sha-90f406a6 [skip ci] ([3dacbb8](https://github.com/fhswf/appointme/commit/3dacbb831cc0f0d8fd045b95879c1e6ff90cb508))
+* upgrade @sentry/node and @sentry/profiling-node to 10.49.0 ([7a17d01](https://github.com/fhswf/appointme/commit/7a17d0103982788d94a83c4d124c51d5ea695184))
+* use `release-please` for release management ([7c01559](https://github.com/fhswf/appointme/commit/7c0155912b7e04954c483fc526e80b68be262d35))
+
 ## backend [1.43.1](https://github.com/fhswf/appointme/compare/backend@1.43.0...backend@1.43.1) (2026-04-21)
 
 
@@ -68,7 +92,7 @@
 
 * **common:** upgraded to 1.16.3-rc.1
 
-# backend [1.43.0](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0) (2026-02-09)
+## backend [1.43.0](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0) (2026-02-09)
 
 
 ### Bug Fixes
@@ -88,7 +112,7 @@
 
 * **common:** upgraded to 1.16.2
 
-# backend [1.43.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0-rc.1) (2026-02-07)
+## backend [1.43.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.42.0...backend@1.43.0-rc.1) (2026-02-07)
 
 
 ### Bug Fixes
@@ -108,14 +132,14 @@
 
 * **common:** upgraded to 1.16.2-rc.1
 
-# backend [1.42.0](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0) (2026-01-29)
+## backend [1.42.0](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0) (2026-01-29)
 
 
 ### Features
 
 * argocd refactoring ([409fe96](https://github.com/fhswf/appointme/commit/409fe96b9fa7e1af98cd792f17024c313bc7382f))
 
-# backend [1.42.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0-rc.1) (2026-01-29)
+## backend [1.42.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.41.3...backend@1.42.0-rc.1) (2026-01-29)
 
 
 ### Features
@@ -165,21 +189,21 @@
 * debug lti timeout ([3e5b284](https://github.com/fhswf/appointme/commit/3e5b284abee1ded058e532b4e532d8c36aee450a))
 * debug lti timeout ([eae286b](https://github.com/fhswf/appointme/commit/eae286b8a3ec6f6003c49efcb785b620465086e0))
 
-# backend [1.41.0](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0) (2026-01-28)
+## backend [1.41.0](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0) (2026-01-28)
 
 
 ### Features
 
 * tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
 
-# backend [1.41.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0-rc.1) (2026-01-28)
+## backend [1.41.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.40.0...backend@1.41.0-rc.1) (2026-01-28)
 
 
 ### Features
 
 * tag different environments in sentry ([269a5bb](https://github.com/fhswf/appointme/commit/269a5bb8a317e06730f6f557c5a79f088bdd5cff))
 
-# backend [1.40.0](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0) (2026-01-28)
+## backend [1.40.0](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0) (2026-01-28)
 
 
 ### Bug Fixes
@@ -198,7 +222,7 @@
 * provide extended reconciliation ([707aaad](https://github.com/fhswf/appointme/commit/707aaad49c818673852dc86e72277d45b535f0ca))
 * provide extended reconciliation ([14211c7](https://github.com/fhswf/appointme/commit/14211c7ab8653ff4cb47a1d726875f41f5f31900))
 
-# backend [1.40.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.3...backend@1.40.0-rc.4) (2026-01-27)
+## backend [1.40.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.3...backend@1.40.0-rc.4) (2026-01-27)
 
 
 ### Bug Fixes
@@ -206,14 +230,14 @@
 * handle login if user slug is not available ([4cf0310](https://github.com/fhswf/appointme/commit/4cf03107af7e1b0f81d0d261aa800d03f8f5c14e))
 * handle login if user slug is not available ([19e0b78](https://github.com/fhswf/appointme/commit/19e0b78bde962fb2a275e54701cfcda32e4cb304))
 
-# backend [1.40.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.2...backend@1.40.0-rc.3) (2026-01-27)
+## backend [1.40.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.2...backend@1.40.0-rc.3) (2026-01-27)
 
 
 ### Bug Fixes
 
 * full reconciliation should check all future appointments ([54f5851](https://github.com/fhswf/appointme/commit/54f585139af12671c5c4a1baef0baf1abe23a8c9))
 
-# backend [1.40.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.1...backend@1.40.0-rc.2) (2026-01-27)
+## backend [1.40.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.40.0-rc.1...backend@1.40.0-rc.2) (2026-01-27)
 
 
 ### Features
@@ -221,7 +245,7 @@
 * provide extended reconciliation ([707aaad](https://github.com/fhswf/appointme/commit/707aaad49c818673852dc86e72277d45b535f0ca))
 * provide extended reconciliation ([14211c7](https://github.com/fhswf/appointme/commit/14211c7ab8653ff4cb47a1d726875f41f5f31900))
 
-# backend [1.40.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0-rc.1) (2026-01-26)
+## backend [1.40.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.39.0...backend@1.40.0-rc.1) (2026-01-26)
 
 
 ### Bug Fixes
@@ -235,7 +259,7 @@
 
 * asynchronous calendar entries ([6b59783](https://github.com/fhswf/appointme/commit/6b59783dc4ab98edc222506c5b3d042fb48c4c7e))
 
-# backend [1.39.0](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0) (2026-01-25)
+## backend [1.39.0](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0) (2026-01-25)
 
 
 ### Bug Fixes
@@ -255,14 +279,14 @@
 
 * **common:** upgraded to 1.16.0
 
-# backend [1.39.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.39.0-rc.1...backend@1.39.0-rc.2) (2026-01-25)
+## backend [1.39.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.39.0-rc.1...backend@1.39.0-rc.2) (2026-01-25)
 
 
 ### Bug Fixes
 
 * update list of required API scopes ([7790f6d](https://github.com/fhswf/appointme/commit/7790f6db678c18b56fc0d82f66a7a619bce0cf31))
 
-# backend [1.39.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0-rc.1) (2026-01-24)
+## backend [1.39.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.38.3...backend@1.39.0-rc.1) (2026-01-24)
 
 
 ### Features
@@ -335,7 +359,7 @@
 
 * refine csrf exemption rules ([f88e5c8](https://github.com/fhswf/appointme/commit/f88e5c80d526596a7dd673f0d46b782f600f20cd))
 
-# backend [1.38.0](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0) (2026-01-21)
+## backend [1.38.0](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0) (2026-01-21)
 
 
 ### Bug Fixes
@@ -369,7 +393,7 @@
 
 * **common:** upgraded to 1.15.1
 
-# backend [1.38.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.5...backend@1.38.0-rc.6) (2026-01-21)
+## backend [1.38.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.5...backend@1.38.0-rc.6) (2026-01-21)
 
 
 
@@ -379,7 +403,7 @@
 
 * **common:** upgraded to 1.15.1-rc.1
 
-# backend [1.38.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.4...backend@1.38.0-rc.5) (2026-01-21)
+## backend [1.38.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.4...backend@1.38.0-rc.5) (2026-01-21)
 
 
 ### Bug Fixes
@@ -397,14 +421,14 @@
 * filter transient fields in settings export ([50cde89](https://github.com/fhswf/appointme/commit/50cde897b505ac6886a6851213bd0d2c317b0c32))
 * import/export user settings ([72ed714](https://github.com/fhswf/appointme/commit/72ed7142b51026d7f03081b4c6a403507f9e02ac))
 
-# backend [1.38.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.3...backend@1.38.0-rc.4) (2026-01-20)
+## backend [1.38.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.3...backend@1.38.0-rc.4) (2026-01-20)
 
 
 ### Bug Fixes
 
 * avoid accidentally overwriting google tokens on oidc login ([e075f07](https://github.com/fhswf/appointme/commit/e075f07b0b5f77300a6bc405dd451018a331f682))
 
-# backend [1.38.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.2...backend@1.38.0-rc.3) (2026-01-20)
+## backend [1.38.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.2...backend@1.38.0-rc.3) (2026-01-20)
 
 
 ### Bug Fixes
@@ -412,7 +436,7 @@
 * **backend:** use production env for backend ([f7d9eb4](https://github.com/fhswf/appointme/commit/f7d9eb499e0d1ebe1e5352f2201545a40b651a93))
 * visibility of restricted events ([1af3f3e](https://github.com/fhswf/appointme/commit/1af3f3e71d2445de55197f866380bda320ca5187))
 
-# backend [1.38.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.1...backend@1.38.0-rc.2) (2026-01-20)
+## backend [1.38.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.38.0-rc.1...backend@1.38.0-rc.2) (2026-01-20)
 
 
 ### Bug Fixes
@@ -426,14 +450,14 @@
 
 * separate access token from "transient" lti token ([da9e2e7](https://github.com/fhswf/appointme/commit/da9e2e7a6362ab65fd2c07b6cc12c685fc349d1e))
 
-# backend [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0-rc.1) (2026-01-20)
+## backend [1.38.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.37.0...backend@1.38.0-rc.1) (2026-01-20)
 
 
 ### Features
 
 * separate access token from "transient" lti token ([a8d1482](https://github.com/fhswf/appointme/commit/a8d1482b1429a3b8b6a0710183d2f24f67c6798a))
 
-# backend [1.37.0](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0) (2026-01-20)
+## backend [1.37.0](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0) (2026-01-20)
 
 
 ### Bug Fixes
@@ -703,14 +727,14 @@
 
 * **common:** upgraded to 1.15.0
 
-# backend [1.37.0-rc.22](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.21...backend@1.37.0-rc.22) (2026-01-20)
+## backend [1.37.0-rc.22](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.21...backend@1.37.0-rc.22) (2026-01-20)
 
 
 ### Bug Fixes
 
 * improve csrf protection ([e33fb05](https://github.com/fhswf/appointme/commit/e33fb05c5dd9bae97d8953fd006bd61df1d60752))
 
-# backend [1.37.0-rc.21](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.20...backend@1.37.0-rc.21) (2026-01-19)
+## backend [1.37.0-rc.21](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.20...backend@1.37.0-rc.21) (2026-01-19)
 
 
 ### Bug Fixes
@@ -725,7 +749,7 @@
 * LTI integration ([e877ff1](https://github.com/fhswf/appointme/commit/e877ff150167c225075fa4d51e2c2c7b2cdbf852))
 * LTI integration ([194bedc](https://github.com/fhswf/appointme/commit/194bedc13a1bf0dbe267a2c9f46ecf6b1e55b45a))
 
-# backend [1.37.0-rc.20](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.19...backend@1.37.0-rc.20) (2026-01-19)
+## backend [1.37.0-rc.20](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.19...backend@1.37.0-rc.20) (2026-01-19)
 
 
 ### Bug Fixes
@@ -733,14 +757,14 @@
 * LTI authentication ([8ffeff4](https://github.com/fhswf/appointme/commit/8ffeff40cf23828f8f571085df02324dc324d4f3))
 * LTI authentication ([fda74ac](https://github.com/fhswf/appointme/commit/fda74ac1d42a2b73647ae0f420cc0a915247ade2))
 
-# backend [1.37.0-rc.19](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.18...backend@1.37.0-rc.19) (2026-01-19)
+## backend [1.37.0-rc.19](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.18...backend@1.37.0-rc.19) (2026-01-19)
 
 
 ### Bug Fixes
 
 * LTI authentication ([05207f9](https://github.com/fhswf/appointme/commit/05207f987cbb826ceaddd91982761236e1bcfd72))
 
-# backend [1.37.0-rc.18](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.17...backend@1.37.0-rc.18) (2026-01-19)
+## backend [1.37.0-rc.18](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.17...backend@1.37.0-rc.18) (2026-01-19)
 
 
 ### Bug Fixes
@@ -748,21 +772,21 @@
 * LTI authentication ([2e3fba3](https://github.com/fhswf/appointme/commit/2e3fba33905102a1b56a12afcdfd778c3e048042))
 * LTI authentication ([09e638b](https://github.com/fhswf/appointme/commit/09e638b18bf5bd4a144f48b9c32975de885c6e80))
 
-# backend [1.37.0-rc.17](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.16...backend@1.37.0-rc.17) (2026-01-17)
+## backend [1.37.0-rc.17](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.16...backend@1.37.0-rc.17) (2026-01-17)
 
 
 ### Bug Fixes
 
 * lti login configuration ([23aa70b](https://github.com/fhswf/appointme/commit/23aa70b1bdf4788b1ae911f7f21cd6a3c5b572d8))
 
-# backend [1.37.0-rc.16](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.15...backend@1.37.0-rc.16) (2026-01-17)
+## backend [1.37.0-rc.16](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.15...backend@1.37.0-rc.16) (2026-01-17)
 
 
 ### Bug Fixes
 
 * exempt lti login from csrf ([e7f9fbd](https://github.com/fhswf/appointme/commit/e7f9fbd6cb7fc8009de29d105a8159e4d6e58002))
 
-# backend [1.37.0-rc.15](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.14...backend@1.37.0-rc.15) (2026-01-16)
+## backend [1.37.0-rc.15](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.14...backend@1.37.0-rc.15) (2026-01-16)
 
 
 ### Bug Fixes
@@ -788,21 +812,21 @@
 
 * **common:** upgraded to 1.15.0-rc.4
 
-# backend [1.37.0-rc.14](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.13...backend@1.37.0-rc.14) (2026-01-13)
+## backend [1.37.0-rc.14](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.13...backend@1.37.0-rc.14) (2026-01-13)
 
 
 ### Bug Fixes
 
 * **backend:** handle changes in `rrule.between()` ([9b375d5](https://github.com/fhswf/appointme/commit/9b375d5d165da3eb08ff8940cc3c33315ab48af0))
 
-# backend [1.37.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.12...backend@1.37.0-rc.13) (2026-01-11)
+## backend [1.37.0-rc.13](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.12...backend@1.37.0-rc.13) (2026-01-11)
 
 
 ### Bug Fixes
 
 * **backend:** use dynamic import for instrumentation ([0199f2a](https://github.com/fhswf/appointme/commit/0199f2a403b3eab8c7afa458e0a087900564d3b7))
 
-# backend [1.37.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.11...backend@1.37.0-rc.12) (2026-01-10)
+## backend [1.37.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.11...backend@1.37.0-rc.12) (2026-01-10)
 
 
 ### Bug Fixes
@@ -810,21 +834,21 @@
 * improve sentry instrumentation ([2166525](https://github.com/fhswf/appointme/commit/2166525393c6e066ce2e9f9a9f44e153689c8e61))
 * update ical generation ([c138a25](https://github.com/fhswf/appointme/commit/c138a25dc7143de2f12d7ccab52ae35379d9bfb9))
 
-# backend [1.37.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.10...backend@1.37.0-rc.11) (2026-01-09)
+## backend [1.37.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.10...backend@1.37.0-rc.11) (2026-01-09)
 
 
 ### Bug Fixes
 
 * issues due to mongoose version bump ([cdcf89b](https://github.com/fhswf/appointme/commit/cdcf89bacaede9be877344d5b8dc15f8d4cc3d67))
 
-# backend [1.37.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.9...backend@1.37.0-rc.10) (2026-01-07)
+## backend [1.37.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.9...backend@1.37.0-rc.10) (2026-01-07)
 
 
 ### Bug Fixes
 
 * **backend:** upgrade Docker base image from Bullseye to Bookworm. ([49895b3](https://github.com/fhswf/appointme/commit/49895b3300227bf9a951a382afec4770a7dd00ba))
 
-# backend [1.37.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.8...backend@1.37.0-rc.9) (2026-01-07)
+## backend [1.37.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.8...backend@1.37.0-rc.9) (2026-01-07)
 
 
 ### Bug Fixes
@@ -1067,21 +1091,21 @@
 
 * **common:** upgraded to 1.15.0-rc.3
 
-# backend [1.37.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.7...backend@1.37.0-rc.8) (2026-01-04)
+## backend [1.37.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.7...backend@1.37.0-rc.8) (2026-01-04)
 
 
 ### Bug Fixes
 
 * **backend:** fix Dockerfile dependencies and trigger release ([acdf6c5](https://github.com/fhswf/appointme/commit/acdf6c54f95ad95a76a72f6240cfd64b8afed351))
 
-# backend [1.37.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.6...backend@1.37.0-rc.7) (2026-01-04)
+## backend [1.37.0-rc.7](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.6...backend@1.37.0-rc.7) (2026-01-04)
 
 
 ### Bug Fixes
 
 * replace yarn in init container ([ff5f4a5](https://github.com/fhswf/appointme/commit/ff5f4a573129644aed8910d19b7a6dded48db5ea))
 
-# backend [1.37.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.5...backend@1.37.0-rc.6) (2026-01-04)
+## backend [1.37.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.5...backend@1.37.0-rc.6) (2026-01-04)
 
 
 ### Bug Fixes
@@ -1093,21 +1117,21 @@
 
 * centralize documentation generation ([976ac6d](https://github.com/fhswf/appointme/commit/976ac6db6123dbd19d1c31ab46737154b4f7b51a))
 
-# backend [1.37.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.4...backend@1.37.0-rc.5) (2026-01-04)
+## backend [1.37.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.4...backend@1.37.0-rc.5) (2026-01-04)
 
 
 ### Bug Fixes
 
 * bump openid-client to v6 ([6afd919](https://github.com/fhswf/appointme/commit/6afd9199380bbff08e9e149e89715a68c404efdb))
 
-# backend [1.37.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.3...backend@1.37.0-rc.4) (2026-01-03)
+## backend [1.37.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.3...backend@1.37.0-rc.4) (2026-01-03)
 
 
 ### Bug Fixes
 
 * Potential fix for code scanning alert no. 140: Database query built from user-controlled sources ([19c7644](https://github.com/fhswf/appointme/commit/19c76445e23899354de99a3e4aed6668eb7a0bb1))
 
-# backend [1.37.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.2...backend@1.37.0-rc.3) (2026-01-02)
+## backend [1.37.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.2...backend@1.37.0-rc.3) (2026-01-02)
 
 
 ### Bug Fixes
@@ -1120,7 +1144,7 @@
 
 * mcp server ([24103e6](https://github.com/fhswf/appointme/commit/24103e6b42e37c763beb8eaeee9c3f0cb85d9f19))
 
-# backend [1.37.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.1...backend@1.37.0-rc.2) (2025-12-31)
+## backend [1.37.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.37.0-rc.1...backend@1.37.0-rc.2) (2025-12-31)
 
 
 ### Bug Fixes
@@ -1143,14 +1167,14 @@
 
 * **common:** upgraded to 1.15.0-rc.1
 
-# backend [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0-rc.1) (2025-12-31)
+## backend [1.37.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.36.0...backend@1.37.0-rc.1) (2025-12-31)
 
 
 ### Features
 
 * token handling ([588900c](https://github.com/fhswf/appointme/commit/588900c092800cce3aebc49baa96a804a7ae7ea6))
 
-# backend [1.36.0](https://github.com/fhswf/appointme/compare/backend@1.35.0...backend@1.36.0) (2025-12-29)
+## backend [1.36.0](https://github.com/fhswf/appointme/compare/backend@1.35.0...backend@1.36.0) (2025-12-29)
 
 
 ### Bug Fixes
@@ -1177,7 +1201,7 @@
 
 * **common:** upgraded to 1.14.0
 
-# backend [1.36.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.36.0-rc.1...backend@1.36.0-rc.2) (2025-12-27)
+## backend [1.36.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.36.0-rc.1...backend@1.36.0-rc.2) (2025-12-27)
 
 
 ### Bug Fixes
@@ -1189,7 +1213,7 @@
 
 * refactor calendar endpoint to use VEVENT data for CalDAV calendars ([b26fdec](https://github.com/fhswf/appointme/commit/b26fdec9ff6c4b42c7e88564bc7218a63b28f542))
 
-# backend [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.1-rc.1...backend@1.36.0-rc.1) (2025-12-23)
+## backend [1.36.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.35.1-rc.1...backend@1.36.0-rc.1) (2025-12-23)
 
 
 ### Bug Fixes
@@ -1220,7 +1244,7 @@
 
 * base url configuration ([2ee1503](https://github.com/fhswf/appointme/commit/2ee150348fe375c4613142ba1d859f980b2f845a))
 
-# backend [1.35.0](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0) (2025-12-19)
+## backend [1.35.0](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0) (2025-12-19)
 
 
 ### Features
@@ -1228,21 +1252,21 @@
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([e6e0014](https://github.com/fhswf/appointme/commit/e6e0014d1f3835b5f7bed5f35cfad25e7e406a60))
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
 
-# backend [1.35.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.35.0-rc.1...backend@1.35.0-rc.2) (2025-12-19)
+## backend [1.35.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.35.0-rc.1...backend@1.35.0-rc.2) (2025-12-19)
 
 
 ### Features
 
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([e6e0014](https://github.com/fhswf/appointme/commit/e6e0014d1f3835b5f7bed5f35cfad25e7e406a60))
 
-# backend [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0-rc.1) (2025-12-19)
+## backend [1.35.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.34.0...backend@1.35.0-rc.1) (2025-12-19)
 
 
 ### Features
 
 * Implement default event availability and refine scheduling logic to correctly apply buffers and include exact duration slots. ([01d6e01](https://github.com/fhswf/appointme/commit/01d6e0150c2d01a468627d414b5e94d439c7b69b))
 
-# backend [1.34.0](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0) (2025-12-18)
+## backend [1.34.0](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0) (2025-12-18)
 
 
 ### Bug Fixes
@@ -1268,7 +1292,7 @@
 
 * **common:** upgraded to 1.13.0
 
-# backend [1.34.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0-rc.1) (2025-12-18)
+## backend [1.34.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.33.0...backend@1.34.0-rc.1) (2025-12-18)
 
 
 ### Bug Fixes
@@ -1286,7 +1310,7 @@
 * improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
 * simplify event availability modes ([c0479f2](https://github.com/fhswf/appointme/commit/c0479f230f95d3e65401245ccec060fbe9c646a7))
 
-# backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-18)
+## backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-18)
 
 
 ### Bug Fixes
@@ -1322,49 +1346,49 @@
 * gracefully handle missing Google tokens in calendar and event queries and add corresponding tests. ([dc75b57](https://github.com/fhswf/appointme/commit/dc75b57f0b8e64c7dadf00e1c043abf5c65e9664))
 * Improve user identification by email or provider ID, enforce unique email addresses, and add tests for cross-provider linking. ([e05ac46](https://github.com/fhswf/appointme/commit/e05ac462ddd41e85f63c7831c819418530b23145))
 
-# backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-17)
+## backend [1.33.0](https://github.com/fhswf/appointme/compare/backend@1.32.0...backend@1.33.0) (2025-12-17)
 
 
 ### Bug Fixes
 
 * google login ([0c2cda1](https://github.com/fhswf/appointme/commit/0c2cda19f8c40441eedbbe403334c260eaf2a454))
 
-# backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
+## backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
 
 
 ### Features
 
 * improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
 
-# backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
+## backend [1.32.0-rc.12](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.11...backend@1.32.0-rc.12) (2025-12-18)
 
 
 ### Features
 
 * improve login/logout ([28c839c](https://github.com/fhswf/appointme/commit/28c839c2d2f020dd12e211d338b328c0610753de))
 
-# backend [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.10...backend@1.32.0-rc.11) (2025-12-17)
+## backend [1.32.0-rc.11](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.10...backend@1.32.0-rc.11) (2025-12-17)
 
 
 ### Bug Fixes
 
 * update Swagger server URL environment variable from `REACT_APP_URL` to `CLIENT_URL` ([851218e](https://github.com/fhswf/appointme/commit/851218e6ab75340a60fb51a3384e5e90cc354f8a))
 
-# backend [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.9...backend@1.32.0-rc.10) (2025-12-17)
+## backend [1.32.0-rc.10](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.9...backend@1.32.0-rc.10) (2025-12-17)
 
 
 ### Bug Fixes
 
 * trust proxy ([8839dc6](https://github.com/fhswf/appointme/commit/8839dc69a852db1859e7130b42a891a1b8cc9552))
 
-# backend [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.8...backend@1.32.0-rc.9) (2025-12-17)
+## backend [1.32.0-rc.9](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.8...backend@1.32.0-rc.9) (2025-12-17)
 
 
 ### Bug Fixes
 
 * simplify common package import paths by removing `/src/types` suffix. ([4ea8a35](https://github.com/fhswf/appointme/commit/4ea8a3575eaa3d4b065ab38654f293a171042962))
 
-# backend [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.7...backend@1.32.0-rc.8) (2025-12-17)
+## backend [1.32.0-rc.8](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.7...backend@1.32.0-rc.8) (2025-12-17)
 * Correct type assertion for Client property in test mock. ([cc7272b](https://github.com/fhswf/appointme/commit/cc7272bd037841642193fa7e654f76df363ab7b5))
 * regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
 
@@ -1386,14 +1410,14 @@
 
 * **common:** upgraded to 1.12.0
 
-# backend [1.32.0](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.32.0) (2025-12-13)
+## backend [1.32.0](https://github.com/fhswf/appointme/compare/backend@1.31.0...backend@1.32.0) (2025-12-13)
 
 
 ### Bug Fixes
 
 * regression error due to optional chaining ([2d381cb](https://github.com/fhswf/appointme/commit/2d381cb30c260dbf124ae8c0694069b1f348863b))
 
-# backend [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.5...backend@1.32.0-rc.6) (2025-12-17)
+## backend [1.32.0-rc.6](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.5...backend@1.32.0-rc.6) (2025-12-17)
 
 
 ### Features
@@ -1408,7 +1432,7 @@
 
 * **common:** upgraded to 1.12.0-rc.2
 
-# backend [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.4...backend@1.32.0-rc.5) (2025-12-15)
+## backend [1.32.0-rc.5](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.4...backend@1.32.0-rc.5) (2025-12-15)
 
 
 ### Bug Fixes
@@ -1436,14 +1460,14 @@
 * **common:** upgraded to 1.12.0-rc.1
 * add SBOM in docker images ([68cc2e4](https://github.com/fhswf/appointme/commit/68cc2e4ec5d9ac43870bf092819ce3a96439bfb6))
 
-# backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
+## backend [1.32.0-rc.4](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.3...backend@1.32.0-rc.4) (2025-12-12)
 
 
 ### Bug Fixes
 
 * configuration ([cac0259](https://github.com/fhswf/appointme/commit/cac0259c5100802363f124153b463ba4f2258315))
 
-# backend [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.2...backend@1.32.0-rc.3) (2025-12-12)
+## backend [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.2...backend@1.32.0-rc.3) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1451,21 +1475,21 @@
 * config update ([bff42e3](https://github.com/fhswf/appointme/commit/bff42e3e0b116b4e70771f58de022a16b007cf75))
 * config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
 
-# backend [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.2...backend@1.32.0-rc.3) (2025-12-12)
+## backend [1.32.0-rc.3](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.2...backend@1.32.0-rc.3) (2025-12-12)
 
 
 ### Bug Fixes
 
 * config update ([798e067](https://github.com/fhswf/appointme/commit/798e067ea3158e5ac898ccae6e3fd71ce41d279b))
 
-# backend [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.1...backend@1.32.0-rc.2) (2025-12-12)
+## backend [1.32.0-rc.2](https://github.com/fhswf/appointme/compare/backend@1.32.0-rc.1...backend@1.32.0-rc.2) (2025-12-12)
 
 
 ### Bug Fixes
 
 * runtime configuration of URLs ([d326a87](https://github.com/fhswf/appointme/commit/d326a8702a994924fdf4924232809476a912931f))
 
-# backend [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.31.1-rc.1...backend@1.32.0-rc.1) (2025-12-12)
+## backend [1.32.0-rc.1](https://github.com/fhswf/appointme/compare/backend@1.31.1-rc.1...backend@1.32.0-rc.1) (2025-12-12)
 
 
 ### Features
@@ -1480,7 +1504,7 @@
 * image tagging ([95e03b0](https://github.com/fhswf/appointme/commit/95e03b0906d778dd0529b6746d009a82ab0c1308))
 * version bumps ([29c4d17](https://github.com/fhswf/appointme/commit/29c4d173a15de4207c6a4e1f8a76c885ff3ba210))
 
-# backend [1.31.0](https://github.com/fhswf/appointme/compare/backend@1.30.0...backend@1.31.0) (2025-12-12)
+## backend [1.31.0](https://github.com/fhswf/appointme/compare/backend@1.30.0...backend@1.31.0) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1500,7 +1524,7 @@
 
 * **common:** upgraded to 1.11.0
 
-# backend [1.30.0](https://github.com/fhswf/appointme/compare/backend@1.29.1...backend@1.30.0) (2025-12-12)
+## backend [1.30.0](https://github.com/fhswf/appointme/compare/backend@1.29.1...backend@1.30.0) (2025-12-12)
 
 
 ### Bug Fixes
@@ -1527,7 +1551,7 @@
 
 * separate Swagger server configurations for production and development environments ([cbb46bd](https://github.com/fhswf/appointme/commit/cbb46bd7372ecaf1e2b1d0cc08aacac357617809))
 
-# backend [1.29.0](https://github.com/fhswf/appointme/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
+## backend [1.29.0](https://github.com/fhswf/appointme/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1541,7 +1565,7 @@
 * add swagger ui ([3d96b76](https://github.com/fhswf/appointme/commit/3d96b7655d9c350196fbbbb5777ffdef0c75e9fb))
 * refactor api & swagger docs ([01efa3e](https://github.com/fhswf/appointme/commit/01efa3eef808b40f6d649122990bf55f1c68f441))
 
-# backend [1.29.0](https://github.com/fhswf/appointme/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
+## backend [1.29.0](https://github.com/fhswf/appointme/compare/backend@1.28.0...backend@1.29.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1554,7 +1578,7 @@
 * add swagger ui ([3d96b76](https://github.com/fhswf/appointme/commit/3d96b7655d9c350196fbbbb5777ffdef0c75e9fb))
 * refactor api & swagger docs ([01efa3e](https://github.com/fhswf/appointme/commit/01efa3eef808b40f6d649122990bf55f1c68f441))
 
-# backend [1.28.0](https://github.com/fhswf/appointme/compare/backend@1.27.0...backend@1.28.0) (2025-12-11)
+## backend [1.28.0](https://github.com/fhswf/appointme/compare/backend@1.27.0...backend@1.28.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1566,7 +1590,7 @@
 
 * Refactor event booking logic into modular functions and introduce client-side configuration for environment variables. ([75c3380](https://github.com/fhswf/appointme/commit/75c33807d401dc6537cf0cde5cd1df4c0c7aadc0))
 
-# backend [1.27.0](https://github.com/fhswf/appointme/compare/backend@1.26.0...backend@1.27.0) (2025-12-11)
+## backend [1.27.0](https://github.com/fhswf/appointme/compare/backend@1.26.0...backend@1.27.0) (2025-12-11)
 
 
 ### Bug Fixes
@@ -1578,7 +1602,7 @@
 
 * improve Google Calendar integration ([bbb5031](https://github.com/fhswf/appointme/commit/bbb5031acc50d41e2aa7a3fe1549d1a8db269cb6))
 
-# backend [1.26.0](https://github.com/fhswf/appointme/compare/backend@1.25.2...backend@1.26.0) (2025-12-10)
+## backend [1.26.0](https://github.com/fhswf/appointme/compare/backend@1.25.2...backend@1.26.0) (2025-12-10)
 
 
 ### Features
@@ -1607,7 +1631,7 @@
 
 * simplify health check endpoint ([0e6b02a](https://github.com/fhswf/appointme/commit/0e6b02a793932ea021c02b34fd1ce5de7fe0ac5c))
 
-# backend [1.25.0](https://github.com/fhswf/appointme/compare/backend@1.24.0...backend@1.25.0) (2025-12-10)
+## backend [1.25.0](https://github.com/fhswf/appointme/compare/backend@1.24.0...backend@1.25.0) (2025-12-10)
 
 
 ### Bug Fixes
@@ -1630,7 +1654,7 @@
 
 * **common:** upgraded to 1.9.0
 
-# backend [1.24.0](https://github.com/fhswf/appointme/compare/backend@1.23.0...backend@1.24.0) (2025-12-10)
+## backend [1.24.0](https://github.com/fhswf/appointme/compare/backend@1.23.0...backend@1.24.0) (2025-12-10)
 
 
 ### Features
@@ -1646,7 +1670,7 @@
 
 * **common:** upgraded to 1.8.0
 
-# backend [1.23.0](https://github.com/fhswf/appointme/compare/backend@1.22.2...backend@1.23.0) (2025-12-10)
+## backend [1.23.0](https://github.com/fhswf/appointme/compare/backend@1.22.2...backend@1.23.0) (2025-12-10)
 
 
 ### Bug Fixes
@@ -1688,7 +1712,7 @@
 
 * mongoose import ([a243b54](https://github.com/fhswf/appointme/commit/a243b5440ab91b4ddcbda55a5a66c413e651e310))
 
-# backend [1.22.0](https://github.com/fhswf/appointme/compare/backend@1.21.0...backend@1.22.0) (2025-12-09)
+## backend [1.22.0](https://github.com/fhswf/appointme/compare/backend@1.21.0...backend@1.22.0) (2025-12-09)
 
 
 ### Features
@@ -1703,28 +1727,28 @@
 
 * **common:** upgraded to 1.5.0
 
-# backend [1.21.0](https://github.com/fhswf/appointme/compare/backend@1.20.0...backend@1.21.0) (2025-12-09)
+## backend [1.21.0](https://github.com/fhswf/appointme/compare/backend@1.20.0...backend@1.21.0) (2025-12-09)
 
 
 ### Features
 
 * Allow SMTP configuration without authentication and update K8s manifests and tests. ([1a3dee0](https://github.com/fhswf/appointme/commit/1a3dee0ce116c6542236dfeda1e206ddb0f1467e))
 
-# backend [1.20.0](https://github.com/fhswf/appointme/compare/backend@1.19.0...backend@1.20.0) (2025-12-09)
+## backend [1.20.0](https://github.com/fhswf/appointme/compare/backend@1.19.0...backend@1.20.0) (2025-12-09)
 
 
 ### Features
 
 * Add ENCRYPTION_KEY environment variable for CalDAV password encryption to deployment, secret example, and README. ([12dc113](https://github.com/fhswf/appointme/commit/12dc113cb4f337c28fd6b313665bc362d090f62f))
 
-# backend [1.19.0](https://github.com/fhswf/appointme/compare/backend@1.18.0...backend@1.19.0) (2025-12-09)
+## backend [1.19.0](https://github.com/fhswf/appointme/compare/backend@1.18.0...backend@1.19.0) (2025-12-09)
 
 
 ### Features
 
 * add Kubernetes deployment examples for ConfigMap and Secret, update README and gitignore. ([beb7391](https://github.com/fhswf/appointme/commit/beb739184d4d3a91b660297ab9a9dd34ae453259))
 
-# backend [1.18.0](https://github.com/fhswf/appointme/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
+## backend [1.18.0](https://github.com/fhswf/appointme/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
 
 
 ### Bug Fixes
@@ -1749,7 +1773,7 @@
 * Prevent Mongoose model re-compilation, enhance OIDC controller tests for unconfigured scenarios, and include `.tsx` files in SonarQube test inclusions. ([f8d0b7f](https://github.com/fhswf/appointme/commit/f8d0b7f47ef8fe4a6ed239a75664bbd4fb684b9d))
 * test duplicate `user_url` ([f730e0b](https://github.com/fhswf/appointme/commit/f730e0b27ab7aaa3bf17bd10ef0fcbad3b9fb353))
 
-# backend [1.18.0](https://github.com/fhswf/appointme/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
+## backend [1.18.0](https://github.com/fhswf/appointme/compare/backend@1.17.0...backend@1.18.0) (2025-12-09)
 
 
 ### Bug Fixes
@@ -1773,7 +1797,7 @@
 * Prevent Mongoose model re-compilation, enhance OIDC controller tests for unconfigured scenarios, and include `.tsx` files in SonarQube test inclusions. ([f8d0b7f](https://github.com/fhswf/appointme/commit/f8d0b7f47ef8fe4a6ed239a75664bbd4fb684b9d))
 * test duplicate `user_url` ([f730e0b](https://github.com/fhswf/appointme/commit/f730e0b27ab7aaa3bf17bd10ef0fcbad3b9fb353))
 
-# backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
+## backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
 
 
 ### Bug Fixes
@@ -1914,7 +1938,7 @@
 * Update encryption algorithm from AES-256-CBC to AES-256-GCM. ([04ccf64](https://github.com/fhswf/appointme/commit/04ccf6496eab32d6df67155531448e3ee17b8c5f))
 * update encryption utility to use authentication tags and refine `Event` document type ([1b7db71](https://github.com/fhswf/appointme/commit/1b7db7125ac90c672cfa050cfc407496c0fad6a9))
 
-# backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
+## backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
 
 
 ### Bug Fixes
@@ -2054,7 +2078,7 @@
 * ui improvements ([2cd8dfe](https://github.com/fhswf/appointme/commit/2cd8dfee5038775ebb1c122a5bab0a8a2ecd62c4))
 * Update encryption algorithm from AES-256-CBC to AES-256-GCM. ([04ccf64](https://github.com/fhswf/appointme/commit/04ccf6496eab32d6df67155531448e3ee17b8c5f))
 
-# backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
+## backend [1.17.0](https://github.com/fhswf/appointme/compare/backend@1.16.0...backend@1.17.0) (2025-12-08)
 
 
 ### Bug Fixes
@@ -2201,14 +2225,14 @@
 
 * **common:** upgraded to 1.3.0
 
-# backend [1.16.0](https://github.com/fhswf/appointme/compare/backend@1.15.0...backend@1.16.0) (2025-12-04)
+## backend [1.16.0](https://github.com/fhswf/appointme/compare/backend@1.15.0...backend@1.16.0) (2025-12-04)
 
 
 ### Features
 
 * Add authentication and event controller tests and fix authentication flow. ([ac27ac6](https://github.com/fhswf/appointme/commit/ac27ac6c16249b338c97f7d9ca54693b59d18bb8))
 
-# backend [1.15.0](https://github.com/fhswf/appointme/compare/backend@1.14.0...backend@1.15.0) (2025-12-03)
+## backend [1.15.0](https://github.com/fhswf/appointme/compare/backend@1.14.0...backend@1.15.0) (2025-12-03)
 
 
 ### Features
@@ -2225,7 +2249,7 @@
 
 * **common:** upgraded to 1.2.0
 
-# backend [1.14.0](https://github.com/fhswf/appointme/compare/backend@1.13.0...backend@1.14.0) (2024-11-04)
+## backend [1.14.0](https://github.com/fhswf/appointme/compare/backend@1.13.0...backend@1.14.0) (2024-11-04)
 
 
 ### Bug Fixes
@@ -2240,14 +2264,14 @@
 * **logging:** use winston for logging ([7b865d3](https://github.com/fhswf/appointme/commit/7b865d38b61382cca0f9bcab6c3a44636436e581))
 * **logging:** use winston for logging ([b1c8ac0](https://github.com/fhswf/appointme/commit/b1c8ac041e6891ef8c3b45e4847f6d225753d41a))
 
-# backend [1.13.0](https://github.com/fhswf/appointme/compare/backend@1.12.0...backend@1.13.0) (2024-10-17)
+## backend [1.13.0](https://github.com/fhswf/appointme/compare/backend@1.12.0...backend@1.13.0) (2024-10-17)
 
 
 ### Features
 
 * new rest api ([93ec39b](https://github.com/fhswf/appointme/commit/93ec39bedfe704cf6c26ba72078b108c7498248a))
 
-# backend [1.12.0](https://github.com/fhswf/appointme/compare/backend@1.11.9...backend@1.12.0) (2024-10-16)
+## backend [1.12.0](https://github.com/fhswf/appointme/compare/backend@1.11.9...backend@1.12.0) (2024-10-16)
 
 
 ### Bug Fixes
@@ -2324,7 +2348,7 @@
 
 * testing ([7e1022c](https://github.com/fhswf/appointme/commit/7e1022c848a7f7cf7033e2610326b8d38197321b))
 
-# backend [1.11.0](https://github.com/fhswf/appointme/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
+## backend [1.11.0](https://github.com/fhswf/appointme/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
 
 
 ### Bug Fixes
@@ -2337,7 +2361,7 @@
 * **backend:** store access token in cookie ([3b58072](https://github.com/fhswf/appointme/commit/3b58072ded26205ba01edaaf951aebc2012125fd))
 * store access token in cookie ([27990d7](https://github.com/fhswf/appointme/commit/27990d7e86de82d3f6d5e9ba97e4f785e9e26ea2))
 
-# backend [1.11.0](https://github.com/fhswf/appointme/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
+## backend [1.11.0](https://github.com/fhswf/appointme/compare/backend@1.10.0...backend@1.11.0) (2024-10-11)
 
 
 ### Features
@@ -2345,21 +2369,21 @@
 * **backend:** store access token in cookie ([3b58072](https://github.com/fhswf/appointme/commit/3b58072ded26205ba01edaaf951aebc2012125fd))
 * store access token in cookie ([27990d7](https://github.com/fhswf/appointme/commit/27990d7e86de82d3f6d5e9ba97e4f785e9e26ea2))
 
-# backend [1.10.0](https://github.com/fhswf/appointme/compare/backend@1.9.0...backend@1.10.0) (2024-10-10)
+## backend [1.10.0](https://github.com/fhswf/appointme/compare/backend@1.9.0...backend@1.10.0) (2024-10-10)
 
 
 ### Features
 
 * store access token in cookie ([fbd2706](https://github.com/fhswf/appointme/commit/fbd27066b4e3d016c4053197b551d46555df68c1))
 
-# backend [1.9.0](https://github.com/fhswf/appointme/compare/backend@1.8.0...backend@1.9.0) (2024-10-09)
+## backend [1.9.0](https://github.com/fhswf/appointme/compare/backend@1.8.0...backend@1.9.0) (2024-10-09)
 
 
 ### Features
 
 * **calendar:** allow guests to modify an event ([dbba656](https://github.com/fhswf/appointme/commit/dbba6566db19783759f980ede8463b81246d4f2f))
 
-# backend [1.8.0](https://github.com/fhswf/appointme/compare/backend@1.7.17...backend@1.8.0) (2024-10-09)
+## backend [1.8.0](https://github.com/fhswf/appointme/compare/backend@1.7.17...backend@1.8.0) (2024-10-09)
 
 
 ### Features
@@ -2602,7 +2626,7 @@
 
 * **deployment:** update via semantic release ([52619ba](https://github.com/fhswf/appointme/commit/52619bad54f3eb702164d2909f01c52b1c7e7425))
 
-# backend [1.7.0](https://github.com/fhswf/appointme/compare/backend@1.6.8...backend@1.7.0) (2024-09-23)
+## backend [1.7.0](https://github.com/fhswf/appointme/compare/backend@1.6.8...backend@1.7.0) (2024-09-23)
 
 
 ### Bug Fixes
@@ -2688,7 +2712,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 
 * **backend:** typescript config ([48376f7](https://github.com/fhswf/appointme/commit/48376f7fb2b36535fa037ea76c8f8e32a1c403ae))
 
-# backend [1.6.0](https://github.com/fhswf/appointme/compare/backend@1.5.6...backend@1.6.0) (2023-10-09)
+## backend [1.6.0](https://github.com/fhswf/appointme/compare/backend@1.5.6...backend@1.6.0) (2023-10-09)
 
 
 ### Bug Fixes
@@ -2768,7 +2792,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 
 * automated docker build ([3647c57](https://github.com/fhswf/appointme/commit/3647c579e5e261f60d503f3989a591043d8288a6))
 
-# backend [1.5.0](https://github.com/fhswf/appointme/compare/backend@1.4.0...backend@1.5.0) (2023-09-11)
+## backend [1.5.0](https://github.com/fhswf/appointme/compare/backend@1.4.0...backend@1.5.0) (2023-09-11)
 
 
 ### Features
@@ -2777,21 +2801,21 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([c697153](https://github.com/fhswf/appointme/commit/c697153957f3ddac263f110fad88ce1fb612c55b))
 * docker build in release ([4f05ee3](https://github.com/fhswf/appointme/commit/4f05ee3f72cc8ab6482a22498bb2069b1b1a03c4))
 
-# backend [1.4.0](https://github.com/fhswf/appointme/compare/backend@1.3.0...backend@1.4.0) (2023-09-11)
+## backend [1.4.0](https://github.com/fhswf/appointme/compare/backend@1.3.0...backend@1.4.0) (2023-09-11)
 
 
 ### Features
 
 * docker build in release ([8302272](https://github.com/fhswf/appointme/commit/8302272c2f07a72dff498b9da46eec034e10fa37))
 
-# backend [1.3.0](https://github.com/fhswf/appointme/compare/backend@1.2.0...backend@1.3.0) (2023-09-10)
+## backend [1.3.0](https://github.com/fhswf/appointme/compare/backend@1.2.0...backend@1.3.0) (2023-09-10)
 
 
 ### Features
 
 * docker build in release ([1437407](https://github.com/fhswf/appointme/commit/1437407f5b96b06ec538e2c870f1e592a5d28ebb))
 
-# backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
+## backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
 
 
 ### Features
@@ -2802,7 +2826,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([f1c3366](https://github.com/fhswf/appointme/commit/f1c3366e78a3e6cbe8c048572dd49b664fb1c980))
 * docker build in release ([af3b7c4](https://github.com/fhswf/appointme/commit/af3b7c449225e7ef9c26181c0a21482856521644))
 
-# backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
+## backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
 
 
 ### Features
@@ -2811,7 +2835,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([f1c3366](https://github.com/fhswf/appointme/commit/f1c3366e78a3e6cbe8c048572dd49b664fb1c980))
 * docker build in release ([af3b7c4](https://github.com/fhswf/appointme/commit/af3b7c449225e7ef9c26181c0a21482856521644))
 
-# backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
+## backend [1.2.0](https://github.com/fhswf/appointme/compare/backend@1.1.0...backend@1.2.0) (2023-09-10)
 
 
 ### Features
@@ -2819,7 +2843,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([f1c3366](https://github.com/fhswf/appointme/commit/f1c3366e78a3e6cbe8c048572dd49b664fb1c980))
 * docker build in release ([af3b7c4](https://github.com/fhswf/appointme/commit/af3b7c449225e7ef9c26181c0a21482856521644))
 
-# backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
+## backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
 
 
 ### Features
@@ -2831,7 +2855,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([b1610e3](https://github.com/fhswf/appointme/commit/b1610e3c6a7bd013e58107e9f53f8b2b9a6a6c0f))
 * docker build in release ([e856a5c](https://github.com/fhswf/appointme/commit/e856a5c1c1b03d7e258bd14c36dba9c67c08e768))
 
-# backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
+## backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
 
 
 ### Features
@@ -2841,7 +2865,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([b1610e3](https://github.com/fhswf/appointme/commit/b1610e3c6a7bd013e58107e9f53f8b2b9a6a6c0f))
 * docker build in release ([e856a5c](https://github.com/fhswf/appointme/commit/e856a5c1c1b03d7e258bd14c36dba9c67c08e768))
 
-# backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
+## backend [1.1.0](https://github.com/fhswf/appointme/compare/backend@1.0.0...backend@1.1.0) (2023-09-10)
 
 
 ### Features
@@ -2849,7 +2873,7 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 * docker build in release ([b1610e3](https://github.com/fhswf/appointme/commit/b1610e3c6a7bd013e58107e9f53f8b2b9a6a6c0f))
 * docker build in release ([e856a5c](https://github.com/fhswf/appointme/commit/e856a5c1c1b03d7e258bd14c36dba9c67c08e768))
 
-# backend 1.0.0 (2023-09-10)
+## backend 1.0.0 (2023-09-10)
 
 
 ### Bug Fixes
@@ -2887,56 +2911,56 @@ ghcr.io/fhswf/appointme/backend:1.6.8
 
 * **common:** upgraded to 1.0.0
 
-# [@fhswf/appointme-backend-v1.3.2](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.3.1...@fhswf/appointme-backend-v1.3.2) (2021-08-10)
+## [@fhswf/appointme-backend-v1.3.2](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.3.1...@fhswf/appointme-backend-v1.3.2) (2021-08-10)
 
 
 ### Bug Fixes
 
 * **bump dependencies:** upgrade several dependencies ([ca905e2](https://github.com/fhswf/appointme/commit/ca905e241e31bbbe69d05a7e4bec76b0bd4a9bcc))
 
-# [@fhswf/appointme-backend-v1.3.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.3.0...@fhswf/appointme-backend-v1.3.1) (2021-06-06)
+## [@fhswf/appointme-backend-v1.3.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.3.0...@fhswf/appointme-backend-v1.3.1) (2021-06-06)
 
 
 ### Bug Fixes
 
 * **insertEvent:** check availablility of requested slot in backend ([54c9e92](https://github.com/fhswf/appointme/commit/54c9e92b3b7d4c452954e30c8442bc483e654ed1)), closes [#27](https://github.com/fhswf/appointme/issues/27)
 
-# [@fhswf/appointme-backend-v1.3.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.2.1...@fhswf/appointme-backend-v1.3.0) (2021-06-06)
+## [@fhswf/appointme-backend-v1.3.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.2.1...@fhswf/appointme-backend-v1.3.0) (2021-06-06)
 
 
 ### Features
 
 * **markdown:** handle event type description as markdown. ([4bedade](https://github.com/fhswf/appointme/commit/4bedade846876fe6eedb5b0f4d986a33c8d283b2))
 
-# [@fhswf/appointme-backend-v1.2.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.2.0...@fhswf/appointme-backend-v1.2.1) (2021-06-05)
+## [@fhswf/appointme-backend-v1.2.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.2.0...@fhswf/appointme-backend-v1.2.1) (2021-06-05)
 
 
 ### Bug Fixes
 
 * **freeBusy:** filter out free slots shorter than the event duration ([2eedf77](https://github.com/fhswf/appointme/commit/2eedf7789c6158827c6ffc2d9ebf61c6c4682879))
 
-# [@fhswf/appointme-backend-v1.2.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.1.0...@fhswf/appointme-backend-v1.2.0) (2021-05-31)
+## [@fhswf/appointme-backend-v1.2.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.1.0...@fhswf/appointme-backend-v1.2.0) (2021-05-31)
 
 
 ### Features
 
 * **freeBusy:** check maxPerDay constraint ([ad49b95](https://github.com/fhswf/appointme/commit/ad49b957181a2717b179b4c52ce4ab84f1ddca34))
 
-# [@fhswf/appointme-backend-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.0.1...@fhswf/appointme-backend-v1.1.0) (2021-05-29)
+## [@fhswf/appointme-backend-v1.1.0](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.0.1...@fhswf/appointme-backend-v1.1.0) (2021-05-29)
 
 
 ### Features
 
 * **freeBusy:** freeBusy should observe minFuture and maxFuture restrictictions of an event ([a670b7d](https://github.com/fhswf/appointme/commit/a670b7d8eadf01547009c35121bbe3062b545931))
 
-# [@fhswf/appointme-backend-v1.0.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.0.0...@fhswf/appointme-backend-v1.0.1) (2021-05-26)
+## [@fhswf/appointme-backend-v1.0.1](https://github.com/fhswf/appointme/compare/@fhswf/appointme-backend-v1.0.0...@fhswf/appointme-backend-v1.0.1) (2021-05-26)
 
 
 ### Bug Fixes
 
 * do not overwrite calendar settings upon login ([8923777](https://github.com/fhswf/appointme/commit/892377784cc94f2243c193f0763c82e7e58e7c16))
 
-# @fhswf/appointme-backend-v1.0.0 (2021-05-26)
+## @fhswf/appointme-backend-v1.0.0 (2021-05-26)
 
 
 ### Bug Fixes
