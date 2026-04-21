@@ -375,4 +375,6 @@ Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln u
     "You are logged in via your Learning Management System. Please use the specific booking links provided in your course to book appointments.": "Sie sind über Ihr Lernmanagementsystem angemeldet. Bitte nutzen Sie die spezifischen Buchungslinks in Ihrem Kurs, um Termine zu buchen.",
     "Logout": "Abmelden",
     "MyProvider": "Mein Anbieter",
+    "Changelog": "Changelog",
+    "Failed to load changelog data.": "Changelog-Daten konnten nicht geladen werden."
 };
