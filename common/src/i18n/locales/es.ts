@@ -371,5 +371,6 @@ Utilizamos Sentry para recopilar datos de telemetría anónimos e informes de er
     "Neuter": "Neutro",
     "gender_help_text": "Utilizado para la gramática correcta en los mensajes de confirmación.",
     "Changelog": "Changelog",
-    "Failed to load changelog data.": "No se pudieron cargar los datos del registro de cambios."
+    "Failed to load changelog data.": "No se pudieron cargar los datos del registro de cambios.",
+    "See what's new and what has been fixed.": "Vea qué hay de nuevo y qué se ha corregido."
 };
