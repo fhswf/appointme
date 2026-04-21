@@ -47,9 +47,7 @@ jobs:
 
       - name: Update Backend dev overlay
         run: |
-          node utility/update-kustomize.js backend backend ${{ steps.tag.outputs.sha }}
-        env:
-          GITHUB_REF_NAME: main
+          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" backend/k8s/overlays/dev/kustomization.yaml
 
       # ── Client ──────────────────────────────────────────────────────────────
       - name: Build & Push Client Image
@@ -64,9 +62,7 @@ jobs:
 
       - name: Update Client dev overlay
         run: |
-          node utility/update-kustomize.js client frontend ${{ steps.tag.outputs.sha }}
-        env:
-          GITHUB_REF_NAME: main
+          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" client/k8s/overlays/dev/kustomization.yaml
 
       # ── MCP Server ──────────────────────────────────────────────────────────
       - name: Build & Push MCP Server Image
@@ -81,9 +77,7 @@ jobs:
 
       - name: Update MCP Server dev overlay
         run: |
-          node utility/update-kustomize.js mcp-server mcp-server ${{ steps.tag.outputs.sha }}
-        env:
-          GITHUB_REF_NAME: main
+          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" mcp-server/k8s/overlays/dev/kustomization.yaml
 
       # ── Commit & push all overlay changes ───────────────────────────────────
       - name: Commit kustomize updates

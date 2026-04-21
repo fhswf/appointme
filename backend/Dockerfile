@@ -1,4 +1,4 @@
-FROM node:22-bookworm as build
+FROM node:22-bookworm AS build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
 ARG APP_URL=/
 ARG APP_API_URL=https://appointme.example.com/api/v1
@@ -27,11 +27,14 @@ COPY ./backend ./backend
 RUN pnpm --filter backend build
 
 # Create backend container
-FROM node:22-bookworm as backend
+FROM node:22-bookworm AS backend
 ARG TZ=Europe/Berlin
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# Re-declare ARGs needed at runtime (ARGs don't carry over between stages)
+ARG APP_URL=/
+ARG APP_API_URL=https://appointme.example.com/api/v1
 ENV APP_URL=${APP_URL}
 ENV APP_API_URL=${APP_API_URL}
 
