@@ -368,7 +368,7 @@ Utilizziamo Sentry per raccogliere dati di telemetria anonimi e segnalazioni di 
     "Male": "Maschile",
     "Female": "Femminile",
     "Neuter": "Neutro",
-    "gender_help_text": "Utilizzato per la grammatica corretta nei messaggi di conferma."
+    "gender_help_text": "Utilizzato per la grammatica corretta nei messaggi di conferma.",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Impossibile caricare i dati del registro delle modifiche."
 };
