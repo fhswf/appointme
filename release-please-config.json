@@ -14,15 +14,19 @@
   ],
   "packages": {
     "common": {
+      "release-type": "node",
       "component": "common"
     },
     "backend": {
+      "release-type": "node",
       "component": "backend"
     },
     "client": {
+      "release-type": "node",
       "component": "client"
     },
     "mcp-server": {
+      "release-type": "node",
       "component": "mcp-server"
     }
   },

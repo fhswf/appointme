@@ -3,7 +3,7 @@ name: release
 on:
   push:
     branches:
-      - prod
+      - main
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
-          target-branch: prod
+          target-branch: main
 
       # ========== BACKEND PIPELINE ==========
       - name: Docker Login
@@ -82,6 +82,8 @@ jobs:
           git commit -am "chore(deploy): update mcp-server kustomize to version ${{ steps.release.outputs.mcp-server--version }} [skip ci]" || echo "No changes to commit"
 
       # ========== FINALIZE PIPELINE ==========
-      - name: Push Kustomize Updates
-        if: ${{ steps.release.outputs.backend--release_created || steps.release.outputs.client--release_created || steps.release.outputs.mcp-server--release_created }}
-        run: git push origin prod
+      - name: Push Kustomize Updates and Fast-Forward Prod
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          git push origin main
+          git push origin main:prod --force
