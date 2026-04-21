@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    "common": {
+      "component": "common"
+    },
+    "backend": {
+      "component": "backend"
+    },
+    "client": {
+      "component": "client"
+    },
+    "mcp-server": {
+      "component": "mcp-server"
+    }
+  },
+  "bump-minor-pre-major": true,
+  "changelog-type": "default"
+}

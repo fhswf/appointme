@@ -90,53 +90,5 @@
       "react-app"
     ]
   },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/exec",
-        {
-          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": "..",
-          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": ".",
-          "prepareCmd": "node ../utility/update-kustomize.js backend backend ${nextRelease.version}"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@codedependant/semantic-release-docker",
-        {
-          "dockerImage": "backend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/appointme",
-          "dockerContext": ".."
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
-    ]
-  },
   "gitHead": "a4b1d2cc78703828c99149277115e8434b675afc"
 }

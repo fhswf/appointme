@@ -124,53 +124,5 @@
     "vite-plugin-istanbul": "^7.2.1",
     "vitest": "^4.0.18",
     "wait-on": "^9.0.3"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/exec",
-        {
-          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": "..",
-          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": ".",
-          "prepareCmd": "node ../utility/update-kustomize.js client frontend ${nextRelease.version}"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@codedependant/semantic-release-docker",
-        {
-          "dockerImage": "frontend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/appointme",
-          "dockerContext": ".."
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
-    ]
   }
 }
