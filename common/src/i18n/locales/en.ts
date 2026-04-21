@@ -366,5 +366,8 @@ We use Sentry to collect anonymous telemetry data and error reports to improve t
     "MyProvider": "MyProvider",
     "confirmationText_male": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
     "confirmationText_female": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
-    "confirmationText_neuter": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}."
+    "confirmationText_neuter": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
+    "Changelog": "Changelog",
+    "Failed to load changelog data.": "Failed to load changelog data.",
+    "See what's new and what has been fixed.": "See what's new and what has been fixed."
 };

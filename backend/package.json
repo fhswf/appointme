@@ -29,8 +29,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@sentry/node": "10.36.0",
-    "@sentry/profiling-node": "10.36.0",
+    "@sentry/node": "10.49.0",
+    "@sentry/profiling-node": "10.49.0",
     "body-parser": "^2.2.2",
     "common": "file:../common",
     "concurrently": "^9.2.1",
@@ -39,10 +39,10 @@
     "csrf-csrf": "^4.0.3",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "express": "^5.0.1",
     "express-jwt": "^8.4.1",
-    "express-rate-limit": "^8.2.1",
+    "express-rate-limit": "^8.2.2",
     "express-validator": "^7.0.1",
     "google-auth-library": "^10.5.0",
     "googleapis": "^170.1.0",
@@ -52,7 +52,7 @@
     "moment": "^2.29.1",
     "mongoose": "^9.1.5",
     "node-ical": "^0.24.0",
-    "nodemailer": "^7.0.11",
+    "nodemailer": "^8.0.5",
     "openid-client": "^6",
     "remark": "15.0.1",
     "remark-html": "16.0.1",
@@ -88,54 +88,6 @@
   "eslintConfig": {
     "extends": [
       "react-app"
-    ]
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/exec",
-        {
-          "prepareCmd": "node ../utility/set-version.js ${nextRelease.version}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": "..",
-          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": ".",
-          "prepareCmd": "node ../utility/update-kustomize.js backend backend ${nextRelease.version}"
-        }
-      ],
-      "@semantic-release/github",
-      [
-        "@codedependant/semantic-release-docker",
-        {
-          "dockerImage": "backend",
-          "dockerRegistry": "ghcr.io",
-          "dockerProject": "fhswf/appointme",
-          "dockerContext": ".."
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "CHANGELOG.md",
-            "k8s/overlays/**/kustomization.yaml"
-          ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
     ]
   },
   "gitHead": "a4b1d2cc78703828c99149277115e8434b675afc"

@@ -15,7 +15,6 @@
     "build:common": "pnpm --filter common build",
     "build:backend": "pnpm --filter backend build",
     "build:client": "pnpm --filter client build",
-    "release": "semantic-release",
     "doc": "typedoc"
   },
   "repository": {
@@ -41,50 +40,11 @@
   },
   "homepage": "https://github.com/fhswf/appointme#readme",
   "devDependencies": {
-    "@codedependant/semantic-release-docker": "^5.0.3",
-    "@qiwi/multi-semantic-release": "^7.1.2",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.0",
-    "@semantic-release/exec": "^7.1.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.2",
-    "@semantic-release/npm": "^13.1.3",
-    "@semantic-release/release-notes-generator": "^14.1.0",
     "dotenv-vault": "^1.27.0",
-    "fast-xml-parser": "^5.3.6",
+    "fast-xml-parser": "^5.5.7",
     "jest-ctrf-json-reporter": "^0.0.10",
-    "semantic-release": "^25.0.2",
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/exec",
-        {
-          "execCwd": "..",
-          "prepareCmd": "node utility/patch-workspace-versions.js && node utility/sync-root-version.js ${nextRelease.type}"
-        }
-      ],
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      "@semantic-release/github"
-    ],
-    "branches": [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "prod",
-      "stable",
-      {
-        "name": "main",
-        "prerelease": "rc"
-      },
-      "next",
-      "next-major"
-    ],
-    "noCi": true
   },
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
