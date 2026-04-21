@@ -53,6 +53,10 @@ if (CONFIG.SENTRY_DSN) {
     enableTracing: true,
     enableLogs: true,
   });
+
+  Sentry.metrics.count('button_click', 1);
+  Sentry.metrics.gauge('page_load_time', 150);
+  Sentry.metrics.distribution('response_time', 200);
 }
 
 const CLIENT_ID = CONFIG.CLIENT_ID;
