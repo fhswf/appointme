@@ -1,3 +1,18 @@
+## backend [1.43.1-rc.4](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.3...backend@1.43.1-rc.4) (2026-04-21)
+
+
+### Bug Fixes
+
+* **scheduler:** ensure IntervalSet remains sorted after addRange overlaps ([57bd8b6](https://github.com/fhswf/appointme/commit/57bd8b69197ea56c06399d02fb3d1bec316ac61d))
+
+
+
+
+
+### Dependencies
+
+* **common:** upgraded to 1.16.3-rc.3
+
 ## backend [1.43.1-rc.3](https://github.com/fhswf/appointme/compare/backend@1.43.1-rc.2...backend@1.43.1-rc.3) (2026-02-14)
 
 
