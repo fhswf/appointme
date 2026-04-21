@@ -11,6 +11,11 @@ vi.mock('@sentry/react', () => ({
     setUser: vi.fn(),
 }));
 
+// Mock instrumentation (avoids real axios interceptor registration)
+vi.mock('./helpers/instrumentation', () => ({
+    setupSentryInstrumentation: vi.fn(),
+}));
+
 // Mock ReactDOM
 const mockRender = vi.fn();
 const mockCreateRoot = vi.fn(() => ({
