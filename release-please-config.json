@@ -1,5 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "changelog-sections": [
+    { "type": "feat",     "section": "Improvements" },
+    { "type": "perf",     "section": "Improvements" },
+    { "type": "refactor", "section": "Improvements" },
+    { "type": "fix",      "section": "Fixes" },
+    { "type": "chore",    "section": "Patches", "hidden": false },
+    { "type": "style",    "section": "Patches", "hidden": false },
+    { "type": "build",    "section": "Patches", "hidden": false },
+    { "type": "ci",       "section": "Patches", "hidden": false },
+    { "type": "test",     "section": "Patches", "hidden": false },
+    { "type": "docs",     "section": "Patches", "hidden": false }
+  ],
   "packages": {
     "common": {
       "component": "common"
@@ -17,3 +29,4 @@
   "bump-minor-pre-major": true,
   "changelog-type": "default"
 }
+

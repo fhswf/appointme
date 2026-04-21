@@ -11,7 +11,8 @@ import {
   User,
   Scale,
   HelpCircle,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from "lucide-react";
 import * as Sentry from "@sentry/react";
 import { Button } from "@/components/ui/button";
@@ -169,6 +170,12 @@ const AppNavbar = () => {
               <DropdownMenuItem onClick={copyToClipboard} disabled={!user}>
                 <LinkIcon className="mr-2 h-4 w-4" />
                 <span>{t("user_menu_copy_link")}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/changelog" className="flex items-center w-full">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>{t("Changelog")}</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/legal" className="flex items-center w-full">
