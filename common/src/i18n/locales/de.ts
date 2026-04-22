@@ -333,8 +333,6 @@ Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln u
     "Female": "Weiblich (die {{name}})",
     "Neuter": "Sächlich (das {{name}})",
     "gender_help_text": "Wird für die korrekte Anrede in Bestätigungen verwendet (z.B. 'Ihr Termin' vs 'Ihre Sprechstunde').",
-
-    // Recurrence
     "Recurrence": "Wiederholung",
     "Enable Recurring Event": "Wiederkehrenden Termin aktivieren",
     "Frequency": "Häufigkeit",
