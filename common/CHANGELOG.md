@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.6](https://github.com/fhswf/appointme/compare/common-v1.16.5...common-v1.16.6) (2026-04-22)
+
+
+### Fixes
+
+* update German translation for changelog description ([8b44d94](https://github.com/fhswf/appointme/commit/8b44d9424b1430abf9a44d4b0700da66d183e1a0))
+
 ## [1.16.5](https://github.com/fhswf/appointme/compare/common-v1.16.4...common-v1.16.5) (2026-04-22)
 
 
