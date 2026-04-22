@@ -22,6 +22,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install root dependencies
+        run: pnpm install --ignore-scripts --workspace-root
+
       # Compute a short SHA tag once and expose it for all subsequent steps
       - name: Compute image tag
         id: tag
@@ -46,8 +52,7 @@ jobs:
             ghcr.io/fhswf/appointme/backend:main
 
       - name: Update Backend dev overlay
-        run: |
-          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" backend/k8s/overlays/dev/kustomization.yaml
+        run: node utility/update-kustomize.js backend backend ${{ steps.tag.outputs.sha }}
 
       # ── Client ──────────────────────────────────────────────────────────────
       - name: Build & Push Client Image
@@ -61,8 +66,7 @@ jobs:
             ghcr.io/fhswf/appointme/frontend:main
 
       - name: Update Client dev overlay
-        run: |
-          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" client/k8s/overlays/dev/kustomization.yaml
+        run: node utility/update-kustomize.js client frontend ${{ steps.tag.outputs.sha }}
 
       # ── MCP Server ──────────────────────────────────────────────────────────
       - name: Build & Push MCP Server Image
@@ -76,8 +80,7 @@ jobs:
             ghcr.io/fhswf/appointme/mcp-server:main
 
       - name: Update MCP Server dev overlay
-        run: |
-          sed -i "s|newTag:.*|newTag: ${{ steps.tag.outputs.sha }}|" mcp-server/k8s/overlays/dev/kustomization.yaml
+        run: node utility/update-kustomize.js mcp-server mcp-server ${{ steps.tag.outputs.sha }}
 
       # ── Commit & push all overlay changes ───────────────────────────────────
       - name: Commit kustomize updates

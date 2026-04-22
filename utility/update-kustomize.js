@@ -30,7 +30,7 @@ if (branch === 'prod') {
     process.exit(0);
 }
 
-const overlayPath = path.join(process.cwd(), 'k8s', 'overlays', overlay);
+const overlayPath = path.join(process.cwd(), component, 'k8s', 'overlays', overlay);
 const kustomizationFile = path.join(overlayPath, 'kustomization.yaml');
 
 if (!fs.existsSync(kustomizationFile)) {
