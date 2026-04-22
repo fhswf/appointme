@@ -53,6 +53,7 @@ jobs:
         if: ${{ steps.release.outputs.backend--release_created }}
         run: |
           node utility/update-kustomize.js backend backend ${{ steps.release.outputs.backend--version }}
+          GITHUB_REF_NAME=prod node utility/update-kustomize.js backend backend ${{ steps.release.outputs.backend--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "deploy: update backend kustomize to version ${{ steps.release.outputs.backend--version }} [skip ci]" || echo "No changes to commit"
@@ -68,6 +69,7 @@ jobs:
         if: ${{ steps.release.outputs.client--release_created }}
         run: |
           node utility/update-kustomize.js client frontend ${{ steps.release.outputs.client--version }}
+          GITHUB_REF_NAME=prod node utility/update-kustomize.js client frontend ${{ steps.release.outputs.client--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "deploy: update client kustomize to version ${{ steps.release.outputs.client--version }} [skip ci]" || echo "No changes to commit"
@@ -83,6 +85,7 @@ jobs:
         if: ${{ steps.release.outputs.mcp-server--release_created }}
         run: |
           node utility/update-kustomize.js mcp-server mcp-server ${{ steps.release.outputs.mcp-server--version }}
+          GITHUB_REF_NAME=prod node utility/update-kustomize.js mcp-server mcp-server ${{ steps.release.outputs.mcp-server--version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "deploy: update mcp-server kustomize to version ${{ steps.release.outputs.mcp-server--version }} [skip ci]" || echo "No changes to commit"
