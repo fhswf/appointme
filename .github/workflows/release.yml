@@ -29,7 +29,7 @@ jobs:
       - name: Install root dependencies
         run: pnpm install --ignore-scripts --workspace-root
 
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
           target-branch: main
@@ -91,5 +91,6 @@ jobs:
       - name: Push Kustomize Updates and Fast-Forward Prod
         if: ${{ steps.release.outputs.releases_created }}
         run: |
+          git pull --rebase origin main
           git push origin main
           git push origin main:prod --force
