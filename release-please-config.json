@@ -10,19 +10,24 @@
     { "type": "build",    "section": "Patches", "hidden": false },
     { "type": "ci",       "section": "Patches", "hidden": false },
     { "type": "test",     "section": "Patches", "hidden": false },
-    { "type": "docs",     "section": "Patches", "hidden": false }
+    { "type": "docs",     "section": "Patches", "hidden": false },
+    { "type": "deploy",   "section": "Deployments", "hidden": true }
   ],
   "packages": {
     "common": {
+      "release-type": "node",
       "component": "common"
     },
     "backend": {
+      "release-type": "node",
       "component": "backend"
     },
     "client": {
+      "release-type": "node",
       "component": "client"
     },
     "mcp-server": {
+      "release-type": "node",
       "component": "mcp-server"
     }
   },

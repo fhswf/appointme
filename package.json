@@ -43,6 +43,7 @@
     "dotenv-vault": "^1.27.0",
     "fast-xml-parser": "^5.5.7",
     "jest-ctrf-json-reporter": "^0.0.10",
+    "js-yaml": "^4.1.0",
     "typedoc": "^0.28.17",
     "typescript": "^5.9.3"
   },
@@ -54,10 +55,5 @@
   "resolutions": {
     "lodash.template": "npm:lodash@4.17.23",
     "glob": "11.1.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "hono": "4.11.4"
-    }
   }
 }

@@ -1,51 +1,11 @@
 # Changelog
 
-## [1.91.0](https://github.com/fhswf/appointme/compare/common-v1.90.12...common-v1.91.0) (2026-04-21)
-
-
-### Improvements
-
-* add gender-aware translations ([528e4d5](https://github.com/fhswf/appointme/commit/528e4d5f66929c462cd53f63dc43410f8ce2b2de))
+## [1.16.4](https://github.com/fhswf/appointme/compare/common@1.16.3...common-v1.16.4) (2026-04-21)
 
 
 ### Fixes
 
 * add translation for changelog description across all supported locales ([80d6e11](https://github.com/fhswf/appointme/commit/80d6e1108982170a86af3e1c30bbccea9de1ced6))
-* adding missing translations ([a43e012](https://github.com/fhswf/appointme/commit/a43e012e22c2038f1688621a38d8f3f1f5fdcba2))
-* availibilty calculation ([42d80d4](https://github.com/fhswf/appointme/commit/42d80d4c76dad6d9cfcd99005c3ac109323da767))
-* calculation of free slots in edge cases ([4c36f6f](https://github.com/fhswf/appointme/commit/4c36f6fa577ca7b306efc54d29e388f4a7362c74))
-* correctly interpret "24:00" time slots as midnight of the next day ([1f8de54](https://github.com/fhswf/appointme/commit/1f8de547a7a10b9701405c227fd43f487d3b564d))
-* Introduce tests for phantom availability reproduction and regression, and update scheduler tests and common types. ([9be177b](https://github.com/fhswf/appointme/commit/9be177bf6a073667fd1193759fa58a0dd55dd519))
-* remove outdated entries ([a846c4a](https://github.com/fhswf/appointme/commit/a846c4ad30f24041cb10f5b44143161508509a26))
-* **scheduler:** ensure IntervalSet remains sorted after addRange overlaps ([57bd8b6](https://github.com/fhswf/appointme/commit/57bd8b69197ea56c06399d02fb3d1bec316ac61d))
-* update legal information on the landing page ([7854f2d](https://github.com/fhswf/appointme/commit/7854f2dbd2b31c6a0461a41cef5331619f967e90))
-* update privacy statement ([8f56fd8](https://github.com/fhswf/appointme/commit/8f56fd863a16fa6f577f338dda41bd6265bfbadd))
-* use linear time algorithm for merging of interval sets ([db84c87](https://github.com/fhswf/appointme/commit/db84c870eb154fd26c7c9314ed518b5c1b1d10c4))
-
-
-### Patches
-
-* add test case to check missing translations ([c7926ef](https://github.com/fhswf/appointme/commit/c7926ef10bd0c9c13474381794209f03a7689619))
-* clarify use of getUTCDay() ([3845f55](https://github.com/fhswf/appointme/commit/3845f557424a0c7748fe4b7bdd55248a8add1a40))
-* coverage & linting issues ([fa56001](https://github.com/fhswf/appointme/commit/fa5600176cdcb897ba67c5590486d5f753709301))
-* **deps-dev:** bump @types/node from 25.0.10 to 25.2.0 ([90ed05d](https://github.com/fhswf/appointme/commit/90ed05d1d41e5d20e871a2d3450a07c560b9fe2e))
-* **deps-dev:** bump @types/node from 25.0.9 to 25.0.10 ([6f15e21](https://github.com/fhswf/appointme/commit/6f15e2196b38d5de22ceaae38103d948b5140c07))
-* **deps-dev:** bump @vitest/coverage-v8 from 4.0.17 to 4.0.18 ([0aacc91](https://github.com/fhswf/appointme/commit/0aacc91568606da259253826d83757586cca32e0))
-* **deps-dev:** bump vitest from 4.0.17 to 4.0.18 ([9c9ccb2](https://github.com/fhswf/appointme/commit/9c9ccb27c1feac8fb673b1bef60cdce059ca03a1))
-* **release:** 1.15.1 [skip ci] ([3285e5e](https://github.com/fhswf/appointme/commit/3285e5e21f43241e35735a20b7193e47167ee46d))
-* **release:** 1.15.1-rc.1 [skip ci] ([1883701](https://github.com/fhswf/appointme/commit/18837012f52ae62af73d56fc17b15d9d07d12afc))
-* **release:** 1.15.2 [skip ci] ([7c0667c](https://github.com/fhswf/appointme/commit/7c0667cd8cea4745afa1ba3dc134e79e624e9bad))
-* **release:** 1.15.2-rc.1 [skip ci] ([caef290](https://github.com/fhswf/appointme/commit/caef29078d04390954920ed4dc6822e6e5567237))
-* **release:** 1.16.0 [skip ci] ([f5e02cb](https://github.com/fhswf/appointme/commit/f5e02cb51bd11584e37ae40fa33606fd85aaecf0))
-* **release:** 1.16.0-rc.1 [skip ci] ([74270a7](https://github.com/fhswf/appointme/commit/74270a7158ccd977073ff186f36df80550e5addf))
-* **release:** 1.16.1 [skip ci] ([89f1a17](https://github.com/fhswf/appointme/commit/89f1a179734c01678a7f956b337bef54d0a9836c))
-* **release:** 1.16.1-rc.1 [skip ci] ([45b68eb](https://github.com/fhswf/appointme/commit/45b68eb40b2a2b28b0ae1e50d25ea58b3827a65a))
-* **release:** 1.16.2 [skip ci] ([22d9b29](https://github.com/fhswf/appointme/commit/22d9b29322a0bce4861ce47616ffe94c4bd2baa6))
-* **release:** 1.16.2-rc.1 [skip ci] ([6a8acbf](https://github.com/fhswf/appointme/commit/6a8acbfa7d838ccc61eea2e54721f6b6659fbd01))
-* **release:** 1.16.3 [skip ci] ([7de232e](https://github.com/fhswf/appointme/commit/7de232ec589c94b56fcc08e0b94c92ac5a81311b))
-* **release:** 1.16.3-rc.1 [skip ci] ([73e8915](https://github.com/fhswf/appointme/commit/73e89159cac3dfa37fa99fdbd8d773ec93e9bab1))
-* **release:** 1.16.3-rc.2 [skip ci] ([52e5c51](https://github.com/fhswf/appointme/commit/52e5c51556a28bb7c69a3c9b654731ecae19761a))
-* **release:** 1.16.3-rc.3 [skip ci] ([9da815a](https://github.com/fhswf/appointme/commit/9da815af70d1f8d78b997cd1662ebce66c97fecd))
 
 ## common [1.16.3](https://github.com/fhswf/appointme/compare/common@1.16.2...common@1.16.3) (2026-04-21)
 
