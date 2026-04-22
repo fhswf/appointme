@@ -1,9 +1,7 @@
 name: staging
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # superseded by ci.yml
 
 permissions:
   contents: write
