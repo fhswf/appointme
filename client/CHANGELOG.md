@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.39.2](https://github.com/fhswf/appointme/compare/client-v1.39.1...client-v1.39.2) (2026-04-22)
+
+
+### Fixes
+
+* migrate local dependencies to pnpm workspaces and configure release-please plugin ([43d10cc](https://github.com/fhswf/appointme/commit/43d10cce2059260e7f4998e6dce6e044a4adcccd))
+
 ## [1.39.1](https://github.com/fhswf/appointme/compare/client-v1.39.0...client-v1.39.1) (2026-04-22)
 
 
