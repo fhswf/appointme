@@ -47,7 +47,7 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       common:
-        specifier: file:../common
+        specifier: workspace:*
         version: link:../common
       concurrently:
         specifier: ^9.2.1
@@ -270,7 +270,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       common:
-        specifier: file:../common
+        specifier: workspace:*
         version: link:../common
       date-fns:
         specifier: ^4.1.0
@@ -461,7 +461,7 @@ importers:
         specifier: ^1.15.0
         version: 1.15.0
       common:
-        specifier: file:../common
+        specifier: workspace:*
         version: link:../common
       cors:
         specifier: ^2.8.6

@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "plugins": ["node-workspace"],
   "changelog-sections": [
     { "type": "feat",     "section": "Improvements" },
     { "type": "perf",     "section": "Improvements" },

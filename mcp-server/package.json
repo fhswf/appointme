@@ -17,7 +17,7 @@
     "@sentry/node": "10.36.0",
     "@sentry/profiling-node": "10.36.0",
     "axios": "^1.15.0",
-    "common": "file:../common",
+    "common": "workspace:*",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
