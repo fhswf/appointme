@@ -15,13 +15,13 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      releases_created:          ${{ steps.release.outputs.releases_created }}
-      backend--release_created:  ${{ steps.release.outputs.backend--release_created }}
-      client--release_created:   ${{ steps.release.outputs.client--release_created }}
+      releases_created:            ${{ steps.release.outputs.releases_created }}
+      backend--release_created:    ${{ steps.release.outputs.backend--release_created }}
+      client--release_created:     ${{ steps.release.outputs.client--release_created }}
       mcp-server--release_created: ${{ steps.release.outputs.mcp-server--release_created }}
-      backend--version:          ${{ steps.release.outputs.backend--version }}
-      client--version:           ${{ steps.release.outputs.client--version }}
-      mcp-server--version:       ${{ steps.release.outputs.mcp-server--version }}
+      backend--version:            ${{ steps.release.outputs.backend--version }}
+      client--version:             ${{ steps.release.outputs.client--version }}
+      mcp-server--version:         ${{ steps.release.outputs.mcp-server--version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,7 +43,7 @@ jobs:
         with:
           target-branch: main
 
-  # ── Staging: regular commits → sha-tagged images + dev overlay ────────────
+  # ── Staging: regular commits → build with cache, sha tag, update dev ──────
   staging:
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created != 'true' }}
@@ -75,6 +75,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       # ── Backend ─────────────────────────────────────────────────────────────
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
@@ -85,6 +88,8 @@ jobs:
           tags: |
             ghcr.io/fhswf/appointme/backend:${{ steps.tag.outputs.sha }}
             ghcr.io/fhswf/appointme/backend:main
+          cache-from: type=registry,ref=ghcr.io/fhswf/appointme/backend:cache
+          cache-to:   type=registry,ref=ghcr.io/fhswf/appointme/backend:cache,mode=max
 
       - name: Update Backend dev overlay
         run: node utility/update-kustomize.js backend backend ${{ steps.tag.outputs.sha }}
@@ -99,6 +104,8 @@ jobs:
           tags: |
             ghcr.io/fhswf/appointme/frontend:${{ steps.tag.outputs.sha }}
             ghcr.io/fhswf/appointme/frontend:main
+          cache-from: type=registry,ref=ghcr.io/fhswf/appointme/frontend:cache
+          cache-to:   type=registry,ref=ghcr.io/fhswf/appointme/frontend:cache,mode=max
 
       - name: Update Client dev overlay
         run: node utility/update-kustomize.js client frontend ${{ steps.tag.outputs.sha }}
@@ -113,6 +120,8 @@ jobs:
           tags: |
             ghcr.io/fhswf/appointme/mcp-server:${{ steps.tag.outputs.sha }}
             ghcr.io/fhswf/appointme/mcp-server:main
+          cache-from: type=registry,ref=ghcr.io/fhswf/appointme/mcp-server:cache
+          cache-to:   type=registry,ref=ghcr.io/fhswf/appointme/mcp-server:cache,mode=max
 
       - name: Update MCP Server dev overlay
         run: node utility/update-kustomize.js mcp-server mcp-server ${{ steps.tag.outputs.sha }}
@@ -130,7 +139,10 @@ jobs:
             git commit -m "deploy: update dev overlays to ${{ steps.tag.outputs.sha }} [skip ci]"
           git push origin main
 
-  # ── Release: release PR merged → semver images + dev & prod overlays ──────
+  # ── Release: release PR merged → retag :main as semver, update overlays ───
+  # No Docker rebuild: the :main image from the last staging run IS the release
+  # image. We simply add a semver alias via a registry-side retag (no data
+  # transfer), which also guarantees prod runs the exact bits that were tested.
   release:
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
@@ -159,12 +171,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Backend ─────────────────────────────────────────────────────────────
-      - name: Build & Push Backend Docker Image
+      - name: Set up Docker Buildx
+        if: ${{ needs.release-please.outputs.backend--release_created == 'true' || needs.release-please.outputs.client--release_created == 'true' || needs.release-please.outputs.mcp-server--release_created == 'true' }}
+        uses: docker/setup-buildx-action@v3
+
+      # ── Backend: retag :main → semver (registry-side, no rebuild) ───────────
+      - name: Retag Backend as release version
         if: ${{ needs.release-please.outputs.backend--release_created == 'true' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/backend:${{ needs.release-please.outputs.backend--version }} -f backend/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/backend:${{ needs.release-please.outputs.backend--version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/backend:${{ needs.release-please.outputs.backend--version }} \
+            ghcr.io/fhswf/appointme/backend:main
 
       - name: Update Backend Kustomize
         if: ${{ needs.release-please.outputs.backend--release_created == 'true' }}
@@ -175,12 +192,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "deploy: update backend kustomize to version ${{ needs.release-please.outputs.backend--version }} [skip ci]" || echo "No changes to commit"
 
-      # ── Client ──────────────────────────────────────────────────────────────
-      - name: Build & Push Client Docker Image
+      # ── Client: retag :main → semver (registry-side, no rebuild) ────────────
+      - name: Retag Client as release version
         if: ${{ needs.release-please.outputs.client--release_created == 'true' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/frontend:${{ needs.release-please.outputs.client--version }} -f client/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/frontend:${{ needs.release-please.outputs.client--version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/frontend:${{ needs.release-please.outputs.client--version }} \
+            ghcr.io/fhswf/appointme/frontend:main
 
       - name: Update Client Kustomize
         if: ${{ needs.release-please.outputs.client--release_created == 'true' }}
@@ -191,12 +209,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "deploy: update client kustomize to version ${{ needs.release-please.outputs.client--version }} [skip ci]" || echo "No changes to commit"
 
-      # ── MCP Server ──────────────────────────────────────────────────────────
-      - name: Build & Push MCP Docker Image
+      # ── MCP Server: retag :main → semver (registry-side, no rebuild) ────────
+      - name: Retag MCP Server as release version
         if: ${{ needs.release-please.outputs.mcp-server--release_created == 'true' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/mcp-server:${{ needs.release-please.outputs.mcp-server--version }} -f mcp-server/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/mcp-server:${{ needs.release-please.outputs.mcp-server--version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/mcp-server:${{ needs.release-please.outputs.mcp-server--version }} \
+            ghcr.io/fhswf/appointme/mcp-server:main
 
       - name: Update MCP Kustomize
         if: ${{ needs.release-please.outputs.mcp-server--release_created == 'true' }}
