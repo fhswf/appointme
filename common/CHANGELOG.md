@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.7](https://github.com/fhswf/appointme/compare/common-v1.16.6...common-v1.16.7) (2026-04-22)
+
+
+### Fixes
+
+* improve German translation for changelog loading error message ([68ac88a](https://github.com/fhswf/appointme/commit/68ac88a0b734678e93315a87784c7583aa00ee7c))
+
 ## [1.16.6](https://github.com/fhswf/appointme/compare/common-v1.16.5...common-v1.16.6) (2026-04-22)
 
 

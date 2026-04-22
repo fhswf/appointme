@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.39.3](https://github.com/fhswf/appointme/compare/client-v1.39.2...client-v1.39.3) (2026-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.16.7
+
 ## [1.39.2](https://github.com/fhswf/appointme/compare/client-v1.39.1...client-v1.39.2) (2026-04-22)
 
 
