@@ -5,6 +5,6 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/backend
-    newTag: sha-2ba96146
+    newTag: sha-fc269fc5
 patches:
   - path: configmap-patch.yaml
