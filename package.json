@@ -44,7 +44,7 @@
     "fast-xml-parser": "^5.5.7",
     "jest-ctrf-json-reporter": "^0.0.10",
     "js-yaml": "^4.1.0",
-    "typedoc": "^0.28.17",
+    "typedoc": "^0.28.19",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.27.0",
