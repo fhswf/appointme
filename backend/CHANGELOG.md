@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.4](https://github.com/fhswf/appointme/compare/backend-v1.43.3...backend-v1.43.4) (2026-04-22)
+
+
+### Fixes
+
+* migrate local dependencies to pnpm workspaces and configure release-please plugin ([43d10cc](https://github.com/fhswf/appointme/commit/43d10cce2059260e7f4998e6dce6e044a4adcccd))
+
 ## [1.43.3](https://github.com/fhswf/appointme/compare/backend-v1.43.2...backend-v1.43.3) (2026-04-22)
 
 
