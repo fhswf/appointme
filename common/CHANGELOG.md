@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.8](https://github.com/fhswf/appointme/compare/common-v1.16.7...common-v1.16.8) (2026-04-22)
+
+
+### Fixes
+
+* translations ([2f97e42](https://github.com/fhswf/appointme/commit/2f97e4225baee90ee993ecd929526291c1b98d37))
+
 ## [1.16.7](https://github.com/fhswf/appointme/compare/common-v1.16.6...common-v1.16.7) (2026-04-22)
 
 

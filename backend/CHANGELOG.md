@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.43.6](https://github.com/fhswf/appointme/compare/backend-v1.43.5...backend-v1.43.6) (2026-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.16.8
+
 ## [1.43.5](https://github.com/fhswf/appointme/compare/backend-v1.43.4...backend-v1.43.5) (2026-04-22)
 
 
