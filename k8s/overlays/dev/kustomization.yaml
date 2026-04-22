@@ -10,7 +10,7 @@ patches:
       name: appointme-ingress
 images:
   - name: ghcr.io/fhswf/appointme/backend
-    newTag: 1.43.3
+    newTag: 1.43.4
   - name: ghcr.io/fhswf/appointme/frontend
     newTag: 1.39.1
   - name: ghcr.io/fhswf/appointme/mcp-server

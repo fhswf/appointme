@@ -8,3 +8,6 @@ patches:
     target:
       kind: Ingress
       name: appointme-ingress
+images:
+  - name: ghcr.io/fhswf/appointme/backend
+    newTag: 1.43.4
