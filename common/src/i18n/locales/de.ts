@@ -377,5 +377,5 @@ Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln u
     "MyProvider": "Mein Anbieter",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Changelog-Daten konnten nicht geladen werden.",
-    "See what's new and what has been fixed.": "Sehen Sie, was neu ist und was behoben wurde."
+    "See what's new and what has been fixed.": "Sehen Sie, welche neuen Features es gibt und welche Fehler behoben wurden."
 };
