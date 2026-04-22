@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.5](https://github.com/fhswf/appointme/compare/common-v1.16.4...common-v1.16.5) (2026-04-22)
+
+
+### Patches
+
+* release prod ([8751554](https://github.com/fhswf/appointme/commit/8751554d05d9562ef5c4029ea4cf214d25b73f29))
+
 ## [1.16.4](https://github.com/fhswf/appointme/compare/common@1.16.3...common-v1.16.4) (2026-04-21)
 
 

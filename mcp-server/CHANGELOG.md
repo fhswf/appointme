@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.3...mcp-server-v1.2.4) (2026-04-22)
+
+
+### Patches
+
+* release prod ([8751554](https://github.com/fhswf/appointme/commit/8751554d05d9562ef5c4029ea4cf214d25b73f29))
+
 ## [1.2.3](https://github.com/fhswf/appointme/compare/mcp-server@1.2.2...mcp-server-v1.2.3) (2026-04-21)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.39.1](https://github.com/fhswf/appointme/compare/client-v1.39.0...client-v1.39.1) (2026-04-22)
+
+
+### Patches
+
+* release prod ([8751554](https://github.com/fhswf/appointme/commit/8751554d05d9562ef5c4029ea4cf214d25b73f29))
+
 ## [1.39.0](https://github.com/fhswf/appointme/compare/client@1.38.2...client-v1.39.0) (2026-04-21)
 
 

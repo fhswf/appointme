@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.3](https://github.com/fhswf/appointme/compare/backend-v1.43.2...backend-v1.43.3) (2026-04-22)
+
+
+### Patches
+
+* release prod ([8751554](https://github.com/fhswf/appointme/commit/8751554d05d9562ef5c4029ea4cf214d25b73f29))
+
 ## [1.43.2](https://github.com/fhswf/appointme/compare/backend@1.43.1...backend-v1.43.2) (2026-04-21)
 
 
