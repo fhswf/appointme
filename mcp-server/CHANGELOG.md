@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.6](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.5...mcp-server-v1.2.6) (2026-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.16.7
+
 ## [1.2.5](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.4...mcp-server-v1.2.5) (2026-04-22)
 
 

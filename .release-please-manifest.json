@@ -1,6 +1,6 @@
 {
-  "common": "1.16.6",
-  "backend": "1.43.4",
-  "client": "1.39.2",
-  "mcp-server": "1.2.5"
+  "common": "1.16.7",
+  "backend": "1.43.5",
+  "client": "1.39.3",
+  "mcp-server": "1.2.6"
 }
