@@ -4,6 +4,8 @@ name: release (manual)
 # Use this when the automatic ci.yml release job failed after a release PR
 # was already merged and the versions are known.
 # release-please is NOT run here — versions are provided as inputs.
+# Optional source tags allow you to promote a tested immutable image such as
+# sha-abc123 instead of rebuilding or relying on the moving :main tag.
 
 on:
   workflow_dispatch:
@@ -11,32 +13,52 @@ on:
       backend_version:
         description: "Backend version to deploy (e.g. 1.43.5), leave empty to skip"
         required: false
+      backend_source_tag:
+        description: "Backend source image tag to promote (e.g. sha-abc123, defaults to main)"
+        required: false
+        default: "main"
       client_version:
         description: "Client version to deploy (e.g. 1.39.2), leave empty to skip"
         required: false
+      client_source_tag:
+        description: "Client source image tag to promote (e.g. sha-abc123, defaults to main)"
+        required: false
+        default: "main"
       mcp_server_version:
         description: "MCP Server version to deploy (e.g. 1.2.5), leave empty to skip"
         required: false
+      mcp_server_source_tag:
+        description: "MCP source image tag to promote (e.g. sha-abc123, defaults to main)"
+        required: false
+        default: "main"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 permissions:
-  contents: write
-  packages: write
+  contents: read
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install root dependencies
         run: pnpm install --ignore-scripts --workspace-root
@@ -49,12 +71,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Docker Buildx
+        if: ${{ inputs.backend_version != '' || inputs.client_version != '' || inputs.mcp_server_version != '' }}
+        uses: docker/setup-buildx-action@v3
+
       # ── Backend ─────────────────────────────────────────────────────────────
-      - name: Build & Push Backend Docker Image
+      - name: Retag Backend Docker Image
         if: ${{ inputs.backend_version != '' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/backend:${{ inputs.backend_version }} -f backend/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/backend:${{ inputs.backend_version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/backend:${{ inputs.backend_version }} \
+            ghcr.io/fhswf/appointme/backend:${{ inputs.backend_source_tag }}
 
       - name: Update Backend Kustomize
         if: ${{ inputs.backend_version != '' }}
@@ -66,11 +93,12 @@ jobs:
           git commit -am "deploy: update backend kustomize to version ${{ inputs.backend_version }} [skip ci]" || echo "No changes to commit"
 
       # ── Client ──────────────────────────────────────────────────────────────
-      - name: Build & Push Client Docker Image
+      - name: Retag Client Docker Image
         if: ${{ inputs.client_version != '' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/frontend:${{ inputs.client_version }} -f client/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/frontend:${{ inputs.client_version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/frontend:${{ inputs.client_version }} \
+            ghcr.io/fhswf/appointme/frontend:${{ inputs.client_source_tag }}
 
       - name: Update Client Kustomize
         if: ${{ inputs.client_version != '' }}
@@ -82,11 +110,12 @@ jobs:
           git commit -am "deploy: update client kustomize to version ${{ inputs.client_version }} [skip ci]" || echo "No changes to commit"
 
       # ── MCP Server ──────────────────────────────────────────────────────────
-      - name: Build & Push MCP Docker Image
+      - name: Retag MCP Docker Image
         if: ${{ inputs.mcp_server_version != '' }}
         run: |
-          docker build -t ghcr.io/fhswf/appointme/mcp-server:${{ inputs.mcp_server_version }} -f mcp-server/Dockerfile .
-          docker push ghcr.io/fhswf/appointme/mcp-server:${{ inputs.mcp_server_version }}
+          docker buildx imagetools create \
+            --tag ghcr.io/fhswf/appointme/mcp-server:${{ inputs.mcp_server_version }} \
+            ghcr.io/fhswf/appointme/mcp-server:${{ inputs.mcp_server_source_tag }}
 
       - name: Update MCP Kustomize
         if: ${{ inputs.mcp_server_version != '' }}
