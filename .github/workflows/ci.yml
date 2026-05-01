@@ -8,15 +8,20 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
-  contents: write
-  packages: write
-  pull-requests: write
+  contents: read
 
 jobs:
   # ── Gate: always runs, determines which pipeline follows ──────────────────
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     outputs:
       releases_created:            ${{ steps.release.outputs.releases_created }}
       backend--release_created:    ${{ steps.release.outputs.backend--release_created }}
@@ -30,17 +35,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Install root dependencies
-        run: pnpm install --ignore-scripts --workspace-root
-
       - uses: googleapis/release-please-action@v4
         id: release
         with:
@@ -51,18 +45,23 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created != 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install root dependencies
         run: pnpm install --ignore-scripts --workspace-root
@@ -150,18 +149,23 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.releases_created == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install root dependencies
         run: pnpm install --ignore-scripts --workspace-root

@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import * as userServices from '../helpers/services/user_services';
 import * as eventServices from '../helpers/services/event_services';
 import { IntervalSet } from 'common';
-import { addDays, startOfDay, endOfDay } from 'date-fns';
+import { addDays, format, startOfDay } from 'date-fns';
 
 // Mock dependencies
 vi.mock('../helpers/services/user_services');
@@ -41,6 +41,8 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('Booking Page Reproduction', () => {
+    const fixedNow = new Date('2026-04-15T08:00:00.000Z'); // 2026-04-15 10:00 Europe/Berlin
+
     const mockUser = {
         _id: 'user1',
         name: 'Test User',
@@ -60,8 +62,9 @@ describe('Booking Page Reproduction', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        // Set timezone to Europe/Berlin for consistent testing
         process.env.TZ = 'Europe/Berlin';
+        vi.useFakeTimers({ shouldAdvanceTime: true });
+        vi.setSystemTime(fixedNow);
 
         (userServices.getUserByUrl as any).mockResolvedValue({ data: mockUser });
         (userServices.getTransientUser as any).mockResolvedValue({ data: null });
@@ -73,6 +76,7 @@ describe('Booking Page Reproduction', () => {
 
     afterEach(() => {
         vi.restoreAllMocks();
+        vi.useRealTimers();
     });
 
     it('should automatically select the first available date', async () => {
@@ -146,62 +150,22 @@ describe('Booking Page Reproduction', () => {
             expect(screen.getByText('Available Times')).toBeInTheDocument();
         });
 
-        // Find the date element for tomorrow
-        // Calendar usually renders buttons for dates.
-        // We need to look for the button that corresponds to 'tomorrow' day number.
-        // And check if it has 'font-bold' class.
-        // Note: Use a more specific selector if possible, e.g. within the calendar container.
+        const availableDayButton = document.querySelector<HTMLButtonElement>(
+            `button[data-day="${format(tomorrow, 'yyyy-MM-dd')}"]`
+        );
 
-        // Since we don't have easy aria-label mocking for current date, 
-        // let's try to find the button by day number.
-        // Check if "font-bold" is applied to any button in the calendar grid (except nav buttons)
-        // This is a bit loose but confirms *some* highlighting is happening.
-        // A better way:
-        const dayNumber = tomorrow.getDate().toString();
-
-        // Find by text, ensuring it is a button (day picker days are buttons)
-        // We use getAll because there might be previous/next month days with same number shown
-        // But the one in current month should likely be the first or we can check aria-current or similar if selected.
-        // Or simplified: just check if ANY button with that number has the class.
-
-        const dayButtons = screen.getAllByText(dayNumber, { selector: 'button' });
-
-        const boldButton = dayButtons.find(btn => btn.className.includes('font-bold'));
-
-        expect(boldButton).toBeInTheDocument();
-        expect(boldButton).toHaveClass('font-bold');
+        expect(availableDayButton).toBeInTheDocument();
+        expect(availableDayButton).toHaveClass('font-bold');
+        expect(availableDayButton).not.toBeDisabled();
 
         // Check that a day WITHOUT slots is NOT bold
         // addDays(today, 2) has no slots mocked
         const day2 = addDays(today, 2);
-        const day2Number = day2.getDate().toString();
-        const day2Buttons = screen.getAllByText(day2Number, { selector: 'button' });
-        // Assuming the one in current month is found (or just check all)
-        // We expect NO button for this day to have font-bold, OR specifically the enabled one.
-        // Since it's disabled, it might have 'font-normal'.
+        const unavailableDayButton = document.querySelector<HTMLButtonElement>(
+            `button[data-day="${format(day2, 'yyyy-MM-dd')}"]`
+        );
 
-        // Let's check the first one found (simpler)
-        if (day2Buttons.length > 0) {
-            const btn = day2Buttons[0];
-            // It should NOT have font-bold, or should have font-normal if we apply that class explicitly.
-            // Tailwind font-bold sets font-weight: 700. font-normal sets 400.
-            // If we apply both without precedence, one wins. 
-            // Ideally we want to ensure 'font-bold' class is NOT present or overridden.
-            // But since we put 'font-bold' roughly in the class string, it IS present in the class list string.
-            // We need to check if 'font-normal' is ALSO present (and presumably winning due to specificity logic or order).
-            // Actually, testing-library `toHaveClass` just checks string presence.
-            // So if we have `font-bold disabled:font-normal`, the string `font-bold` is still there!
-
-            // We can check if `disabled:font-normal` or `aria-disabled:font-normal` is present.
-            // Or better, check computed style? Vitest/jsdom computed style for pseudo-classes is tricky.
-
-            // Wait, if `disabled:font-normal` is applied, the class string contains "disabled:font-normal". 
-            // It is hard to verify "visual boldness" in unit test without computed styles on pseudo-states.
-
-            // However, ensuring the CLASS is present is a good start.
-            expect(btn).toHaveClass('aria-disabled:font-normal');
-            expect(btn).toHaveClass('disabled:font-normal');
-            // And we can also add 'disabled:font-normal' to the expectations if we add it to code.
-        }
+        expect(unavailableDayButton).toBeInTheDocument();
+        expect(unavailableDayButton).toBeDisabled();
     });
 });
