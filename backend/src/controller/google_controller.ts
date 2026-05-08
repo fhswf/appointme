@@ -130,10 +130,94 @@ const performFreeBusyQuery = async (user_id: string, tokens: any, timeMin: strin
   });
 };
 
+// Keep each Google freebusy request below the API's practical range limit.
+const MAX_FREE_BUSY_RANGE_MS = 90 * 24 * 60 * 60 * 1000;
+
+const splitFreeBusyRange = (timeMin: string, timeMax: string): Array<{ timeMin: string; timeMax: string }> => {
+  const start = new Date(timeMin);
+  const end = new Date(timeMax);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end.getTime() <= start.getTime()) {
+    return [{ timeMin, timeMax }];
+  }
+
+  if (end.getTime() - start.getTime() <= MAX_FREE_BUSY_RANGE_MS) {
+    return [{ timeMin, timeMax }];
+  }
+
+  const chunks: Array<{ timeMin: string; timeMax: string }> = [];
+  let chunkStart = start;
+
+  while (chunkStart.getTime() < end.getTime()) {
+    const chunkEnd = new Date(Math.min(chunkStart.getTime() + MAX_FREE_BUSY_RANGE_MS, end.getTime()));
+    chunks.push({
+      timeMin: chunkStart.toISOString(),
+      timeMax: chunkEnd.toISOString()
+    });
+    chunkStart = chunkEnd;
+  }
+
+  return chunks;
+};
+
+const mergeFreeBusyResponses = (responses: any[]) => {
+  if (responses.length === 0) {
+    return { data: { calendars: {} } } as any;
+  }
+
+  if (responses.length === 1) {
+    return responses[0];
+  }
+
+  const merged = {
+    ...responses[0],
+    data: {
+      ...responses[0].data,
+      calendars: {},
+      groups: {}
+    }
+  } as any;
+
+  for (const response of responses) {
+    for (const calendarId in response?.data?.calendars ?? {}) {
+      const calendar = response.data.calendars[calendarId];
+      const existing = merged.data.calendars[calendarId] ?? {};
+      merged.data.calendars[calendarId] = {
+        ...existing,
+        ...calendar,
+        busy: [
+          ...(existing.busy ?? []),
+          ...(calendar.busy ?? [])
+        ].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+      };
+    }
+
+    for (const groupId in response?.data?.groups ?? {}) {
+      merged.data.groups[groupId] = response.data.groups[groupId];
+    }
+  }
+
+  return merged;
+};
+
 const isInvalidGrantError = (err: any): boolean => {
   return err.message === 'invalid_grant' ||
     err.response?.data?.error === 'invalid_grant' ||
     err.errors?.some?.((error: any) => error?.reason === 'invalid_grant');
+};
+
+const googleErrorDetails = (err: any) => {
+  const error = err?.response?.data?.error;
+  const detail = error?.errors?.[0] ?? err?.cause?.errors?.[0] ?? err?.errors?.[0];
+
+  return {
+    message: error?.message ?? err?.message ?? String(err),
+    code: err?.code ?? error?.code,
+    status: err?.status ?? error?.status,
+    reason: detail?.reason,
+    location: detail?.location,
+    locationType: detail?.locationType
+  };
 };
 
 const handleFreeBusyError = async (err: any, user_id: string, current_tokens: any, timeMin: string, timeMax: string, items: any[], retry: boolean) => {
@@ -163,8 +247,14 @@ const handleFreeBusyError = async (err: any, user_id: string, current_tokens: an
   if (isInvalidGrant) {
     logger.warn(`freeBusy failed with invalid_grant for user ${user_id}.`);
   } else {
-    logger.error('freeBusy failed inside: %o', err);
-    if (err instanceof Error) {
+    logger.error('freeBusy failed: %j', {
+      ...googleErrorDetails(err),
+      userId: user_id,
+      timeMin,
+      timeMax,
+      calendarCount: items.length
+    });
+    if (err instanceof Error && !(err as any).response) {
       logger.error(err.stack);
     }
   }
@@ -190,11 +280,18 @@ export const freeBusy = async (user_id: string, timeMin: string, timeMax: string
     return { data: { calendars: {} } } as any;
   }
 
-  try {
-    return await performFreeBusyQuery(user_id, google_tokens, timeMin, timeMax, items);
-  } catch (err: any) {
-    return await handleFreeBusyError(err, user_id, google_tokens, timeMin, timeMax, items, retry);
+  const chunks = splitFreeBusyRange(timeMin, timeMax);
+  const responses: any[] = [];
+
+  for (const chunk of chunks) {
+    try {
+      responses.push(await performFreeBusyQuery(user_id, google_tokens, chunk.timeMin, chunk.timeMax, items));
+    } catch (err: any) {
+      responses.push(await handleFreeBusyError(err, user_id, google_tokens, chunk.timeMin, chunk.timeMax, items, retry));
+    }
   }
+
+  return mergeFreeBusyResponses(responses);
 }
 
 import { convertBusyToFree } from '../utility/scheduler.js';
@@ -205,7 +302,7 @@ async function fetchFreeBusyData(userid: string, timeMin: Date, timeMax: Date) {
       const user = await UserModel.findOne({ _id: userid }).exec();
       if (user?.google_tokens?.access_token) {
         return freeBusy(userid, timeMin.toISOString(), timeMax.toISOString()).catch(err => {
-          logger.error('Google freeBusy error', err);
+          logger.error('Google freeBusy error: %j', googleErrorDetails(err));
           return null;
         });
       }

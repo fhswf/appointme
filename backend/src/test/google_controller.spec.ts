@@ -54,6 +54,7 @@ vi.mock('../utility/mailer', () => ({
 }));
 
 import { sendEmail } from '../utility/mailer';
+import { logger } from '../logging';
 
 vi.mock('google-auth-library', () => {
     return {
@@ -865,6 +866,63 @@ describe('google_controller', () => {
                 { $unset: { google_tokens: "" } }
             );
             expect(sendEmail).not.toHaveBeenCalled();
+            expect(logger.error).toHaveBeenCalledWith('freeBusy failed: %j', expect.objectContaining({
+                message: 'The requested time range is too long.',
+                code: 400,
+                status: 'INVALID_ARGUMENT',
+                userId,
+                timeMin: '2025-01-01',
+                timeMax: '2025-01-02',
+                calendarCount: 1
+            }));
+            expect(logger.error).not.toHaveBeenCalledWith('freeBusy failed inside: %o', rangeError);
+        });
+
+        it('should split and merge long freeBusy ranges', async () => {
+            const userId = 'user_long_range_test';
+            const userToken = {
+                _id: userId,
+                google_tokens: { access_token: 'token', refresh_token: 'refresh' },
+                pull_calendars: ['cal1']
+            };
+
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({
+                exec: vi.fn().mockResolvedValue(userToken)
+            });
+
+            const mockQuery = vi.fn()
+                .mockResolvedValueOnce({
+                    data: { calendars: { cal1: { busy: [{ start: '2026-05-20T09:00:00Z', end: '2026-05-20T10:00:00Z' }] } } }
+                })
+                .mockResolvedValueOnce({
+                    data: { calendars: { cal1: { busy: [{ start: '2026-09-01T09:00:00Z', end: '2026-09-01T10:00:00Z' }] } } }
+                })
+                .mockResolvedValueOnce({
+                    data: { calendars: { cal1: { busy: [{ start: '2026-12-01T09:00:00Z', end: '2026-12-01T10:00:00Z' }] } } }
+                });
+
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            const result = await freeBusy(userId, '2026-05-10T09:00:00.000Z', '2026-12-08T09:00:00.000Z');
+
+            expect(mockQuery).toHaveBeenCalledTimes(3);
+            const requestBodies = mockQuery.mock.calls.map(call => call[0].requestBody);
+            expect(requestBodies[0].timeMin).toBe('2026-05-10T09:00:00.000Z');
+            expect(requestBodies[2].timeMax).toBe('2026-12-08T09:00:00.000Z');
+            for (const body of requestBodies) {
+                const rangeMs = new Date(body.timeMax).getTime() - new Date(body.timeMin).getTime();
+                expect(rangeMs).toBeLessThanOrEqual(90 * 24 * 60 * 60 * 1000);
+            }
+            expect(result.data.calendars.cal1.busy).toEqual([
+                { start: '2026-05-20T09:00:00Z', end: '2026-05-20T10:00:00Z' },
+                { start: '2026-09-01T09:00:00Z', end: '2026-09-01T10:00:00Z' },
+                { start: '2026-12-01T09:00:00Z', end: '2026-12-01T10:00:00Z' }
+            ]);
         });
     });
 
