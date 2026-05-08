@@ -3,6 +3,14 @@ kind: Service
 metadata:
   name: mcp-server
   namespace: appointme
+  annotations:
+    gatus.home-operations.com/enabled: "true"
+    gatus.home-operations.com/endpoint: |
+      group: appointme-internal
+      interval: 1m
+      conditions:
+        - "[CONNECTED] == true"
+        - "[RESPONSE_TIME] < 500"
   labels:
     app: mcp-server
 spec:
