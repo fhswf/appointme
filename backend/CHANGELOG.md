@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.0](https://github.com/fhswf/appointme/compare/backend-v1.43.7...backend-v1.44.0) (2026-05-08)
+
+
+### Improvements
+
+* implement freeBusy range splitting and response merging for Google Calendar API ([f50c231](https://github.com/fhswf/appointme/commit/f50c231fb54c9efef0d9ac37f0d2d10f4d89c4b9))
+
 ## [1.43.7](https://github.com/fhswf/appointme/compare/backend-v1.43.6...backend-v1.43.7) (2026-05-08)
 
 
