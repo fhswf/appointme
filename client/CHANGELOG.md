@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.39.5](https://github.com/fhswf/appointme/compare/client-v1.39.4...client-v1.39.5) (2026-05-08)
+
+
+### Patches
+
+* **deps-dev:** bump @eslint/js from 9.39.2 to 10.0.1 ([3519b66](https://github.com/fhswf/appointme/commit/3519b6638ef8709d75bc2c01e156c418d2e084b3))
+* **deps-dev:** bump @eslint/js from 9.39.2 to 10.0.1 ([f242c7a](https://github.com/fhswf/appointme/commit/f242c7a869e27f2c8baead086433f83fbb8fb1a1))
+* **deps:** bump @tailwindcss/vite from 4.1.18 to 4.2.4 ([0b5e383](https://github.com/fhswf/appointme/commit/0b5e383f89384f56a1739b05265196e3051a715f))
+* **deps:** bump @tailwindcss/vite from 4.1.18 to 4.2.4 ([7610fb1](https://github.com/fhswf/appointme/commit/7610fb1d3a0bf1aaf3823232021fb81681d9a0c7))
+* **deps:** bump i18next-http-backend from 3.0.2 to 3.0.5 ([793c6ce](https://github.com/fhswf/appointme/commit/793c6ce0830567310cea5f67e47c3e6236f43022))
+* **deps:** bump i18next-http-backend from 3.0.2 to 3.0.5 ([67aab1e](https://github.com/fhswf/appointme/commit/67aab1ee110269349cfb188553fa4e629025c0dc))
+* refactor workflows to improve concurrency and permissions management ([5ecb967](https://github.com/fhswf/appointme/commit/5ecb9674cfbbc10eb9369f8c8ab735e8f6de7dc4))
+* remove GitHub package registry configuration from .npmrc files ([753e3b7](https://github.com/fhswf/appointme/commit/753e3b70910671f7cfdc5edd6c17dee84401a894))
+* update Booking regression tests for improved date handling and assertions ([753e3b7](https://github.com/fhswf/appointme/commit/753e3b70910671f7cfdc5edd6c17dee84401a894))
+
 ## [1.39.4](https://github.com/fhswf/appointme/compare/client-v1.39.3...client-v1.39.4) (2026-04-22)
 
 
