@@ -33,6 +33,10 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+concurrency:
+  group: quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   pull-requests: read # allows SonarQube to decorate PRs with analysis results
 

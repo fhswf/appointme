@@ -39,7 +39,7 @@
     "@sentry/browser": "^10.49.0",
     "@sentry/react": "^10.49.0",
     "@stepperize/react": "^5.1.9",
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.2.4",
     "@types/react": "^19.2.14",
     "@types/react-big-calendar": "^1.16.3",
     "axios": "^1.15.0",
@@ -51,7 +51,7 @@
     "dayjs": "^1.11.13",
     "i18next": "^26.0.6",
     "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-http-backend": "^3.0.5",
     "ical.js": "^2.2.1",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
@@ -95,7 +95,7 @@
     "last 1 safari version"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^16.3.2",
