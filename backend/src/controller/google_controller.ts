@@ -130,10 +130,14 @@ const performFreeBusyQuery = async (user_id: string, tokens: any, timeMin: strin
   });
 };
 
-const handleFreeBusyError = async (err: any, user_id: string, current_tokens: any, timeMin: string, timeMax: string, items: any[], retry: boolean) => {
-  const isInvalidGrant = err.message === 'invalid_grant' ||
+const isInvalidGrantError = (err: any): boolean => {
+  return err.message === 'invalid_grant' ||
     err.response?.data?.error === 'invalid_grant' ||
-    err.code === 400; // invalid_grant often comes as 400
+    err.errors?.some?.((error: any) => error?.reason === 'invalid_grant');
+};
+
+const handleFreeBusyError = async (err: any, user_id: string, current_tokens: any, timeMin: string, timeMax: string, items: any[], retry: boolean) => {
+  const isInvalidGrant = isInvalidGrantError(err);
 
   if (retry && isInvalidGrant) {
     logger.warn(`freeBusy failed with invalid_grant for user ${user_id}. Checking for updated tokens...`);

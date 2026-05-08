@@ -822,6 +822,50 @@ describe('google_controller', () => {
                 expect.any(String)
             );
         });
+
+        it('should not invalidate tokens for non-auth Google 400 errors', async () => {
+            const userId = 'user_non_auth_400_test';
+            const userToken = {
+                _id: userId,
+                email: userId + '@example.com',
+                google_tokens: { access_token: 'token', refresh_token: 'refresh' },
+                pull_calendars: ['cal1']
+            };
+            const rangeError = {
+                code: 400,
+                message: 'The requested time range is too long.',
+                response: {
+                    data: {
+                        error: {
+                            code: 400,
+                            message: 'The requested time range is too long.',
+                            status: 'INVALID_ARGUMENT'
+                        }
+                    }
+                }
+            };
+
+            // @ts-ignore
+            UserModel.findOne.mockReturnValue({
+                exec: vi.fn().mockResolvedValue(userToken)
+            });
+
+            const mockQuery = vi.fn().mockRejectedValue(rangeError);
+
+            // @ts-ignore
+            vi.mocked(google.calendar).mockReturnValue({
+                // @ts-ignore
+                freebusy: { query: mockQuery }
+            });
+
+            await expect(freeBusy(userId, '2025-01-01', '2025-01-02')).rejects.toMatchObject(rangeError);
+
+            expect(UserModel.findOneAndUpdate).not.toHaveBeenCalledWith(
+                { _id: { $eq: userId } },
+                { $unset: { google_tokens: "" } }
+            );
+            expect(sendEmail).not.toHaveBeenCalled();
+        });
     });
 
     describe('Edge Cases', () => {
