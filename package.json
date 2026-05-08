@@ -41,7 +41,7 @@
   "homepage": "https://github.com/fhswf/appointme#readme",
   "devDependencies": {
     "dotenv-vault": "^1.27.0",
-    "fast-xml-parser": "^5.5.7",
+    "fast-xml-parser": "^5.7.0",
     "jest-ctrf-json-reporter": "^0.0.10",
     "js-yaml": "^4.1.0",
     "typedoc": "^0.28.19",
