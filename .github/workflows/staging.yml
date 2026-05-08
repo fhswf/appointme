@@ -85,6 +85,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "::notice::origin/main advanced while this run was building; skipping stale dev overlay update for ${{ steps.tag.outputs.sha }}"
+            exit 0
+          fi
           git add \
             backend/k8s/overlays/dev/kustomization.yaml \
             client/k8s/overlays/dev/kustomization.yaml \
