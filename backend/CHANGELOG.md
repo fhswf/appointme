@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.43.7](https://github.com/fhswf/appointme/compare/backend-v1.43.6...backend-v1.43.7) (2026-05-08)
+
+
+### Fixes
+
+* improve error handling for invalid Google tokens and add test for non-auth 400 errors ([d7ddbea](https://github.com/fhswf/appointme/commit/d7ddbea02cb60bf63a1eec39c84f0ec26a653e4f))
+
+
+### Patches
+
+* add full reconciliation CronJob for daily execution ([0fea49f](https://github.com/fhswf/appointme/commit/0fea49fa3e8152703e7e5d248f9d7d985f847f10))
+* **deps:** bump mongoose from 9.1.5 to 9.1.6 ([e308b78](https://github.com/fhswf/appointme/commit/e308b787125c982d01752c58225d358476547f38))
+* **deps:** bump mongoose from 9.1.5 to 9.1.6 ([6c88d31](https://github.com/fhswf/appointme/commit/6c88d313414f4ecb048257b3d0306ddde02a6f84))
+* refactor workflows to improve concurrency and permissions management ([5ecb967](https://github.com/fhswf/appointme/commit/5ecb9674cfbbc10eb9369f8c8ab735e8f6de7dc4))
+* remove GitHub package registry configuration from .npmrc files ([753e3b7](https://github.com/fhswf/appointme/commit/753e3b70910671f7cfdc5edd6c17dee84401a894))
+* update Booking regression tests for improved date handling and assertions ([753e3b7](https://github.com/fhswf/appointme/commit/753e3b70910671f7cfdc5edd6c17dee84401a894))
+
 ## [1.43.6](https://github.com/fhswf/appointme/compare/backend-v1.43.5...backend-v1.43.6) (2026-04-22)
 
 
