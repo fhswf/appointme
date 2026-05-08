@@ -4,7 +4,9 @@ metadata:
   annotations:
     gatus.home-operations.com/enabled: "true"
     gatus.home-operations.com/endpoint: |
-      group: appointme-public
+      group: appointment
+      extra-labels:
+        type: ingress
       interval: 1m
       conditions:
         - "[STATUS] == 200"

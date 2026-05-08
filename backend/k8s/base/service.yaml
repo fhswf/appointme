@@ -4,7 +4,9 @@ metadata:
   annotations:
     gatus.home-operations.com/enabled: "true"
     gatus.home-operations.com/endpoint: |
-      group: appointme-internal
+      group: appointment
+      extra-labels:
+        type: backend
       interval: 1m
       conditions:
         - "[CONNECTED] == true"
