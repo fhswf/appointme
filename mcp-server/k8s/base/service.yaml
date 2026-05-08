@@ -8,7 +8,7 @@ metadata:
     gatus.home-operations.com/endpoint: |
       group: appointment
       extra-labels:
-        type: backend
+        app_type: backend
       interval: 1m
       conditions:
         - "[CONNECTED] == true"
