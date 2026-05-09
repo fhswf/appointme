@@ -372,5 +372,17 @@ Nous utilisons Sentry pour collecter des données télémétriques anonymes et d
     "gender_help_text": "Utilisé pour une grammaire correcte dans les messages de confirmation.",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Impossible de charger les données du journal des modifications.",
-    "See what's new and what has been fixed.": "Découvrez les nouveautés et les corrections apportées."
+    "See what's new and what has been fixed.": "Découvrez les nouveautés et les corrections apportées.",
+    "Reminder setting": "Paramètre de rappel",
+    "Notification type": "Type de notification",
+    "System notification": "Notification système",
+    "No reminder": "Aucun rappel",
+    "Reminder time": "Heure du rappel",
+    "Reminder settings saved": "Paramètres de rappel enregistrés",
+    "At event start": "Au début de l'événement",
+    "minutes before": "minutes avant",
+    "1 day before": "1 jour avant",
+    "days before": "jours avant",
+    "1 hour before": "1 heure avant",
+    "hours before": "heures avant"
 };

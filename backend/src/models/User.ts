@@ -110,6 +110,17 @@ const userSchema = new Schema<UserDocument>(
       type: Boolean,
       default: false
     },
+    calendar_reminder_method: {
+      type: String,
+      enum: ['popup', 'email', 'none'],
+      default: 'popup'
+    },
+    calendar_reminder_minutes: {
+      type: Number,
+      default: 15,
+      min: 0,
+      max: 40320
+    },
     use_gravatar: {
       type: Boolean,
       default: false

@@ -375,5 +375,17 @@ Wir verwenden Sentry, um anonyme Telemetriedaten und Fehlerberichte zu sammeln u
     "MyProvider": "Mein Anbieter",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Die Changelog-Daten konnten nicht geladen werden.",
-    "See what's new and what has been fixed.": "Sehen Sie, welche neuen Features es gibt und welche Fehler behoben wurden."
+    "See what's new and what has been fixed.": "Sehen Sie, welche neuen Features es gibt und welche Fehler behoben wurden.",
+    "Reminder setting": "Erinnerungseinstellung",
+    "Notification type": "Benachrichtigungstyp",
+    "System notification": "Systembenachrichtigung",
+    "No reminder": "Keine Erinnerung",
+    "Reminder time": "Erinnerungszeit",
+    "Reminder settings saved": "Erinnerungseinstellungen gespeichert",
+    "At event start": "Beim Terminstart",
+    "minutes before": "Minuten vorher",
+    "1 day before": "1 Tag vorher",
+    "days before": "Tage vorher",
+    "1 hour before": "1 Stunde vorher",
+    "hours before": "Stunden vorher"
 };

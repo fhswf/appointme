@@ -242,6 +242,31 @@ describe('CalendarSettings Component', () => {
         });
     });
 
+    it('should update reminder settings', async () => {
+        render(
+            <MemoryRouter>
+                <UserContext.Provider value={{ user: mockUser } as any}>
+                    <CalendarSettings />
+                </UserContext.Provider>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('calendar-reminder-method')).toBeInTheDocument();
+        });
+
+        fireEvent.change(screen.getByTestId('calendar-reminder-method'), { target: { value: 'popup' } });
+        fireEvent.change(screen.getByTestId('calendar-reminder-minutes'), { target: { value: '15' } });
+        fireEvent.click(screen.getByTestId('save-reminder-settings'));
+
+        await waitFor(() => {
+            expect(userServices.updateUser).toHaveBeenCalledWith(expect.objectContaining({
+                calendar_reminder_method: 'popup',
+                calendar_reminder_minutes: 15
+            }));
+        });
+    });
+
     it('should handle partial failure when listing calendars', async () => {
         const accounts = [{ _id: 'acc1', name: 'Broken Account' }];
         (caldavServices.listAccounts as any).mockResolvedValue({ data: accounts });
@@ -463,4 +488,3 @@ describe('CalendarSettings Component', () => {
         consoleSpy.mockRestore();
     });
 });
-

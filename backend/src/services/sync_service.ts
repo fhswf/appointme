@@ -8,6 +8,7 @@ import { createCalDavEvent, findAccountForCalendar, verifyEvent as verifyCalDavE
 import { generateIcsContent } from "../utility/ical.js";
 import { sendEventInvitation } from "../utility/mailer.js";
 import { t, Locale } from "../utility/i18n.js";
+import { getCalendarReminderSettings, googleReminder } from "../utility/calendar_reminder.js";
 import validator from "validator";
 import crypto from 'node:crypto';
 import { calendar_v3 } from 'googleapis';
@@ -137,6 +138,7 @@ function buildExternalEvent(appointment: any, eventDoc: any, user: any, determin
         } : undefined,
         guestsCanModify: true,
         guestsCanInviteOthers: true,
+        reminders: googleReminder(getCalendarReminderSettings(user)),
         extendedProperties: {
             private: {
                 appointme_id: deterministicId
@@ -349,7 +351,8 @@ async function processCalDavBooking(
                 email: a.email,
                 partstat: 'NEEDS-ACTION',
                 rsvp: true
-            }))
+            })),
+            reminder: getCalendarReminderSettings(user)
         }, { comment: userComment });
 
         const subject = t(locale, 'invitationSubject', { summary: event.summary });

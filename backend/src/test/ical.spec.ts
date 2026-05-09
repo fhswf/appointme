@@ -93,6 +93,25 @@ describe('ICS Generation', () => {
         expect(ics).not.toContain('DESCRIPTION:');
     });
 
+    it('should include display reminder alarms', () => {
+        const start = new Date('2023-12-08T10:00:00.000Z');
+        const end = new Date('2023-12-08T11:00:00.000Z');
+        const event = {
+            start,
+            end,
+            summary: 'Reminder Test',
+            organizer: { displayName: 'Org', email: 'org@test.com' },
+            attendees: [],
+            reminder: { method: 'popup' as const, minutes: 15 }
+        };
+
+        const ics = generateIcsContent(event);
+
+        expect(ics).toContain('BEGIN:VALARM');
+        expect(ics).toContain('ACTION:DISPLAY');
+        expect(ics).toContain('TRIGGER:-PT15M');
+    });
+
     describe('Recurrence Rules', () => {
         it('should generate correct RRULE string for weekly', () => {
             const rule: RecurrenceRule = {

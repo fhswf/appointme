@@ -1,4 +1,4 @@
-import ical, { ICalEventRepeatingFreq } from 'ical-generator';
+import ical, { ICalAlarmType, ICalEventRepeatingFreq } from 'ical-generator';
 
 export interface IcsEventData {
     start: Date;
@@ -18,7 +18,13 @@ export interface IcsEventData {
     }[];
     uid?: string;
     recurrence?: RecurrenceRule;
+    reminder?: CalendarReminder;
 }
+
+export type CalendarReminder = {
+    method: 'popup' | 'email' | 'none';
+    minutes: number;
+};
 
 export type RecurrenceRule = {
     enabled: boolean;
@@ -93,6 +99,7 @@ export const generateIcsContent = (event: IcsEventData, options?: IcsOptions): s
 
     addAttendees(icsEvent, event);
     addRecurrence(icsEvent, event);
+    addReminder(icsEvent, event);
 
     return calendar.toString();
 };
@@ -139,4 +146,16 @@ const addRecurrence = (icsEvent: any, event: IcsEventData) => {
             until: until ? new Date(until) : undefined
         });
     }
+};
+
+const addReminder = (icsEvent: any, event: IcsEventData) => {
+    if (!event.reminder || event.reminder.method === 'none') return;
+
+    const minutes = Number.isInteger(event.reminder.minutes) ? event.reminder.minutes : 15;
+
+    icsEvent.createAlarm({
+        type: ICalAlarmType.display,
+        trigger: minutes * 60,
+        description: event.summary
+    });
 };

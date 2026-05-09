@@ -7,6 +7,7 @@ import { logger } from '../logging.js';
 import { Request, Response } from 'express';
 import { encrypt, decrypt } from '../utility/encryption.js';
 import { generateIcsContent } from '../utility/ical.js';
+import { getCalendarReminderSettings } from '../utility/calendar_reminder.js';
 
 export const addAccount = async (req: Request, res: Response) => {
     let { serverUrl, username, password, name, email } = req.body;
@@ -462,7 +463,8 @@ export const createCalDavEvent = async (user: User, eventDetails: any, userComme
             partstat: a.partstat,
             rsvp: a.rsvp
         })),
-        recurrence: recurrence
+        recurrence: recurrence,
+        reminder: getCalendarReminderSettings(user)
     }, { comment: userComment });
 
     const createdEvent = await client.createCalendarObject({

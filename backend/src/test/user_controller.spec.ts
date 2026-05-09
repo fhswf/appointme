@@ -211,6 +211,34 @@ describe("User Controller", () => {
             expect(updateArg.$set._id).toBeUndefined();
             expect(updateArg.$set.unknown_field).toBeUndefined();
         });
+
+        it("should update calendar reminder settings", async () => {
+            (UserModel.findById as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue(USER)
+            });
+            (UserModel.findByIdAndUpdate as any).mockReturnValue({
+                exec: vi.fn().mockResolvedValue({
+                    ...USER,
+                    calendar_reminder_method: "popup",
+                    calendar_reminder_minutes: 15
+                })
+            });
+
+            const res = await request(app)
+                .put("/api/v1/user/me")
+                .send({
+                    data: {
+                        calendar_reminder_method: "popup",
+                        calendar_reminder_minutes: 15
+                    }
+                });
+
+            expect(res.status).toBe(200);
+            const updateCall = (UserModel.findByIdAndUpdate as any).mock.calls[0];
+            const updateArg = updateCall[1];
+            expect(updateArg.$set.calendar_reminder_method).toBe("popup");
+            expect(updateArg.$set.calendar_reminder_minutes).toBe(15);
+        });
     });
 
     describe("getUserByUrl (Unit)", () => {
@@ -534,4 +562,3 @@ describe("User Controller", () => {
         });
     });
 });
-

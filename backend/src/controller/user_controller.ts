@@ -84,6 +84,8 @@ export const getUser = (req: Request, res: Response): void => {
         "welcome": 1,
         "updatedAt": 1,
         "send_invitation_email": 1,
+        "calendar_reminder_method": 1,
+        "calendar_reminder_minutes": 1,
         "google_tokens.access_token": 1,
         "use_gravatar": 1,
         "defaultAvailable": 1
@@ -172,6 +174,14 @@ const buildUserUpdateObject = (userData: Partial<User>): Record<string, any> => 
     update.send_invitation_email = userData.send_invitation_email;
   }
 
+  if (typeof userData.calendar_reminder_method === "string" && ['popup', 'email', 'none'].includes(userData.calendar_reminder_method)) {
+    update.calendar_reminder_method = userData.calendar_reminder_method;
+  }
+
+  if (Number.isInteger(userData.calendar_reminder_minutes) && userData.calendar_reminder_minutes >= 0 && userData.calendar_reminder_minutes <= 40320) {
+    update.calendar_reminder_minutes = userData.calendar_reminder_minutes;
+  }
+
   if (userData.defaultAvailable && typeof userData.defaultAvailable === 'object') {
     update.defaultAvailable = userData.defaultAvailable;
   }
@@ -229,6 +239,8 @@ export const updateUser = (req: Request, res: Response): void => {
             "google_tokens.access_token": 1,
             "use_gravatar": 1,
             "send_invitation_email": 1,
+            "calendar_reminder_method": 1,
+            "calendar_reminder_minutes": 1,
             "defaultAvailable": 1
           }
         }).exec();

@@ -371,5 +371,17 @@ Utilizziamo Sentry per raccogliere dati di telemetria anonimi e segnalazioni di 
     "gender_help_text": "Utilizzato per la grammatica corretta nei messaggi di conferma.",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Impossibile caricare i dati del registro delle modifiche.",
-    "See what's new and what has been fixed.": "Scopri le novità e le correzioni apportate."
+    "See what's new and what has been fixed.": "Scopri le novità e le correzioni apportate.",
+    "Reminder setting": "Impostazione promemoria",
+    "Notification type": "Tipo di notifica",
+    "System notification": "Notifica di sistema",
+    "No reminder": "Nessun promemoria",
+    "Reminder time": "Ora del promemoria",
+    "Reminder settings saved": "Impostazioni promemoria salvate",
+    "At event start": "All'inizio dell'evento",
+    "minutes before": "minuti prima",
+    "1 day before": "1 giorno prima",
+    "days before": "giorni prima",
+    "1 hour before": "1 ora prima",
+    "hours before": "ore prima"
 };

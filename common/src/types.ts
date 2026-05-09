@@ -137,6 +137,8 @@ export interface CalDavAccount {
   email?: string;
 }
 
+export type CalendarReminderMethod = 'popup' | 'email' | 'none';
+
 export interface User {
   email: string;
   name: string;
@@ -151,6 +153,8 @@ export interface User {
   agenda_visible_calendars?: string[];
   welcome?: string;
   send_invitation_email?: boolean;
+  calendar_reminder_method?: CalendarReminderMethod;
+  calendar_reminder_minutes?: number;
   roles?: string[];
   defaultAvailable?: Slots;
 };
@@ -464,4 +468,3 @@ export class IntervalSet extends Array<TimeRange> {
     return result;
   }
 }
-

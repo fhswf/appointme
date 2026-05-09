@@ -30,7 +30,7 @@ import {
     getCalendarList,
     deleteAccess,
 } from "../helpers/services/google_services";
-import { Edit, Trash2 } from "lucide-react";
+import { Bell, Edit, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { addAccount, removeAccount, listAccounts, listCalendars } from "../helpers/services/caldav_services";
 import { Input } from "@/components/ui/input";
@@ -94,6 +94,101 @@ const renderCalendarList = (calendarList: any, state: any, setState: any, t: any
     } else {
         return <div className="flex flex-col gap-2">{items}</div>;
     }
+};
+
+const REMINDER_MINUTE_OPTIONS = [0, 5, 10, 15, 30, 60, 120, 1440, 2880, 10080];
+
+const reminderMinutesLabel = (minutes: number, t: any) => {
+    if (minutes === 0) return t("At event start");
+    if (minutes < 60) return `${minutes} ${t("minutes before")}`;
+    if (minutes % 1440 === 0) {
+        const days = minutes / 1440;
+        return days === 1 ? t("1 day before") : `${days} ${t("days before")}`;
+    }
+    if (minutes % 60 === 0) {
+        const hours = minutes / 60;
+        return hours === 1 ? t("1 hour before") : `${hours} ${t("hours before")}`;
+    }
+    return `${minutes} ${t("minutes before")}`;
+};
+
+export const ReminderSettings = ({ user }: { user: any }) => {
+    const { t } = useTranslation();
+    const { setUser } = useAuth();
+    const [method, setMethod] = useState(user?.calendar_reminder_method || 'popup');
+    const [minutes, setMinutes] = useState(String(user?.calendar_reminder_minutes ?? 15));
+
+    useEffect(() => {
+        setMethod(user?.calendar_reminder_method || 'popup');
+        setMinutes(String(user?.calendar_reminder_minutes ?? 15));
+    }, [user]);
+
+    const save = () => {
+        const updatedUser = {
+            ...user,
+            calendar_reminder_method: method,
+            calendar_reminder_minutes: Number(minutes)
+        };
+
+        updateUser(updatedUser)
+            .then((res) => {
+                toast.success(t("Reminder settings saved"));
+                setUser(res.data);
+            })
+            .catch((err) => {
+                console.error("user update failed: %o", err);
+                toast.error(t("Failed to save settings"));
+            });
+    };
+
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <Bell className="h-4 w-4" />
+                    {t("Reminder setting")}
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
+                    <div className="grid gap-1.5">
+                        <Label htmlFor="calendar-reminder-method">{t("Notification type")}</Label>
+                        <select
+                            id="calendar-reminder-method"
+                            data-testid="calendar-reminder-method"
+                            value={method}
+                            onChange={(event) => setMethod(event.target.value)}
+                            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        >
+                            <option value="popup">{t("System notification")}</option>
+                            <option value="email">{t("Email")}</option>
+                            <option value="none">{t("No reminder")}</option>
+                        </select>
+                    </div>
+                    <div className="grid gap-1.5">
+                        <Label htmlFor="calendar-reminder-minutes">{t("Reminder time")}</Label>
+                        <select
+                            id="calendar-reminder-minutes"
+                            data-testid="calendar-reminder-minutes"
+                            value={minutes}
+                            onChange={(event) => setMinutes(event.target.value)}
+                            disabled={method === 'none'}
+                            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm disabled:opacity-50"
+                        >
+                            {REMINDER_MINUTE_OPTIONS.map((option) => (
+                                <option key={option} value={option}>
+                                    {reminderMinutesLabel(option, t)}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <Button onClick={save} data-testid="save-reminder-settings">
+                        {t("Save")}
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
 };
 
 export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: any }) => {
@@ -624,6 +719,12 @@ export const CalendarSettings = () => {
             <ErrorBoundary>
                 <CalDavAccounts user={user} onAccountsChange={handleAccountsChange} />
             </ErrorBoundary>
+
+            <div className="p-4">
+                <ErrorBoundary>
+                    <ReminderSettings user={user} />
+                </ErrorBoundary>
+            </div>
 
             {(calendarList && calendarList.items.length > 0) && (
                 <>

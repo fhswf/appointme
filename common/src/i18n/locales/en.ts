@@ -369,5 +369,17 @@ We use Sentry to collect anonymous telemetry data and error reports to improve t
     "confirmationText_neuter": "You booked an {{event}} with {{name}} appointment on {{date}} at {{time}}.",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "Failed to load changelog data.",
-    "See what's new and what has been fixed.": "See what's new and what has been fixed."
+    "See what's new and what has been fixed.": "See what's new and what has been fixed.",
+    "Reminder setting": "Reminder setting",
+    "Notification type": "Notification type",
+    "System notification": "System notification",
+    "No reminder": "No reminder",
+    "Reminder time": "Reminder time",
+    "Reminder settings saved": "Reminder settings saved",
+    "At event start": "At event start",
+    "minutes before": "minutes before",
+    "1 day before": "1 day before",
+    "days before": "days before",
+    "1 hour before": "1 hour before",
+    "hours before": "hours before"
 };

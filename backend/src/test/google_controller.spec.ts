@@ -618,7 +618,13 @@ describe('google_controller', () => {
             // Verify google.calendar().events.insert called
             expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
                 calendarId: 'primary',
-                requestBody: { summary: 'test' }
+                requestBody: expect.objectContaining({
+                    summary: 'test',
+                    reminders: {
+                        useDefault: false,
+                        overrides: [{ method: 'popup', minutes: 15 }]
+                    }
+                })
             }));
         });
     });

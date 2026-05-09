@@ -372,5 +372,17 @@ Utilizamos Sentry para recopilar datos de telemetría anónimos e informes de er
     "gender_help_text": "Utilizado para la gramática correcta en los mensajes de confirmación.",
     "Changelog": "Changelog",
     "Failed to load changelog data.": "No se pudieron cargar los datos del registro de cambios.",
-    "See what's new and what has been fixed.": "Vea qué hay de nuevo y qué se ha corregido."
+    "See what's new and what has been fixed.": "Vea qué hay de nuevo y qué se ha corregido.",
+    "Reminder setting": "Configuración de recordatorio",
+    "Notification type": "Tipo de notificación",
+    "System notification": "Notificación del sistema",
+    "No reminder": "Sin recordatorio",
+    "Reminder time": "Hora del recordatorio",
+    "Reminder settings saved": "Configuración de recordatorio guardada",
+    "At event start": "Al inicio del evento",
+    "minutes before": "minutos antes",
+    "1 day before": "1 día antes",
+    "days before": "días antes",
+    "1 hour before": "1 hora antes",
+    "hours before": "horas antes"
 };

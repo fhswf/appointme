@@ -18,6 +18,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { generateRRule } from '../utility/ical.js';
 import { sendEmail } from '../utility/mailer.js';
+import { getCalendarReminderSettings, googleReminder } from '../utility/calendar_reminder.js';
 
 
 
@@ -364,6 +365,8 @@ export async function insertGoogleEvent(user: UserDocument, event: Schema$Event,
       event.recurrence = [rrule];
     }
   }
+
+  event.reminders = event.reminders || googleReminder(getCalendarReminderSettings(user));
 
   logger.debug('insert: event=%j', event)
 
