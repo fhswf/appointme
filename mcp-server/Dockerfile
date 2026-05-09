@@ -1,4 +1,4 @@
-FROM node:22-bullseye as build
+FROM node:24-bookworm as build
 
 WORKDIR /base
 
@@ -19,7 +19,7 @@ COPY ./mcp-server ./mcp-server
 RUN pnpm --filter mcp-server build
 
 # Create mcp-server container
-FROM node:22-bullseye as mcp-server
+FROM node:24-bookworm as mcp-server
 ARG TZ=Europe/Berlin
 ENV TZ=${TZ}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

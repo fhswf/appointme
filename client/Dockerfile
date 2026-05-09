@@ -1,8 +1,9 @@
-FROM node:18-bullseye AS build
+FROM node:24-bookworm AS build
 ARG CLIENT_ID=692793330469-6iupo55tt0kelejcie26m4njeckbmnv8.apps.googleusercontent.com
 ARG BASE_PATH=/
 ARG APP_URL=https://appointme.example.com
 ARG API_URL=https://appointme.example.com/api/v1
+ARG SENTRY_DSN
 
 ENV REACT_APP_CLIENT_ID=${CLIENT_ID}
 ENV REACT_APP_BASE_PATH=${BASE_PATH}
