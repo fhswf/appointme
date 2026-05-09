@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/fhswf/appointme/compare/common-v1.16.8...common-v1.17.0) (2026-05-09)
+
+
+### Improvements
+
+* implement calendar reminder settings and update related components ([9c92f0f](https://github.com/fhswf/appointme/commit/9c92f0fcd193aa83bfb6988a908f75364ef78046))
+
 ## [1.16.8](https://github.com/fhswf/appointme/compare/common-v1.16.7...common-v1.16.8) (2026-04-22)
 
 

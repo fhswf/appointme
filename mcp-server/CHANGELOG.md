@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.7...mcp-server-v1.3.0) (2026-05-09)
+
+
+### Improvements
+
+* add Gatus monitoring annotations to services and ingress ([17ccc68](https://github.com/fhswf/appointme/commit/17ccc68cd3bfe921a3992d91a41f6cd79089d49c))
+* update Gatus monitoring annotations for services and ingress ([e936f80](https://github.com/fhswf/appointme/commit/e936f80a6876910527656889fa24eb168368457b))
+* update Gatus monitoring annotations to use app_type for services and ingress ([51c0398](https://github.com/fhswf/appointme/commit/51c0398638734d3ae07ce6a6bb5421441f669d3d))
+
+
+### Patches
+
+* **deps:** bump axios from 1.15.0 to 1.15.2 ([1f96a79](https://github.com/fhswf/appointme/commit/1f96a79bf851d4a9fc85066affaba76cfd6f6d13))
+* **deps:** bump axios from 1.15.0 to 1.15.2 ([b859e75](https://github.com/fhswf/appointme/commit/b859e75c77ea5cf3af404e97049f5ce55e024ab9))
+* upgrade Node.js version to 24 in CI, release, staging, and Dockerfiles ([f47e651](https://github.com/fhswf/appointme/commit/f47e651a52cbd7bc7ea34f1e3ccbd7b869b9df3a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.0
+
 ## [1.2.7](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.6...mcp-server-v1.2.7) (2026-04-22)
 
 

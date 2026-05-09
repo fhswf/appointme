@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.45.0](https://github.com/fhswf/appointme/compare/backend-v1.44.0...backend-v1.45.0) (2026-05-09)
+
+
+### Improvements
+
+* add Gatus monitoring annotations to services and ingress ([17ccc68](https://github.com/fhswf/appointme/commit/17ccc68cd3bfe921a3992d91a41f6cd79089d49c))
+* implement calendar reminder settings and update related components ([9c92f0f](https://github.com/fhswf/appointme/commit/9c92f0fcd193aa83bfb6988a908f75364ef78046))
+* update Gatus monitoring annotations for services and ingress ([e936f80](https://github.com/fhswf/appointme/commit/e936f80a6876910527656889fa24eb168368457b))
+* update Gatus monitoring annotations to use app_type for services and ingress ([51c0398](https://github.com/fhswf/appointme/commit/51c0398638734d3ae07ce6a6bb5421441f669d3d))
+
+
+### Patches
+
+* **deps:** bump jose from 6.1.3 to 6.2.3 ([4f72b9b](https://github.com/fhswf/appointme/commit/4f72b9b4d64b33de97332690e98780d87f6d754a))
+* **deps:** bump jose from 6.1.3 to 6.2.3 ([0d23eb9](https://github.com/fhswf/appointme/commit/0d23eb92b026d45d96ef1b6607d7005e395a7e1c))
+* **deps:** bump nodemailer and @types/nodemailer ([44c7315](https://github.com/fhswf/appointme/commit/44c73150b01e4197328c1c2f12efcc4972fa5734))
+* **deps:** bump nodemailer and @types/nodemailer ([3fcd8c9](https://github.com/fhswf/appointme/commit/3fcd8c95851e4c1c815ad43809d83f001b949cf5))
+* upgrade Node.js version to 24 in CI, release, staging, and Dockerfiles ([f47e651](https://github.com/fhswf/appointme/commit/f47e651a52cbd7bc7ea34f1e3ccbd7b869b9df3a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.0
+
 ## [1.44.0](https://github.com/fhswf/appointme/compare/backend-v1.43.7...backend-v1.44.0) (2026-05-08)
 
 
