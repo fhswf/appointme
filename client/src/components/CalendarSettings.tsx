@@ -37,34 +37,54 @@ import { Input } from "@/components/ui/input";
 import ErrorBoundary from "./ErrorBoundary";
 import { useAuth } from "./AuthProvider";
 
+const getCalendarLabel = (calendar: any) => calendar.summaryOverride ? calendar.summaryOverride : calendar.summary;
+
+const getCalendarProvenance = (calendar: any) => {
+    if (!calendar.isCalDav) return "Google";
+    return calendar.accountName ? `CalDAV - ${calendar.accountName}` : "CalDAV";
+};
+
+const CalendarProvenance = ({ calendar }: { calendar: any }) => (
+    <span className="text-xs text-muted-foreground">
+        {getCalendarProvenance(calendar)}
+    </span>
+);
+
 const renderCalendarList = (calendarList: any, state: any, setState: any, t: any, single = false) => {
     const items = calendarList.items.map((item: any) => {
         const iconSrc = item.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg";
-        const label = item.summaryOverride ? item.summaryOverride : item.summary;
+        const label = getCalendarLabel(item);
 
         if (single) {
             return (
                 <SelectItem key={item.id} value={item.id}>
                     <div className="flex items-center gap-2">
                         <img src={iconSrc} alt="icon" className="w-4 h-4" />
-                        <span>{label}</span>
+                        <span className="flex flex-col">
+                            <span>{label}</span>
+                            <CalendarProvenance calendar={item} />
+                        </span>
                     </div>
                 </SelectItem>
             );
         } else {
             return (
-                <div className="flex items-center gap-2" key={item.id}>
+                <div className="flex items-start gap-2" key={item.id}>
                     <Checkbox
                         id={item.id}
+                        aria-label={label}
                         checked={!!state[item.id]}
                         onCheckedChange={(checked) => {
                             setState((prev: any) => ({ ...prev, [item.id]: checked }));
                         }}
                         name={item.id}
                     />
-                    <Label htmlFor={item.id} className="flex items-center gap-2 cursor-pointer">
-                        <img src={iconSrc} alt="icon" className="w-4 h-4" />
-                        <span>{label}</span>
+                    <Label htmlFor={item.id} className="flex cursor-pointer items-start gap-2">
+                        <img src={iconSrc} alt="icon" className="mt-0.5 w-4 h-4" />
+                        <span className="flex flex-col">
+                            <span>{label}</span>
+                            <CalendarProvenance calendar={item} />
+                        </span>
                     </Label>
                 </div>
             );
@@ -142,38 +162,38 @@ export const ReminderSettings = ({ user }: { user: any }) => {
     };
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    <Bell className="h-4 w-4" />
+        <Card className="border-gray-200 bg-white shadow-sm">
+            <CardHeader className="pb-6">
+                <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-800">
+                    <Bell className="h-5 w-5 text-gray-500" />
                     {t("Reminder setting")}
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
-                    <div className="grid gap-1.5">
-                        <Label htmlFor="calendar-reminder-method">{t("Notification type")}</Label>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-end">
+                    <div className="grid gap-2 md:col-span-5">
+                        <Label htmlFor="calendar-reminder-method" className="text-sm font-medium text-gray-700">{t("Notification type")}</Label>
                         <select
                             id="calendar-reminder-method"
                             data-testid="calendar-reminder-method"
                             value={method}
                             onChange={(event) => setMethod(event.target.value)}
-                            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                            className="h-10 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                         >
                             <option value="popup">{t("System notification")}</option>
                             <option value="email">{t("Email")}</option>
                             <option value="none">{t("No reminder")}</option>
                         </select>
                     </div>
-                    <div className="grid gap-1.5">
-                        <Label htmlFor="calendar-reminder-minutes">{t("Reminder time")}</Label>
+                    <div className="grid gap-2 md:col-span-5">
+                        <Label htmlFor="calendar-reminder-minutes" className="text-sm font-medium text-gray-700">{t("Reminder time")}</Label>
                         <select
                             id="calendar-reminder-minutes"
                             data-testid="calendar-reminder-minutes"
                             value={minutes}
                             onChange={(event) => setMinutes(event.target.value)}
                             disabled={method === 'none'}
-                            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm disabled:opacity-50"
+                            className="h-10 w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50"
                         >
                             {REMINDER_MINUTE_OPTIONS.map((option) => (
                                 <option key={option} value={option}>
@@ -182,7 +202,7 @@ export const ReminderSettings = ({ user }: { user: any }) => {
                             ))}
                         </select>
                     </div>
-                    <Button onClick={save} data-testid="save-reminder-settings">
+                    <Button onClick={save} data-testid="save-reminder-settings" className="w-full bg-blue-600 text-white shadow-sm hover:bg-blue-700 md:col-span-2">
                         {t("Save")}
                     </Button>
                 </div>
@@ -198,9 +218,12 @@ export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: 
         ? calendarList.items
             .filter((item: any) => currentPushCalendars.includes(item.id))
             .map((cal: any) => (
-                <li key={cal.id} className="flex items-center gap-2">
-                    <img src={cal.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg"} alt="icon" className="w-4 h-4" />
-                    {cal.summaryOverride ? cal.summaryOverride : cal.summary}
+                <li key={cal.id} className="flex items-center gap-3">
+                    <img src={cal.isCalDav ? "/icons/caldav.png" : "/icons/google_calendar_icon.svg"} alt="icon" className="h-4 w-4 opacity-70" />
+                    <span className="flex flex-col">
+                        <span>{getCalendarLabel(cal)}</span>
+                        <CalendarProvenance calendar={cal} />
+                    </span>
                 </li>
             ))
         : undefined;
@@ -252,18 +275,18 @@ export const PushCalendar = ({ user, calendarList }: { user: any, calendarList: 
     }
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
+        <Card className="border-gray-200 bg-white shadow-sm">
+            <CardHeader className="flex flex-row items-start justify-between pb-4">
+                <CardTitle className="text-sm font-bold uppercase tracking-wider text-gray-700">
                     {t("trite_warm_gorilla_pet")}
                 </CardTitle>
-                <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-push-calendar">
-                    <Edit className="h-4 w-4" />
+                <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-push-calendar" className="h-9 w-9 text-gray-400 hover:text-blue-600">
+                    <Edit className="h-5 w-5" />
                 </Button>
             </CardHeader>
             <CardContent>
                 {pushCals && pushCals.length > 0 ? (
-                    <ul className="list-disc pl-4 space-y-1">{pushCals}</ul>
+                    <ul className="space-y-3 text-sm text-gray-600">{pushCals}</ul>
                 ) : (
                     <div className="text-sm text-muted-foreground">{t("No calendar selected")}</div>
                 )}
@@ -305,7 +328,13 @@ export const PullCalendars = ({ user, calendarList }: { user: any, calendarList:
         ? calendarList.items
             .filter((item: any) => user.pull_calendars.includes(item.id))
             .map((cal: any) => (
-                <li key={cal.id}>{cal.summaryOverride ? cal.summaryOverride : cal.summary}</li>
+                <li key={cal.id} className="flex items-start gap-2">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-blue-500" />
+                    <span className="flex flex-col">
+                        <span>{getCalendarLabel(cal)}</span>
+                        <CalendarProvenance calendar={cal} />
+                    </span>
+                </li>
             ))
         : undefined;
 
@@ -356,17 +385,21 @@ export const PullCalendars = ({ user, calendarList }: { user: any, calendarList:
         }
         return (
             <>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">
+                <Card className="border-gray-200 bg-white shadow-sm">
+                    <CardHeader className="flex flex-row items-start justify-between pb-4">
+                        <CardTitle className="text-sm font-bold uppercase tracking-wider text-gray-700">
                             {t("aware_alert_mare_glow")}
                         </CardTitle>
-                        <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-pull-calendar">
-                            <Edit className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" onClick={handleShow} data-testid="edit-pull-calendar" className="h-9 w-9 text-gray-400 hover:text-blue-600">
+                            <Edit className="h-5 w-5" />
                         </Button>
                     </CardHeader>
                     <CardContent>
-                        <ul className="list-disc pl-4">{pullCals}</ul>
+                        {pullCals && pullCals.length > 0 ? (
+                            <ul className="space-y-2 text-sm text-gray-600">{pullCals}</ul>
+                        ) : (
+                            <div className="text-sm text-muted-foreground">{t("No calendar selected")}</div>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -448,33 +481,34 @@ export const CalDavAccounts = ({ user, onAccountsChange }: { user: any, onAccoun
 
     return (
         <>
-            <div className="p-4">
-                <div className="flex justify-between items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <img
-                            className="icon"
-                            alt="CalDav Calendar"
-                            src="/icons/caldav.png"
-                            width="32"
-                        />
-                        <span>{t("CalDav Calendar")}</span>
-                    </div>
-                    <div>
-                        <Button onClick={() => setOpen(true)} data-testid="add-caldav-button">
+            <div className="space-y-3">
+                <Card className="border-gray-200 bg-white shadow-sm">
+                    <CardContent className="flex items-center justify-between gap-4 p-5">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+                                <img
+                                    alt="CalDav Calendar"
+                                    src="/icons/caldav.png"
+                                    className="h-6 w-6 object-contain"
+                                />
+                            </div>
+                            <span className="font-medium text-gray-700">{t("CalDav Calendar")}</span>
+                        </div>
+                        <Button onClick={() => setOpen(true)} data-testid="add-caldav-button" className="bg-blue-600 text-white shadow-sm hover:bg-blue-700">
                             {t("Add CalDav Account")}
                         </Button>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
                 {accounts.length > 0 && (
-                    <div className="mt-4 flex flex-col gap-2">
+                    <div className="ml-0 flex flex-col gap-3 sm:ml-4">
                         {accounts.map(acc => (
-                            <div key={acc._id} className="flex items-center justify-between p-2 border rounded-md">
+                            <div key={acc._id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4">
                                 <div className="flex flex-col">
-                                    <span className="font-medium">{acc.name}</span>
+                                    <span className="text-sm font-medium text-gray-600">{acc.name}</span>
                                     {acc.email && <span className="text-xs text-muted-foreground">{acc.email}</span>}
                                 </div>
-                                <Button variant="ghost" size="icon" onClick={() => handleRemove(acc._id)}>
-                                    <Trash2 className="h-4 w-4" />
+                                <Button variant="ghost" size="icon" onClick={() => handleRemove(acc._id)} className="h-9 w-9 text-gray-400 hover:text-red-500">
+                                    <Trash2 className="h-5 w-5" />
                                 </Button>
                             </div>
                         ))}
@@ -662,7 +696,7 @@ export const CalendarSettings = () => {
         for (const acc of accounts) {
             try {
                 const res = await listCalendars(acc._id);
-                const cals = res.data.map((c: any) => ({ ...c, isCalDav: true, accountId: acc._id }));
+                const cals = res.data.map((c: any) => ({ ...c, isCalDav: true, accountId: acc._id, accountName: acc.name }));
                 newCalDavCalendars.push(...cals);
             } catch (e) {
                 console.error("Failed to load calendars for account", acc.name, e);
@@ -680,13 +714,13 @@ export const CalendarSettings = () => {
     const renderConnectButton = () => {
         if (connected) {
             return (
-                <Button onClick={revokeScopes} variant="destructive" data-testid="disconnect-google-button">
+                <Button onClick={revokeScopes} variant="destructive" data-testid="disconnect-google-button" className="bg-red-500 text-white shadow-sm hover:bg-red-600">
                     {t("lower_born_finch_dash")}
                 </Button>
             );
         } else {
             return (
-                <Button asChild data-testid="connect-google-button">
+                <Button asChild data-testid="connect-google-button" className="bg-blue-600 text-white shadow-sm hover:bg-blue-700">
                     <a href={url}>{t("whole_formal_liger_rise")}</a>
                 </Button>
             );
@@ -694,54 +728,55 @@ export const CalendarSettings = () => {
     };
 
     return (
-        <div>
+        <div className="space-y-12">
             {calendarError && (
                 <div className="mb-4 bg-destructive/15 text-destructive text-sm p-3 rounded-md">
                     {calendarError}
                 </div>
             )}
 
-            <div className="p-4">
-                <div className="flex justify-between items-center gap-4">
-                    <div className="flex items-center gap-2">
-                        <img
-                            className="icon"
-                            alt="Google Calendar"
-                            src="/icons/google_calendar_icon.svg"
-                            width="32"
-                        />
-                        {t("upper_even_florian_peek")}
-                    </div>
-                    <div>{renderConnectButton()}</div>
-                </div>
-            </div>
+            <section className="space-y-4">
+                <Card className="border-gray-200 bg-white shadow-sm">
+                    <CardContent className="flex items-center justify-between gap-4 p-5">
+                        <div className="flex items-center gap-4">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-gray-100">
+                                <img
+                                    alt="Google Calendar"
+                                    src="/icons/google_calendar_icon.svg"
+                                    className="h-6 w-6 object-contain"
+                                />
+                            </div>
+                            <span className="font-medium text-gray-700">{t("upper_even_florian_peek")}</span>
+                        </div>
+                        <div>{renderConnectButton()}</div>
+                    </CardContent>
+                </Card>
 
-            <ErrorBoundary>
-                <CalDavAccounts user={user} onAccountsChange={handleAccountsChange} />
-            </ErrorBoundary>
+                <ErrorBoundary>
+                    <CalDavAccounts user={user} onAccountsChange={handleAccountsChange} />
+                </ErrorBoundary>
+            </section>
 
-            <div className="p-4">
+            <section>
                 <ErrorBoundary>
                     <ReminderSettings user={user} />
                 </ErrorBoundary>
-            </div>
+            </section>
 
             {(calendarList && calendarList.items.length > 0) && (
-                <>
-                    <h4 className="text-xl font-bold mb-4 mt-6 px-4">
+                <section className="space-y-6">
+                    <h4 className="text-xl font-bold text-gray-900">
                         {t("merry_north_meerkat_cuddle")}
                     </h4>
-                    <div className="p-4">
-                        <div className="grid grid-cols-1 gap-6">
-                            <ErrorBoundary>
-                                <PushCalendar user={user} calendarList={calendarList} />
-                            </ErrorBoundary>
-                            <ErrorBoundary>
-                                <PullCalendars user={user} calendarList={calendarList} />
-                            </ErrorBoundary>
-                        </div>
+                    <div className="grid grid-cols-1 gap-6">
+                        <ErrorBoundary>
+                            <PushCalendar user={user} calendarList={calendarList} />
+                        </ErrorBoundary>
+                        <ErrorBoundary>
+                            <PullCalendars user={user} calendarList={calendarList} />
+                        </ErrorBoundary>
                     </div>
-                </>
+                </section>
             )}
         </div>
     );

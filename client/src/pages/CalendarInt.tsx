@@ -11,14 +11,14 @@ const Calendarintegration = () => {
   return (
     <>
       <AppNavbar />
-      <div className="container mx-auto p-4">
-        <h3 className="text-3xl font-bold mb-4">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <h3 className="mb-10 text-3xl font-bold text-gray-900">
           {t("pink_loose_cougar_grin")}
         </h3>
 
         <CalendarSettings />
 
-        <div className="p-4 flex justify-end">
+        <div className="mt-10 flex justify-end">
           <Button onClick={() => navigate("/")} data-testid="close-button">
             {t("Close")}
           </Button>

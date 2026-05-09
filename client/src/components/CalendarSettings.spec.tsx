@@ -347,8 +347,9 @@ describe('CalendarSettings Component', () => {
 
         // Check if both calendars are listed
         await waitFor(() => {
-            expect(screen.getByText('Google')).toBeInTheDocument();
-            expect(screen.getByText('CalDAV')).toBeInTheDocument();
+            expect(screen.getByLabelText('Google')).toBeInTheDocument();
+            expect(screen.getByLabelText('CalDAV')).toBeInTheDocument();
+            expect(screen.getByText('CalDAV - CalDAV Account')).toBeInTheDocument();
         });
 
         // Select both
