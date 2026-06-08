@@ -3,7 +3,7 @@
 ![GitHub pull request check state](https://img.shields.io/github/status/s/pulls/fhswf/appointme/10)
 [![Quality Gate Status](https://sonarqube.fh-swf.cloud/api/project_badges/measure?project=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3&metric=alert_status&token=sqb_5deb3d670ea0a882f6563a07b9bea9dee035bcb6)](https://sonarqube.fh-swf.cloud/dashboard?id=fhswf_appointme_4a6870c1-a6b0-4818-9a4f-c9256685c9d3)
 
-# APPointment
+# AppointMe
 
 This web application helps you planning your appointments.
 
