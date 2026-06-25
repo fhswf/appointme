@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.40.1](https://github.com/fhswf/appointme/compare/client-v1.40.0...client-v1.40.1) (2026-06-25)
+
+
+### Patches
+
+* **deps-dev:** bump eslint-plugin-i18next from 6.1.3 to 6.1.4 ([0fd4576](https://github.com/fhswf/appointme/commit/0fd4576f0d97ea733223a366587992f02fc28e91))
+* **deps-dev:** bump eslint-plugin-i18next from 6.1.3 to 6.1.4 ([5946a94](https://github.com/fhswf/appointme/commit/5946a941d23ce0a81b6941da33d86649e69b7e14))
+* **deps-dev:** bump vite from 7.3.2 to 7.3.5 ([c90c8a0](https://github.com/fhswf/appointme/commit/c90c8a036df5e06c63f0acc50cc3c3be951a5258))
+* **deps-dev:** bump vite from 7.3.2 to 7.3.5 ([8c06968](https://github.com/fhswf/appointme/commit/8c069689f3c725ee7c3a32cad5c91e8ec46aa35e))
+* **deps:** bump js-cookie from 3.0.5 to 3.0.7 ([95bba6c](https://github.com/fhswf/appointme/commit/95bba6c4ea9b766510484d9881c4497704f8cac9))
+* **deps:** bump js-cookie from 3.0.5 to 3.0.7 ([42ee976](https://github.com/fhswf/appointme/commit/42ee9767e13a80b22071d7557af2eea6b86031ec))
+* **deps:** bump lucide-react from 0.563.0 to 1.16.0 ([989d824](https://github.com/fhswf/appointme/commit/989d824040326f4f7edb884fdca5c52399e39c2c))
+* **deps:** bump lucide-react from 0.563.0 to 1.16.0 ([0b3e3d8](https://github.com/fhswf/appointme/commit/0b3e3d81659fe060b418171111a1577e93389e90))
+
 ## [1.40.0](https://github.com/fhswf/appointme/compare/client-v1.39.5...client-v1.40.0) (2026-05-09)
 
 
