@@ -43,7 +43,7 @@
     "dotenv-vault": "^1.27.0",
     "fast-xml-parser": "^5.7.0",
     "jest-ctrf-json-reporter": "^0.0.10",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.2.0",
     "typedoc": "^0.28.19",
     "typescript": "^5.9.3"
   },
