@@ -12,8 +12,13 @@ describe("Booking CSRF Reproduction", () => {
         server = init(0);
     });
 
-    afterAll((done) => {
-        server.close(done);
+    afterAll(async () => {
+        await new Promise<void>((resolve, reject) => {
+            server.close((err) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
     });
 
     it("POST /api/v1/event/:id/slot should NOT fail with 403 CSRF error", async () => {

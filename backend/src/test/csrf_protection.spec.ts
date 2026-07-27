@@ -11,8 +11,13 @@ describe("CSRF Protection Middleware", () => {
         server = init(0);
     });
 
-    afterAll((done) => {
-        server.close(done);
+    afterAll(async () => {
+        await new Promise<void>((resolve, reject) => {
+            server.close((err) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
     });
 
     it("GET /api/v1/csrf-token should return a token", async () => {
