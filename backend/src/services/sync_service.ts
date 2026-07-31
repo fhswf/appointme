@@ -23,7 +23,7 @@ export interface SyncResult {
 }
 
 export async function syncAppointment(appointmentId: string): Promise<boolean> {
-    const appointment = await AppointmentModel.findById(appointmentId).exec();
+    const appointment = await (AppointmentModel as any).findById(appointmentId, {}, { lean: true });
     if (!appointment) {
         logger.error(`Sync failed: Appointment ${appointmentId} not found`);
         return false;
@@ -81,7 +81,7 @@ export async function syncAppointment(appointmentId: string): Promise<boolean> {
 }
 
 async function fetchSyncContext(appointment: any) {
-    const user = await UserModel.findById(appointment.user).exec();
+    const user = await (UserModel as any).findById(appointment.user, {}, { lean: true });
     if (!user) {
         // throw new Error("User not found"); // Original logic threw error? 
         // Original logic: if (!user) throw new Error("User not found");
@@ -95,7 +95,7 @@ async function fetchSyncContext(appointment: any) {
         throw new Error("User not found");
     }
 
-    const eventDoc = await EventModel.findById(appointment.event).exec();
+    const eventDoc = await (EventModel as any).findById(appointment.event, {}, { lean: true });
     if (!eventDoc) throw new Error("Event definition not found");
 
     return { user, eventDoc };
@@ -161,7 +161,7 @@ async function updateAppointmentStatus(appointment: any, results: SyncResult[], 
         await appointment.save();
 
         if (appointment.isRecurring && appointment.seriesId) {
-            await AppointmentModel.updateMany(
+            await (AppointmentModel as any).updateMany(
                 { seriesId: appointment.seriesId },
                 {
                     $set: {
@@ -242,7 +242,7 @@ export async function pushEventToCalendars(params: {
 }
 
 export async function verifyAppointment(appointmentId: string): Promise<boolean> {
-    const appointment = await AppointmentModel.findById(appointmentId).exec();
+    const appointment = await (AppointmentModel as any).findById(appointmentId, {}, { lean: true });
     if (!appointment) return false;
 
     // We allow verifying any appointment that has an ID, even if status is failed.
@@ -253,7 +253,7 @@ export async function verifyAppointment(appointmentId: string): Promise<boolean>
         return true;
     }
 
-    const user = await UserModel.findById(appointment.user).exec();
+    const user = await (UserModel as any).findById(appointment.user, {}, { lean: true });
     if (!user) return false;
 
     const targetCalendars = user.push_calendars || [];

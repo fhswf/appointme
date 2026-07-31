@@ -54,7 +54,7 @@ export const createUserWithUniqueUrl = async (
             //    Wait, if we use setOnInsert for user_url, we rely on it being unique.
             //    If we collide on user_url, it throws 11000.
 
-            user = await UserModel.findOneAndUpdate(
+            user = await (UserModel as any).findOneAndUpdate(
                 { _id: sub },
                 {
                     $set: {
@@ -66,7 +66,7 @@ export const createUserWithUniqueUrl = async (
                     $setOnInsert: { user_url: user_url }
                 },
                 { upsert: true, new: true, runValidators: true }
-            ).exec();
+            );
 
             return user;
         } catch (err: any) {
@@ -96,7 +96,7 @@ export const createUserWithUniqueUrl = async (
  * @returns 
  */
 export const findOrUpdateGoogleUser = async (sub: string, email: string, name: string, picture: string): Promise<UserDocument | null> => {
-    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
+    let user = await (UserModel as any).findOne({ $or: [{ email: email }, { _id: sub }] }, {}, { lean: true });
 
     if (user) {
         // Existing user: only update name, email, and picture_url (if not using gravatar)
@@ -110,11 +110,11 @@ export const findOrUpdateGoogleUser = async (sub: string, email: string, name: s
             updateData.picture_url = picture;
         }
 
-        user = await UserModel.findOneAndUpdate(
+        user = await (UserModel as any).findOneAndUpdate(
             { _id: user._id },
             { $set: updateData },
             { new: true }
-        ).exec();
+        );
     } else {
         // New user: use shared service to create with unique URL handling
         user = await createUserWithUniqueUrl(sub, email, name, picture);
