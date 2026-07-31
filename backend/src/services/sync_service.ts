@@ -161,7 +161,7 @@ async function updateAppointmentStatus(appointment: any, results: SyncResult[], 
         await appointment.save();
 
         if (appointment.isRecurring && appointment.seriesId) {
-            await AppointmentModel.updateMany(
+            await (AppointmentModel as any).updateMany(
                 { seriesId: appointment.seriesId },
                 {
                     $set: {
