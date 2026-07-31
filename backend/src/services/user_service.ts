@@ -66,7 +66,7 @@ export const createUserWithUniqueUrl = async (
                     $setOnInsert: { user_url: user_url }
                 },
                 { upsert: true, new: true, runValidators: true }
-            );
+            ).exec();
 
             return user;
         } catch (err: any) {
@@ -114,7 +114,7 @@ export const findOrUpdateGoogleUser = async (sub: string, email: string, name: s
             { _id: user._id },
             { $set: updateData },
             { new: true }
-        );
+        ).exec();
     } else {
         // New user: use shared service to create with unique URL handling
         user = await createUserWithUniqueUrl(sub, email, name, picture);
