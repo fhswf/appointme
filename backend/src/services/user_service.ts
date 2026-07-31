@@ -54,7 +54,7 @@ export const createUserWithUniqueUrl = async (
             //    Wait, if we use setOnInsert for user_url, we rely on it being unique.
             //    If we collide on user_url, it throws 11000.
 
-            user = await (UserModel as any).findOneAndUpdate(
+            user = await UserModel.findOneAndUpdate(
                 { _id: sub },
                 {
                     $set: {
@@ -110,7 +110,7 @@ export const findOrUpdateGoogleUser = async (sub: string, email: string, name: s
             updateData.picture_url = picture;
         }
 
-        user = await (UserModel as any).findOneAndUpdate(
+        user = await UserModel.findOneAndUpdate(
             { _id: user._id },
             { $set: updateData },
             { new: true }
