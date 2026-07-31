@@ -96,7 +96,7 @@ export const createUserWithUniqueUrl = async (
  * @returns 
  */
 export const findOrUpdateGoogleUser = async (sub: string, email: string, name: string, picture: string): Promise<UserDocument | null> => {
-    let user = await (UserModel as any).findOne({ $or: [{ email: email }, { _id: sub }] }, {}, { lean: true });
+    let user = await UserModel.findOne({ $or: [{ email: email }, { _id: sub }] }).exec();
 
     if (user) {
         // Existing user: only update name, email, and picture_url (if not using gravatar)

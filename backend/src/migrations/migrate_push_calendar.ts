@@ -35,7 +35,7 @@ export async function migratePushCalendar() {
         // Find all users with push_calendar set
         const users = await UserModel.find({
             push_calendar: { $ne: null, $exists: true }
-        } as any).lean();
+        }).exec();
 
         logger.info(`Migrating ${users.length} users with push_calendar field`);
 
