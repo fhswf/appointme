@@ -5,4 +5,4 @@ resources:
   - ../../base
 images:
   - name: ghcr.io/fhswf/appointme/mcp-server
-    newTag: sha-a2f4f5af
+    newTag: sha-9e2cd814
