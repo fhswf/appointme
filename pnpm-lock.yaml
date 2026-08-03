@@ -77,8 +77,8 @@ importers:
         specifier: ^8.4.1
         version: 8.5.1
       express-rate-limit:
-        specifier: ^8.2.2
-        version: 8.2.2(express@5.2.1)
+        specifier: ^8.6.1
+        version: 8.6.1(express@5.2.1)
       express-validator:
         specifier: ^7.0.1
         version: 7.3.1
@@ -4669,8 +4669,8 @@ packages:
     peerDependencies:
       express: '>= 4.11'
 
-  express-rate-limit@8.2.2:
-    resolution: {integrity: sha512-Ybv7bqtOgA914MLwaHWVFXMpMYeR1MQu/D+z2MaLYteqBsTIp9sY3AU7mGNLMJv8eLg8uQMpE20I+L2Lv49nSg==}
+  express-rate-limit@8.6.1:
+    resolution: {integrity: sha512-0D493aP61w0TJ2A0wy27riRsO7FMQ7FK+KUHOKCSfPvYo0R55aiC6emCVgFUeShH0fq0ICPVzNcgoS+BsbXQCA==}
     engines: {node: '>= 16'}
     peerDependencies:
       express: '>= 4.11'
@@ -5177,10 +5177,6 @@ packages:
 
   ip-address@10.0.1:
     resolution: {integrity: sha512-NWv9YLW4PoW2B7xtzaS3NCot75m6nK7Icdv0o3lfMceJVRfSoQwqD4wEH5rLwoKJwUiZ/rfpiVBhnaF0FK4HoA==}
-    engines: {node: '>= 12'}
-
-  ip-address@10.1.0:
-    resolution: {integrity: sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==}
     engines: {node: '>= 12'}
 
   ip-address@10.4.0:
@@ -12409,10 +12405,13 @@ snapshots:
       express: 5.2.1
       ip-address: 10.0.1
 
-  express-rate-limit@8.2.2(express@5.2.1):
+  express-rate-limit@8.6.1(express@5.2.1):
     dependencies:
+      debug: 4.4.3
       express: 5.2.1
-      ip-address: 10.1.0
+      ip-address: 10.4.0
+    transitivePeerDependencies:
+      - supports-color
 
   express-unless@2.1.3: {}
 
@@ -13010,10 +13009,7 @@ snapshots:
 
   ip-address@10.0.1: {}
 
-  ip-address@10.1.0: {}
-
-  ip-address@10.4.0:
-    optional: true
+  ip-address@10.4.0: {}
 
   ipaddr.js@1.9.1: {}
 
