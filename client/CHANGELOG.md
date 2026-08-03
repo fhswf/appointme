@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.40.1](https://github.com/fhswf/appointme/compare/client-v1.40.0...client-v1.40.1) (2026-08-03)
+
+
+### Patches
+
+* **deps-dev:** bump eslint-plugin-i18next from 6.1.3 to 6.1.4 ([0fd4576](https://github.com/fhswf/appointme/commit/0fd4576f0d97ea733223a366587992f02fc28e91))
+* **deps-dev:** bump eslint-plugin-i18next from 6.1.3 to 6.1.4 ([5946a94](https://github.com/fhswf/appointme/commit/5946a941d23ce0a81b6941da33d86649e69b7e14))
+* **deps-dev:** bump typescript-eslint from 8.54.0 to 8.65.0 ([13d3737](https://github.com/fhswf/appointme/commit/13d373781a62607ffef6e22fd3136bf6c881ac57))
+* **deps-dev:** bump typescript-eslint from 8.54.0 to 8.65.0 ([2ede910](https://github.com/fhswf/appointme/commit/2ede9102bc2b88df26d6c34175d2ae39180506fe))
+* **deps-dev:** bump vite from 7.3.2 to 7.3.5 ([c90c8a0](https://github.com/fhswf/appointme/commit/c90c8a036df5e06c63f0acc50cc3c3be951a5258))
+* **deps-dev:** bump vite from 7.3.2 to 7.3.5 ([8c06968](https://github.com/fhswf/appointme/commit/8c069689f3c725ee7c3a32cad5c91e8ec46aa35e))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([2dd0e7a](https://github.com/fhswf/appointme/commit/2dd0e7a1fc5630b11c347655ec0116d5e7077bf7))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([18b7889](https://github.com/fhswf/appointme/commit/18b78894184d5e301460b303933307422dee8ced))
+* **deps:** also bump react to 19.2.8 to match react-dom ([12172fa](https://github.com/fhswf/appointme/commit/12172faa59aa43802f8533e373158e166d4272cf))
+* **deps:** bump axios from 1.16.0 to 1.18.0 ([cd3d06b](https://github.com/fhswf/appointme/commit/cd3d06bba7c3c7e98f5496b5fc3fe856006e4d70))
+* **deps:** bump axios from 1.16.0 to 1.18.0 ([9658e0d](https://github.com/fhswf/appointme/commit/9658e0d52cbe20c3d4318cac79345ebd304b296f))
+* **deps:** bump js-cookie from 3.0.5 to 3.0.7 ([95bba6c](https://github.com/fhswf/appointme/commit/95bba6c4ea9b766510484d9881c4497704f8cac9))
+* **deps:** bump js-cookie from 3.0.5 to 3.0.7 ([42ee976](https://github.com/fhswf/appointme/commit/42ee9767e13a80b22071d7557af2eea6b86031ec))
+* **deps:** bump lucide-react from 0.563.0 to 1.16.0 ([989d824](https://github.com/fhswf/appointme/commit/989d824040326f4f7edb884fdca5c52399e39c2c))
+* **deps:** bump lucide-react from 0.563.0 to 1.16.0 ([0b3e3d8](https://github.com/fhswf/appointme/commit/0b3e3d81659fe060b418171111a1577e93389e90))
+* **deps:** bump react-dom from 19.2.4 to 19.2.8 ([0194bb9](https://github.com/fhswf/appointme/commit/0194bb9a390df3335cc1ffbf81ce9ec25a2393e0))
+* **deps:** bump react-dom from 19.2.4 to 19.2.8 ([f90750e](https://github.com/fhswf/appointme/commit/f90750ef30c9c3ef777a840aba89ef2cdbe9962e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.1
+
 ## [1.40.0](https://github.com/fhswf/appointme/compare/client-v1.39.5...client-v1.40.0) (2026-05-09)
 
 
