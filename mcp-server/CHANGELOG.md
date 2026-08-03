@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.1](https://github.com/fhswf/appointme/compare/mcp-server-v1.3.0...mcp-server-v1.3.1) (2026-08-03)
+
+
+### Patches
+
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([2dd0e7a](https://github.com/fhswf/appointme/commit/2dd0e7a1fc5630b11c347655ec0116d5e7077bf7))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([18b7889](https://github.com/fhswf/appointme/commit/18b78894184d5e301460b303933307422dee8ced))
+* **deps:** bump @sentry/node from 10.36.0 to 10.68.0 ([7830d4b](https://github.com/fhswf/appointme/commit/7830d4bb5a6454f7715ae25cd113494a3012c2af))
+* **deps:** bump @sentry/node from 10.36.0 to 10.68.0 ([7346153](https://github.com/fhswf/appointme/commit/7346153f0968984d8bd2793e9293816d2e6c6c5c))
+* **deps:** bump axios from 1.16.0 to 1.18.0 ([cd3d06b](https://github.com/fhswf/appointme/commit/cd3d06bba7c3c7e98f5496b5fc3fe856006e4d70))
+* **deps:** bump axios from 1.16.0 to 1.18.0 ([9658e0d](https://github.com/fhswf/appointme/commit/9658e0d52cbe20c3d4318cac79345ebd304b296f))
+* **deps:** update @sentry/profiling-node to match @sentry/node version ([2f2dad3](https://github.com/fhswf/appointme/commit/2f2dad3833393f866e53d331258327c4230d0f70))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.1
+
 ## [1.3.0](https://github.com/fhswf/appointme/compare/mcp-server-v1.2.7...mcp-server-v1.3.0) (2026-05-09)
 
 

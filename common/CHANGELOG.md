@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.1](https://github.com/fhswf/appointme/compare/common-v1.17.0...common-v1.17.1) (2026-08-03)
+
+
+### Patches
+
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([2dd0e7a](https://github.com/fhswf/appointme/commit/2dd0e7a1fc5630b11c347655ec0116d5e7077bf7))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([18b7889](https://github.com/fhswf/appointme/commit/18b78894184d5e301460b303933307422dee8ced))
+
 ## [1.17.0](https://github.com/fhswf/appointme/compare/common-v1.16.8...common-v1.17.0) (2026-05-09)
 
 

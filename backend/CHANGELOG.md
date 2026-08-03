@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.45.1](https://github.com/fhswf/appointme/compare/backend-v1.45.0...backend-v1.45.1) (2026-08-03)
+
+
+### Improvements
+
+* update test server teardown to use async/await instead of callback patterns ([b5552e0](https://github.com/fhswf/appointme/commit/b5552e049e18072fd0b3ca35e1529e878e0f722b))
+
+
+### Fixes
+
+* add missing .exec() calls to findOneAndUpdate queries ([e1daa6b](https://github.com/fhswf/appointme/commit/e1daa6b5afa049b6573020868f7fb9e3bd5af48b))
+* remove as any casts from findOneAndUpdate calls ([714b79d](https://github.com/fhswf/appointme/commit/714b79da73f30a89a3cf70fb78c2c43ceef16047))
+* resolve TypeScript compilation errors after mongoose 9.7.2 upgrade ([eb8d34a](https://github.com/fhswf/appointme/commit/eb8d34a26c40cdebc995b2116bb3e0ee5922c56d))
+* revert lean:true changes to restore .save() functionality ([593427a](https://github.com/fhswf/appointme/commit/593427a6e7e43f7cd84d5fd4968aab067f4cca32))
+
+
+### Patches
+
+* **deps-dev:** bump @babel/core from 7.28.6 to 8.0.1 ([4a7c5ca](https://github.com/fhswf/appointme/commit/4a7c5ca154cb621cad5feeb08cf359848a030de4))
+* **deps-dev:** bump @babel/core from 7.28.6 to 8.0.1 ([590e9f2](https://github.com/fhswf/appointme/commit/590e9f2450c5225b943287fa6fc978d68fb25675))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([2dd0e7a](https://github.com/fhswf/appointme/commit/2dd0e7a1fc5630b11c347655ec0116d5e7077bf7))
+* **deps-dev:** bump vitest from 4.0.18 to 4.1.9 ([18b7889](https://github.com/fhswf/appointme/commit/18b78894184d5e301460b303933307422dee8ced))
+* **deps:** bump @sentry/node from 10.36.0 to 10.68.0 ([7830d4b](https://github.com/fhswf/appointme/commit/7830d4bb5a6454f7715ae25cd113494a3012c2af))
+* **deps:** bump @sentry/node from 10.36.0 to 10.68.0 ([7346153](https://github.com/fhswf/appointme/commit/7346153f0968984d8bd2793e9293816d2e6c6c5c))
+* **deps:** bump body-parser from 2.2.2 to 2.3.0 ([f67c114](https://github.com/fhswf/appointme/commit/f67c1144d8cd6157fa6c41cda286b0ad667e8b07))
+* **deps:** bump body-parser from 2.2.2 to 2.3.0 ([8eb5844](https://github.com/fhswf/appointme/commit/8eb58444719333f08bbd402613daa9f6e21d9b0a))
+* **deps:** bump express-rate-limit from 8.2.2 to 8.6.1 ([548ef59](https://github.com/fhswf/appointme/commit/548ef5934d2522a3aa820b674312a027721b5107))
+* **deps:** bump express-rate-limit from 8.2.2 to 8.6.1 ([d524a7d](https://github.com/fhswf/appointme/commit/d524a7dd443e53b460a3019d53aaf41cfea6c151))
+* **deps:** bump mongoose from 9.1.6 to 9.7.2 ([350cff5](https://github.com/fhswf/appointme/commit/350cff59d0c0834ab747b7bffaa61ad20755a80a))
+* **deps:** bump mongoose from 9.1.6 to 9.7.2 ([c1f88e2](https://github.com/fhswf/appointme/commit/c1f88e298ea133107fc8a106ff561f644136e4ba))
+* **deps:** bump nodemailer from 8.0.7 to 9.0.1 ([9e2cd81](https://github.com/fhswf/appointme/commit/9e2cd81409c04c68d7333d72c93756fe7357b0de))
+* **deps:** bump nodemailer from 8.0.7 to 9.0.1 ([91d665f](https://github.com/fhswf/appointme/commit/91d665f23cc27e790628e8f1d4a0db40b20a8c6d))
+* **deps:** bump validator from 13.15.26 to 13.15.35 ([4d813dd](https://github.com/fhswf/appointme/commit/4d813dd150eda7b8913e4d0871ec892ca4c07d54))
+* **deps:** bump validator from 13.15.26 to 13.15.35 ([6b55761](https://github.com/fhswf/appointme/commit/6b55761db64ff05e5cfd73a847ed7dce274dc8f0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.1
+
 ## [1.45.0](https://github.com/fhswf/appointme/compare/backend-v1.44.0...backend-v1.45.0) (2026-05-09)
 
 
