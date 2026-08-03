@@ -128,8 +128,8 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6
       validator:
-        specifier: ^13.12.0
-        version: 13.15.26
+        specifier: ^13.15.35
+        version: 13.15.35
       winston:
         specifier: ^3.16.0
         version: 3.19.0
@@ -7289,8 +7289,8 @@ packages:
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
-  validator@13.15.26:
-    resolution: {integrity: sha512-spH26xU080ydGggxRyR1Yhcbgx+j3y5jbNXk/8L+iRvdIEQ4uTRH2Sgf2dokud6Q4oAtsbNvJ1Ft+9xmm6IZcA==}
+  validator@13.15.35:
+    resolution: {integrity: sha512-TQ5pAGhd5whStmqWvYF4OjQROlmv9SMFVt37qoCBdqRffuuklWYQlCNnEs2ZaIBD1kZRNnikiZOS1eqgkar0iw==}
     engines: {node: '>= 0.10'}
 
   vary@1.1.2:
@@ -12418,7 +12418,7 @@ snapshots:
   express-validator@7.3.1:
     dependencies:
       lodash: 4.17.21
-      validator: 13.15.26
+      validator: 13.15.35
 
   express@5.2.1:
     dependencies:
@@ -15407,7 +15407,7 @@ snapshots:
 
   v8-compile-cache-lib@3.0.1: {}
 
-  validator@13.15.26: {}
+  validator@13.15.35: {}
 
   vary@1.1.2: {}
 
@@ -15762,7 +15762,7 @@ snapshots:
     dependencies:
       lodash.get: 4.4.2
       lodash.isequal: 4.5.0
-      validator: 13.15.26
+      validator: 13.15.35
     optionalDependencies:
       commander: 9.5.0
 

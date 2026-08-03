@@ -59,7 +59,7 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsdav": "^2.1.6",
-    "validator": "^13.12.0",
+    "validator": "^13.15.35",
     "winston": "^3.16.0",
     "winston-mongodb": "7.0.1"
   },
