@@ -355,6 +355,7 @@ export const getCalendars = async (req: Request, res: Response): Promise<void> =
 
         oAuth2Client.setCredentials(user.google_tokens);
 
+        // @ts-ignore - Type mismatch between google-auth-library versions
         const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
         const list = await calendar.calendarList.list();
 
@@ -465,6 +466,7 @@ const fetchGoogleEvents = async (user: any, calendarId: string, timeMin: string,
 
     oAuth2Client.setCredentials(user.google_tokens);
 
+    // @ts-ignore - Type mismatch between google-auth-library versions
     const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
     const response = await calendar.events.list({
       calendarId,
@@ -553,11 +555,11 @@ const fetchCalDavEvents = async (user: any, accountId: string, calendarId: strin
 
 export const getCalendarEvents = async (req: Request, res: Response): Promise<void> => {
   const userId = req.params.id;
-  const calendarId = req.params.calendarId;
+  const calendarId = Array.isArray(req.params.calendarId) ? req.params.calendarId[0] : req.params.calendarId;
   const currentUserId = req['user_id'];
   const timeMin = req.query.timeMin as string;
   const timeMax = req.query.timeMax as string;
-  const accountId = req.params.accountId;
+  const accountId = Array.isArray(req.params.accountId) ? req.params.accountId[0] : req.params.accountId;
 
   // Check if requesting own calendar events
   if (userId !== 'me' && userId !== currentUserId) {
