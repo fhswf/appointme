@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.45.2](https://github.com/fhswf/appointme/compare/backend-v1.45.1...backend-v1.45.2) (2026-08-04)
+
+
+### Fixes
+
+* TypeScript type errors from google-auth-library@11.0.0 upgrade ([8d694df](https://github.com/fhswf/appointme/commit/8d694dfb4d541835815bcaef7194424d163e858f))
+
+
+### Patches
+
+* **deps-dev:** bump @vitest/coverage-istanbul from 4.0.18 to 4.1.10 ([366a440](https://github.com/fhswf/appointme/commit/366a4407594823fc08d9c2998851efd99e98425b))
+* **deps-dev:** bump @vitest/coverage-istanbul from 4.0.18 to 4.1.10 ([c0f7ee1](https://github.com/fhswf/appointme/commit/c0f7ee185b9e9ce0da350eb284e9eb2ab50ac749))
+* **deps:** bump google-auth-library from 10.5.0 to 11.0.0 ([61928bb](https://github.com/fhswf/appointme/commit/61928bbaf8dc2f3f4a0f0ef1bcdae76712b24f27))
+* **deps:** bump google-auth-library from 10.5.0 to 11.0.0 ([6646e6a](https://github.com/fhswf/appointme/commit/6646e6ab39a0842bd410397abaffcf79afa4fe1d))
+
 ## [1.45.1](https://github.com/fhswf/appointme/compare/backend-v1.45.0...backend-v1.45.1) (2026-08-03)
 
 
