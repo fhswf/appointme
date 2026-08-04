@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.40.2](https://github.com/fhswf/appointme/compare/client-v1.40.1...client-v1.40.2) (2026-08-04)
+
+
+### Patches
+
+* **deps-dev:** bump @vitest/coverage-istanbul from 4.0.18 to 4.1.10 ([366a440](https://github.com/fhswf/appointme/commit/366a4407594823fc08d9c2998851efd99e98425b))
+* **deps-dev:** bump @vitest/coverage-istanbul from 4.0.18 to 4.1.10 ([c0f7ee1](https://github.com/fhswf/appointme/commit/c0f7ee185b9e9ce0da350eb284e9eb2ab50ac749))
+* **deps:** bump @radix-ui/react-tabs from 1.1.13 to 1.1.21 ([c974083](https://github.com/fhswf/appointme/commit/c974083447f4ac35ce1e5e4bc440643122e74836))
+* **deps:** bump @radix-ui/react-tabs from 1.1.13 to 1.1.21 ([489fbff](https://github.com/fhswf/appointme/commit/489fbff5b05678be6cf6f84c45fc58a9ee9d808d))
+* **deps:** bump dayjs from 1.11.19 to 1.11.21 ([43a70e8](https://github.com/fhswf/appointme/commit/43a70e876d49d0399274265dac8a50deca4f26b8))
+* **deps:** bump dayjs from 1.11.19 to 1.11.21 ([9948d88](https://github.com/fhswf/appointme/commit/9948d88628f023703b723404738f0f89fa8d8a9b))
+* **deps:** bump i18next from 26.0.6 to 26.3.6 ([39901d2](https://github.com/fhswf/appointme/commit/39901d2ecc41bbcc9ced55fffd087fa93b64e811))
+* **deps:** bump i18next from 26.0.6 to 26.3.6 ([c1a55bd](https://github.com/fhswf/appointme/commit/c1a55bdc56737a46518735b1153db7c6b8ca30fb))
+
 ## [1.40.1](https://github.com/fhswf/appointme/compare/client-v1.40.0...client-v1.40.1) (2026-08-03)
 
 
