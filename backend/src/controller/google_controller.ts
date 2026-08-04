@@ -121,6 +121,7 @@ export const googleCallback = (req: Request, res: Response): void => {
 const performFreeBusyQuery = async (user_id: string, tokens: any, timeMin: string, timeMax: string, items: any[]) => {
   const oAuth2Client = createOAuthClient(user_id);
   oAuth2Client.setCredentials(tokens);
+  // @ts-ignore - Type mismatch between google-auth-library versions
   const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
   return calendar.freebusy.query({
     requestBody: {
@@ -370,12 +371,16 @@ export async function insertGoogleEvent(user: UserDocument, event: Schema$Event,
 
   logger.debug('insert: event=%j', event)
 
-  return google.calendar({ version: "v3" }).events.insert({
-    auth: oAuth2Client,
+  // @ts-ignore - Type mismatch between google-auth-library versions
+  const calendar = google.calendar({ version: "v3" });
+  const result: any = calendar.events.insert({
+    // @ts-ignore - Type mismatch between google-auth-library versions
+    auth: oAuth2Client as any,
     calendarId,
     sendUpdates: "all",
     requestBody: event,
   });
+  return result;
 }
 
 
@@ -438,6 +443,7 @@ export async function getAuth(user_id: string): Promise<OAuth2Client> {
 export function getCalendarList(req: Request, res: Response): void {
   getAuth(req['user_id'])
     .then(auth => {
+      // @ts-ignore - Type mismatch between google-auth-library versions
       google.calendar({ version: "v3", auth })
         .calendarList.list()
         .then(list => {
@@ -480,6 +486,7 @@ export const events = (user_id: string, timeMin: string, timeMax: string, calend
       }
       const oAuth2Client = createOAuthClient(user_id);
       oAuth2Client.setCredentials(google_tokens);
+      // @ts-ignore - Type mismatch between google-auth-library versions
       const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
       return calendar.events.list({
         calendarId,
@@ -543,6 +550,7 @@ export async function verifyEvent(user: UserDocument, eventId: string, calendarI
   try {
     const oAuth2Client = createOAuthClient(user._id as unknown as string);
     oAuth2Client.setCredentials(user.google_tokens);
+    // @ts-ignore - Type mismatch between google-auth-library versions
     const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
 
     await calendar.events.get({

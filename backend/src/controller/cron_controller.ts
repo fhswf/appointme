@@ -50,6 +50,7 @@ export const validateGoogleTokens = async (req: Request, res: Response) => {
             // Re-importing google to use with the client
             const { google } = await import('googleapis');
             const auth = await getAuth(user._id as string);
+            // @ts-ignore - Type mismatch between google-auth-library versions
             const calendar = google.calendar({ version: "v3", auth });
 
             await calendar.calendarList.list({ maxResults: 1 }); // Lightweight call

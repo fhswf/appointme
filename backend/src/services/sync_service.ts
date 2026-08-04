@@ -389,7 +389,7 @@ async function processGoogleBooking(user: any, userComment: string, event: Schem
             googleEvent.description = (googleEvent.description || '') + "\n\nKommentar:\n" + userComment;
         }
 
-        const evt = await insertGoogleEvent(user, googleEvent, calendarUrl, recurrence);
+        const evt: any = await insertGoogleEvent(user, googleEvent, calendarUrl, recurrence);
         return { success: true, message: "Event wurde gebucht", event: evt.data };
     } catch (error: any) {
         // Handle "Duplicate" error as success
