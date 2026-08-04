@@ -90,7 +90,7 @@ importers:
         version: 170.1.0
       ical-generator:
         specifier: ^10.0.0
-        version: 10.0.0(@types/node@25.3.0)(dayjs@1.11.19)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1)
+        version: 10.0.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1)
       jose:
         specifier: 6.2.3
         version: 6.2.3
@@ -279,8 +279,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.1.0)
       dayjs:
-        specifier: ^1.11.13
-        version: 1.11.19
+        specifier: ^1.11.21
+        version: 1.11.21
       i18next:
         specifier: ^26.3.6
         version: 26.3.6(typescript@5.9.3)
@@ -4363,8 +4363,8 @@ packages:
   date-now@0.1.4:
     resolution: {integrity: sha512-AsElvov3LoNB7tf5k37H2jYSB+ZZPMT5sG2QjJCcdlV5chIv6htBUBUui2IKRjgtKAKtCBN7Zbwa+MtwLjSeNw==}
 
-  dayjs@1.11.19:
-    resolution: {integrity: sha512-t5EcLVS6QPBNqM2z8fakk/NKel+Xzshgt8FFKAn+qwlD1pzZWxh0nVCrvFK7ZDb6XucZeF9z8C7CBWTRIVApAw==}
+  dayjs@1.11.21:
+    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -12067,7 +12067,7 @@ snapshots:
 
   date-now@0.1.4: {}
 
-  dayjs@1.11.19: {}
+  dayjs@1.11.21: {}
 
   debug@3.2.7:
     dependencies:
@@ -13228,10 +13228,10 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  ical-generator@10.0.0(@types/node@25.3.0)(dayjs@1.11.19)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1):
+  ical-generator@10.0.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1):
     optionalDependencies:
       '@types/node': 25.3.0
-      dayjs: 1.11.19
+      dayjs: 1.11.21
       luxon: 3.7.2
       moment: 2.30.1
       moment-timezone: 0.5.48
@@ -14628,7 +14628,7 @@ snapshots:
       '@babel/runtime': 7.28.4
       clsx: 1.2.1
       date-arithmetic: 4.1.0
-      dayjs: 1.11.19
+      dayjs: 1.11.21
       dom-helpers: 5.2.1
       globalize: 0.1.1
       invariant: 2.2.4
