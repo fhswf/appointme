@@ -89,8 +89,8 @@ importers:
         specifier: ^170.1.0
         version: 170.1.0
       ical-generator:
-        specifier: ^10.0.0
-        version: 10.0.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1)
+        specifier: ^11.1.0
+        version: 11.1.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1)
       jose:
         specifier: 6.2.3
         version: 6.2.3
@@ -5242,9 +5242,9 @@ packages:
       typescript:
         optional: true
 
-  ical-generator@10.0.0:
-    resolution: {integrity: sha512-YUQ7H4eZdLfYvx3zE/qN4AoG0qqwMZG37vLdWzysXFDn/YQEfctZ9tQuPSBncARKgv79d2smWf5Sh67k6xiZfg==}
-    engines: {node: 20 || 22 || >=24}
+  ical-generator@11.1.0:
+    resolution: {integrity: sha512-/CSyXcelySK5qYAUxXnwzhAi1UPVnapnVMXqkRQ+L0RXHCFtzqLm92o5PD0ZRhaWBCtkS0hP8YIxMrSRZ+8Zug==}
+    engines: {node: 22 || >=24.0.0}
     peerDependencies:
       '@touch4it/ical-timezones': '>=1.6.0'
       '@types/luxon': '>= 1.26.0'
@@ -13226,7 +13226,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  ical-generator@10.0.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1):
+  ical-generator@11.1.0(@types/node@25.3.0)(dayjs@1.11.21)(luxon@3.7.2)(moment-timezone@0.5.48)(moment@2.30.1)(rrule@2.8.1):
     optionalDependencies:
       '@types/node': 25.3.0
       dayjs: 1.11.21
