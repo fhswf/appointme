@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.45.3](https://github.com/fhswf/appointme/compare/backend-v1.45.2...backend-v1.45.3) (2026-09-14)
+
+
+### Patches
+
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([235d213](https://github.com/fhswf/appointme/commit/235d2138703bc450df26e0e684b506d03071ed64))
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([d2a87f0](https://github.com/fhswf/appointme/commit/d2a87f0e23c30203c6466e186b6e7a6e1a6f6b8b))
+* **deps:** bump ical-generator from 10.0.0 to 11.1.0 ([9e63420](https://github.com/fhswf/appointme/commit/9e634201e0da86938abf6f5dfe47cd57fe711600))
+* **deps:** bump ical-generator from 10.0.0 to 11.1.0 ([bfcafc7](https://github.com/fhswf/appointme/commit/bfcafc73851932a0cf25f7afd71d9158f009d31b))
+* **deps:** bump nodemailer from 9.0.1 to 9.1.1 ([4b27a70](https://github.com/fhswf/appointme/commit/4b27a7081490b709b284a140c667fec76035538f))
+* **deps:** bump nodemailer from 9.0.1 to 9.1.1 ([6a46061](https://github.com/fhswf/appointme/commit/6a460616513bc28731d5926370087cf750394e85))
+* **deps:** bump tsdav from 2.1.6 to 2.3.1 ([4323118](https://github.com/fhswf/appointme/commit/4323118cb742c22cbefb64d59e79b931f1b5f25d))
+* **deps:** bump tsdav from 2.1.6 to 2.3.1 ([060ab08](https://github.com/fhswf/appointme/commit/060ab086e51a7db27882055c1b979bcf27b3f233))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.2
+
 ## [1.45.2](https://github.com/fhswf/appointme/compare/backend-v1.45.1...backend-v1.45.2) (2026-08-04)
 
 
