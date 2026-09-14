@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.2](https://github.com/fhswf/appointme/compare/mcp-server-v1.3.1...mcp-server-v1.3.2) (2026-09-14)
+
+
+### Patches
+
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([235d213](https://github.com/fhswf/appointme/commit/235d2138703bc450df26e0e684b506d03071ed64))
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([d2a87f0](https://github.com/fhswf/appointme/commit/d2a87f0e23c30203c6466e186b6e7a6e1a6f6b8b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.2
+
 ## [1.3.1](https://github.com/fhswf/appointme/compare/mcp-server-v1.3.0...mcp-server-v1.3.1) (2026-08-03)
 
 

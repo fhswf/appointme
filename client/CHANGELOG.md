@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.40.3](https://github.com/fhswf/appointme/compare/client-v1.40.2...client-v1.40.3) (2026-09-14)
+
+
+### Patches
+
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([235d213](https://github.com/fhswf/appointme/commit/235d2138703bc450df26e0e684b506d03071ed64))
+* **deps-dev:** bump vitest from 4.1.9 to 4.1.11 ([d2a87f0](https://github.com/fhswf/appointme/commit/d2a87f0e23c30203c6466e186b6e7a6e1a6f6b8b))
+* **deps:** bump @radix-ui/react-label from 2.1.8 to 2.1.15 ([d95ec62](https://github.com/fhswf/appointme/commit/d95ec62b33fe9b0aff3f49a82a90e15d0ea2cc5f))
+* **deps:** bump @radix-ui/react-label from 2.1.8 to 2.1.15 ([a5011a2](https://github.com/fhswf/appointme/commit/a5011a20c4017d4879c7eee5c961ee79822fea87))
+* **deps:** bump @sentry/browser from 10.49.0 to 10.69.0 ([1b22132](https://github.com/fhswf/appointme/commit/1b22132fb64439fe8fd8d0422e8f0e50dc427d29))
+* **deps:** bump @sentry/browser from 10.49.0 to 10.69.0 ([5cbb717](https://github.com/fhswf/appointme/commit/5cbb717364a843930f0b3525a793a58e971db060))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.2
+
 ## [1.40.2](https://github.com/fhswf/appointme/compare/client-v1.40.1...client-v1.40.2) (2026-08-04)
 
 
