@@ -400,8 +400,8 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4
       playwright-ctrf-json-reporter:
-        specifier: ^0.0.27
-        version: 0.0.27
+        specifier: ^0.0.29
+        version: 0.0.29
       sharp-cli:
         specifier: ^5.2.0
         version: 5.2.0
@@ -6779,8 +6779,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright-ctrf-json-reporter@0.0.27:
-    resolution: {integrity: sha512-FZ8KadoHJc7xhf5XM0R9F8XBsTSm4vywa5/fhmeo2nZhN31UmapYwRfxaBsGk6AbsvGmft5G+MVmkBjTJZic/Q==}
+  playwright-ctrf-json-reporter@0.0.29:
+    resolution: {integrity: sha512-zwJx7y/StmMtVq4DHbn85II/YbhnufyL08CeBH0sPzwq2nmHxsaRj+Te+ISimnWsHptrvcWRIfueh1LMjVwuIw==}
 
   playwright@1.58.2:
     resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
@@ -15041,7 +15041,9 @@ snapshots:
 
   playwright-core@1.58.2: {}
 
-  playwright-ctrf-json-reporter@0.0.27: {}
+  playwright-ctrf-json-reporter@0.0.29:
+    dependencies:
+      ctrf: 0.2.1
 
   playwright@1.58.2:
     dependencies:
@@ -15715,7 +15717,13 @@ snapshots:
     dependencies:
       eastasianwidth: 0.2.0
       emoji-regex: 9.2.2
-      strip-ansi: 7.1.2
+      strip-ansi: 7.2.0
+
+  string-width@7.2.0:
+    dependencies:
+      emoji-regex: 10.6.0
+      get-east-asian-width: 1.7.0
+      strip-ansi: 7.2.0
 
   string-width@7.2.0:
     dependencies:
@@ -16555,7 +16563,13 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.3
       string-width: 5.1.2
-      strip-ansi: 7.1.2
+      strip-ansi: 7.2.0
+
+  wrap-ansi@9.0.2:
+    dependencies:
+      ansi-styles: 6.2.3
+      string-width: 7.2.0
+      strip-ansi: 7.2.0
 
   wrap-ansi@9.0.2:
     dependencies:
