@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.17.3](https://github.com/fhswf/appointme/compare/common-v1.17.2...common-v1.17.3) (2026-09-29)
+
+
+### Patches
+
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([3eaa57c](https://github.com/fhswf/appointme/commit/3eaa57c496ed7619aff3da6ac4035996e4e5233c))
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([ab7c813](https://github.com/fhswf/appointme/commit/ab7c813446bbde7c4c451d68d6485b504380860b))
+
 ## [1.17.2](https://github.com/fhswf/appointme/compare/common-v1.17.1...common-v1.17.2) (2026-09-28)
 
 

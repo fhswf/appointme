@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.40.4](https://github.com/fhswf/appointme/compare/client-v1.40.3...client-v1.40.4) (2026-09-29)
+
+
+### Patches
+
+* **deps-dev:** bump @testing-library/user-event from 14.6.1 to 14.6.7 ([4b4588b](https://github.com/fhswf/appointme/commit/4b4588b6d631aa2999f6dd277411f8178c3609b3))
+* **deps-dev:** bump @testing-library/user-event from 14.6.1 to 14.6.7 ([c2622f1](https://github.com/fhswf/appointme/commit/c2622f1e907c361bbc50f509fbbbdb83acd16231))
+* **deps-dev:** bump jsdom and @types/jsdom ([e81acff](https://github.com/fhswf/appointme/commit/e81acff1358c89fe991141b5b0597f7d9f850c00))
+* **deps-dev:** bump jsdom and @types/jsdom ([4722092](https://github.com/fhswf/appointme/commit/472209277dfbae4dc1a4729a344d2e33695a119d))
+* **deps-dev:** bump playwright-ctrf-json-reporter ([8ad4729](https://github.com/fhswf/appointme/commit/8ad4729bf33a5295a0593b91a6ea6b6d04fbba85))
+* **deps-dev:** bump playwright-ctrf-json-reporter from 0.0.27 to 0.0.29 ([cbc944e](https://github.com/fhswf/appointme/commit/cbc944e7ed3fa6d5c69bd883aed97a695c14bb67))
+* **deps-dev:** bump vite-plugin-istanbul from 7.2.1 to 9.0.1 ([6aec935](https://github.com/fhswf/appointme/commit/6aec935da4999533d51e7054c5ab2d6f059bb7b6))
+* **deps-dev:** bump vite-plugin-istanbul from 7.2.1 to 9.0.1 ([feee639](https://github.com/fhswf/appointme/commit/feee6398beb7e92c3a87754d0338a704165ab4b4))
+* **deps:** bump @radix-ui/react-popover from 1.1.15 to 1.1.23 ([2e6024c](https://github.com/fhswf/appointme/commit/2e6024c93f5857bdceb1850429b9acbb55bdb625))
+* **deps:** bump @radix-ui/react-popover from 1.1.15 to 1.1.23 ([a7a301f](https://github.com/fhswf/appointme/commit/a7a301f512e9d67e0b95c86c648ca10e2fa34631))
+* **deps:** bump @sentry/browser from 10.69.0 to 11.0.0 ([e45bfb7](https://github.com/fhswf/appointme/commit/e45bfb7b6f98bc5bdbb96a9858d4c035049ec24a))
+* **deps:** bump @sentry/browser from 10.69.0 to 11.0.0 ([0f1ba49](https://github.com/fhswf/appointme/commit/0f1ba49731e54de35dec759db7bc18a7bc1fba10))
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([3eaa57c](https://github.com/fhswf/appointme/commit/3eaa57c496ed7619aff3da6ac4035996e4e5233c))
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([ab7c813](https://github.com/fhswf/appointme/commit/ab7c813446bbde7c4c451d68d6485b504380860b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.3
+
 ## [1.40.3](https://github.com/fhswf/appointme/compare/client-v1.40.2...client-v1.40.3) (2026-09-28)
 
 
