@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.45.4](https://github.com/fhswf/appointme/compare/backend-v1.45.3...backend-v1.45.4) (2026-09-29)
+
+
+### Patches
+
+* **deps-dev:** bump @babel/preset-typescript from 7.28.5 to 8.0.1 ([912a0b5](https://github.com/fhswf/appointme/commit/912a0b5b74fcfe52bda905b2a6b8d0d75d210e1e))
+* **deps-dev:** bump @babel/preset-typescript from 7.28.5 to 8.0.1 ([44ff087](https://github.com/fhswf/appointme/commit/44ff087fe97162db333a855608584edbea62d0f3))
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([3eaa57c](https://github.com/fhswf/appointme/commit/3eaa57c496ed7619aff3da6ac4035996e4e5233c))
+* **deps:** bump date-fns from 4.1.0 to 4.4.0 ([ab7c813](https://github.com/fhswf/appointme/commit/ab7c813446bbde7c4c451d68d6485b504380860b))
+* **deps:** bump nodemailer from 9.1.1 to 10.0.2 ([b3f40fd](https://github.com/fhswf/appointme/commit/b3f40fd6b169204b48f622612d63e230fe73490e))
+* **deps:** bump nodemailer from 9.1.1 to 10.0.2 ([2116834](https://github.com/fhswf/appointme/commit/211683407cb13425b73ee5549f78210fb1b01808))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * common bumped to 1.17.3
+
 ## [1.45.3](https://github.com/fhswf/appointme/compare/backend-v1.45.2...backend-v1.45.3) (2026-09-28)
 
 
