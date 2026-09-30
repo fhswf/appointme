@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.40.5](https://github.com/fhswf/appointme/compare/client-v1.40.4...client-v1.40.5) (2026-09-30)
+
+
+### Patches
+
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([b69ffa9](https://github.com/fhswf/appointme/commit/b69ffa9c92c1003e79247552c7ac19c29e97b614))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([2eca079](https://github.com/fhswf/appointme/commit/2eca079d4f5a82cdd829527b09d818d59248ccf6))
+
 ## [1.40.4](https://github.com/fhswf/appointme/compare/client-v1.40.3...client-v1.40.4) (2026-09-29)
 
 
