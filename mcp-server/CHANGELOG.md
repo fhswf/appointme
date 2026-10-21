@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.4](https://github.com/fhswf/appointme/compare/mcp-server-v1.3.3...mcp-server-v1.3.4) (2026-10-21)
+
+
+### Patches
+
+* **deps:** bump @modelcontextprotocol/sdk from 1.26.0 to 1.32.0 ([bb8847b](https://github.com/fhswf/appointme/commit/bb8847b42d68ccf01c2f312a06b83b91540ff11c))
+* **deps:** bump @modelcontextprotocol/sdk from 1.26.0 to 1.32.0 ([47be2ac](https://github.com/fhswf/appointme/commit/47be2ac2a36c763b5fb3a97398d3702c69aa96e6))
+
 ## [1.3.3](https://github.com/fhswf/appointme/compare/mcp-server-v1.3.2...mcp-server-v1.3.3) (2026-09-29)
 
 

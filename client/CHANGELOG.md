@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.40.5](https://github.com/fhswf/appointme/compare/client-v1.40.4...client-v1.40.5) (2026-10-21)
+
+
+### Patches
+
+* **deps-dev:** bump vite from 7.3.6 to 7.3.7 ([72ce425](https://github.com/fhswf/appointme/commit/72ce425605b7962ec85542a9adc4629f7b3a27dd))
+* **deps-dev:** bump vite from 7.3.6 to 7.3.7 ([97f4a0c](https://github.com/fhswf/appointme/commit/97f4a0c96d1922f8a426c0a90add4dad2416ea18))
+* **deps:** bump i18next-http-backend from 3.0.6 to 4.0.2 ([180d04e](https://github.com/fhswf/appointme/commit/180d04efa454ee105d0a9ebb02cba4d7945d6dc4))
+* **deps:** bump i18next-http-backend from 3.0.6 to 4.0.2 ([82483e6](https://github.com/fhswf/appointme/commit/82483e6f0619748e55795559ab9e271a97ba981f))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([b69ffa9](https://github.com/fhswf/appointme/commit/b69ffa9c92c1003e79247552c7ac19c29e97b614))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([2eca079](https://github.com/fhswf/appointme/commit/2eca079d4f5a82cdd829527b09d818d59248ccf6))
+
 ## [1.40.4](https://github.com/fhswf/appointme/compare/client-v1.40.3...client-v1.40.4) (2026-09-29)
 
 
