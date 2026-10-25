@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.45.5](https://github.com/fhswf/appointme/compare/backend-v1.45.4...backend-v1.45.5) (2026-10-21)
+
+
+### Patches
+
+* **deps:** bump googleapis from 170.1.0 to 182.0.0 ([3a49f28](https://github.com/fhswf/appointme/commit/3a49f281264768aae291023f0c4f6eb9dc7a35e5))
+* **deps:** bump googleapis from 170.1.0 to 182.0.0 ([fdbf32d](https://github.com/fhswf/appointme/commit/fdbf32dd369a044f014b3219f633be93880402f2))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([b69ffa9](https://github.com/fhswf/appointme/commit/b69ffa9c92c1003e79247552c7ac19c29e97b614))
+* **deps:** bump moment from 2.30.1 to 2.31.0 ([2eca079](https://github.com/fhswf/appointme/commit/2eca079d4f5a82cdd829527b09d818d59248ccf6))
+
 ## [1.45.4](https://github.com/fhswf/appointme/compare/backend-v1.45.3...backend-v1.45.4) (2026-09-29)
 
 
