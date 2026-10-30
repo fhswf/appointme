@@ -33,7 +33,7 @@
     "@sentry/profiling-node": "10.49.0",
     "body-parser": "^2.3.0",
     "common": "workspace:*",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.6",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.6",
     "csrf-csrf": "^4.0.3",
