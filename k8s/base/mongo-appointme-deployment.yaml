@@ -27,7 +27,7 @@ spec:
         io.kompose.service: mongo-appointme
     spec:
       containers:
-        - image: mongo
+        - image: mongo:8
           name: mongo-appointme
           args:
             - "--profile"
